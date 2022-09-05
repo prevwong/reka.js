@@ -51,6 +51,17 @@ importers:
     devDependencies:
       '@composite/types': link:../types
 
+  packages/state:
+    specifiers:
+      '@composite/types': workspace:*
+      mobx: ^6.3.13
+      tiny-invariant: ^1.2.0
+    dependencies:
+      mobx: 6.6.1
+      tiny-invariant: 1.2.0
+    devDependencies:
+      '@composite/types': link:../types
+
   packages/types:
     specifiers:
       invariant: ^2.2.4
@@ -1502,6 +1513,10 @@ packages:
     dependencies:
       brace-expansion: 1.1.11
     dev: true
+
+  /mobx/6.6.1:
+    resolution: {integrity: sha512-7su3UZv5JF+ohLr2opabjbUAERfXstMY+wiBtey8yNAPoB8H187RaQXuhFjNkH8aE4iHbDWnhDFZw0+5ic4nGQ==}
+    dev: false
 
   /ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}

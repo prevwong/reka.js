@@ -1,0 +1,23 @@
+{
+  "name": "@composite/state",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./src/index.ts",
+  "scripts": {
+    "dev": "rollup -w -c rollup.config.js"
+  },
+  "keywords": [],
+  "author": "Prev Wong",
+  "license": "ISC",
+  "devDependencies": {
+    "@composite/types": "workspace:*"
+  },
+  "peerDependencies": {
+    "@composite/types": "*"
+  },
+  "dependencies": {
+    "mobx": "^6.3.13",
+    "tiny-invariant": "^1.2.0"
+  }
+}
