@@ -387,22 +387,24 @@ export class ViewTree {
   }
 
   computeTree() {
-    // TODO: if root element has @each, this only renders the first @each iteration
-    // We need to render the root view with a Fragment
-    const view = this.computeTemplate(this.rootTemplate, {
-      path: ['frame'],
-      env: this.state.env,
-    })[0];
+    runInAction(() => {
+      // TODO: if root element has @each, this only renders the first @each iteration
+      // We need to render the root view with a Fragment
+      const view = this.computeTemplate(this.rootTemplate, {
+        path: ['frame'],
+        env: this.state.env,
+      })[0];
 
-    if (this.root !== view) {
-      this.setRoot(view);
-    } else {
-      this.tplKeyToComponentEvaluator.forEach((componentEvaluator) =>
-        componentEvaluator.compute()
-      );
-    }
+      if (this.root !== view) {
+        this.setRoot(view);
+      } else {
+        this.tplKeyToComponentEvaluator.forEach((componentEvaluator) =>
+          componentEvaluator.compute()
+        );
+      }
 
-    return view;
+      return view;
+    });
   }
 
   dispose() {
