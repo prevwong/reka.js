@@ -1,0 +1,74 @@
+@import url("https://rsms.me/inter/inter.css");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap");
+
+@tailwind base;
+
+html {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+}
+html,
+body {
+  font-family: "Inter";
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+button {
+  outline: none;
+  box-shadow: none;
+  border: none;
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f5f5f5;
+}
+
+.btn {
+  @apply bg-black text-white rounded px-3 py-2;
+}
+
+.btn.disabled {
+  @apply bg-transparent text-black;
+}
+
+.collapsible-icon {
+  width: 15px;
+  height: 15px;
+  margin-top: 3px;
+  cursor: pointer;
+}
+
+.remove-array-icon {
+  width: 13px;
+  height: 13px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+.cm-editor {
+  @apply h-full;
+}
+
+.ͼ2 .cm-gutters {
+  background: #ffffff;
+}
+
+.template-selected,
+.template-hovered {
+  outline: 1px solid;
+}
+
+.template-hovered {
+  outline-color: rgba(0, 0, 0, 0.15);
+}
+
+.template-selected {
+  outline-color: #1d4ed8;
+}
