@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { Schema, Type, TypeProperties } from "./schema";
-import * as t from "./types.generated";
+import { Schema, Type, TypeProperties } from './schema';
+import * as t from './types.generated';
 
 export const switchTypes = (node: t.Any, visitor: Partial<t.Visitor>) => {
   let currentType = node.type;
@@ -23,7 +23,7 @@ export const switchTypes = (node: t.Any, visitor: Partial<t.Visitor>) => {
 };
 
 export const isLiteralObject = (t: any) => {
-  return !!t && "object" === typeof t && t.constructor === Object;
+  return !!t && 'object' === typeof t && t.constructor === Object;
 };
 
 type TypeOpt<T extends Type = any> = Partial<{
@@ -177,7 +177,7 @@ export const mergeType = <T extends Type>(a: T, b: T, opts?: MergeTypeOpts) => {
       return a;
     }
 
-    if (typeof a === "function" && typeof b === "function" && opts?.function) {
+    if (typeof a === 'function' && typeof b === 'function' && opts?.function) {
       const diff = opts.function(a, b);
       if (diff !== undefined) {
         return diff;
@@ -198,7 +198,7 @@ export const flattenType = <T extends Type>(root: T) => {
       return value.map((c) => convert(c));
     }
 
-    if (typeof value === "object") {
+    if (typeof value === 'object') {
       const obj = Object.entries(value).reduce((accum, [k, v]) => {
         return {
           ...accum,
@@ -233,13 +233,13 @@ export const unflattenType = ({ root, types }) => {
       return value.map((child) => convert(child));
     }
 
-    if (typeof value === "object") {
+    if (typeof value === 'object') {
       let obj = value;
 
       let isType = false;
 
-      if (value["$$typeId"]) {
-        obj = types[value["$$typeId"]];
+      if (value['$$typeId']) {
+        obj = types[value['$$typeId']];
         isType = true;
       }
 
@@ -275,7 +275,7 @@ export const collectNestedTypes = (type: any) => {
       return;
     }
 
-    if (typeof value === "object") {
+    if (typeof value === 'object') {
       if (value instanceof Type) {
         types.push(value);
       }

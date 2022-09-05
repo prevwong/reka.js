@@ -1,7 +1,7 @@
-import invariant from "invariant";
-import shortUUID from "short-uuid";
+import invariant from 'invariant';
+import shortUUID from 'short-uuid';
 
-import { Schema } from "./Schema";
+import { Schema } from './Schema';
 
 export class Type {
   declare type: string;

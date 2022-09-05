@@ -1,2 +1,2 @@
-export * from "./Schema";
-export * from "./Type";
+export * from './Schema';
+export * from './Type';

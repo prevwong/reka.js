@@ -1,21 +1,21 @@
-import { Schema, Type } from "../schema";
+import { Schema, Type } from '../schema';
 
-import { Validator } from "./validator";
+import { Validator } from './validator';
 
 export class TypeValidator extends Validator {
   type: string;
 
   constructor(type: string) {
-    super("type");
+    super('type');
     this.type = type;
   }
 
   validate(value: any) {
-    if (value === null && this.type === "null") {
+    if (value === null && this.type === 'null') {
       return true;
     }
 
-    if (value === "Record") {
+    if (value === 'Record') {
       return Object.getPrototypeOf(value) === Object.prototype;
     }
 
@@ -27,7 +27,7 @@ export class OptionalValidator extends Validator {
   type: Validator;
 
   constructor(type: Validator) {
-    super("optional");
+    super('optional');
     this.type = type;
   }
 
@@ -49,7 +49,7 @@ export class NodeValidator extends Validator {
   isRef: boolean;
 
   constructor(node: string, isRef?: boolean) {
-    super("node");
+    super('node');
     this.node = node;
     this.isRef = isRef !== undefined ? isRef : false;
   }
@@ -91,7 +91,7 @@ export class UnionValidator extends Validator {
   union: Validator[];
 
   constructor(validators: Validator[]) {
-    super("union");
+    super('union');
     this.union = validators;
   }
 
@@ -104,7 +104,7 @@ export class UnionValidator extends Validator {
           continue;
         }
 
-        throw new TypeError("No matching field types");
+        throw new TypeError('No matching field types');
       }
     }
   }
@@ -114,7 +114,7 @@ export class ArrayValidator extends Validator {
   array: Validator;
 
   constructor(validator: Validator) {
-    super("array");
+    super('array');
     this.array = validator;
   }
 
@@ -131,7 +131,7 @@ export class MapValidator extends Validator {
   type: Validator;
 
   constructor(validator: Validator) {
-    super("map");
+    super('map');
     this.type = validator;
   }
 
@@ -150,14 +150,14 @@ export class ModelValidator extends Validator {
   model: Record<string, Validator>;
 
   constructor(model: Record<string, Validator>) {
-    super("model");
+    super('model');
     this.model = model;
   }
 
   format(value: any) {
     return Object.keys(this.model).reduce((accum, key) => {
       if (!this.model[key]) {
-        throw new TypeError("Invalid key in model");
+        throw new TypeError('Invalid key in model');
       }
 
       return {
@@ -172,7 +172,7 @@ export class ConstantValidator extends Validator {
   value: string;
 
   constructor(value: string) {
-    super("constant");
+    super('constant');
     this.value = value;
   }
 
@@ -183,7 +183,7 @@ export class ConstantValidator extends Validator {
 
 export class AnyValidator extends Validator {
   constructor() {
-    super("any");
+    super('any');
   }
 
   validate() {

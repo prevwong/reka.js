@@ -1,3 +1,3 @@
-export * from "./validator";
-export * as assertions from "./assertions";
-export * from "./definitions";
+export * from './validator';
+export * as assertions from './assertions';
+export * from './definitions';

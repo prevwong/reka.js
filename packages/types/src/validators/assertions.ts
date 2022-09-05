@@ -8,8 +8,8 @@ import {
   OptionalValidator,
   TypeValidator,
   UnionValidator,
-} from "./definitions";
-import { Validator } from "./validator";
+} from './definitions';
+import { Validator } from './validator';
 
 export const type = (type: string) => new TypeValidator(type);
 export const node = (node: string, isRef?: boolean) =>
@@ -26,8 +26,8 @@ export const constant = (value: string) => new ConstantValidator(value);
 export const enumeration = (...constants: string[]) =>
   union(...constants.map((c) => constant(c)));
 export const any = new AnyValidator();
-export const string = type("string");
-export const number = type("number");
-export const boolean = type("boolean");
-export const nullish = type("null");
-export const func = type("Function");
+export const string = type('string');
+export const number = type('number');
+export const boolean = type('boolean');
+export const nullish = type('null');
+export const func = type('Function');

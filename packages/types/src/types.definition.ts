@@ -1,250 +1,250 @@
-import { Schema } from "./schema";
+import { Schema } from './schema';
 
-Schema.define("Literal", {
-  alias: ["Expression"],
+Schema.define('Literal', {
+  alias: ['Expression'],
   fields: (t) => ({
     value: t.union(t.string, t.number, t.boolean),
   }),
 });
 
-Schema.define("Identifier", {
-  alias: ["Expression"],
+Schema.define('Identifier', {
+  alias: ['Expression'],
   fields: (t) => ({
     name: t.string,
   }),
 });
 
-Schema.define("Val", {
-  alias: ["Expression"],
+Schema.define('Val', {
+  alias: ['Expression'],
   fields: (t) => ({
     name: t.string,
-    init: t.node("Expression"),
+    init: t.node('Expression'),
   }),
 });
 
-Schema.define("ArrayExpression", {
-  alias: ["Expression"],
+Schema.define('ArrayExpression', {
+  alias: ['Expression'],
   fields: (t) => ({
-    elements: t.array(t.node("Expression")),
+    elements: t.array(t.node('Expression')),
   }),
 });
 
-Schema.define("BinaryExpression", {
-  alias: ["Expression"],
+Schema.define('BinaryExpression', {
+  alias: ['Expression'],
   fields: (t) => ({
-    left: t.node("Expression"),
+    left: t.node('Expression'),
     operator: t.enumeration(
-      "+",
-      "-",
-      "*",
-      "/",
-      "!=",
-      "==",
-      "<",
-      "<=",
-      ">",
-      ">="
+      '+',
+      '-',
+      '*',
+      '/',
+      '!=',
+      '==',
+      '<',
+      '<=',
+      '>',
+      '>='
     ),
-    right: t.node("Expression"),
+    right: t.node('Expression'),
   }),
 });
 
-Schema.define("ArrayExpression", {
-  alias: ["Expression"],
+Schema.define('ArrayExpression', {
+  alias: ['Expression'],
   fields: (t) => ({
-    elements: t.array(t.node("Expression")),
+    elements: t.array(t.node('Expression')),
   }),
 });
 
-Schema.define("ObjectExpression", {
-  alias: ["Expression"],
+Schema.define('ObjectExpression', {
+  alias: ['Expression'],
   fields: (t) => ({
-    properties: t.map(t.node("Expression")),
+    properties: t.map(t.node('Expression')),
   }),
 });
 
-Schema.define("ComponentProp", {
+Schema.define('ComponentProp', {
   fields: (t) => ({
     name: t.string,
   }),
 });
 
-Schema.define("Component", {
+Schema.define('Component', {
   abstract: true,
   fields: (t) => ({
     name: t.string,
   }),
 });
 
-Schema.define("CompositeComponent", {
-  extends: "Component",
+Schema.define('CompositeComponent', {
+  extends: 'Component',
   fields: (t) => ({
-    template: t.node("Template"),
-    state: t.array(t.node("Val")),
-    props: t.array(t.node("ComponentProp")),
+    template: t.node('Template'),
+    state: t.array(t.node('Val')),
+    props: t.array(t.node('ComponentProp')),
   }),
 });
 
-Schema.define("ExternalComponent", {
-  extends: "Component",
+Schema.define('ExternalComponent', {
+  extends: 'Component',
   fields: (t) => ({
-    render: t.type("Function"),
+    render: t.type('Function'),
   }),
 });
 
-Schema.define("ElementEach", {
+Schema.define('ElementEach', {
   fields: (t) => ({
-    alias: t.node("Identifier"),
-    index: t.optional(t.node("Identifier")),
-    iterator: t.node("Identifier"),
+    alias: t.node('Identifier'),
+    index: t.optional(t.node('Identifier')),
+    iterator: t.node('Identifier'),
   }),
 });
 
-Schema.define("Template", {
+Schema.define('Template', {
   abstract: true,
   fields: (t) => ({
-    props: t.map(t.node("Expression")),
-    children: t.array(t.node("Template")),
-    if: t.optional(t.node("Expression")),
-    each: t.optional(t.node("ElementEach")),
+    props: t.map(t.node('Expression')),
+    children: t.array(t.node('Template')),
+    if: t.optional(t.node('Expression')),
+    each: t.optional(t.node('ElementEach')),
   }),
 });
 
-Schema.define("TagTemplate", {
-  extends: "Template",
+Schema.define('TagTemplate', {
+  extends: 'Template',
   fields: (t) => ({
     tag: t.string,
   }),
 });
 
-Schema.define("ComponentTemplate", {
-  extends: "Template",
+Schema.define('ComponentTemplate', {
+  extends: 'Template',
   fields: (t) => ({
-    component: t.node("Identifier"),
+    component: t.node('Identifier'),
   }),
 });
 
-Schema.define("SlotTemplate", {
-  extends: "Template",
+Schema.define('SlotTemplate', {
+  extends: 'Template',
   fields: () => ({}),
 });
 
-Schema.define("MemberExpression", {
-  alias: ["Expression"],
+Schema.define('MemberExpression', {
+  alias: ['Expression'],
   fields: (t) => ({
-    object: t.union(t.node("Identifier"), t.node("MemberExpression")),
-    property: t.node("Identifier"),
+    object: t.union(t.node('Identifier'), t.node('MemberExpression')),
+    property: t.node('Identifier'),
   }),
 });
 
-Schema.define("Func", {
-  alias: ["Expression"],
+Schema.define('Func', {
+  alias: ['Expression'],
   fields: (t) => ({
     name: t.optional(t.string),
-    params: t.array(t.node("Identifier")),
-    body: t.node("Block"),
+    params: t.array(t.node('Identifier')),
+    body: t.node('Block'),
   }),
 });
 
-Schema.define("Assignment", {
-  alias: ["Statement"],
+Schema.define('Assignment', {
+  alias: ['Statement'],
   fields: (t) => ({
-    left: t.node("Identifier"),
-    operator: t.enumeration("=", "+=", "-="),
-    right: t.node("Expression"),
+    left: t.node('Identifier'),
+    operator: t.enumeration('=', '+=', '-='),
+    right: t.node('Expression'),
   }),
 });
 
-Schema.define("State", {
+Schema.define('State', {
   fields: (t) => ({
-    program: t.node("Program"),
-    extensions: t.array(t.node("ExtensionState")),
+    program: t.node('Program'),
+    extensions: t.array(t.node('ExtensionState')),
   }),
 });
 
-Schema.define("Program", {
+Schema.define('Program', {
   scope: true,
   fields: (t) => ({
-    globals: t.array(t.node("Val")),
-    components: t.array(t.node("CompositeComponent")),
+    globals: t.array(t.node('Val')),
+    components: t.array(t.node('CompositeComponent')),
   }),
 });
 
-Schema.define("View", {
+Schema.define('View', {
   abstract: true,
   fields: (t) => ({
     key: t.string,
-    template: t.node("Template", true),
+    template: t.node('Template', true),
   }),
 });
 
-Schema.define("ElementView", {
-  extends: "View",
+Schema.define('ElementView', {
+  extends: 'View',
   fields: (t) => ({
     // template: t.node("Template"),
     tag: t.string,
-    children: t.array(t.node("View")),
+    children: t.array(t.node('View')),
     props: t.map(t.union(t.string, t.number, t.boolean, t.func)),
   }),
 });
 
-Schema.define("ComponentView", {
+Schema.define('ComponentView', {
   abstract: true,
-  extends: "View",
+  extends: 'View',
   fields: (t) => ({
-    component: t.node("Component"),
+    component: t.node('Component'),
   }),
 });
 
-Schema.define("CompositeComponentView", {
-  extends: "ComponentView",
+Schema.define('CompositeComponentView', {
+  extends: 'ComponentView',
   fields: (t) => ({
-    render: t.array(t.node("View")),
+    render: t.array(t.node('View')),
   }),
 });
 
-Schema.define("ExternalComponentView", {
-  extends: "ComponentView",
+Schema.define('ExternalComponentView', {
+  extends: 'ComponentView',
   fields: (t) => ({
-    component: t.node("ExternalComponent"),
+    component: t.node('ExternalComponent'),
     props: t.map(t.union(t.string, t.number, t.boolean, t.func)),
   }),
 });
 
-Schema.define("SlotView", {
-  extends: "View",
+Schema.define('SlotView', {
+  extends: 'View',
   fields: (t) => ({
-    view: t.array(t.node("View")),
+    view: t.array(t.node('View')),
   }),
 });
 
-Schema.define("SystemView", {
+Schema.define('SystemView', {
   abstract: true,
-  extends: "View",
+  extends: 'View',
 });
 
-Schema.define("EachSystemView", {
-  extends: "SystemView",
+Schema.define('EachSystemView', {
+  extends: 'SystemView',
   fields: (t) => ({
-    children: t.array(t.node("View")),
+    children: t.array(t.node('View')),
   }),
 });
 
-Schema.define("ErrorSystemView", {
-  extends: "SystemView",
+Schema.define('ErrorSystemView', {
+  extends: 'SystemView',
   fields: (t) => ({
     error: t.string,
   }),
 });
 
-Schema.define("Block", {
-  alias: ["Expression"],
+Schema.define('Block', {
+  alias: ['Expression'],
   fields: (t) => ({
-    statements: t.array(t.node("Statement")),
+    statements: t.array(t.node('Statement')),
   }),
 });
 
-Schema.define("ExtensionState", {
+Schema.define('ExtensionState', {
   fields: (t) => ({
     value: t.union(t.nullish, t.map(t.any)),
   }),

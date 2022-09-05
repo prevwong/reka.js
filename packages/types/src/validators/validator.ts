@@ -15,7 +15,7 @@ export class Validator {
       }
 
       if (bool === false) {
-        throw new Error("Invalid type");
+        throw new Error('Invalid type');
       }
 
       if (!this.format) {
