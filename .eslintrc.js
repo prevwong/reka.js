@@ -1,16 +1,21 @@
 module.exports = {
-  extends: ["turbo", "prettier"],
+  env: {
+    browser: true,
+    es2021: true,
+    node: true,
+  },
+  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: "latest",
+    sourceType: "module",
+  },
+  plugins: ["@typescript-eslint"],
   rules: {
-    "no-console": 1,
-    "import/no-unresolved": 2,
-    "import/order": [
-      "error",
-      {
-        alphabetize: { order: "asc" },
-        "newlines-between": "always",
-        groups: ["builtin", "external", "internal", "sibling", "index"],
-        pathGroups: [{ pattern: "*", group: "external" }],
-      },
-    ],
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/no-inferrable-types": 0,
   },
 };

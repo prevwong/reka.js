@@ -9,15 +9,24 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
-    "lint": "turbo run lint",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^22.0.2",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-typescript": "^8.4.0",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
+    "esbuild": "^0.15.7",
     "eslint": "^8.23.0",
-    "eslint-config-custom": "*",
-    "eslint-config-prettier": "^8.5.0",
+    "nodemon": "^2.0.19",
+    "npm-run-all": "^4.1.5",
     "prettier": "latest",
-    "turbo": "latest"
+    "rollup": "^2.79.0",
+    "tslib": "^2.4.0",
+    "turbo": "latest",
+    "typescript": "^4.8.2"
   },
   "engines": {
     "node": ">=14.0.0"
