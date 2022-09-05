@@ -1,0 +1,112 @@
+@top Script { (declaration)+ }
+
+declaration {
+  ComponentDeclaration
+}
+
+expression {
+  Number |
+  String |
+  boolean
+}
+
+ComponentDeclaration {
+  kw<"component"> VariableName Parameters ComponentStateDeclaration "=>" ComponentTemplate
+}
+
+ComponentStateDeclaration {
+  "{" VariableDeclaration+ "}"
+}
+
+ComponentTemplate {
+  "(" Element ")"
+}
+
+Element {
+  elementSelfClosingTag | 
+  elementOpenTag Element* elementCloseTag
+}
+
+elementSelfClosingTag {
+  ElementStartTag ElementIdentifier ElementSelfCloseEndTag
+}
+
+elementOpenTag {
+  ElementStartTag ElementIdentifier ElementAttribute* ElementEndTag
+}
+
+elementCloseTag {
+  ElementStartCloseTag ElementIdentifier ElementEndTag
+}
+
+ElementAttribute {
+  VariableName "=" ("{" expression "}")
+}
+
+VariableDeclaration {
+  kw<"val"> VariableName "=" expression ";"
+}
+
+Parameters {
+  "(" (identifier ("," identifier)*)? ")"
+}
+
+kw<term> { @specialize[@name={term}]<identifier, term> }
+
+boolean { @specialize[@name=Boolean]<identifier, "true" | "false"> }
+
+@skip { spaces | newline }
+
+VariableName { identifier  }
+
+@tokens {
+  spaces[@export] { $[\u0009 \u000b\u00a0\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]+ }
+  newline[@export] { $[\r\n\u2028\u2029] }
+
+  identifierChar { std.asciiLetter | $[_$\u{a1}-\u{10ffff}] }
+
+  word { identifierChar (identifierChar | std.digit)* }
+
+  identifier { word }
+
+  "="[@name=Equals]
+  "..."[@name=Spread]
+  "=>"[@name=Arrow]
+
+  "(" ")" "[" "]" "{" "}"
+
+  "?." "." "," ";" ":"
+
+  @precedence { spaces, newline, identifier }
+
+  @precedence { spaces, newline, ElementIdentifier }
+
+  @precedence { spaces, newline }
+
+  Number {
+    (std.digit ("_" | std.digit)* ("." ("_" | std.digit)*)? | "." std.digit ("_" | std.digit)*)
+      (("e" | "E") ("+" | "-")? ("_" | std.digit)+)? |
+    std.digit ("_" | std.digit)* "n" |
+    "0x" (std.digit | $[a-fA-F] | "_")+ "n"? |
+    "0b" $[01_]+ "n"? |
+    "0o" $[0-7_]+ "n"?
+  }
+
+  String {
+    '"' (![\\\n"] | "\\" _)* '"'? |
+    "'" (![\\\n'] | "\\" _)* "'"?
+  }
+
+
+  ElementIdentifier { identifierChar (identifierChar | std.digit | "-")* }
+
+  ElementStartTag { "<" }
+
+  ElementStartCloseTag { "</" }
+
+  ElementEndTag { ">" }
+
+  ElementSelfCloseEndTag { "/>" }
+}
+
+@detectDelim
