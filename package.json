@@ -1,0 +1,30 @@
+{
+  "name": "composite",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "eslint": "^8.23.0",
+    "eslint-config-custom": "*",
+    "eslint-config-prettier": "^8.5.0",
+    "prettier": "latest",
+    "turbo": "latest"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "description": "Monorepo for Composite",
+  "main": ".eslintrc.js",
+  "keywords": [],
+  "author": "Prev Wong",
+  "license": "MIT"
+}
