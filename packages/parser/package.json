@@ -1,0 +1,25 @@
+{
+  "name": "@composite/parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./src/index.ts",
+  "scripts": {
+    "dev": "rollup -w -c rollup.config.js",
+    "generate-ast": "./scripts/generate-ast.js"
+  },
+  "keywords": [],
+  "author": "Prev Wong",
+  "license": "ISC",
+  "devDependencies": {
+    "@composite/types": "workspace:*"
+  },
+  "peerDependencies": {
+    "@composite/types": "workspace:*"
+  },
+  "dependencies": {
+    "@babel/types": "^7.18.13",
+    "acorn": "^8.7.0",
+    "tiny-invariant": "^1.2.0"
+  }
+}
