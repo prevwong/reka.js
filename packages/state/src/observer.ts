@@ -134,6 +134,7 @@ export class Observer<T extends Type = Type> {
         return this.setupMap(value, parent);
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       return () => {};
     } catch (err) {
       console.warn(

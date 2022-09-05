@@ -11,6 +11,8 @@ export class Scope {
 
   getDistance(name: string) {
     let distance = 0;
+
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let scope: Scope = this;
 
     do {

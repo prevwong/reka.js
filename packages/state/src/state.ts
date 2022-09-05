@@ -1,9 +1,8 @@
 import * as t from '@composite/types';
-import { ExtensionState } from '@composite/types';
 import { computed, IComputedValue, makeObservable, runInAction } from 'mobx';
 import { Environment } from './environment';
 import { computeExpression } from './expression';
-import { Extension, ExtensionCtor } from './extension';
+import { Extension } from './extension';
 import { Frame, FrameOpts } from './frame';
 import { Observer } from './observer';
 import { Resolver } from './resolver';

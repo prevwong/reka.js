@@ -6,7 +6,7 @@ export const isValNodeAffected = (c) => {
   for (let i = 0; i < c.path.length; i++) {
     const path = c.path[i];
 
-    if (path.node.type === "Val") {
+    if (path.node.type === 'Val') {
       return path.node;
     }
   }
@@ -16,12 +16,12 @@ export const isValNodeAffected = (c) => {
 
 export const isCapitalLetter = (c: string) => c === c.toUpperCase();
 
-export const createKey = (arr: string[]) => arr.join(".");
+export const createKey = (arr: string[]) => arr.join('.');
 
 const HASHED_OBJ = new WeakMap();
 
 export const valueToHash = (value: any): string => {
-  if (typeof value === "object") {
+  if (typeof value === 'object') {
     if (!HASHED_OBJ.get(value)) {
       HASHED_OBJ.set(value, randUint16());
     }
@@ -33,9 +33,9 @@ export const valueToHash = (value: any): string => {
 };
 
 export const isPrimitive = (value: any) => {
-  return typeof value !== "object";
+  return typeof value !== 'object';
 };
 
 export const isObjectLiteral = (t: any) => {
-  return !!t && "object" === typeof t && t.constructor === Object;
+  return !!t && 'object' === typeof t && t.constructor === Object;
 };

@@ -228,7 +228,7 @@ export class ViewTree {
     const eachComputation = computed(() => {
       const iterator = tplEnv.getByIdentifier(eachExpr.iterator);
 
-      let views: t.View[] = [];
+      const views: t.View[] = [];
 
       const iterationValueHashes = new Set();
 
@@ -352,29 +352,30 @@ export class ViewTree {
   ) {
     const key = ctx.path.join('.');
 
-    if (!this.tplKeyToComponentEvaluator.get(key)) {
+    let componentEvaluator = this.tplKeyToComponentEvaluator.get(key);
+
+    if (!componentEvaluator) {
       const componentEnv = this.state.env.inherit();
 
-      this.tplKeyToComponentEvaluator.set(
-        key,
-        new ComponentViewEvaluator(
-          this,
-          {
-            ...ctx,
-            /**
-             * Note: we append "comp" as part of the path
-             * This is so that the resulting inner Component's view does not get confused with
-             * the Component's template
-             */
-            path: [...ctx.path, 'comp'],
-          },
-          template,
-          componentEnv
-        )
+      componentEvaluator = new ComponentViewEvaluator(
+        this,
+        {
+          ...ctx,
+          /**
+           * Note: we append "comp" as part of the path
+           * This is so that the resulting inner Component's view does not get confused with
+           * the Component's template
+           */
+          path: [...ctx.path, 'comp'],
+        },
+        template,
+        componentEnv
       );
+
+      this.tplKeyToComponentEvaluator.set(key, componentEvaluator);
     }
 
-    return this.tplKeyToComponentEvaluator.get(key)!.compute();
+    return componentEvaluator.compute();
   }
 
   evaluateExpr(expr: t.Any, env: Environment) {
@@ -396,9 +397,9 @@ export class ViewTree {
     if (this.root !== view) {
       this.setRoot(view);
     } else {
-      for (const key of this.tplKeyToComponentEvaluator.keys()) {
-        this.tplKeyToComponentEvaluator.get(key)!.compute();
-      }
+      this.tplKeyToComponentEvaluator.forEach((componentEvaluator) =>
+        componentEvaluator.compute()
+      );
     }
 
     return view;

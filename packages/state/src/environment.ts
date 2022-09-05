@@ -1,7 +1,7 @@
-import * as t from "@composite/types";
+import * as t from '@composite/types';
 
-import { action, makeObservable, observable } from "mobx";
-import { State } from "./state";
+import { action, makeObservable, observable } from 'mobx';
+import { State } from './state';
 
 export class Environment {
   bindings: Map<string, any>;
@@ -65,6 +65,7 @@ export class Environment {
       return;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let env: Environment = this;
 
     for (let i = 0; i < distance; i++) {

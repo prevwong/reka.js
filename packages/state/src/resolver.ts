@@ -1,8 +1,8 @@
-import * as t from "@composite/types";
-import { computed, IComputedValue, makeObservable, observable } from "mobx";
+import * as t from '@composite/types';
+import { computed, IComputedValue, makeObservable, observable } from 'mobx';
 
-import { Scope } from "./scope";
-import { State } from "./state";
+import { Scope } from './scope';
+import { State } from './state';
 
 type CachedTemplateResolver = {
   computed: IComputedValue<void>;
@@ -29,7 +29,7 @@ export class Resolver {
   declare cachedComponentsComputation: IComputedValue<void>;
 
   constructor(readonly state: State) {
-    this.scope = new Scope("root");
+    this.scope = new Scope('root');
     this.identifiersToVariableDistance = new Map();
 
     this.cachedComponentResolver = new WeakMap();
