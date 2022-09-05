@@ -1,7 +1,7 @@
-import * as t from "@composite/types";
-import * as Y from "yjs";
+import * as t from '@composite/types';
+import * as Y from 'yjs';
 
-import { isLiteralObject, isPrimitiveValue } from "./types";
+import { isLiteralObject, isPrimitiveValue } from './types';
 
 export const jsToYType = (value: any) => {
   let typesToInsert: Record<string, any> = {};
@@ -35,7 +35,7 @@ export const jsToYType = (value: any) => {
           ),
         };
 
-        map.set("$$typeId", f.root.$$typeId);
+        map.set('$$typeId', f.root.$$typeId);
       } else {
         Object.entries(value).forEach(([key, c]) => {
           map.set(key, convert(c));

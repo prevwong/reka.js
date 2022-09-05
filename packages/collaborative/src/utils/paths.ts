@@ -1,4 +1,4 @@
-import * as t from "@composite/types";
+import * as t from '@composite/types';
 
 /**
  * Given a Mobx change path

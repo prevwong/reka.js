@@ -34,7 +34,7 @@ export const yTypeToJS = (state: State, types: any, yType: any) => {
         return t.Schema.fromJSON(value.toJSON());
       }
 
-      let obj = {};
+      const obj = {};
 
       value.forEach((child, key) => {
         obj[key] = convert(child);

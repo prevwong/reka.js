@@ -115,8 +115,7 @@ export class YjsCompositeSyncProvider {
           }
 
           if (delta.insert) {
-            // @ts-ignore
-            const m = delta.insert.map((item) => {
+            const m = (delta.insert as any[]).map((item) => {
               const converted = yTypeToJS(
                 this.state,
                 yDocRoot.get('types'),
@@ -141,8 +140,6 @@ export class YjsCompositeSyncProvider {
     Y.transact(
       this.yDoc,
       () => {
-        // console.log("new transaction", changes);
-
         let removed: any[] = [];
         let insert: Record<string, any> = {};
 

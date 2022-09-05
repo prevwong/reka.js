@@ -2,9 +2,9 @@ export const isPrimitiveValue = (value: any) => {
   if (
     value === undefined ||
     value === null ||
-    typeof value === "string" ||
-    typeof value === "number" ||
-    typeof value === "boolean"
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean'
   ) {
     return true;
   }
