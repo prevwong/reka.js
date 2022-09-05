@@ -1,0 +1,23 @@
+{
+  "name": "@composite/collaborative",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./src/index.ts",
+  "scripts": {
+    "dev": "rollup -w -c rollup.config.js",
+    "generate-ast": "./scripts/generate-ast.js"
+  },
+  "keywords": [],
+  "author": "Prev Wong",
+  "license": "ISC",
+  "dependencies": {
+    "@composite/state": "workspace:*",
+    "@composite/types": "workspace:*",
+    "mobx": "^6.3.13",
+    "yjs": "^13.5.27"
+  },
+  "devDependencies": {
+    "y-protocols": "^1.0.5"
+  }
+}

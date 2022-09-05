@@ -38,6 +38,21 @@ importers:
       turbo: 1.4.5
       typescript: 4.8.2
 
+  packages/collaborative:
+    specifiers:
+      '@composite/state': workspace:*
+      '@composite/types': workspace:*
+      mobx: ^6.3.13
+      y-protocols: ^1.0.5
+      yjs: ^13.5.27
+    dependencies:
+      '@composite/state': link:../state
+      '@composite/types': link:../types
+      mobx: 6.6.1
+      yjs: 13.5.41
+    devDependencies:
+      y-protocols: 1.0.5
+
   packages/parser:
     specifiers:
       '@babel/types': ^7.18.13
@@ -1418,6 +1433,9 @@ packages:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: true
 
+  /isomorphic.js/0.2.5:
+    resolution: {integrity: sha512-PIeMbHqMt4DnUP3MA/Flc0HElYjMXArsw1qwJZcm9sqR8mq3l8NYizFMty0pWwE/tzIGH3EKK5+jes5mAr85yw==}
+
   /js-tokens/4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
     dev: false
@@ -1448,6 +1466,12 @@ packages:
       prelude-ls: 1.2.1
       type-check: 0.4.0
     dev: true
+
+  /lib0/0.2.52:
+    resolution: {integrity: sha512-CjxlM7UgICfN6b2OPALBXchIBiNk6jE+1g7JP8ha+dh1xKRDSYpH0WQl1+rMqCju49xUnwPG34v4CR5/rPOZhg==}
+    engines: {node: '>=14'}
+    dependencies:
+      isomorphic.js: 0.2.5
 
   /load-json-file/4.0.0:
     resolution: {integrity: sha512-Kx8hMakjX03tiGTLAIdJ+lL0htKnXjEZN6hk/tozf/WOuYGdZBJrZ+rCJRbVCugsjB3jMLn9746NsQIf5VjBMw==}
@@ -2242,9 +2266,21 @@ packages:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
     dev: true
 
+  /y-protocols/1.0.5:
+    resolution: {integrity: sha512-Wil92b7cGk712lRHDqS4T90IczF6RkcvCwAD0A2OPg+adKmOe+nOiT/N2hvpQIWS3zfjmtL4CPaH5sIW1Hkm/A==}
+    dependencies:
+      lib0: 0.2.52
+    dev: true
+
   /yallist/4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
     dev: true
+
+  /yjs/13.5.41:
+    resolution: {integrity: sha512-4eSTrrs8OeI0heXKKioRY4ag7V5Bk85Z4MeniUyown3o3y0G7G4JpAZWrZWfTp7pzw2b53GkAQWKqHsHi9j9JA==}
+    dependencies:
+      lib0: 0.2.52
+    dev: false
 
   /yocto-queue/0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
