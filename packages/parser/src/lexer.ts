@@ -3,9 +3,9 @@ import {
   tc_component_tmpl,
   tc_element_open_tag,
   tc_element_expr,
-} from "./context";
-import { State } from "./state";
-import { KEYWORDS, Token, TokenType } from "./tokens";
+} from './context';
+import { State } from './state';
+import { KEYWORDS, Token, TokenType } from './tokens';
 
 export class Lexer {
   protected declare source: string;
@@ -13,7 +13,7 @@ export class Lexer {
 
   parse(source: string) {
     this.state = new State();
-    this.source = source.replace(/\s+$/, "");
+    this.source = source.replace(/\s+$/, '');
     this.next();
   }
 
@@ -73,7 +73,7 @@ export class Lexer {
     }
 
     switch (c) {
-      case "(": {
+      case '(': {
         if (
           this.currentToken?.type === TokenType.ARROW &&
           this.currentContext === tc_component
@@ -82,13 +82,13 @@ export class Lexer {
         }
         return this.tokenize(TokenType.LPAREN);
       }
-      case ")": {
+      case ')': {
         if (this.currentContext === tc_component_tmpl) {
           return this.tokenize(TokenType.COMPONENT_TMPL_END);
         }
         return this.tokenize(TokenType.RPAREN);
       }
-      case "{": {
+      case '{': {
         if (
           this.currentContext === tc_component_tmpl ||
           this.currentContext === tc_element_open_tag
@@ -98,22 +98,22 @@ export class Lexer {
 
         return this.tokenize(TokenType.LBRACE);
       }
-      case "}": {
+      case '}': {
         if (this.currentContext === tc_element_expr) {
           return this.tokenize(TokenType.ELEMENT_EXPR_END);
         }
         return this.tokenize(TokenType.RBRACE);
       }
-      case "=": {
-        if (this.matchChar(">")) {
+      case '=': {
+        if (this.matchChar('>')) {
           return this.tokenize(TokenType.ARROW);
-        } else if (this.matchChar("=")) {
+        } else if (this.matchChar('=')) {
           return this.tokenize(TokenType.EQEQ);
         }
 
         return this.tokenize(TokenType.EQ);
       }
-      case "<": {
+      case '<': {
         if (
           this.currentContext === tc_component_tmpl ||
           this.currentContext === tc_element_open_tag
@@ -121,23 +121,23 @@ export class Lexer {
           return this.tokenize(TokenType.ELEMENT_TAG_START);
         }
 
-        if (this.matchChar("=")) {
+        if (this.matchChar('=')) {
           return this.tokenize(TokenType.LEQ);
         }
 
         return this.tokenize(TokenType.LT);
       }
-      case ">": {
+      case '>': {
         if (this.currentContext === tc_element_open_tag) {
           return this.tokenize(TokenType.ELEMENT_TAG_END);
         }
-        if (this.matchChar("=")) {
+        if (this.matchChar('=')) {
           return this.tokenize(TokenType.GEQ);
         }
 
         return this.tokenize(TokenType.GT);
       }
-      case "/": {
+      case '/': {
         return this.tokenize(TokenType.SLASH);
       }
       case '"': {
@@ -147,29 +147,30 @@ export class Lexer {
         this.state.current += 1;
         return string;
       }
-      case ";": {
+      case ';': {
         return this.tokenize(TokenType.SEMICOLON);
       }
-      case "@": {
+      case '@': {
         if (this.currentContext === tc_element_open_tag) {
           this.state.start += 1;
           this.advanceCharWhile((c) => this.isAlpha(c));
           const word = this.readWord();
 
-          if (["if", "each"].includes(word) === false) {
+          if (['if', 'each'].includes(word) === false) {
             throw new Error(`Unknown element directive: ${word}`);
           }
 
           return this.tokenize(TokenType.ELEMENT_DIRECTIVE);
         }
+        break;
       }
-      case ",": {
+      case ',': {
         return this.tokenize(TokenType.COMMA);
       }
-      case "[": {
+      case '[': {
         return this.tokenize(TokenType.LBRACKET);
       }
-      case "]": {
+      case ']': {
         return this.tokenize(TokenType.RBRACKET);
       }
       default: {
@@ -203,7 +204,7 @@ export class Lexer {
   private readNumber() {
     this.advanceInt();
 
-    if (this.matchChar(".")) {
+    if (this.matchChar('.')) {
       this.advanceInt();
     }
 
@@ -269,8 +270,8 @@ export class Lexer {
 
   private advanceWhitespace() {
     this.advanceCharWhile((c) => {
-      if (c === " " || c === "\r" || c === "\t" || c === "\n") {
-        if (c === "\n") {
+      if (c === ' ' || c === '\r' || c === '\t' || c === '\n') {
+        if (c === '\n') {
           this.state.nextLine();
         }
         return true;
@@ -289,6 +290,7 @@ export class Lexer {
       if (this.isAtEnd()) {
         throw new Error(`Unterminated`);
       }
+
       this.advanceChar();
     }
   }
@@ -312,7 +314,7 @@ export class Lexer {
 
   private peekChar() {
     if (this.isAtEnd()) {
-      return "\0";
+      return '\0';
     }
     return this.source[this.state.current];
   }

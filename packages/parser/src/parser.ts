@@ -1,25 +1,25 @@
-import * as b from "@babel/types";
-import * as t from "@composite/types";
-import { parseExpressionAt } from "acorn";
+import * as b from '@babel/types';
+import * as t from '@composite/types';
+import { parseExpressionAt } from 'acorn';
 
-import { Lexer } from "./lexer";
-import { TokenType } from "./tokens";
+import { Lexer } from './lexer';
+import { TokenType } from './tokens';
 
 export const jsToComposite = (node: b.Node) => {
   switch (node.type) {
-    case "BlockStatement": {
+    case 'BlockStatement': {
       return t.block({
         statements: node.body.map((b) => jsToComposite(b)),
       });
     }
-    case "AssignmentExpression": {
+    case 'AssignmentExpression': {
       return t.assignment({
         left: jsToComposite(node.left),
         operator: node.operator as any,
         right: jsToComposite(node.right),
       });
     }
-    case "VariableDeclaration": {
+    case 'VariableDeclaration': {
       return t.val({
         name: (node.declarations[0].id as b.Identifier).name,
         init: node.declarations[0].init
@@ -27,26 +27,26 @@ export const jsToComposite = (node: b.Node) => {
           : undefined,
       });
     }
-    case "Identifier": {
+    case 'Identifier': {
       return t.identifier({
         name: node.name,
       });
     }
-    case "ExpressionStatement": {
+    case 'ExpressionStatement': {
       return jsToComposite(node.expression);
     }
-    case "ArrowFunctionExpression": {
+    case 'ArrowFunctionExpression': {
       return t.func({
         params: node.params.map((p) => jsToComposite(p)),
         body: jsToComposite(node.body as b.BlockStatement),
       });
     }
-    case "ArrayExpression": {
+    case 'ArrayExpression': {
       return t.arrayExpression({
         elements: node.elements.map((p) => p && jsToComposite(p)),
       });
     }
-    case "ObjectExpression": {
+    case 'ObjectExpression': {
       return t.objectExpression({
         properties: node.properties.reduce((accum, property: any) => {
           return {
@@ -121,7 +121,7 @@ export class Parser extends Lexer {
     const name = this.consume(TokenType.IDENTIFIER);
 
     this.consume(TokenType.LPAREN);
-    let props: t.ComponentProp[] = [];
+    const props: t.ComponentProp[] = [];
     while (!this.check(TokenType.RPAREN)) {
       props.push(
         t.componentProp({
@@ -148,7 +148,7 @@ export class Parser extends Lexer {
   }
 
   parseComponentStateDeclaration() {
-    let state: t.Val[] = [];
+    const state: t.Val[] = [];
 
     this.consume(TokenType.LBRACE);
     while (!this.check(TokenType.RBRACE)) {
@@ -173,7 +173,7 @@ export class Parser extends Lexer {
   }
 
   parseElementEach() {
-    let index, alias, iterator;
+    let index: t.Identifier | undefined, alias: t.Identifier;
 
     this.consume(TokenType.ELEMENT_EXPR_START);
     if (this.check(TokenType.LPAREN)) {
@@ -194,7 +194,7 @@ export class Parser extends Lexer {
 
     this.consume(TokenType.IN);
 
-    iterator = t.identifier({
+    const iterator = t.identifier({
       name: this.consume(TokenType.IDENTIFIER).value,
     });
 
@@ -215,7 +215,7 @@ export class Parser extends Lexer {
 
     const tag = this.consume(TokenType.ELEMENT_PROPERTY).value;
 
-    let directives = {
+    const directives = {
       each: undefined,
       if: undefined,
     };
@@ -243,7 +243,7 @@ export class Parser extends Lexer {
         const directive = this.consume(TokenType.ELEMENT_DIRECTIVE).value;
         this.consume(TokenType.EQ);
         const directiveValue =
-          directive === "each"
+          directive === 'each'
             ? this.parseElementEach()
             : this.parseElementExpr();
 
@@ -274,7 +274,7 @@ export class Parser extends Lexer {
             const expr = this.parseElementExpr();
             children.push(
               t.tagTemplate({
-                tag: "text",
+                tag: 'text',
                 props: {
                   text: expr,
                 },
@@ -284,7 +284,7 @@ export class Parser extends Lexer {
             break;
           }
           default: {
-            this.error("Unexpected token" + this.currentToken.type);
+            this.error('Unexpected token' + this.currentToken.type);
             break;
           }
         }
@@ -308,7 +308,7 @@ export class Parser extends Lexer {
       });
     }
 
-    if (tag === "slot") {
+    if (tag === 'slot') {
       return t.slotTemplate({
         props: {},
         children: [],

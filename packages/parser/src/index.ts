@@ -1,2 +1,2 @@
-export * from "./parser";
-export * from "./stringifier";
+export * from './parser';
+export * from './stringifier';
