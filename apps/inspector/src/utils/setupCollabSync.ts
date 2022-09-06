@@ -13,7 +13,7 @@ const loadInitialDocument = (state: State, type: Y.Map<any>) => {
     return;
   }
 
-  const flattenState = t.flattenType(state.state);
+  const flattenState = t.flattenType(state.data);
   const { converted } = jsToYType(flattenState);
 
   type.set('document', converted);

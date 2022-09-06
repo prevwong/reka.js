@@ -24,7 +24,7 @@ export class State {
   env: Environment;
   resolver: Resolver;
   frames: Frame[];
-  state: t.State;
+  data: t.State;
 
   private observer: Observer<t.State>;
   private syncGlobals: IComputedValue<void> | null = null;
@@ -35,7 +35,7 @@ export class State {
   private idToFrame: Map<string, Frame> = new Map();
 
   constructor(private readonly opts: StateOpts) {
-    this.state = t.state({
+    this.data = t.state({
       program: opts.data,
       extensions: [],
     });
@@ -46,16 +46,16 @@ export class State {
         return;
       }
 
-      this.state.extensions.push(
+      this.data.extensions.push(
         t.extensionState({
           value: extension.state,
         })
       );
 
-      this.extensionToIndex.set(extension, this.state.extensions.length - 1);
+      this.extensionToIndex.set(extension, this.data.extensions.length - 1);
     });
 
-    this.observer = new Observer(this.state, this.observerConfig);
+    this.observer = new Observer(this.data, this.observerConfig);
     this.env = new Environment(this);
     this.resolver = new Resolver(this);
     this.frames = [];
@@ -75,7 +75,7 @@ export class State {
       throw new Error();
     }
 
-    return this.state.extensions[index].value as E['state'];
+    return this.data.extensions[index].value as E['state'];
   }
 
   get config(): StateConfig {
@@ -93,7 +93,7 @@ export class State {
   }
 
   get root() {
-    return this.state.program;
+    return this.data.program;
   }
 
   private get observerConfig() {
@@ -203,8 +203,8 @@ export class State {
   }
 
   replace(state: t.State) {
-    this.state = state;
-    this.observer.replace(this.state);
+    this.data = state;
+    this.observer.replace(this.data);
 
     this.env = new Environment(this);
     this.resolver = new Resolver(this);
