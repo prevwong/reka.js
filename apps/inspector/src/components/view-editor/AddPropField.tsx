@@ -3,17 +3,24 @@ import * as t from '@composite/types';
 import * as React from 'react';
 
 import { useEditor } from '@app/editor';
-import { Box } from '@app/components/box';
 import { TextField } from '@app/components/text-field';
+import { EditPropSettingsField } from './shared';
+import { IconButton } from '../button';
+import { Cross1Icon, Cross2Icon } from '@radix-ui/react-icons';
 
 const parser = new Parser();
 
 type AddNewPropFieldProps = {
   template: t.Template;
   onAdd: () => void;
+  onCancel: () => void;
 };
 
-export const AddNewPropField = ({ template, onAdd }: AddNewPropFieldProps) => {
+export const AddNewPropField = ({
+  template,
+  onAdd,
+  onCancel,
+}: AddNewPropFieldProps) => {
   const editor = useEditor();
   const [prop, setProp] = React.useState('');
   const [value, setValue] = React.useState('');
@@ -45,7 +52,7 @@ export const AddNewPropField = ({ template, onAdd }: AddNewPropFieldProps) => {
   };
 
   return (
-    <Box css={{ display: 'grid', gridTemplateColumns: '100px 1fr', gap: '$2' }}>
+    <EditPropSettingsField>
       <TextField
         placeholder="Prop"
         value={prop}
@@ -53,12 +60,19 @@ export const AddNewPropField = ({ template, onAdd }: AddNewPropFieldProps) => {
         onKeyDown={onKeyDown}
       />
       <TextField
-        badge="expression"
         placeholder="Value"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={onKeyDown}
       />
-    </Box>
+      <IconButton
+        transparent
+        onClick={() => {
+          onCancel();
+        }}
+      >
+        <Cross2Icon />
+      </IconButton>
+    </EditPropSettingsField>
   );
 };

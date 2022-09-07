@@ -159,6 +159,9 @@ export const {
       untitled: 'Inter, -apple-system, system-ui, sans-serif',
       mono: 'Söhne Mono, menlo, monospace',
     },
+    fontWeights: {
+      medium: '500',
+    },
     sizes: {
       1: '5px',
       2: '10px',
@@ -171,15 +174,13 @@ export const {
       9: '80px',
     },
     fontSizes: {
-      1: '12px',
-      2: '13px',
-      3: '15px',
-      4: '17px',
-      5: '19px',
-      6: '21px',
-      7: '27px',
-      8: '35px',
-      9: '59px',
+      1: '11px',
+      2: '0.8125rem',
+      3: '0.9375rem',
+      4: '1.125rem',
+      5: '2.25rem',
+      6: '1.5rem',
+      7: '1.25rem',
     },
     radii: {
       1: '4px',

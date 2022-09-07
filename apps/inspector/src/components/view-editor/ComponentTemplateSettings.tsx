@@ -16,10 +16,6 @@ export const ComponentTemplateSettings = observer(
   ({ template }: ComponentTemplateSettingsProps) => {
     return (
       <Box css={{ display: 'grid', gap: '10px' }}>
-        <SettingField>
-          <h4>Component</h4>
-          <TextField type="text" value={template.component.name} />
-        </SettingField>
         <PropEditorSection template={template} />
       </Box>
     );

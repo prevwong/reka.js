@@ -4,9 +4,9 @@ import { Cross2Icon } from '@radix-ui/react-icons';
 import * as React from 'react';
 
 import { useEditor } from '@app/editor';
-import { styled } from '@app/stitches.config';
 import { TextField } from '@app/components/text-field';
-import { SettingField } from './shared';
+import { EditPropSettingsField } from './shared';
+import { IconButton } from '../button';
 
 const stringifier = new Stringifier();
 const parser = new Parser();
@@ -16,33 +16,6 @@ type EditPropFieldProps = {
   prop: string;
 };
 
-const RemoveProp = styled('button', {
-  position: 'absolute',
-  right: '-8px',
-  top: '-8px',
-  width: '15px',
-  height: '15px',
-  borderRadius: '100px',
-  background: 'rgba(255,255,255,0.2)',
-  textAlign: 'center',
-  svg: {
-    margin: '0 auto',
-    width: '10px',
-    height: '10px',
-  },
-});
-
-const EditPropSettingField = styled(SettingField, {
-  [`& ${RemoveProp}`]: {
-    display: 'none',
-  },
-  '&:hover': {
-    [`& ${RemoveProp}`]: {
-      display: 'block',
-    },
-  },
-});
-
 export const EditPropField = ({ template, prop }: EditPropFieldProps) => {
   const editor = useEditor();
   const [value, setValue] = React.useState(
@@ -50,10 +23,9 @@ export const EditPropField = ({ template, prop }: EditPropFieldProps) => {
   );
 
   return (
-    <EditPropSettingField>
-      <h4>{prop}</h4>
+    <EditPropSettingsField>
+      <TextField type="text" value={prop} onChange={() => {}} />
       <TextField
-        badge="expression"
         type="text"
         value={value}
         onChange={(e) => {
@@ -83,7 +55,8 @@ export const EditPropField = ({ template, prop }: EditPropFieldProps) => {
           }
         }}
       />
-      <RemoveProp
+      <IconButton
+        transparent
         onClick={() => {
           editor.state.change(() => {
             delete template.props[prop];
@@ -91,7 +64,7 @@ export const EditPropField = ({ template, prop }: EditPropFieldProps) => {
         }}
       >
         <Cross2Icon />
-      </RemoveProp>
-    </EditPropSettingField>
+      </IconButton>
+    </EditPropSettingsField>
   );
 };

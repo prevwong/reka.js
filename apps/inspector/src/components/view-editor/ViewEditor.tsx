@@ -12,34 +12,112 @@ import { TagTemplateSettings } from './TagTemplateSettings';
 import { Toolbar } from './Toolbar';
 import { reaction } from 'mobx';
 import { ComponentTemplateSettings } from './ComponentTemplateSettings';
+import { Dropdown } from '../dropdown';
+import { Button } from '../button';
+import { ArrowDownIcon, ChevronDownIcon } from '@radix-ui/react-icons';
+import { TextField } from '../text-field';
+import { SharedTemplateSettings } from './SharedTemplateSettings';
 
 const StyledContainer = styled(motion.div, {
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
+  position: 'relative',
+  top: 0,
+  right: 0,
   width: '100%',
+  height: '100%',
   '> div': {
-    background: 'rgb(0 0 0 / 50%)',
-    backdropFilter: 'blur(10px)',
     padding: '$4 $4',
-    color: '$whiteA12',
-    borderTopLeftRadius: '$1',
-    borderTopRightRadius: '$1',
+    height: '100%',
   },
 });
 
-const StyledTemplateTypeHeading = styled('h3', {
-  fontSize: '14px',
+const StyledTemplateTypeHeading = styled('div', {
+  input: {
+    padding: '2px 4px',
+    marginLeft: '-4px',
+    marginRight: '-4px',
+    fontSize: '$4',
+
+    '&:hover': {
+      background: '$grayA5',
+    },
+  },
   '> span': {
     fontSize: '10px',
-    ml: '$1',
-    color: 'rgba(255,255,255,0.8)',
+    color: 'rgba(0,0,0,0.8)',
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    mt: '2px',
+    cursor: 'pointer',
+    svg: {
+      display: 'inline-block',
+      width: '10px',
+      height: '10px',
+      ml: '$1',
+    },
   },
 });
 
 const Topbar = styled('div', {
   display: 'flex',
 });
+
+type TemplateHeadingProps = {
+  template: t.Template;
+};
+
+const TemplateHeading = (props: TemplateHeadingProps) => {
+  let title: string;
+
+  const editor = useEditor();
+
+  if (props.template instanceof t.ComponentTemplate) {
+    title = props.template.component.name;
+  } else if (props.template instanceof t.TagTemplate) {
+    title = props.template.tag;
+  } else if (props.template instanceof t.SlotTemplate) {
+    title = 'Slot';
+  } else {
+    title = 'Template';
+  }
+
+  const [newTitleValue, setNewTitleValue] = React.useState(title);
+
+  return (
+    <StyledTemplateTypeHeading>
+      <TextField
+        value={newTitleValue}
+        transparent
+        onChange={(e) => {
+          setNewTitleValue(e.target.value);
+        }}
+        onKeyUp={(e) => {
+          if (e.key === 'Escape') {
+            setNewTitleValue(title);
+            return;
+          }
+
+          if (e.key !== 'Enter') {
+            return;
+          }
+
+          const template = props.template;
+
+          if (template instanceof t.TagTemplate) {
+            editor.state.change(() => {
+              template.tag = newTitleValue;
+            });
+          }
+        }}
+      />
+      <Dropdown>
+        <span>
+          {props.template.type} <ChevronDownIcon />
+        </span>
+      </Dropdown>
+    </StyledTemplateTypeHeading>
+  );
+};
 
 const ViewSettings = observer(() => {
   const editor = useEditor();
@@ -57,13 +135,11 @@ const ViewSettings = observer(() => {
   return (
     <div>
       <Topbar>
-        <StyledTemplateTypeHeading>
-          {template.type}
-          <span>{template.id}</span>
-        </StyledTemplateTypeHeading>
-        <Toolbar template={template} />
+        <TemplateHeading template={template} />
+        {/* <Toolbar template={template} /> */}
       </Topbar>
-      <Box css={{ mt: '$4' }}>
+      <Box>
+        <SharedTemplateSettings template={template} />
         {template instanceof t.TagTemplate && (
           <TagTemplateSettings template={template} />
         )}

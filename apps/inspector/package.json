@@ -19,6 +19,7 @@
     "@composite/state": "workspace:*",
     "@composite/types": "workspace:*",
     "@radix-ui/colors": "^0.1.8",
+    "@radix-ui/react-dropdown-menu": "^1.0.0",
     "@radix-ui/react-icons": "^1.0.3",
     "@radix-ui/react-switch": "*",
     "@radix-ui/react-tabs": "^0.1.4",

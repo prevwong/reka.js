@@ -11,13 +11,7 @@ const StyledToolbarContainer = styled('div', {
   display: 'flex',
   justifyContent: 'flex-end',
   gap: '5px',
-  [`& ${Button}`]: {
-    padding: '0 $1',
-    svg: {
-      width: '12px',
-      height: '12px',
-    },
-  },
+  [`& ${Button}`]: {},
 });
 
 type ToolbarProps = {

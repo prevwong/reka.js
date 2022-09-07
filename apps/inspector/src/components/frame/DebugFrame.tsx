@@ -1,5 +1,6 @@
 import * as Tabs from '@radix-ui/react-tabs';
 import * as React from 'react';
+import cx from 'classnames';
 
 import { observer } from 'mobx-react-lite';
 
@@ -17,13 +18,11 @@ import { RenderFrame } from './RenderFrame';
 import { UserFrame } from '@app/extensions/UserFrameExtension';
 
 type DebugFrameProps = {
+  className?: string;
   frame: UserFrame;
 };
 
 const TabRoot = styled(Tabs.Root, {
-  borderRadius: '$1',
-  border: '1px solid $grayA11',
-  mb: '$2',
   background: '$whiteA12',
 });
 
@@ -33,7 +32,8 @@ const TabList = styled(Tabs.List, {
   width: '100%',
   px: '$2',
   py: '$1',
-  background: '$grayA11',
+  background: '$whiteA12',
+  borderBottom: '1px solid $grayA4',
 });
 
 const TabTrigger = styled(Tabs.Trigger, {
@@ -41,6 +41,7 @@ const TabTrigger = styled(Tabs.Trigger, {
   padding: '$1 $2',
   borderRadius: '$1',
   color: '$blackA12',
+  fontSize: '$1',
 
   '&[data-state="active"]': {
     background: '$blackA12',
@@ -78,13 +79,14 @@ export const DebugFrame = observer((props: DebugFrameProps) => {
   }
 
   return (
-    <TabRoot defaultValue="react" className="debug-frame-container">
+    <TabRoot
+      defaultValue="react"
+      className={cx('debug-frame', props.className)}
+    >
       <TabList>
         <Box css={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-          <Text variant="white" size={1} css={{ mr: '$3' }}>
-            Frame {'<'}
+          <Text variant="gray" size={1} css={{ mr: '$3' }}>
             {props.frame.id}
-            {'>'}
           </Text>
           <Switch
             checked={frame.sync}
@@ -147,3 +149,5 @@ export const DebugFrame = observer((props: DebugFrameProps) => {
     </TabRoot>
   );
 });
+
+DebugFrame.toString = () => '.debug-frame';

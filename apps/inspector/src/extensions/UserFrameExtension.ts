@@ -1,4 +1,5 @@
 import { createExtension } from '@composite/state';
+import * as t from '@composite/types';
 
 export type UserFrame = {
   id: string;
@@ -13,8 +14,27 @@ export type UserFrameExtensionState = {
 export const UserFrameExtension = createExtension<UserFrameExtensionState>({
   state: {
     frames: [
-      { id: 'root', name: 'App' },
-      // { id: "button-main", name: "Button", props: { text: t.literal({value: "Hello"}) } },
+      { id: 'App', name: 'App' },
+      {
+        id: 'Button Primary',
+        name: 'Button',
+        props: { text: t.literal({ value: 'Hello' }) },
+      },
+      {
+        id: 'Button Secondary',
+        name: 'Button',
+        props: { text: t.literal({ value: 'Woah' }) },
+      },
+      {
+        id: 'Button Tertiary',
+        name: 'Button',
+        props: { text: t.literal({ value: 'Woah' }) },
+      },
+      {
+        id: 'Button Warning',
+        name: 'Button',
+        props: { text: t.literal({ value: 'Woah' }) },
+      },
     ],
   },
   globals: {},

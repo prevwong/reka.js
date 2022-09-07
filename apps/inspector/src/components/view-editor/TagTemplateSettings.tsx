@@ -16,10 +16,6 @@ export const TagTemplateSettings = observer(
   ({ template }: TagTemplateSettingsProps) => {
     return (
       <Box css={{ display: 'grid', gap: '10px' }}>
-        <SettingField>
-          <h4>Tag</h4>
-          <TextField type="text" value={template.tag} />
-        </SettingField>
         <PropEditorSection template={template} />
       </Box>
     );
