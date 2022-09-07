@@ -9,7 +9,7 @@ const StyledInputField = styled('input', {
 
   outline: 'none',
   boxShadow: 'none',
-  padding: '$1 $1',
+  padding: '$2 $2',
   color: 'rgba(0,0,0,0.8)',
   transition: '0.2s ease-in',
   border: 'none',
@@ -118,7 +118,7 @@ export const CancellableInputField = ({
         css={{
           background: 'none',
           border: 'none',
-          mr: '$1',
+          mr: '$2',
         }}
         onClick={() => {
           onCancel();

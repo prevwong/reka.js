@@ -61,6 +61,9 @@ const StyledButton = styled('button', {
 const StyledIconButton = styled(StyledButton, {
   padding: '$1 $1',
   boxShadow: 'none',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
 });
 
 type ButtonProps = React.ComponentProps<typeof StyledButton>;

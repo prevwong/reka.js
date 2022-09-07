@@ -13,11 +13,16 @@ export const SettingField = styled('div', {
 });
 
 export const EditPropSettingsField = styled(SettingField, {
-  gridTemplateColumns: '60px 1fr',
+  gridTemplateColumns: '60px 1fr auto',
   position: 'relative',
   gap: '0px',
+  border: '1px solid $grayA5',
+  borderRadius: '$1',
+  [`& ${TextField}`]: {
+    borderColor: 'transparent',
+  },
   [`& ${TextField}:nth-child(1)`]: {
-    borderRight: 'none',
+    borderRight: 'inherit',
     borderTopRightRadius: 0,
     borderBottomRightRadius: 0,
   },
@@ -28,10 +33,8 @@ export const EditPropSettingsField = styled(SettingField, {
   },
   mb: '-1px',
   [`& ${IconButton}`]: {
+    mr: '$2',
     opacity: 0,
-    position: 'absolute',
-    top: '4px',
-    right: '$1',
   },
   '&:hover': {
     [`& ${IconButton}`]: {

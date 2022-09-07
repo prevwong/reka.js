@@ -39,7 +39,9 @@ const state = new State({
 
 const [_, provider] = setupExperimentalCollaborationSync(state);
 
-// (window as any).state = state;
+if (typeof window !== 'undefined') {
+  (window as any).state = state;
+}
 
 const App = observer(() => {
   return (

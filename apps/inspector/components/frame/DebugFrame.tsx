@@ -31,14 +31,14 @@ const TabList = styled(Tabs.List, {
   alignItems: 'center',
   width: '100%',
   px: '$2',
-  py: '$1',
+  py: '$2',
   background: '$whiteA12',
   borderBottom: '1px solid $grayA4',
 });
 
 const TabTrigger = styled(Tabs.Trigger, {
   background: 'transparent',
-  padding: '$1 $2',
+  padding: '$2 $3',
   borderRadius: '$1',
   color: '$blackA12',
   fontSize: '$1',
