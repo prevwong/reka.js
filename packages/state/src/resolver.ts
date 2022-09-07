@@ -1,4 +1,5 @@
 import * as t from '@composite/types';
+import { string } from '@composite/types/src/validators/assertions';
 import { computed, IComputedValue, makeObservable, observable } from 'mobx';
 
 import { Scope } from './scope';
@@ -124,6 +125,8 @@ export class Resolver {
     if (!cache || (cache && cache.key !== key)) {
       const templateScope = new Scope(template.id, scope);
 
+      let eachIndex: string | null = null;
+
       cache = {
         key,
         computed: computed(() => {
@@ -145,7 +148,13 @@ export class Resolver {
             }
 
             if (template.each.index) {
+              eachIndex = template.each.index.name;
               templateScope.defineVariableName(template.each.index.name);
+            } else {
+              if (eachIndex) {
+                templateScope.removeVariableName(eachIndex);
+                eachIndex = null;
+              }
             }
           }
 

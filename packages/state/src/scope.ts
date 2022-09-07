@@ -9,6 +9,10 @@ export class Scope {
     this.variableNames.add(name);
   }
 
+  removeVariableName(name: string) {
+    this.variableNames.delete(name);
+  }
+
   getDistance(name: string) {
     let distance = 0;
 
