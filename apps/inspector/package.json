@@ -1,14 +1,14 @@
 {
   "name": "@composite/app-inspector",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
   "scripts": {
-    "dev": "vite --port 3000",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "@babel/core": "^7.18.13",
     "@codemirror/basic-setup": "^0.19.1",
     "@codemirror/commands": "^0.19.8",
     "@codemirror/theme-one-dark": "^0.19.1",
@@ -25,35 +25,27 @@
     "@radix-ui/react-tabs": "^0.1.4",
     "@radix-ui/react-tooltip": "^0.1.7",
     "@stitches/react": "^1.2.7",
-    "async": "^3.2.3",
-    "autoprefixer": "^10.4.8",
     "classnames": "^2.3.1",
     "framer-motion": "^6.2.8",
-    "invariant": "^2.2.4",
     "lodash": "^4.17.21",
-    "mobx": "^6.3.3",
+    "mobx": "^6.6.1",
     "mobx-react-lite": "^3.3.0",
-    "postcss": "^8.4.16",
+    "next": "12.2.5",
     "randomcolor": "^0.6.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-is": "^17.0.2",
-    "styled-components": "^5.3.5",
-    "tailwindcss": "^3.0.15",
+    "tiny-invariant": "^1.2.0",
     "unique-names-generator": "^4.7.1",
     "y-webrtc": "^10.2.2",
     "yjs": "^13.5.27"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.181",
+    "@types/node": "18.7.15",
+    "@types/randomcolor": "^0.5.6",
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",
-    "@types/styled-components": "^5.1.24",
-    "@vitejs/plugin-react": "^1.0.7",
-    "radix-colors-for-tailwind": "^2.0.0",
-    "typescript": "^4.5.4",
-    "vite": "^2.8.0",
-    "vite-plugin-react-svg": "^0.2.0",
-    "vite-plugin-svgr": "^1.1.0"
+    "eslint": "^8.23.0",
+    "eslint-config-next": "12.2.5",
+    "typescript": "4.8.2"
   }
 }
