@@ -40,10 +40,13 @@ type SettingSectionProps = {
   title: string;
   onAdd?: () => void;
   children?: React.ReactNode;
+  collapsedOnInitial?: boolean;
 };
 
 export const SettingSection = (props: SettingSectionProps) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(
+    props.collapsedOnInitial !== undefined ? !props.collapsedOnInitial : false
+  );
 
   return (
     <StyledSettingSection className="setting-section">

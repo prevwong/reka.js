@@ -7,6 +7,7 @@ import { Button } from '../button';
 import { ComponentSettings } from './ComponentSettings';
 
 import { ProgramSettings } from './ProgramSettings';
+import { TemplateSettings } from './TemplateSettings';
 
 type SettingsScreenProps = {
   route?: string;
@@ -15,7 +16,7 @@ type SettingsScreenProps = {
 
 const SettingsScreen = observer((props: SettingsScreenProps) => {
   const editor = useEditor();
-  const [direction, setDirection] = React.useState('left');
+  const [direction, setDirection] = React.useState('right');
 
   return (
     <AnimatePresence initial={false}>
@@ -101,6 +102,9 @@ export const SettingsEditor = observer(() => {
       </SettingsScreen>
       <SettingsScreen route="component">
         <ComponentSettings />
+      </SettingsScreen>
+      <SettingsScreen route="template">
+        <TemplateSettings />
       </SettingsScreen>
     </Box>
   );

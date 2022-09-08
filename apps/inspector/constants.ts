@@ -24,7 +24,10 @@ component Button(text) {
   val counter = 0;
 } => (
   <section>
-   <text text={text} />
+   <text text={counter} />
+   <button>
+    <text text={text} />
+   </button>
   </section>
 )
 `);

@@ -20,6 +20,7 @@ export const GlobalSettings = observer(() => {
 
   return (
     <SettingSection
+      collapsedOnInitial={false}
       title="Shared Variables"
       onAdd={() => {
         setIsAddingNewGlobal(true);

@@ -14,7 +14,7 @@ import { ComponentTemplateSettings } from './ComponentTemplateSettings';
 
 const Topbar = styled('div', {
   display: 'flex',
-  px: '$3',
+  px: '$4',
   py: '$3',
 });
 
@@ -103,23 +103,27 @@ const TemplateHeading = (props: TemplateHeadingProps) => {
   );
 };
 
-type TemplateSettingsProps = {
-  template: t.Template;
-};
+export const TemplateSettings = () => {
+  const editor = useEditor();
 
-export const TemplateSettings = (props: TemplateSettingsProps) => {
+  if (editor.settings.current?.type !== 'template') {
+    return null;
+  }
+
+  const template = editor.settings.current.template;
+
   return (
     <Box>
       <Topbar>
-        <TemplateHeading template={props.template} />
+        <TemplateHeading template={template} />
       </Topbar>
       <Box css={{ mt: '$3' }}>
-        <SharedTemplateSettings template={props.template} />
-        {props.template instanceof t.TagTemplate && (
-          <TagTemplateSettings template={props.template} />
+        <SharedTemplateSettings template={template} />
+        {template instanceof t.TagTemplate && (
+          <TagTemplateSettings template={template} />
         )}
-        {props.template instanceof t.ComponentTemplate && (
-          <ComponentTemplateSettings template={props.template} />
+        {template instanceof t.ComponentTemplate && (
+          <ComponentTemplateSettings template={template} />
         )}
       </Box>
     </Box>

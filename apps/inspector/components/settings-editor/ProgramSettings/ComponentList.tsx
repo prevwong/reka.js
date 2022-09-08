@@ -19,6 +19,7 @@ export const ComponentList = observer(() => {
 
   return (
     <SettingSection
+      collapsedOnInitial={false}
       title="Components"
       onAdd={() => {
         // TODO: add UI to create a new component
@@ -26,15 +27,15 @@ export const ComponentList = observer(() => {
     >
       <Box
         css={{
-          ml: '-$3',
-          mr: '-$3',
+          ml: '-$4',
+          mr: '-$4',
         }}
       >
         {editor.state.allComponents.map((component) => (
           <Box
             css={{
               py: '$2',
-              px: '$3',
+              px: '$4',
 
               cursor: 'pointer',
               display: 'flex',
@@ -70,22 +71,25 @@ export const ComponentList = observer(() => {
                   : 'This is an external component, we cannot edit it'
               }
             >
-              <Button
-                onClick={() => {
-                  editor.settings.goTo({
-                    type: 'component',
-                    component,
-                  });
-                }}
-                css={{
-                  cursor:
-                    component instanceof t.CompositeComponent
-                      ? 'auto'
-                      : 'not-allowed',
-                }}
-              >
-                Edit Component
-              </Button>
+              <Box>
+                <Button
+                  disabled={component instanceof t.CompositeComponent !== true}
+                  onClick={() => {
+                    editor.settings.goTo({
+                      type: 'component',
+                      component,
+                    });
+                  }}
+                  css={{
+                    cursor:
+                      component instanceof t.CompositeComponent
+                        ? 'auto'
+                        : 'not-allowed',
+                  }}
+                >
+                  Edit Component
+                </Button>
+              </Box>
             </Tooltip>
           </Box>
         ))}

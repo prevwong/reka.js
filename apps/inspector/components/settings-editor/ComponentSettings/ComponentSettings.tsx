@@ -8,6 +8,7 @@ import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
 import * as React from 'react';
 import { SettingSection } from '../SettingSection';
+import { TemplateLayers } from './TemplateLayers';
 
 const stringifier = new Stringifier();
 const parser = new Parser();
@@ -45,6 +46,8 @@ export const ComponentSettings = (props: ComponentSettingsProps) => {
     return null;
   }
 
+  console.log('comp', component);
+
   return (
     <Box>
       <ComponentHeader>
@@ -69,7 +72,7 @@ export const ComponentSettings = (props: ComponentSettingsProps) => {
           Component
         </Box>
       </ComponentHeader>
-      <SettingSection title="State">
+      <SettingSection title="State" onAdd={() => setIsAddingNewState(true)}>
         <PairInput
           values={component.state.map((state) => ({
             id: state.name,
@@ -77,7 +80,7 @@ export const ComponentSettings = (props: ComponentSettingsProps) => {
           }))}
           addingNewField={isAddingNewState}
           onCancelAdding={() => setIsAddingNewState(false)}
-          onAdd={(id, value) => {
+          onAdd={(id, value, clear) => {
             const existingStateWithSameName = component.state.find(
               (state) => state.name === id
             );
@@ -99,9 +102,14 @@ export const ComponentSettings = (props: ComponentSettingsProps) => {
                   init: parsedValue,
                 })
               );
+
+              clear();
             });
           }}
         />
+      </SettingSection>
+      <SettingSection title="Template" collapsedOnInitial={false}>
+        <TemplateLayers component={component} />
       </SettingSection>
     </Box>
   );
