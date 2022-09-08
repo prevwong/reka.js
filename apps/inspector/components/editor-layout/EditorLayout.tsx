@@ -3,7 +3,7 @@ import { styled } from '@app/styles';
 import { useEditor } from '@app/editor';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
 import { DebugFrame } from '../frame';
-import { ViewEditor } from '../view-editor';
+import { SettingsEditor } from '../settings-editor';
 
 const StyledScreen = styled('div', {
   display: 'flex',
@@ -58,7 +58,7 @@ export const EditorLayout = () => {
         </StyledFramesGrid>
       </StyledFramesContainer>
       <StyledSidebarContainer>
-        <ViewEditor />
+        <SettingsEditor />
       </StyledSidebarContainer>
     </StyledScreen>
   );
