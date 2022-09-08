@@ -134,6 +134,9 @@ export const {
       ...whiteA,
       ...blackA,
 
+      primary: '$indigoA9',
+      primaryLight: '$indigoA3',
+      secondary: '$purple3',
       // Semantic colors
       hiContrast: '$slate12',
       // loContrast: '$slate1',

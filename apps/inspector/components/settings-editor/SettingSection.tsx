@@ -26,7 +26,7 @@ const StyledSettingSectionHeader = styled(motion.div, {
 
 const StyledSettingSection = styled('div', {
   display: 'flex',
-  px: '$3',
+  px: '$4',
   py: '$4',
   mt: '$2',
   flexDirection: 'column',

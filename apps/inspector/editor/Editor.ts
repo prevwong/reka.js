@@ -11,6 +11,7 @@ import {
 import randomColor from 'randomcolor';
 import shortUUID from 'short-uuid';
 import { Event } from './Event';
+import { SettingsPageStore } from './SettingsPageStore';
 
 export type User = {
   id: string;
@@ -24,6 +25,8 @@ export class Editor {
   peers: User[];
   connected: boolean;
   frameToEvent: WeakMap<Frame, Event>;
+
+  settings: SettingsPageStore;
 
   constructor(readonly state: State, readonly provider: WebrtcProvider) {
     this.activeFrame = null;
@@ -40,6 +43,8 @@ export class Editor {
     this.peers = [];
     this.connected = true;
     this.frameToEvent = new WeakMap();
+
+    this.settings = new SettingsPageStore();
 
     makeObservable(this, {
       activeFrame: observable,

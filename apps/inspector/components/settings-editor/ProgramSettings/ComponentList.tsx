@@ -14,7 +14,7 @@ import * as React from 'react';
 import { SettingSection } from '../SettingSection';
 import { Tooltip } from '@app/components/tooltip';
 
-export const ComponentSettings = observer(() => {
+export const ComponentList = observer(() => {
   const editor = useEditor();
 
   return (
@@ -48,7 +48,7 @@ export const ComponentSettings = observer(() => {
                 opacity: 0,
               },
               '&:hover': {
-                backgroundColor: '$purple3',
+                backgroundColor: '$primaryLight',
                 [`& ${Button}`]: {
                   opacity: 1,
                 },
@@ -71,6 +71,12 @@ export const ComponentSettings = observer(() => {
               }
             >
               <Button
+                onClick={() => {
+                  editor.settings.goTo({
+                    type: 'component',
+                    component,
+                  });
+                }}
                 css={{
                   cursor:
                     component instanceof t.CompositeComponent

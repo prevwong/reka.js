@@ -20,7 +20,7 @@ export const GlobalSettings = observer(() => {
 
   return (
     <SettingSection
-      title="Globals"
+      title="Shared Variables"
       onAdd={() => {
         setIsAddingNewGlobal(true);
       }}
