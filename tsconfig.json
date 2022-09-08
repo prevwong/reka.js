@@ -16,7 +16,7 @@
     "skipLibCheck": true,
     "strict": true,
     "declarationDir": "./dist",
-    "lib": ["es5", "es6", "dom"],
+    "lib": ["es5", "es6", "dom", "ESNext"],
     "target": "ES5",
     "downlevelIteration": true
   },
