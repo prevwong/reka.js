@@ -2,17 +2,23 @@ import * as React from 'react';
 import { styled } from '@app/styles';
 
 const StyledButton = styled('button', {
+  display: 'inline-block',
   backgroundColor: '$whiteA12',
   borderRadius: '3px',
   fontSize: '10px',
   border: '1px solid $gray6',
   boxShadow: 'rgb(0 0 0 / 7%) 0px 1px 1px',
   outline: 'none',
-  padding: '$1 $2',
+  padding: '$2 $3',
   color: '$blackA11',
+  cursor: 'pointer',
   fontWeight: '500',
   '&:hover': {
     backgroundColor: '$grayA2',
+  },
+  '&[disabled]': {
+    cursor: 'not-allowed',
+    boxShadow: 'none',
   },
   svg: {
     width: '10px',
@@ -59,11 +65,9 @@ const StyledButton = styled('button', {
 });
 
 const StyledIconButton = styled(StyledButton, {
-  padding: '$1 $1',
+  padding: '$1 $2',
   boxShadow: 'none',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
+  display: 'inline-block',
 });
 
 type ButtonProps = React.ComponentProps<typeof StyledButton>;

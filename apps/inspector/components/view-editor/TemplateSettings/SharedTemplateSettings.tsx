@@ -1,16 +1,16 @@
 import * as t from '@composite/types';
 import { Parser, Stringifier } from '@composite/parser';
 
-import { useEditor } from '@app/editor';
 import * as React from 'react';
-
-import { Box } from '../box';
-import { CancellableInputField, TextField } from '../text-field';
-import { SettingSection } from './shared';
 import { observer } from 'mobx-react-lite';
-import { Text } from '../text';
-import { Button } from '../button';
-import { flushSync } from 'react-dom';
+
+import { useEditor } from '@app/editor';
+import { Box } from '@app/components/box';
+import { CancellableInputField, TextField } from '@app/components/text-field';
+import { Text } from '@app/components/text';
+import { Button } from '@app/components/button';
+
+import { SettingSection } from '../SettingSection';
 
 type SharedTemplateSettingsProps = {
   template: t.Template;
@@ -36,11 +36,7 @@ const ConditionalTemplateSetting = observer(
     }, [props.template, setCondition]);
 
     return (
-      <SettingSection
-        title={{
-          name: 'Conditional',
-        }}
-      >
+      <SettingSection title={'Conditional'}>
         <Box>
           <CancellableInputField
             placeholder="counter > 0"
@@ -125,7 +121,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
   };
 
   return (
-    <SettingSection title={{ name: 'Loop' }}>
+    <SettingSection title="Loop">
       <Box css={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
         <CancellableInputField
           css={{ flex: 1 }}
@@ -178,11 +174,9 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
         </Box>
 
         <Box
-          css={{ mt: '$2', display: 'flex', gap: '10px', alignItems: 'center' }}
+          css={{ mt: '$3', display: 'flex', gap: '10px', alignItems: 'center' }}
         >
-          <Text css={{ color: '$grayA9', fontSize: '$1', width: '50px' }}>
-            For each
-          </Text>
+          <Text css={{ color: '$grayA9', fontSize: '$1' }}>For</Text>
           <TextField
             placeholder="item"
             css={{ flex: 1 }}
@@ -217,7 +211,10 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
                   }
 
                   editor.state.change(() => {
-                    console.log('undefined');
+                    if (!props.template.each) {
+                      return;
+                    }
+
                     props.template.each.index = undefined;
                   });
                 }}

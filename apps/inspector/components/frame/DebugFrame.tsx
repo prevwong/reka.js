@@ -24,13 +24,15 @@ type DebugFrameProps = {
 
 const TabRoot = styled(Tabs.Root, {
   background: '$whiteA12',
+  display: 'flex',
+  flexDirection: 'column',
 });
 
 const TabList = styled(Tabs.List, {
   display: 'flex',
   alignItems: 'center',
   width: '100%',
-  px: '$2',
+  px: '$3',
   py: '$2',
   background: '$whiteA12',
   borderBottom: '1px solid $grayA4',
@@ -52,6 +54,8 @@ const TabTrigger = styled(Tabs.Trigger, {
 const TabContent = styled(Tabs.Content, {
   px: '$3',
   py: '$4',
+  flex: 1,
+  overflow: 'auto',
 });
 
 export const DebugFrame = observer((props: DebugFrameProps) => {

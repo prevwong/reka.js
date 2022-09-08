@@ -38,7 +38,7 @@ const StyledFramesGrid = styled('div', {
 });
 
 const StyledSidebarContainer = styled('div', {
-  width: '350px',
+  width: '300px',
   background: '#fff',
   borderLeft: '1px solid $grayA5',
 });

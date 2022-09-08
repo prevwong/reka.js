@@ -51,9 +51,17 @@ const StyledArrow = styled(TooltipPrimitive.Arrow, {
   height: '2px',
 });
 
-export const Tooltip = ({ children, content }) => {
+type TooltipProps = {
+  content: string;
+  children: React.ReactNode;
+};
+
+export const Tooltip = ({ children, content }: TooltipProps) => {
   return (
-    <TooltipPrimitive.Root delayDuration={100}>
+    <TooltipPrimitive.Root
+      delayDuration={100}
+      open={content === '' ? false : undefined}
+    >
       <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
       <StyledContent sideOffset={5}>
         {content}

@@ -5,8 +5,9 @@ import * as React from 'react';
 
 import { useEditor } from '@app/editor';
 import { TextField } from '@app/components/text-field';
-import { EditPropSettingsField } from './shared';
-import { IconButton } from '../button';
+import { IconButton } from '@app/components/button';
+
+import { PropSettingField } from './PropSettingField';
 
 const stringifier = new Stringifier();
 const parser = new Parser();
@@ -23,8 +24,8 @@ export const EditPropField = ({ template, prop }: EditPropFieldProps) => {
   );
 
   return (
-    <EditPropSettingsField>
-      <TextField type="text" value={prop} onChange={() => {}} />
+    <PropSettingField>
+      <TextField type="text" value={prop} onChange={() => {}} disabled />
       <TextField
         type="text"
         value={value}
@@ -65,6 +66,6 @@ export const EditPropField = ({ template, prop }: EditPropFieldProps) => {
       >
         <Cross2Icon />
       </IconButton>
-    </EditPropSettingsField>
+    </PropSettingField>
   );
 };

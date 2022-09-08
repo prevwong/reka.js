@@ -4,9 +4,10 @@ import * as React from 'react';
 
 import { useEditor } from '@app/editor';
 import { TextField } from '@app/components/text-field';
-import { EditPropSettingsField } from './shared';
-import { IconButton } from '../button';
-import { Cross1Icon, Cross2Icon } from '@radix-ui/react-icons';
+import { IconButton } from '@app/components/button';
+
+import { PropSettingField } from './PropSettingField';
+import { Cross2Icon } from '@radix-ui/react-icons';
 
 const parser = new Parser();
 
@@ -52,7 +53,7 @@ export const AddNewPropField = ({
   };
 
   return (
-    <EditPropSettingsField>
+    <PropSettingField>
       <TextField
         placeholder="Prop"
         value={prop}
@@ -73,6 +74,6 @@ export const AddNewPropField = ({
       >
         <Cross2Icon />
       </IconButton>
-    </EditPropSettingsField>
+    </PropSettingField>
   );
 };

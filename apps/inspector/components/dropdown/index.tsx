@@ -7,8 +7,8 @@ const StyledContent = styled(DropdownMenuPrimitive.Content, {
   minWidth: '140px',
   backgroundColor: 'white',
   borderRadius: '$1',
-  boxShadow:
-    '0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)',
+  border: '1px solid $grayA2',
+  boxShadow: '0px 3px 22px -8px rgb(0 0 0 / 50%)',
   '@media (prefers-reduced-motion: no-preference)': {
     animationDuration: '400ms',
     animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
@@ -45,7 +45,7 @@ const StyledItem = styled(DropdownMenuPrimitive.Item, {
   borderRadius: 0,
   display: 'flex',
   alignItems: 'center',
-  padding: '$2 $2',
+  padding: '$3 $2',
   position: 'relative',
   userSelect: 'none',
   cursor: 'pointer',

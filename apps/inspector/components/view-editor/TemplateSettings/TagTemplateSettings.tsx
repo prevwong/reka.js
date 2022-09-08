@@ -3,10 +3,8 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { Box } from '@app/components/box';
-import { TextField } from '@app/components/text-field';
 
-import { SettingField } from './shared';
-import { PropEditorSection } from './PropEditorSection';
+import { PropEditorSection } from './shared/PropEditorSection';
 
 type TagTemplateSettingsProps = {
   template: t.TagTemplate;
