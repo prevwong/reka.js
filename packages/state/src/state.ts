@@ -1,5 +1,11 @@
 import * as t from '@composite/types';
-import { computed, IComputedValue, makeObservable, runInAction } from 'mobx';
+import {
+  computed,
+  IComputedValue,
+  makeObservable,
+  observable,
+  runInAction,
+} from 'mobx';
 import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { Extension } from './extension';
@@ -62,6 +68,7 @@ export class State {
 
     makeObservable(this, {
       config: computed,
+      data: observable,
       allComponents: computed,
     });
 
