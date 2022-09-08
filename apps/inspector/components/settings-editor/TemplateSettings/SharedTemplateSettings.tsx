@@ -244,9 +244,9 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
 
 export const SharedTemplateSettings = (props: SharedTemplateSettingsProps) => {
   return (
-    <Box>
+    <React.Fragment>
       <EachTemplateSettings template={props.template} />
       <ConditionalTemplateSetting template={props.template} />
-    </Box>
+    </React.Fragment>
   );
 };
