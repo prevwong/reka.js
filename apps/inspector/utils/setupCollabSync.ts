@@ -33,13 +33,12 @@ export const setupExperimentalCollaborationSync = (state: State) => {
 
   if (typeof window !== 'undefined') {
     webrtcProvider = new WebrtcProvider('composite-yjs-test', doc);
+    webrtcProvider.signalingConns.map((c) => {
+      return c.once('connect', () => {
+        loadInitialDocument(state, type);
+      });
+    });
   }
-
-  // webrtcProvider.signalingConns.map((c) => {
-  //   return c.once('connect', () => {
-  loadInitialDocument(state, type);
-  //   });
-  // });
 
   // @ts-ignore
   return [crdt, webrtcProvider] as [YjsCompositeSyncProvider, WebrtcProvider];
