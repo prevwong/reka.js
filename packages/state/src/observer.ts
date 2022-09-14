@@ -55,12 +55,16 @@ export class Observer<T extends Type = Type> {
   idToType: Map<string, Type>;
   opts: ObserverOptions;
 
-  isDisposed: boolean = false;
-
+  private typeDisposers: WeakMap<Type, any>;
+  private markedForDisposal: Set<Type> = new Set();
   private declare rootDisposer: () => void;
+
+  private isDisposing: boolean = false;
+  private isMutation: boolean = false;
 
   constructor(type: T, opts?: Partial<ObserverOptions>) {
     this.valueToParentMap = new WeakMap();
+    this.typeDisposers = new WeakMap();
     this.idToType = new Map();
     this.root = type;
     this.opts = opts ?? {};
@@ -83,19 +87,36 @@ export class Observer<T extends Type = Type> {
     this.rootDisposer = rootDisposer;
   }
 
-  dispose() {
-    if (this.isDisposed) {
+  private whileDisposing(cb: () => void) {
+    if (this.isDisposing) {
+      cb();
       return;
     }
 
-    if (this.rootDisposer) {
-      this.rootDisposer();
-    }
+    this.isDisposing = true;
+    cb();
+    this.isDisposing = false;
+  }
 
-    this.isDisposed = true;
+  private disposeTypes() {
+    this.whileDisposing(() => {
+      for (const type of this.markedForDisposal) {
+        this.typeDisposers.get(type)();
+      }
+
+      this.markedForDisposal.clear();
+    });
+  }
+
+  dispose() {
+    this.whileDisposing(() => {
+      this.rootDisposer();
+    });
 
     this.valueToParentMap = new WeakMap();
     this.idToType = new Map();
+    this.typeDisposers = new Map();
+    this.markedForDisposal.clear();
   }
 
   replace(type: T) {
@@ -155,6 +176,8 @@ export class Observer<T extends Type = Type> {
       //   return;
       // }
     }
+
+    this.markedForDisposal.delete(value);
 
     if (!this.idToType.get(value.id) && this.opts.hooks?.onAdd) {
       this.opts.hooks.onAdd({
@@ -225,16 +248,35 @@ export class Observer<T extends Type = Type> {
       return e;
     });
 
+    if (!this.typeDisposers.get(value)) {
+      this.typeDisposers.set(value, () => {
+        if (this.opts.hooks?.onDispose) {
+          this.opts.hooks.onDispose({
+            type: value,
+            path: this.getPath(value),
+          });
+        }
+
+        disposeTypeObserver();
+        fieldDisposers.forEach((disposeChildField) => disposeChildField?.());
+
+        this.typeDisposers.delete(value);
+        this.markedForDisposal.delete(value);
+      });
+    }
+
     return () => {
-      if (this.opts.hooks?.onDispose) {
-        this.opts.hooks.onDispose({
-          type: value,
-          path: this.getPath(value),
-        });
+      if (!this.typeDisposers.get(value)) {
+        return;
       }
 
-      disposeTypeObserver();
-      fieldDisposers.forEach((disposeChildField) => disposeChildField?.());
+      if (this.isDisposing) {
+        this.typeDisposers.get(value)();
+
+        return;
+      }
+
+      this.markedForDisposal.add(value);
     };
   }
 
@@ -420,5 +462,22 @@ export class Observer<T extends Type = Type> {
 
   getParent(type: Type) {
     return this.valueToParentMap.get(type);
+  }
+
+  change(mutation: () => void) {
+    if (this.isMutation) {
+      mutation();
+      return;
+    }
+
+    this.isMutation = true;
+
+    runInAction(() => {
+      mutation();
+    });
+
+    this.isMutation = false;
+
+    this.disposeTypes();
   }
 }

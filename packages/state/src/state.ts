@@ -174,7 +174,7 @@ export class State {
   }
 
   change(mutator: () => void) {
-    runInAction(() => {
+    this.observer.change(() => {
       mutator();
     });
 
