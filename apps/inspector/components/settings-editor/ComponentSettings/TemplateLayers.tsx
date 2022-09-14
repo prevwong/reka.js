@@ -7,6 +7,9 @@ import { observer } from 'mobx-react-lite';
 import { Text } from '@app/components/text';
 import { Editor } from '@app/editor/Editor';
 import { useEditor } from '@app/editor';
+import { IconButton } from '@app/components/button';
+import { ArrowDownIcon, ArrowUpIcon, TrashIcon } from '@radix-ui/react-icons';
+import { Tooltip } from '@app/components/tooltip';
 
 type RenderTemplateNodeProps = {
   template: t.Template;
@@ -39,7 +42,7 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
       <Box
         css={{
           px: '$4',
-          py: '$3',
+          py: '$2',
           cursor: 'pointer',
           '&:hover': {
             backgroundColor: '$secondary',
@@ -54,10 +57,117 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
       >
         <Box
           css={{
+            display: 'flex',
             marginLeft: depth * 10 + 'px',
+            alignItems: 'center',
           }}
         >
-          <Text size="1">{getTemplateName(props.template)}</Text>
+          <Text size="1" css={{ flex: 1 }}>
+            {getTemplateName(props.template)}
+          </Text>
+          <Box>
+            <Tooltip content="Move template up">
+              <IconButton
+                transparent
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const originalParent = editor.state.getParentType(
+                    props.template
+                  );
+                  let newParent = originalParent;
+
+                  if (!Array.isArray(originalParent.value)) {
+                    return;
+                  }
+
+                  let newIndex = originalParent.key - 1;
+
+                  if (newIndex < 0) {
+                    const parentTemplate = editor.state.getParentType(
+                      originalParent.value
+                    );
+
+                    // grandparent's children array:
+                    newParent = editor.state.getParentType(
+                      parentTemplate.value
+                    );
+
+                    if (!Array.isArray(newParent.value)) {
+                      return;
+                    }
+
+                    newIndex = newParent.key - 1;
+                  }
+
+                  editor.state.change(() => {
+                    originalParent.value.splice(originalParent.key, 1);
+                    newParent.value.splice(newIndex, 0, props.template);
+                  });
+                }}
+              >
+                <ArrowUpIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip content="Move template down">
+              <IconButton
+                transparent
+                onClick={(e) => {
+                  e.stopPropagation();
+
+                  const originalParent = editor.state.getParentType(
+                    props.template
+                  );
+                  let newParent = originalParent;
+
+                  let newIndex = originalParent.key + 2;
+
+                  if (!Array.isArray(originalParent.value)) {
+                    const parentTemplate = editor.state.getParentType(
+                      originalParent.value
+                    );
+
+                    newParent = editor.state.getParentType(
+                      parentTemplate.value
+                    );
+
+                    if (!Array.isArray(newParent.value)) {
+                      return;
+                    }
+
+                    newIndex = newParent.key + 1;
+                  }
+
+                  editor.state.change(() => {
+                    newParent.value.splice(newIndex, 0, props.template);
+                    originalParent.value.splice(originalParent.key, 1);
+                  });
+                }}
+              >
+                <ArrowDownIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip content="Remove template">
+              <IconButton
+                transparent
+                onClick={(e) => {
+                  e.stopPropagation();
+                  editor.state.change(() => {
+                    const parent = editor.state.getParentType(props.template);
+
+                    if (!parent || !Array.isArray(parent.value)) {
+                      return;
+                    }
+
+                    editor.state.change(() => {
+                      parent.value.splice(parent.key, 1);
+                    });
+                  });
+                }}
+              >
+                <TrashIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Box>
       </Box>
       {props.template.children.map((child) => (

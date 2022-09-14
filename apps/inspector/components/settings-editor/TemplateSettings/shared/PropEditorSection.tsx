@@ -44,7 +44,25 @@ export const PropEditorSection = observer(
               console.warn(err);
             }
           }}
-          onChange={(id, value) => {}}
+          onChange={(id, value) => {
+            try {
+              const parsedValue = parser.parseExpressionFromSource(
+                `{${value}}`
+              );
+              //   console.log("parsedValue", parsedValue);
+              editor.state.change(() => {
+                template.props[id] = parsedValue;
+              });
+            } catch (err) {
+              // TODO: handle error
+              console.warn(err);
+            }
+          }}
+          onRemove={(id) => {
+            editor.state.change(() => {
+              delete template.props[id];
+            });
+          }}
           values={Object.keys(template.props).map((prop) => ({
             id: prop,
             value: stringifier.toString(template.props[prop]),

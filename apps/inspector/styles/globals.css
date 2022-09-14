@@ -150,6 +150,7 @@ button {
   outline: none;
   box-shadow: none;
   border: none;
+  background: transparent;
 }
 
 .cm-editor {

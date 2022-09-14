@@ -9,6 +9,10 @@ export const StyledPairInputField = styled('div', {
   gridTemplateColumns: '60px 1fr auto',
   position: 'relative',
   gap: '0px',
+  borderBottom: '1px solid $grayA5',
+  '&:last-child': {
+    borderBottomColor: 'transparent',
+  },
   [`& ${TextField}`]: {
     borderColor: 'transparent',
   },
@@ -25,6 +29,7 @@ export const StyledPairInputField = styled('div', {
   mb: '-1px',
   [`& ${IconButton}`]: {
     opacity: 0,
+    marginRight: '0px',
   },
   '&:hover': {
     [`& ${IconButton}`]: {
@@ -36,10 +41,11 @@ export const StyledPairInputField = styled('div', {
 const StyledPairInputList = styled('div', {
   border: '1px solid $grayA5',
   borderRadius: '$1',
-  [`& ${StyledPairInputField}`]: {
-    borderBottom: '1px solid $grayA5',
-    '&:last-child': {
-      borderBottomColor: 'transparent',
+  variants: {
+    hidden: {
+      true: {
+        borderColor: 'transparent',
+      },
     },
   },
 });
@@ -202,7 +208,9 @@ const PairInputField = ({
 
 export const PairInput = (props: PairInputProps) => {
   return (
-    <StyledPairInputList>
+    <StyledPairInputList
+      hidden={props.values.length === 0 && !props.addingNewField}
+    >
       {props.values.map(({ id, value }) => {
         return (
           <PairInputField

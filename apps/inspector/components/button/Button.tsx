@@ -2,7 +2,8 @@ import * as React from 'react';
 import { styled } from '@app/styles';
 
 const StyledButton = styled('button', {
-  display: 'inline-block',
+  display: 'inline-flex',
+  alignItems: 'center',
   backgroundColor: '$whiteA12',
   borderRadius: '3px',
   fontSize: '10px',
@@ -65,9 +66,8 @@ const StyledButton = styled('button', {
 });
 
 const StyledIconButton = styled(StyledButton, {
-  padding: '$1 $2',
+  padding: '$2 $2',
   boxShadow: 'none',
-  display: 'inline-block',
 });
 
 type ButtonProps = React.ComponentProps<typeof StyledButton>;
