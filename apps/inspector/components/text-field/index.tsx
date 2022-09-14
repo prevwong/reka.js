@@ -68,26 +68,22 @@ type InputFieldProps = React.ComponentProps<typeof StyledInputField> & {
   children?: React.ReactNode;
 };
 
-export const TextField = ({
-  transparent,
-  badge,
-  children,
-  css,
-  ...props
-}: InputFieldProps) => {
-  return (
-    <StyledInputFieldContainer
-      className={'text-field'}
-      badge={!!badge}
-      transparent={transparent}
-      css={css}
-    >
-      <StyledInputField {...props} />
-      {badge && <StyledBadge>{badge}</StyledBadge>}
-      {children}
-    </StyledInputFieldContainer>
-  );
-};
+export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
+  ({ transparent, badge, children, css, ...props }, ref) => {
+    return (
+      <StyledInputFieldContainer
+        className={'text-field'}
+        badge={!!badge}
+        transparent={transparent}
+        css={css}
+      >
+        <StyledInputField {...props} ref={ref} />
+        {badge && <StyledBadge>{badge}</StyledBadge>}
+        {children}
+      </StyledInputFieldContainer>
+    );
+  }
+);
 
 TextField.toString = () => '.text-field';
 

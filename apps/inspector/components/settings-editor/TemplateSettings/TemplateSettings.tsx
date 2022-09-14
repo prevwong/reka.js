@@ -94,11 +94,6 @@ const TemplateHeading = (props: TemplateHeadingProps) => {
           }
         }}
       />
-      <Dropdown>
-        <span>
-          {props.template.type} <ChevronDownIcon />
-        </span>
-      </Dropdown>
     </StyledTemplateTypeHeading>
   );
 };

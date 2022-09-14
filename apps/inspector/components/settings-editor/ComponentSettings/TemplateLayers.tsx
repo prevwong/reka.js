@@ -8,12 +8,97 @@ import { Text } from '@app/components/text';
 import { Editor } from '@app/editor/Editor';
 import { useEditor } from '@app/editor';
 import { IconButton } from '@app/components/button';
-import { ArrowDownIcon, ArrowUpIcon, TrashIcon } from '@radix-ui/react-icons';
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  PlusIcon,
+  TrashIcon,
+} from '@radix-ui/react-icons';
 import { Tooltip } from '@app/components/tooltip';
+import { Dropdown } from '@app/components/dropdown';
+import { AddTemplateModal } from '../AddTemplateModal';
 
 type RenderTemplateNodeProps = {
   template: t.Template;
   depth?: number;
+};
+
+type AddTemplateButtonProps = {
+  target: t.Template;
+};
+
+const AddTemplateButton = (props: AddTemplateButtonProps) => {
+  const [option, setOption] = React.useState<
+    'before' | 'after' | 'child' | null
+  >(null);
+
+  const editor = useEditor();
+
+  return (
+    <React.Fragment>
+      <Dropdown
+        items={[
+          {
+            title: 'Add Before',
+            onSelect: () => {
+              setOption('before');
+            },
+          },
+          {
+            title: 'Add After',
+            onSelect: () => {
+              setOption('after');
+            },
+          },
+          {
+            title: 'Add child',
+            onSelect: () => {
+              setOption('child');
+            },
+          },
+        ]}
+      >
+        <IconButton transparent>
+          <PlusIcon />
+        </IconButton>
+      </Dropdown>
+      <AddTemplateModal
+        isOpen={!!option}
+        onClose={() => {
+          setOption(null);
+        }}
+        onAdd={(template) => {
+          setOption(null);
+
+          editor.state.change(() => {
+            if (option === 'child') {
+              props.target.children.push(template);
+              return;
+            }
+
+            const parent = editor.state.getParentType(props.target);
+
+            if (!parent || !Array.isArray(parent.value)) {
+              return;
+            }
+
+            const indexInParent = parent.value.indexOf(props.target);
+
+            if (indexInParent === -1) {
+              return;
+            }
+
+            if (option === 'after') {
+              parent.value.splice(indexInParent + 1, 0, template);
+              return;
+            }
+
+            parent.value.splice(indexInParent, 0, template);
+          });
+        }}
+      />
+    </React.Fragment>
+  );
 };
 
 const getTemplateName = (template: t.Template) => {
@@ -45,10 +130,10 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
           py: '$2',
           cursor: 'pointer',
           '&:hover': {
-            backgroundColor: '$secondary',
+            backgroundColor: '$secondary2',
           },
         }}
-        onClick={() => {
+        onClick={(e) => {
           editor.settings.goTo({
             type: 'template',
             template: props.template,
@@ -66,6 +151,9 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
             {getTemplateName(props.template)}
           </Text>
           <Box>
+            <Tooltip content="Add new template">
+              <AddTemplateButton target={props.template} />
+            </Tooltip>
             <Tooltip content="Move template up">
               <IconButton
                 transparent

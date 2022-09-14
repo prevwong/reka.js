@@ -26,17 +26,6 @@ const StyledArrow = styled(DropdownMenuPrimitive.Arrow, {
   fill: 'white',
 });
 
-function Content({ children, ...props }) {
-  return (
-    <DropdownMenuPrimitive.Portal>
-      <StyledContent {...props}>
-        {children}
-        <StyledArrow />
-      </StyledContent>
-    </DropdownMenuPrimitive.Portal>
-  );
-}
-
 const StyledItem = styled(DropdownMenuPrimitive.Item, {
   all: 'unset',
   fontSize: 10,
@@ -60,16 +49,43 @@ const StyledItem = styled(DropdownMenuPrimitive.Item, {
   },
 });
 
-export const Dropdown = (props) => {
+type DropdownItem = {
+  title: string;
+  onSelect: () => void;
+};
+
+type DropdownProps = {
+  items: DropdownItem[];
+  children: React.ReactNode;
+};
+
+export const Dropdown = (props: DropdownProps) => {
   return (
     <DropdownMenuPrimitive.Root>
       <DropdownMenuPrimitive.Trigger asChild>
         {props.children}
       </DropdownMenuPrimitive.Trigger>
+      <DropdownMenuPrimitive.Portal>
+        <StyledContent {...props}>
+          {props.items.map((item) => (
+            <StyledItem
+              key={item.title}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              onSelect={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
 
-      <Content sideOffset={5}>
-        <StyledItem>New Tab</StyledItem>
-      </Content>
+                item.onSelect();
+              }}
+            >
+              {item.title}
+            </StyledItem>
+          ))}
+          <StyledArrow />
+        </StyledContent>
+      </DropdownMenuPrimitive.Portal>
     </DropdownMenuPrimitive.Root>
   );
 };

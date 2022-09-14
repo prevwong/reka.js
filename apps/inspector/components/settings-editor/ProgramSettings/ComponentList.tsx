@@ -49,7 +49,7 @@ export const ComponentList = observer(() => {
                 opacity: 0,
               },
               '&:hover': {
-                backgroundColor: '$primaryLight',
+                backgroundColor: '$secondary2',
                 [`& ${Button}`]: {
                   opacity: 1,
                 },

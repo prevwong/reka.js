@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 
 import { State } from '@composite/state';
 import * as t from '@composite/types';
+import { Stringifier } from '@composite/parser';
 
 import { EditorContextProvider } from '@app/editor';
 import { program } from '@app/constants';
@@ -12,6 +13,10 @@ import { UserFrameExtension } from '../extensions/UserFrameExtension';
 import { EditorLayout } from '../components/editor-layout';
 
 // (window as any).t = t;
+
+if (typeof window !== 'undefined') {
+  (window as any).stringifier = new Stringifier();
+}
 
 const MyHeader = () => {
   return (

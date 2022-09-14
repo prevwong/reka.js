@@ -7,6 +7,7 @@ import { IObservable, IObservableArray, isObservable, observe } from 'mobx';
 import { styled } from '@app/styles';
 
 const TreeVisualizationContainer = styled('div', {
+  lineHeight: '20px',
   '.property-name': {
     color: '$grayA11',
   },

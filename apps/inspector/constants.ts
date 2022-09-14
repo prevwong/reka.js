@@ -16,7 +16,9 @@ component App() {
   val text = "Bye";
 } => (
  <div>
-  <Button text={"Asd" + " " + el} @each={el in text} @if={el != "y"} /> 
+  <Button text={"Asd" + " " + el} @each={el in text} @if={el != "y"}>
+    <text text="Slot" />
+  </Button>
   </div>
 )
 
@@ -24,9 +26,10 @@ component Button(text) {
   val counter = 0;
 } => (
   <section>
-   <text text={counter} />
+   <text text={"counter->" + counter} />
    <button>
     <text text={text} />
+    <slot />
    </button>
   </section>
 )

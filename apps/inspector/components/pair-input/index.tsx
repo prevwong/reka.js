@@ -73,6 +73,9 @@ const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
   const [id, setId] = React.useState('');
   const [value, setValue] = React.useState('');
 
+  const idDomRef = React.useRef<HTMLInputElement | null>(null);
+  const valueDomRef = React.useRef<HTMLInputElement | null>(null);
+
   const commit = () => {
     if (!id || !value) {
       return;
@@ -81,12 +84,24 @@ const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
     props.onAdd(id, value, () => {
       setId('');
       setValue('');
+
+      const { current: idDom } = idDomRef;
+
+      if (!idDom) {
+        return;
+      }
+
+      idDom.focus();
+      idDom.setSelectionRange(0, 0);
     });
   };
 
   return (
     <StyledPairInputField>
       <TextField
+        ref={(dom) => {
+          idDomRef.current = dom;
+        }}
         value={id}
         onChange={(e) => {
           setId(e.target.value);
@@ -98,8 +113,14 @@ const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
 
           commit();
         }}
+        onBlur={() => {
+          commit();
+        }}
       />
       <TextField
+        ref={(dom) => {
+          valueDomRef.current = dom;
+        }}
         value={value}
         onChange={(e) => {
           setValue(e.target.value);
@@ -109,6 +130,9 @@ const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
             return;
           }
 
+          commit();
+        }}
+        onBlur={() => {
           commit();
         }}
       />

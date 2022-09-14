@@ -60,8 +60,8 @@ export const ComponentSettings = (props: ComponentSettingsProps) => {
         <Box
           css={{
             fontSize: '11px',
-            backgroundColor: '$purple3',
-            color: '$slate12',
+            backgroundColor: '$primary2',
+            color: '$primary5',
             display: 'inline-block',
             width: 'auto',
             px: '$4',

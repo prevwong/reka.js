@@ -10,7 +10,6 @@ const StyledSettingSectionHeader = styled(motion.div, {
   alignItems: 'center',
   cursor: 'pointer',
   background: '#fff',
-  zIndex: '9',
 
   '> header': {
     flex: 1,

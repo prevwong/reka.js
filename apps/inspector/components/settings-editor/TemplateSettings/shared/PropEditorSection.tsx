@@ -7,6 +7,7 @@ import { SettingSection } from '../../SettingSection';
 
 import { PairInput } from '@app/components/pair-input';
 import { useEditor } from '@app/editor';
+import { Text } from '@app/components/text';
 
 const stringifier = new Stringifier();
 const parser = new Parser();
@@ -23,7 +24,7 @@ export const PropEditorSection = observer(
     return (
       <SettingSection onAdd={() => setAddNewProp(true)} title={'Props'}>
         {!addNewProp && Object.keys(template.props).length === 0 && (
-          <span>There're no props on this template.</span>
+          <Text size="1">There're no props on this template.</Text>
         )}
         <PairInput
           addingNewField={addNewProp}
