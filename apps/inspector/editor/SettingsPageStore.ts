@@ -36,7 +36,14 @@ export class SettingsPageStore {
     return this.paths.push(route);
   }
 
-  goBack() {
-    return this.paths.pop();
+  goBack(depth?: number) {
+    if (depth === undefined) {
+      this.paths.pop();
+      return;
+    }
+
+    while (this.paths.length > depth) {
+      this.paths.pop();
+    }
   }
 }

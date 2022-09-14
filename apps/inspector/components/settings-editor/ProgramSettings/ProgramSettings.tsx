@@ -6,7 +6,6 @@ import { GlobalSettings } from './GlobalSettings';
 export const ProgramSettings = () => {
   return (
     <Box>
-      <GlobalSettings />
       <ComponentList />
     </Box>
   );

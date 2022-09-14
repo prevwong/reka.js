@@ -9,6 +9,8 @@ import { styled } from '@app/styles';
 import * as React from 'react';
 import { SettingSection } from '../SettingSection';
 import { TemplateLayers } from './TemplateLayers';
+import { SettingsScreen } from '../SettingsScreen';
+import { TemplateSettings } from '../TemplateSettings';
 
 const stringifier = new Stringifier();
 const parser = new Parser();
@@ -49,7 +51,7 @@ export const ComponentSettings = (props: ComponentSettingsProps) => {
   console.log('comp', component);
 
   return (
-    <Box>
+    <Box css={{ display: 'flex', flexDirection: 'column' }}>
       <ComponentHeader>
         <TextField
           css={{ flex: 1 }}
@@ -108,9 +110,16 @@ export const ComponentSettings = (props: ComponentSettingsProps) => {
           }}
         />
       </SettingSection>
-      <SettingSection title="Template" collapsedOnInitial={false}>
-        <TemplateLayers component={component} />
-      </SettingSection>
+      <Box css={{ position: 'relative', flex: 1 }}>
+        <SettingsScreen route="component" hideBackButton>
+          <SettingSection title="Template" collapsedOnInitial={false}>
+            <TemplateLayers component={component} />
+          </SettingSection>
+        </SettingsScreen>
+        <SettingsScreen route="template" goBackText="Templates">
+          <TemplateSettings />
+        </SettingsScreen>
+      </Box>
     </Box>
   );
 };
