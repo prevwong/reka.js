@@ -8,7 +8,6 @@ const StyledButton = styled('button', {
   borderRadius: '3px',
   fontSize: '10px',
   border: '1px solid $gray6',
-  boxShadow: 'rgb(0 0 0 / 7%) 0px 1px 1px',
   outline: 'none',
   padding: '$2 $3',
   color: '$blackA11',
@@ -38,6 +37,14 @@ const StyledButton = styled('button', {
         color: '$whiteA12',
         '&:hover': {
           backgroundColor: '$indigoA10',
+        },
+      },
+      secondary: {
+        backgroundColor: '$secondary2',
+        borderColor: '$secondary2',
+        color: '$secondary5',
+        '&:hover': {
+          backgroundColor: '$secondary3',
         },
       },
     },

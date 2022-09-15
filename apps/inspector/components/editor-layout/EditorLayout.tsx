@@ -43,11 +43,13 @@ const StyledSidebarContainer = styled('div', {
   borderLeft: '1px solid $grayA5',
 });
 
-export const EditorLayout = () => {
+export const EditorLayout = (
+  props: React.ComponentProps<typeof StyledScreen>
+) => {
   const { state } = useEditor();
 
   return (
-    <StyledScreen>
+    <StyledScreen {...props}>
       <StyledFramesContainer>
         <StyledFramesGrid>
           {state

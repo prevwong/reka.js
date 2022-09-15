@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 const StyledCollaboratorsContainers = styled('div', {
   ml: '$2',
   display: 'flex',
+  gap: '2px',
 });
 
 const StyledUserIcon = styled(motion.span, {
