@@ -37,12 +37,14 @@
     "randomcolor": "^0.6.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "short-uuid": "^4.2.0",
     "tiny-invariant": "^1.2.0",
     "unique-names-generator": "^4.7.1",
     "y-webrtc": "^10.2.2",
     "yjs": "^13.5.27"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.185",
     "@types/node": "18.7.15",
     "@types/randomcolor": "^0.5.6",
     "@types/react": "^17.0.33",

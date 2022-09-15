@@ -59,6 +59,7 @@ importers:
       '@radix-ui/react-toggle-group': ^1.0.0
       '@radix-ui/react-tooltip': ^0.1.7
       '@stitches/react': ^1.2.7
+      '@types/lodash': ^4.14.185
       '@types/node': 18.7.15
       '@types/randomcolor': ^0.5.6
       '@types/react': ^17.0.33
@@ -74,6 +75,7 @@ importers:
       randomcolor: ^0.6.2
       react: ^17.0.2
       react-dom: ^17.0.2
+      short-uuid: ^4.2.0
       tiny-invariant: ^1.2.0
       typescript: 4.8.2
       unique-names-generator: ^4.7.1
@@ -108,11 +110,13 @@ importers:
       randomcolor: 0.6.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
+      short-uuid: 4.2.0
       tiny-invariant: 1.2.0
       unique-names-generator: 4.7.1
       y-webrtc: 10.2.3
       yjs: 13.5.41
     devDependencies:
+      '@types/lodash': 4.14.185
       '@types/node': 18.7.15
       '@types/randomcolor': 0.5.6
       '@types/react': 17.0.49
@@ -1640,6 +1644,10 @@ packages:
 
   /@types/json5/0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+    dev: true
+
+  /@types/lodash/4.14.185:
+    resolution: {integrity: sha512-evMDG1bC4rgQg4ku9tKpuMh5iBNEwNa3tf9zRHdP1qlv+1WUg44xat4IxCE14gIpZRGUUWAx2VhItCZc25NfMA==}
     dev: true
 
   /@types/node/18.7.15:
