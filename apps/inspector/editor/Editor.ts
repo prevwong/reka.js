@@ -21,6 +21,11 @@ export type User = {
   color: string;
 };
 
+export enum EditorMode {
+  Code = 'code',
+  UI = 'ui',
+}
+
 export class Editor {
   activeFrame: Frame | null;
   user: User;
@@ -30,11 +35,15 @@ export class Editor {
 
   settings: SettingsPageStore;
 
+  mode: EditorMode;
+
   declare crdt: YjsCompositeSyncProvider;
   declare provider: WebrtcProvider;
 
   constructor(readonly state: State) {
     this.activeFrame = null;
+
+    this.mode = EditorMode.UI;
 
     this.user = {
       id: shortUUID().generate(),
@@ -57,6 +66,8 @@ export class Editor {
       peers: observable,
       connected: observable,
       setConnected: action,
+      setMode: action,
+      mode: observable,
       allUsers: computed,
     });
 
@@ -139,6 +150,10 @@ export class Editor {
     }
 
     this.connected = connected;
+  }
+
+  setMode(mode: EditorMode) {
+    this.mode = mode;
   }
 
   toggleConnected() {

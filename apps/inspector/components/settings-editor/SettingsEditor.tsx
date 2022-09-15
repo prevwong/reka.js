@@ -11,7 +11,7 @@ export const SettingsEditor = observer(() => {
   return (
     <Box
       css={{
-        overflow: 'hidden',
+        overflow: 'auto',
         position: 'relative',
         height: '100%',
         width: '100%',

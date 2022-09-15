@@ -50,7 +50,7 @@ if (typeof window !== 'undefined') {
 const App = observer(() => {
   return (
     <EditorContextProvider opts={[state]}>
-      <Box css={{ display: 'flex', flexDirection: 'column' }}>
+      <Box css={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <Header />
         <EditorLayout css={{ flex: 1 }} />
       </Box>

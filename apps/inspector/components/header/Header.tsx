@@ -5,6 +5,9 @@ import { Box } from '@app/components/box';
 import Image from 'next/image';
 import { Button } from '../button';
 import { Collaborators } from '../editor-panel/Collaborators';
+import { useEditor } from '@app/editor';
+import { EditorMode } from '@app/editor/Editor';
+import { observer } from 'mobx-react-lite';
 
 const LogoText = styled('h2', {
   fontWeight: '500',
@@ -16,7 +19,9 @@ const LogoText = styled('h2', {
 //   height: 'auto',
 // });
 
-export const Header = () => {
+export const Header = observer(() => {
+  const editor = useEditor();
+
   return (
     <Box
       css={{
@@ -36,11 +41,21 @@ export const Header = () => {
         </Box>
         <Box css={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <Collaborators />
-          <Button variant="secondary" css={{ py: '$3', px: '$4' }}>
-            View code
+          <Button
+            variant="secondary"
+            css={{ py: '$3', px: '$4' }}
+            onClick={() => {
+              if (editor.mode === EditorMode.Code) {
+                editor.setMode(EditorMode.UI);
+                return;
+              }
+              editor.setMode(EditorMode.Code);
+            }}
+          >
+            {editor.mode === EditorMode.Code ? 'Use Editor' : 'View Code'}
           </Button>
         </Box>
       </Box>
     </Box>
   );
-};
+});
