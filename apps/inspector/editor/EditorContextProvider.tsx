@@ -13,7 +13,22 @@ export const EditorContextProvider = ({
   children,
   opts,
 }: EditorContextProviderProps) => {
-  const editor = React.useMemo(() => new Editor(...opts), [opts]);
+  const [editor, setEditor] = React.useState<Editor | null>(null);
+
+  React.useEffect(() => {
+    const editor = new Editor(...opts);
+
+    setEditor(editor);
+
+    return () => {
+      setEditor(null);
+      editor.dispose();
+    };
+  }, []);
+
+  if (!editor) {
+    return null;
+  }
 
   return (
     <EditorContext.Provider value={editor}>{children}</EditorContext.Provider>

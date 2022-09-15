@@ -40,6 +40,11 @@ export class YjsCompositeSyncProvider {
     };
   }
 
+  dispose() {
+    this.yDoc.getMap('root').unobserveDeep(this.yDocChangeListener);
+    this.compositeChangeUnsubscriber();
+  }
+
   private withMobxSync(cb: () => void) {
     const prev = this.isSynchingToMobx;
     this.isSynchingToMobx = true;

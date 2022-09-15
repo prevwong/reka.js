@@ -1,6 +1,7 @@
 import { generateRandomName } from '@app/utils';
 import { WebrtcProvider } from 'y-webrtc';
 import { Frame, State } from '@composite/state';
+import { YjsCompositeSyncProvider } from '@composite/collaborative';
 import {
   action,
   makeObservable,
@@ -12,6 +13,7 @@ import randomColor from 'randomcolor';
 import shortUUID from 'short-uuid';
 import { Event } from './Event';
 import { SettingsPageStore } from './SettingsPageStore';
+import { setupExperimentalCollaborationSync } from '@app/utils/setupCollabSync';
 
 export type User = {
   id: string;
@@ -28,7 +30,10 @@ export class Editor {
 
   settings: SettingsPageStore;
 
-  constructor(readonly state: State, readonly provider: WebrtcProvider) {
+  declare crdt: YjsCompositeSyncProvider;
+  declare provider: WebrtcProvider;
+
+  constructor(readonly state: State) {
     this.activeFrame = null;
 
     this.user = {
@@ -56,13 +61,30 @@ export class Editor {
     });
 
     if (typeof window !== 'undefined') {
+      console.log('connecting');
+      const [crdt, provider] = setupExperimentalCollaborationSync(state);
+
+      this.crdt = crdt;
+      this.provider = provider;
+
       this.peers = this.getPeers();
       this.broadcastLocalUser();
       this.listenAwareness();
     }
   }
 
+  dispose() {
+    if (!this.crdt || !this.provider) {
+      return;
+    }
+
+    this.crdt.dispose();
+    this.provider.disconnect();
+    this.provider.destroy();
+  }
+
   private broadcastLocalUser() {
+    console.log('broadcasting');
     this.provider.awareness.setLocalState({
       user: this.user,
     });
@@ -84,6 +106,8 @@ export class Editor {
 
       users.push(state.user);
     }
+
+    console.log(200, users);
 
     return users;
   }

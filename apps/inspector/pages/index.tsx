@@ -8,9 +8,10 @@ import { Stringifier } from '@composite/parser';
 import { EditorContextProvider } from '@app/editor';
 import { program } from '@app/constants';
 
-import { setupExperimentalCollaborationSync } from '../utils/setupCollabSync';
 import { UserFrameExtension } from '../extensions/UserFrameExtension';
 import { EditorLayout } from '../components/editor-layout';
+import { Box } from '@app/components/box';
+import { Header } from '@app/components/header';
 
 // (window as any).t = t;
 
@@ -42,16 +43,17 @@ const state = new State({
   extensions: [UserFrameExtension],
 });
 
-const [_, provider] = setupExperimentalCollaborationSync(state);
-
 if (typeof window !== 'undefined') {
   (window as any).state = state;
 }
 
 const App = observer(() => {
   return (
-    <EditorContextProvider opts={[state, provider]}>
-      <EditorLayout />
+    <EditorContextProvider opts={[state]}>
+      <Box css={{ display: 'flex', flexDirection: 'column' }}>
+        <Header />
+        <EditorLayout css={{ flex: 1 }} />
+      </Box>
     </EditorContextProvider>
   );
 });
