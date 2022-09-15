@@ -90,11 +90,11 @@ export const Collaborators = observer(() => {
   return (
     <StyledCollaboratorsContainers>
       <AnimatePresence>
-        {editor.allUsers.map((user, i) => (
+        {editor.peers.map((user, i) => (
           <MotionCollabUser
             key={i}
             user={user}
-            active={user.id === editor.user.id}
+            active={false}
             disconnected={editor.connected === false}
             animate={{
               transform: 'scale(1)',
@@ -106,6 +106,19 @@ export const Collaborators = observer(() => {
             }}
           />
         ))}
+        <MotionCollabUser
+          user={editor.user}
+          active={true}
+          disconnected={editor.connected === false}
+          animate={{
+            transform: 'scale(1)',
+          }}
+          exit={{ transform: 'scale(0)' }}
+          transition={{
+            ease: [0.19, 1, 0.22, 1],
+            duration: 0.4,
+          }}
+        />
       </AnimatePresence>
     </StyledCollaboratorsContainers>
   );
