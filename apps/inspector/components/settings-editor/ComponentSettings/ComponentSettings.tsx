@@ -82,6 +82,25 @@ export const ComponentSettings = (props: ComponentSettingsProps) => {
           }))}
           addingNewField={isAddingNewState}
           onCancelAdding={() => setIsAddingNewState(false)}
+          onChange={(id, value) => {
+            const existingStateWithSameName = component.state.find(
+              (state) => state.name === id
+            );
+
+            if (!existingStateWithSameName) {
+              return;
+            }
+
+            const parsedValue = parser.parseExpressionFromSource(`{${value}}`);
+
+            if (!parsedValue) {
+              return;
+            }
+
+            editor.state.change(() => {
+              existingStateWithSameName.init = parsedValue;
+            });
+          }}
           onAdd={(id, value, clear) => {
             const existingStateWithSameName = component.state.find(
               (state) => state.name === id
