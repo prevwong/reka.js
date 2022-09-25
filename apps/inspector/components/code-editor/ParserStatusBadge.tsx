@@ -28,7 +28,7 @@ type ParserStatusBadgeProps = {
 const StyledBadge = styled(motion.span, {
   display: 'flex',
   alignItems: 'center',
-  px: '$2',
+  px: '$3',
   py: '$1',
   borderRadius: '100px',
   border: '1px solid #ccc',

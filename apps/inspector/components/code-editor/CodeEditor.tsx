@@ -15,6 +15,8 @@ import { Box } from '../box';
 import { ExternalLinkIcon } from '@radix-ui/react-icons';
 import { Link } from '../link';
 import { ParserStatus, ParserStatusBadge } from './ParserStatusBadge';
+import { motion } from 'framer-motion';
+import { capitalize } from 'lodash';
 
 const diffAST = (oldAST: t.Program, newAST: t.Program) => {
   const oldComponents = oldAST.components;
@@ -56,11 +58,44 @@ const StyledCodeEditorContainer = styled('div', {
   flex: 1,
 });
 
+const StyledTabItem = styled('button', {
+  px: '$4',
+  py: '$3',
+  position: 'relative',
+  cursor: 'pointer',
+  fontSize: '$1',
+  '&:hover': {
+    backgroundColor: '$grayA2',
+  },
+});
+
+const StyledTabItemUnderline = styled(motion.div, {
+  position: 'absolute',
+  bottom: '-1px',
+  left: 0,
+  width: '100%',
+  height: '1px',
+  background: '#000',
+});
+
 type CodeEditorProps = React.ComponentProps<typeof StyledCodeEditorContainer>;
 
 const stringifier = new Stringifier();
 
+const tabs = [
+  {
+    id: 'code',
+    title: 'Code',
+  },
+  {
+    id: 'ast',
+    title: 'Syntax Tree',
+  },
+] as const;
+
 export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
+  const [currentTab, setCurrentTab] =
+    React.useState<typeof tabs[number]['id']>('code');
   const [status, setStatus] = React.useState<ParserStatus>({
     type: 'success',
   });
@@ -228,29 +263,46 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
   return (
     <Box css={{ ...css, height: '100%' }} {...props}>
       <Box css={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <StyledCodeEditorContainer ref={domRef} />
         <Box
           css={{
             display: 'flex',
             alignItems: 'center',
-            py: '$2',
-            px: '$2',
-            borderTop: '1px solid $grayA5',
+            borderBottom: '1px solid $grayA5',
           }}
         >
           <Box css={{ flex: 1 }}>
+            {tabs.map((tab) => (
+              <StyledTabItem
+                onClick={() => {
+                  setCurrentTab(tab.id);
+                }}
+              >
+                {tab.title}
+                {currentTab === tab.id && (
+                  <StyledTabItemUnderline layoutId="underline"></StyledTabItemUnderline>
+                )}
+              </StyledTabItem>
+            ))}
+          </Box>
+          <Box
+            css={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              px: '$4',
+            }}
+          >
             <Link
-              css={{ fontSize: '12px' }}
+              css={{ fontSize: '$1', display: 'flex', alignItems: 'center' }}
               href="https://github.com/prevwong/composite/blob/main/docs/spec.ebnf"
               target="_blank"
             >
               View BNF spec <ExternalLinkIcon />
             </Link>
-          </Box>
-          <Box>
             <ParserStatusBadge status={status} />
           </Box>
         </Box>
+        <StyledCodeEditorContainer ref={domRef} />
       </Box>
     </Box>
   );
