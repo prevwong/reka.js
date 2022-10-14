@@ -47,6 +47,13 @@ const StyledButton = styled('button', {
           backgroundColor: '$secondary3',
         },
       },
+      bw: {
+        backgroundColor: '#000',
+        color: '#fff',
+        '&:hover': {
+          backgroundColor: '#222',
+        },
+      },
     },
     transparent: {
       true: {

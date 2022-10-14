@@ -1,6 +1,4 @@
 import * as React from 'react';
-
-import { styled } from '@app/styles';
 import { Box } from '@app/components/box';
 import Image from 'next/image';
 import { Button } from '../button';
@@ -8,16 +6,6 @@ import { Collaborators } from '../editor-panel/Collaborators';
 import { useEditor } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 import { observer } from 'mobx-react-lite';
-
-const LogoText = styled('h2', {
-  fontWeight: '500',
-  fontSize: '$3',
-});
-
-// const StyledLogoIcon = styled(LogoIcon, {
-//   width: '20px',
-//   height: 'auto',
-// });
 
 export const Header = observer(() => {
   const editor = useEditor();
