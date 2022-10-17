@@ -4,6 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { State } from '@composite/state';
 import * as t from '@composite/types';
 import { Stringifier } from '@composite/parser';
+import { Composite } from '@composite/react';
 
 import { EditorContextProvider } from '@app/editor';
 import { program } from '@app/constants';
@@ -49,12 +50,16 @@ if (typeof window !== 'undefined') {
 
 const App = observer(() => {
   return (
-    <EditorContextProvider opts={[state]}>
-      <Box css={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-        <Header />
-        <EditorLayout css={{ flex: 1 }} />
-      </Box>
-    </EditorContextProvider>
+    <Composite state={state}>
+      <EditorContextProvider opts={[state]}>
+        <Box
+          css={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
+        >
+          <Header />
+          <EditorLayout css={{ flex: 1 }} />
+        </Box>
+      </EditorContextProvider>
+    </Composite>
   );
 });
 

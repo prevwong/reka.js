@@ -1,23 +1,21 @@
 import * as t from '@composite/types';
 
 import { Box } from '@app/components/box';
-import { Button, IconButton } from '@app/components/button';
+import { Button } from '@app/components/button';
 import { Text } from '@app/components/text';
 import { useEditor } from '@app/editor';
 import {
-  Component1Icon,
   ComponentBooleanIcon,
   ComponentPlaceholderIcon,
 } from '@radix-ui/react-icons';
-import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { SettingSection } from '../SettingSection';
 import { Tooltip } from '@app/components/tooltip';
-import { autorun } from 'mobx';
 import { Modal } from '@app/components/modal';
 import { TextField } from '@app/components/text-field';
 import { pascalCase } from 'pascal-case';
 import { styled } from '@app/styles';
+import { useProgram } from '@composite/react';
 
 type AddComponentModalProps = {
   isOpen: boolean;
@@ -113,10 +111,14 @@ const AddComponentModal = (props: AddComponentModalProps) => {
   );
 };
 
-export const ComponentList = observer(() => {
+export const ComponentList = () => {
   const editor = useEditor();
   const [showAddComponentModal, setShowAddCompnonentModal] =
     React.useState(false);
+
+  const { components } = useProgram((program) => ({
+    components: program.components,
+  }));
 
   return (
     <React.Fragment>
@@ -133,7 +135,7 @@ export const ComponentList = observer(() => {
             mr: '-$4',
           }}
         >
-          {editor.state.data.program.components.map((component) => (
+          {components.map((component) => (
             <Box
               css={{
                 py: '$2',
@@ -207,4 +209,4 @@ export const ComponentList = observer(() => {
       />
     </React.Fragment>
   );
-});
+};

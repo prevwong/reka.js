@@ -35,7 +35,7 @@ importers:
       prettier: 2.7.1
       rollup: 2.79.0
       tslib: 2.4.0
-      turbo: 1.4.5
+      turbo: 1.5.6
       typescript: 4.8.2
 
   apps/inspector:
@@ -47,6 +47,7 @@ importers:
       '@composite/codemirror': workspace:*
       '@composite/collaborative': workspace:*
       '@composite/parser': workspace:*
+      '@composite/react': workspace:*
       '@composite/state': workspace:*
       '@composite/types': workspace:*
       '@radix-ui/colors': ^0.1.8
@@ -90,6 +91,7 @@ importers:
       '@composite/codemirror': link:../../packages/codemirror
       '@composite/collaborative': link:../../packages/collaborative
       '@composite/parser': link:../../packages/parser
+      '@composite/react': link:../../packages/react
       '@composite/state': link:../../packages/state
       '@composite/types': link:../../packages/types
       '@radix-ui/colors': 0.1.8
@@ -119,83 +121,6 @@ importers:
       yjs: 13.5.41
     devDependencies:
       '@types/lodash': 4.14.185
-      '@types/node': 18.7.15
-      '@types/randomcolor': 0.5.6
-      '@types/react': 17.0.49
-      '@types/react-dom': 17.0.17
-      eslint: 8.23.0
-      eslint-config-next: 12.2.5_yqf6kl63nyoq5megxukfnom5rm
-      typescript: 4.8.2
-
-  apps/next-inspector:
-    specifiers:
-      '@codemirror/basic-setup': ^0.19.1
-      '@codemirror/commands': ^0.19.8
-      '@codemirror/theme-one-dark': ^0.19.1
-      '@codemirror/view': ^0.19.40
-      '@composite/codemirror': workspace:*
-      '@composite/collaborative': workspace:*
-      '@composite/parser': workspace:*
-      '@composite/state': workspace:*
-      '@composite/types': workspace:*
-      '@radix-ui/colors': ^0.1.8
-      '@radix-ui/react-dropdown-menu': ^1.0.0
-      '@radix-ui/react-icons': ^1.0.3
-      '@radix-ui/react-switch': '*'
-      '@radix-ui/react-tabs': ^0.1.4
-      '@radix-ui/react-tooltip': ^0.1.7
-      '@stitches/react': ^1.2.7
-      '@types/node': 18.7.15
-      '@types/randomcolor': ^0.5.6
-      '@types/react': ^17.0.33
-      '@types/react-dom': ^17.0.10
-      classnames: ^2.3.1
-      eslint: ^8.23.0
-      eslint-config-next: 12.2.5
-      framer-motion: ^6.2.8
-      lodash: ^4.17.21
-      mobx: ^6.6.1
-      mobx-react-lite: ^3.3.0
-      next: 12.2.5
-      randomcolor: ^0.6.2
-      react: ^17.0.2
-      react-dom: ^17.0.2
-      tiny-invariant: ^1.2.0
-      typescript: 4.8.2
-      unique-names-generator: ^4.7.1
-      y-webrtc: ^10.2.2
-      yjs: ^13.5.27
-    dependencies:
-      '@codemirror/basic-setup': 0.19.3
-      '@codemirror/commands': 0.19.8
-      '@codemirror/theme-one-dark': 0.19.1
-      '@codemirror/view': 0.19.48
-      '@composite/codemirror': link:../../packages/codemirror
-      '@composite/collaborative': link:../../packages/collaborative
-      '@composite/parser': link:../../packages/parser
-      '@composite/state': link:../../packages/state
-      '@composite/types': link:../../packages/types
-      '@radix-ui/colors': 0.1.8
-      '@radix-ui/react-dropdown-menu': 1.0.0_j6sw2p2tdbh6crpcmkxtmmhma4
-      '@radix-ui/react-icons': 1.1.1_react@17.0.2
-      '@radix-ui/react-switch': 1.0.0_sfoxds7t5ydpegc3knd667wn6m
-      '@radix-ui/react-tabs': 0.1.5_react@17.0.2
-      '@radix-ui/react-tooltip': 0.1.7_sfoxds7t5ydpegc3knd667wn6m
-      '@stitches/react': 1.2.8_react@17.0.2
-      classnames: 2.3.1
-      framer-motion: 6.5.1_sfoxds7t5ydpegc3knd667wn6m
-      lodash: 4.17.21
-      mobx: 6.6.1
-      mobx-react-lite: 3.4.0_vuaia3cr2ucdrk3q4mauc2kfvi
-      next: 12.2.5_sfoxds7t5ydpegc3knd667wn6m
-      randomcolor: 0.6.2
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-      tiny-invariant: 1.2.0
-      unique-names-generator: 4.7.1
-      y-webrtc: 10.2.3
-      yjs: 13.5.41
-    devDependencies:
       '@types/node': 18.7.15
       '@types/randomcolor': 0.5.6
       '@types/react': 17.0.49
@@ -246,6 +171,23 @@ importers:
       tiny-invariant: 1.2.0
     devDependencies:
       '@composite/types': link:../types
+
+  packages/react:
+    specifiers:
+      '@composite/state': workspace:*
+      '@composite/types': workspace:*
+      '@types/react': ^17.0.33
+      '@types/react-dom': ^17.0.10
+      mobx: ^6.3.13
+      react: ^17.0.2
+    dependencies:
+      mobx: 6.6.1
+    devDependencies:
+      '@composite/state': link:../state
+      '@composite/types': link:../types
+      '@types/react': 17.0.49
+      '@types/react-dom': 17.0.17
+      react: 17.0.2
 
   packages/state:
     specifiers:
@@ -3832,7 +3774,6 @@ packages:
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
-    dev: false
 
   /read-pkg/3.0.0:
     resolution: {integrity: sha512-BLq/cCO9two+lBgiTYNqD6GdtK8s4NpaWrl6/rCO9w0TUS8oJl7cmToOZfRYllKTISY6nt1U7jQ53brmKqY6BA==}
@@ -4226,137 +4167,65 @@ packages:
       typescript: 4.8.2
     dev: true
 
-  /turbo-android-arm64/1.4.5:
-    resolution: {integrity: sha512-cKPJVyS1A2BBVbcH8XVeBArtEjHxioEm9zQa3Hv68usQOOFW+KOjH+0fGvjqMrWztLVFhE+npeVsnyu/6AmRew==}
-    cpu: [arm64]
-    os: [android]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /turbo-darwin-64/1.4.5:
-    resolution: {integrity: sha512-cK6LjkziSfopTznpfx3EdW/C11xFlK01tYxNj0XPoBW4vNb1zLsfrI/HIwp0SzdNLqzCBwOJBK0VB07Q1MmlxQ==}
+  /turbo-darwin-64/1.5.6:
+    resolution: {integrity: sha512-CWdXMwenBS2+QXIR2Czx7JPnAcoMzWx/QwTDcHVxZyeayMHgz8Oq5AHCtfaHDSfV8YhD3xa0GLSk6+cFt+W8BQ==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-darwin-arm64/1.4.5:
-    resolution: {integrity: sha512-hnixteVmfllup0//mGr2AZOff8oJ9dEydRU/EvbyIJ7PdkSct8758YnP5l2yMyxxipHHALSwchOKcySoaPBLRw==}
+  /turbo-darwin-arm64/1.5.6:
+    resolution: {integrity: sha512-c/aXgW9JuXT2bJSKf01pdSDQKnrdcdj3WFKmKiVldb9We6eqFzI0fLHBK97k5LM/OesmRMfCMQ2Cv2DU8RqBAA==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-freebsd-64/1.4.5:
-    resolution: {integrity: sha512-DDNSDiKJF/F1qbSNlvRs2UO79iMPlKFw/ZcVCDKXRjMI5uMRujMIfNnoStAg6kifYZJ0KIxnzdsbbJFtCTgPhQ==}
-    cpu: [x64]
-    os: [freebsd]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /turbo-freebsd-arm64/1.4.5:
-    resolution: {integrity: sha512-pFU8ujUp7XU527NM04P4foDjOKfi8f0rNJqREU6AMxawiMI6y0oyHc3W4VNKm0Y9IsjcfguZKZRMPeQ0n7LgJA==}
-    cpu: [arm64]
-    os: [freebsd]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /turbo-linux-32/1.4.5:
-    resolution: {integrity: sha512-Y5pnIetm4CwxbG1YQbvnTmjROPjQjX03ktHvmoekBleU1coYGShGPd9iarQZ96XkeaRevfwfSJ90AnDGwc3/QQ==}
-    cpu: [ia32]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /turbo-linux-64/1.4.5:
-    resolution: {integrity: sha512-tiTusM7mYib3iLmVOWmxhsg6xU3EArjOL4l3yh9rYBdArhDJk+DrhXkbJkYOYgNSWUEfPeBs0lzSkfTIQ2H21g==}
+  /turbo-linux-64/1.5.6:
+    resolution: {integrity: sha512-y/jNF7SG+XJEwk2GxIqy3g4dj/a0PgZKDGyOkp24qp4KBRcHBl6dI1ZEfNed30EhEqmW4F5Dr7IpeCZoqgbrMg==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-arm/1.4.5:
-    resolution: {integrity: sha512-5BsTRsoZeUWXWau4t4CNdL6NjlDdXrh8suhj5YolXUVCe039A5IutS7Dgd4i8dV1BovFCU3bz38dqQI2Qst5eQ==}
-    cpu: [arm]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /turbo-linux-arm64/1.4.5:
-    resolution: {integrity: sha512-R03HPqb0tJtqsGF4P3oPWsggdpTe9CZiBEtzATFpL7WVzm/Dsimy1Wcj07v6gCWdgi/mWmRt+OcZfGhnf7mibQ==}
+  /turbo-linux-arm64/1.5.6:
+    resolution: {integrity: sha512-FRcxPtW7eFrbR3QaYBVX8cK7i+2Cerqi6F0t5ulcq+d1OGSdSW3l35rPPyJdwCzCy+k/S9sBcyCV0RtbS6RKCQ==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-mips64le/1.4.5:
-    resolution: {integrity: sha512-08+WhWCx2Bp6wKH8im4Z2iEBCgiWJLZbNbZ8YHxamwlIk1JsklyCCMikMSWb0GmpKi7EIjdmtPRQY2CyoBefpg==}
-    cpu: [mipsel]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /turbo-linux-ppc64le/1.4.5:
-    resolution: {integrity: sha512-feGjTOYcCbg12Y6JzL8nxaUOzjqqYtO6vtxrJy16yVCd2k2htd18iZ1kLjWKDZA94vdyW5lfyAGsAQik2eAC4A==}
-    cpu: [ppc64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /turbo-windows-32/1.4.5:
-    resolution: {integrity: sha512-O4tOnGmVJrR1JOKepuUvx/kqgaU6eMEjYUihJlvQmz9pTA/ecs8HrTGyXrabbmp5YdUmF2qsXaAcOvEuJaNPmQ==}
-    cpu: [ia32]
-    os: [win32]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /turbo-windows-64/1.4.5:
-    resolution: {integrity: sha512-3W9gGq9h2szhestsoA1XqN9hV0wCRpGCEV6fbb3q9EaJY8K9Tff8By0mi+fE31OKHY4om+PHg595q7kybcyG/Q==}
+  /turbo-windows-64/1.5.6:
+    resolution: {integrity: sha512-/5KIExY7zbrbeL5fhKGuO85u5VtJ3Ue4kI0MbYCNnTGe7a10yTYkwswgtGihsgEF4AW0Nm0159aHmXZS2Le8IA==}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-arm64/1.4.5:
-    resolution: {integrity: sha512-/77f6OJM/4MqYEoCMER5MZTbfJZuVN22R9mc7iJDFOrNJrwvAWiAx98Fvo7WEVpMjGFUEq4Wi0UV5SpMAGU3bA==}
+  /turbo-windows-arm64/1.5.6:
+    resolution: {integrity: sha512-p+LQN9O39+rZuOAyc6BzyVGvdEKo+v+XmtdeyZsZpfj4xuOLtsEptW1w6cUD439u0YcPknuccGq1MQ0lXQ6Xuw==}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo/1.4.5:
-    resolution: {integrity: sha512-imAyc1kZusjzMWY4RO572FWws8x6CoM5mX7D3qtMjdGuqOBNBhPTIaJ0LmQLu+xzuKIOlJ5m/2587CsHOJTdgw==}
+  /turbo/1.5.6:
+    resolution: {integrity: sha512-xJO/fhiMo4lI62iGR9OgUfJTC9tnnuoMwNC52IfvvBDEPlA8RWGMS8SFpDVG9bNCXvVRrtUTNJXMe6pJWBiOTA==}
     hasBin: true
     requiresBuild: true
     optionalDependencies:
-      turbo-android-arm64: 1.4.5
-      turbo-darwin-64: 1.4.5
-      turbo-darwin-arm64: 1.4.5
-      turbo-freebsd-64: 1.4.5
-      turbo-freebsd-arm64: 1.4.5
-      turbo-linux-32: 1.4.5
-      turbo-linux-64: 1.4.5
-      turbo-linux-arm: 1.4.5
-      turbo-linux-arm64: 1.4.5
-      turbo-linux-mips64le: 1.4.5
-      turbo-linux-ppc64le: 1.4.5
-      turbo-windows-32: 1.4.5
-      turbo-windows-64: 1.4.5
-      turbo-windows-arm64: 1.4.5
+      turbo-darwin-64: 1.5.6
+      turbo-darwin-arm64: 1.5.6
+      turbo-linux-64: 1.5.6
+      turbo-linux-arm64: 1.5.6
+      turbo-windows-64: 1.5.6
+      turbo-windows-arm64: 1.5.6
     dev: true
 
   /type-check/0.4.0:

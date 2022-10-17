@@ -1,0 +1,29 @@
+{
+  "name": "@composite/react",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./src/index.ts",
+  "scripts": {
+    "dev": "rollup -w -c rollup.config.js",
+    "build": "rollup -c rollup.config.js"
+  },
+  "keywords": [],
+  "author": "Prev Wong",
+  "license": "ISC",
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17 || ^18",
+    "@composite/state": "workspace:*",
+    "@composite/types": "workspace:*"
+  },
+  "dependencies": {
+    "mobx": "^6.3.13"
+  },
+  "devDependencies": {
+    "react": "^17.0.2",
+    "@composite/state": "workspace:*",
+    "@composite/types": "workspace:*",
+    "@types/react": "^17.0.33",
+    "@types/react-dom": "^17.0.10"
+  }
+}
