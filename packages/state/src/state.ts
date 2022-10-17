@@ -5,6 +5,8 @@ import {
   makeObservable,
   observable,
   runInAction,
+  comparer,
+  reaction,
 } from 'mobx';
 import { Environment } from './environment';
 import { computeExpression } from './expression';
@@ -26,6 +28,16 @@ type StateConfig = {
   components?: t.Component[];
 };
 
+type StateSubscriberOpts = {
+  fireImmediately?: boolean;
+};
+
+type StateSubscriber<C> = {
+  collect: (state: t.State) => C;
+  onCollect: (collected: C) => void;
+  opts: StateSubscriberOpts;
+};
+
 export class State {
   env: Environment;
   resolver: Resolver;
@@ -39,6 +51,8 @@ export class State {
   private extensions: Set<Extension<any>>;
   private extensionToIndex: WeakMap<Extension<any>, number> = new WeakMap();
   private idToFrame: Map<string, Frame> = new Map();
+  private subscribers: Set<StateSubscriber<any>> = new Set();
+  private subscriberDisposers: WeakMap<any, any> = new WeakMap();
 
   constructor(private readonly opts: StateOpts) {
     this.data = t.state({
@@ -210,6 +224,18 @@ export class State {
   }
 
   replace(state: t.State) {
+    const oldSubscribers = new Set(this.subscribers);
+
+    this.subscribers.forEach((subscriber) => {
+      if (!this.subscriberDisposers.get(subscriber)) {
+        return;
+      }
+
+      this.subscriberDisposers.get(subscriber)();
+    });
+
+    this.subscribers = new Set();
+
     this.data = state;
     this.observer.replace(this.data);
 
@@ -219,6 +245,11 @@ export class State {
     this.syncGlobals = null;
     this.syncCleanupEnv = null;
     this.frames.forEach((frame) => frame.hardRerender());
+
+    oldSubscribers.forEach((subscriber) =>
+      this.subscribe(subscriber.collect, subscriber.onCollect, subscriber.opts)
+    );
+
     this.sync();
   }
 
@@ -230,8 +261,44 @@ export class State {
     return this.observer.getParent(type);
   }
 
-  subscribe(...args: Parameters<Observer<any>['subscribe']>) {
+  listenToChanges(...args: Parameters<Observer<any>['subscribe']>) {
     return this.observer.subscribe(...args);
+  }
+
+  subscribe<C>(
+    collect: (state: t.State) => C,
+    onCollect: (collected: C) => void,
+    opts?: StateSubscriberOpts
+  ) {
+    const subscriber: StateSubscriber<any> = {
+      collect,
+      onCollect,
+      opts: {
+        fireImmediately: false,
+        ...(opts ?? {}),
+      },
+    };
+
+    this.subscribers.add(subscriber);
+
+    const disposeReaction = reaction(
+      () => subscriber.collect(this.data),
+      (collected) => {
+        subscriber.onCollect(collected);
+      },
+      {
+        fireImmediately: subscriber.opts.fireImmediately,
+      }
+    );
+
+    const dispose = () => {
+      disposeReaction();
+      this.subscribers.delete(subscriber);
+    };
+
+    this.subscriberDisposers.set(subscriber, dispose);
+
+    return dispose;
   }
 
   dispose() {
