@@ -156,7 +156,7 @@ export class Lexer {
           this.advanceCharWhile((c) => this.isAlpha(c));
           const word = this.readWord();
 
-          if (['if', 'each'].includes(word) === false) {
+          if (['if', 'each', 'classList'].includes(word) === false) {
             throw new Error(`Unknown element directive: ${word}`);
           }
 

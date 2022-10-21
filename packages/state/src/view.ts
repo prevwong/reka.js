@@ -18,6 +18,7 @@ import { ComponentViewEvaluator } from './component';
 export type TemplateEvaluateContext = {
   env: Environment;
   path: string[];
+  classList: string[];
 };
 
 export type TemplateViewComputationCache = {
@@ -144,6 +145,11 @@ export class ViewTree {
   }
 
   computeTemplate(template: t.Template, ctx: TemplateEvaluateContext) {
+    ctx = {
+      ...ctx,
+      classList: [],
+    };
+
     const renderTemplate = (
       template: t.Template,
       ctx: TemplateEvaluateContext
@@ -167,6 +173,25 @@ export class ViewTree {
             if (!bool) {
               return [];
             }
+          }
+
+          const classList = template.classList;
+
+          if (classList) {
+            ctx.classList = Object.keys(classList.properties).reduce(
+              (accum, key) => {
+                const bool = this.evaluateExpr(
+                  classList.properties[key],
+                  ctx.env
+                );
+                if (bool) {
+                  accum.push(key);
+                }
+
+                return accum;
+              },
+              [] as string[]
+            );
           }
 
           let view: t.View[] = [];
@@ -314,17 +339,26 @@ export class ViewTree {
     let view: t.View;
 
     try {
+      let props = Object.keys(template.props).reduce((accum, key) => {
+        const value = this.evaluateExpr(template.props[key], ctx.env);
+
+        return {
+          ...accum,
+          [key]: value,
+        };
+      }, {});
+
+      if (ctx.classList.length > 0) {
+        props['className'] = [props['className'], ...ctx.classList]
+          .filter(Boolean)
+          .join(' ');
+        console.log(200, props, props['className']);
+      }
+
       view = new t.ElementView({
         tag: template.tag,
         children,
-        props: Object.keys(template.props).reduce((accum, key) => {
-          const value = this.evaluateExpr(template.props[key], ctx.env);
-
-          return {
-            ...accum,
-            [key]: value,
-          };
-        }, {}),
+        props,
         key: createKey(ctx.path),
         template,
       });
@@ -393,6 +427,7 @@ export class ViewTree {
       const view = this.computeTemplate(this.rootTemplate, {
         path: ['frame'],
         env: this.state.env,
+        classList: [],
       })[0];
 
       if (this.root !== view) {

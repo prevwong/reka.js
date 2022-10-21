@@ -163,6 +163,10 @@ export class Resolver {
             // this.identifiersToVariableDistance.set(template.if, templateScope.getDistance(template.if))
           }
 
+          if (template.classList) {
+            this.resolveExpr(template.classList, templateScope);
+          }
+
           Object.values(template.props).forEach((propValue) => {
             this.resolveExpr(propValue, templateScope);
           });

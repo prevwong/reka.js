@@ -107,6 +107,7 @@ Schema.define('Template', {
     children: t.array(t.node('Template')),
     if: t.optional(t.node('Expression')),
     each: t.optional(t.node('ElementEach')),
+    classList: t.optional(t.node('ObjectExpression')),
   }),
 });
 

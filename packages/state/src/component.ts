@@ -92,13 +92,23 @@ export class ComponentViewEvaluator {
               this.env.set('$$children', slot);
 
               component.props.forEach((prop) => {
-                this.env.set(
-                  prop.name,
-                  this.tree.evaluateExpr(
-                    this.template.props[prop.name],
-                    this.ctx.env
-                  )
+                let propValue = this.tree.evaluateExpr(
+                  this.template.props[prop.name],
+                  this.ctx.env
                 );
+
+                if (
+                  prop.name === 'className' &&
+                  this.ctx.classList.length > 0
+                ) {
+                  propValue = [propValue, ...this.ctx.classList]
+                    .filter(Boolean)
+                    .join(' ');
+
+                  // console.log(88, propValue);
+                }
+
+                this.env.set(prop.name, propValue);
               });
             });
           }
@@ -121,6 +131,7 @@ export class ComponentViewEvaluator {
           const render = this.tree.computeTemplate(component.template, {
             path: [this.key, 'root'],
             env: this.env,
+            classList: [],
           });
 
           componentViewTree.render.length = render.length;

@@ -158,6 +158,7 @@ export abstract class Template extends Type {
   declare children: Template[];
   declare if?: Expression;
   declare each?: ElementEach;
+  declare classList?: ObjectExpression;
   constructor(type: string, value: TypeProperties<Template>) {
     super(type, value);
   }

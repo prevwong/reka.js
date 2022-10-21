@@ -49,9 +49,17 @@ export const jsToComposite = (node: b.Node) => {
     case 'ObjectExpression': {
       return t.objectExpression({
         properties: node.properties.reduce((accum, property: any) => {
+          let key: string;
+
+          if (property.key.type === 'Literal') {
+            key = property.key.value;
+          } else {
+            key = property.key.name;
+          }
+
           return {
             ...accum,
-            [(property.key as any).name]: jsToComposite(property.value),
+            [key]: jsToComposite(property.value),
           };
         }, {}),
       });
