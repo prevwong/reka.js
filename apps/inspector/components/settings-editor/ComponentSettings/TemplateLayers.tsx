@@ -3,9 +3,7 @@ import * as t from '@composite/types';
 import { Box } from '@app/components/box';
 
 import * as React from 'react';
-import { observer } from 'mobx-react-lite';
 import { Text } from '@app/components/text';
-import { Editor } from '@app/editor/Editor';
 import { useEditor } from '@app/editor';
 import { IconButton } from '@app/components/button';
 import {
@@ -17,11 +15,7 @@ import {
 import { Tooltip } from '@app/components/tooltip';
 import { Dropdown } from '@app/components/dropdown';
 import { AddTemplateModal } from '../AddTemplateModal';
-
-type RenderTemplateNodeProps = {
-  template: t.Template;
-  depth?: number;
-};
+import { useCollector } from '@composite/react';
 
 type AddTemplateButtonProps = {
   target: t.Template;
@@ -117,10 +111,41 @@ const getTemplateName = (template: t.Template) => {
   throw new Error();
 };
 
-const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
+type RenderTemplateNodeProps = {
+  templateId: string;
+  depth?: number;
+};
+
+const RenderTemplateNode = (props: RenderTemplateNodeProps) => {
   const depth = props.depth ?? 0;
 
   const editor = useEditor();
+
+  const { template } = useCollector((query) => {
+    let collectedTemplateValues;
+
+    const template = query.getTemplateById(props.templateId);
+
+    if (template) {
+      collectedTemplateValues = {
+        id: template.id,
+        name: getTemplateName(template.data),
+        parent: template.getParent(),
+        grandparent: template.getParent()?.getParent(),
+        children: template.children.map((child) => child.id),
+        index: template.index,
+        data: template.data,
+      };
+    }
+
+    return {
+      template: collectedTemplateValues,
+    };
+  });
+
+  if (!template) {
+    return null;
+  }
 
   return (
     <Box>
@@ -136,7 +161,7 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
         onClick={(e) => {
           editor.settings.goTo({
             type: 'template',
-            template: props.template,
+            template: template.data,
           });
         }}
       >
@@ -148,48 +173,41 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
           }}
         >
           <Text size="1" css={{ flex: 1 }}>
-            {getTemplateName(props.template)}
+            {template.name}
           </Text>
           <Box>
             <Tooltip content="Add new template">
-              <AddTemplateButton target={props.template} />
+              <AddTemplateButton target={template.data} />
             </Tooltip>
             <Tooltip content="Move template up">
               <IconButton
                 transparent
                 onClick={(e) => {
                   e.stopPropagation();
-                  const originalParent = editor.state.getParentType(
-                    props.template
-                  );
-                  let newParent = originalParent;
 
-                  if (!Array.isArray(originalParent.value)) {
+                  if (!template.parent) {
                     return;
                   }
 
-                  let newIndex = originalParent.key - 1;
+                  const originalParent = template.parent;
+
+                  let newParent = originalParent;
+
+                  let newIndex = template.index - 1;
 
                   if (newIndex < 0) {
-                    const parentTemplate = editor.state.getParentType(
-                      originalParent.value
-                    );
-
                     // grandparent's children array:
-                    newParent = editor.state.getParentType(
-                      parentTemplate.value
-                    );
-
-                    if (!Array.isArray(newParent.value)) {
+                    if (!template.grandparent) {
                       return;
                     }
 
-                    newIndex = newParent.key - 1;
+                    newParent = template.grandparent;
+                    newIndex = template.parent.index - 1;
                   }
 
                   editor.state.change(() => {
-                    originalParent.value.splice(originalParent.key, 1);
-                    newParent.value.splice(newIndex, 0, props.template);
+                    originalParent.data.children.splice(template.index, 1);
+                    newParent.data.children.splice(newIndex, 0, template.data);
                   });
                 }}
               >
@@ -202,32 +220,18 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
                 onClick={(e) => {
                   e.stopPropagation();
 
-                  const originalParent = editor.state.getParentType(
-                    props.template
-                  );
-                  let newParent = originalParent;
+                  const originalParent = template.parent;
 
-                  let newIndex = originalParent.key + 2;
-
-                  if (!Array.isArray(originalParent.value)) {
-                    const parentTemplate = editor.state.getParentType(
-                      originalParent.value
-                    );
-
-                    newParent = editor.state.getParentType(
-                      parentTemplate.value
-                    );
-
-                    if (!Array.isArray(newParent.value)) {
-                      return;
-                    }
-
-                    newIndex = newParent.key + 1;
+                  if (!originalParent) {
+                    return;
                   }
 
+                  let newParent = originalParent;
+                  let newIndex = template.index + 2;
+
                   editor.state.change(() => {
-                    newParent.value.splice(newIndex, 0, props.template);
-                    originalParent.value.splice(originalParent.key, 1);
+                    newParent.data.children.splice(newIndex, 0, template.data);
+                    originalParent.data.children.splice(template.index, 1);
                   });
                 }}
               >
@@ -240,14 +244,14 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   editor.state.change(() => {
-                    const parent = editor.state.getParentType(props.template);
+                    const parent = template.parent;
 
-                    if (!parent || !Array.isArray(parent.value)) {
+                    if (!parent) {
                       return;
                     }
 
                     editor.state.change(() => {
-                      parent.value.splice(parent.key, 1);
+                      parent.children.splice(template.index, 1);
                     });
                   });
                 }}
@@ -258,21 +262,31 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
           </Box>
         </Box>
       </Box>
-      {props.template.children.map((child) => (
-        <RenderTemplateNode key={child.id} template={child} depth={depth + 1} />
+      {template.children.map((child) => (
+        <RenderTemplateNode key={child} templateId={child} depth={depth + 1} />
       ))}
     </Box>
   );
-});
-
-type TemplateLayersProps = {
-  component: t.CompositeComponent;
 };
 
-export const TemplateLayers = observer((props: TemplateLayersProps) => {
+type TemplateLayersProps = {
+  componentId: string;
+};
+
+export const TemplateLayers = (props: TemplateLayersProps) => {
+  const { component } = useCollector((query) => ({
+    component: query.getComponentById(props.componentId),
+  }));
+
+  if (!component) {
+    return null;
+  }
+
   return (
     <Box css={{ mt: '$3', ml: '-$4', mr: '-$4' }}>
-      <RenderTemplateNode template={props.component.template} />
+      {component.template && (
+        <RenderTemplateNode templateId={component.template.id} />
+      )}
     </Box>
   );
-});
+};

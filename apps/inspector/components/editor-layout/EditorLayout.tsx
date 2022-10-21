@@ -8,6 +8,7 @@ import { CodeEditor } from '../code-editor';
 import { AnimatePresence, motion } from 'framer-motion';
 import { EditorMode } from '@app/editor/Editor';
 import { observer } from 'mobx-react-lite';
+import { useCollector } from '@composite/react';
 
 const StyledScreen = styled('div', {
   display: 'flex',
@@ -69,6 +70,10 @@ export const EditorLayout = observer(
   (props: React.ComponentProps<typeof StyledScreen>) => {
     const editor = useEditor();
 
+    const { frames } = useCollector((query) => ({
+      frames: query.getExtensionState(UserFrameExtension).frames,
+    }));
+
     return (
       <StyledScreen {...props}>
         <AnimatePresence initial={false}>
@@ -90,11 +95,9 @@ export const EditorLayout = observer(
             }}
           >
             <StyledFramesGrid>
-              {editor.state
-                .getExtensionState(UserFrameExtension)
-                .frames.map((frame, i) => (
-                  <DebugFrame key={i} frame={frame} />
-                ))}
+              {frames.map((frame, i) => (
+                <DebugFrame key={i} frame={frame} />
+              ))}
             </StyledFramesGrid>
           </StyledFramesContainer>
 

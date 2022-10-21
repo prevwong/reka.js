@@ -148,13 +148,11 @@ importers:
     specifiers:
       '@composite/state': workspace:*
       '@composite/types': workspace:*
-      mobx: ^6.3.13
       y-protocols: ^1.0.5
       yjs: ^13.5.27
     dependencies:
       '@composite/state': link:../state
       '@composite/types': link:../types
-      mobx: 6.6.1
       yjs: 13.5.41
     devDependencies:
       y-protocols: 1.0.5

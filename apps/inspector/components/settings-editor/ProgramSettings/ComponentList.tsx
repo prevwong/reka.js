@@ -15,7 +15,7 @@ import { Modal } from '@app/components/modal';
 import { TextField } from '@app/components/text-field';
 import { pascalCase } from 'pascal-case';
 import { styled } from '@app/styles';
-import { useProgram } from '@composite/react';
+import { useCollector } from '@composite/react';
 
 type AddComponentModalProps = {
   isOpen: boolean;
@@ -116,8 +116,8 @@ export const ComponentList = () => {
   const [showAddComponentModal, setShowAddCompnonentModal] =
     React.useState(false);
 
-  const { components } = useProgram((program) => ({
-    components: program.components,
+  const { components } = useCollector((query) => ({
+    components: query.program.components,
   }));
 
   return (

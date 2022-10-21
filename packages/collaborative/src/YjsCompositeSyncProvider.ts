@@ -176,6 +176,8 @@ export class YjsCompositeSyncProvider {
               return traverse(target, paths);
             };
 
+            console.log('root', this.root, yDocRoot, paths, rootType);
+
             const type = yDocRoot.get('types').get(rootType.id);
 
             return traverse(type, paths);

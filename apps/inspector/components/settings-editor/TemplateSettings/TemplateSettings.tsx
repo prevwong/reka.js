@@ -19,6 +19,9 @@ const Topbar = styled('div', {
 });
 
 const StyledTemplateTypeHeading = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  flex: 1,
   input: {
     padding: '2px 4px',
     marginLeft: '-4px',
@@ -70,6 +73,7 @@ const TemplateHeading = (props: TemplateHeadingProps) => {
   return (
     <StyledTemplateTypeHeading>
       <TextField
+        css={{ flex: 1 }}
         value={newTitleValue}
         transparent
         onChange={(e) => {
@@ -94,6 +98,21 @@ const TemplateHeading = (props: TemplateHeadingProps) => {
           }
         }}
       />
+      <Box
+        css={{
+          fontSize: '10px',
+          backgroundColor: '$primary2',
+          color: '$primary5',
+          display: 'inline-block',
+          width: 'auto',
+          px: '$3',
+          py: '$2',
+          borderRadius: '$4',
+          alignSelf: 'flex-end',
+        }}
+      >
+        {props.template.type}
+      </Box>
     </StyledTemplateTypeHeading>
   );
 };

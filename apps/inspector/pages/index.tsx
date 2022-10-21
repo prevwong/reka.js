@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { observer } from 'mobx-react-lite';
 
 import { State } from '@composite/state';
 import * as t from '@composite/types';
@@ -48,7 +47,7 @@ if (typeof window !== 'undefined') {
   (window as any).state = state;
 }
 
-const App = observer(() => {
+const App = () => {
   return (
     <Composite state={state}>
       <EditorContextProvider opts={[state]}>
@@ -61,6 +60,6 @@ const App = observer(() => {
       </EditorContextProvider>
     </Composite>
   );
-});
+};
 
 export default App;

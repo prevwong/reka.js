@@ -10,9 +10,10 @@ import {
 } from 'mobx';
 import { Environment } from './environment';
 import { computeExpression } from './expression';
-import { Extension } from './extension';
+import { Extension, ExtensionState } from './extension';
 import { Frame, FrameOpts } from './frame';
 import { Observer } from './observer';
+import { Query } from './query';
 import { Resolver } from './resolver';
 
 type StateOpts = {
@@ -33,7 +34,7 @@ type StateSubscriberOpts = {
 };
 
 type StateSubscriber<C> = {
-  collect: (state: t.State) => C;
+  collect: (query: Query) => C;
   onCollect: (collected: C) => void;
   opts: StateSubscriberOpts;
 };
@@ -43,6 +44,8 @@ export class State {
   resolver: Resolver;
   frames: Frame[];
   data: t.State;
+
+  query: Query;
 
   private observer: Observer<t.State>;
   private syncGlobals: IComputedValue<void> | null = null;
@@ -59,6 +62,8 @@ export class State {
       program: opts.data,
       extensions: [],
     });
+
+    this.query = new Query(this);
 
     this.extensions = new Set(this.opts.extensions || []);
     this.extensions.forEach((extension) => {
@@ -266,7 +271,7 @@ export class State {
   }
 
   subscribe<C>(
-    collect: (state: t.State) => C,
+    collect: (query: Query) => C,
     onCollect: (collected: C) => void,
     opts?: StateSubscriberOpts
   ) {
@@ -282,7 +287,7 @@ export class State {
     this.subscribers.add(subscriber);
 
     const disposeReaction = reaction(
-      () => subscriber.collect(this.data),
+      () => subscriber.collect(this.query),
       (collected) => {
         subscriber.onCollect(collected);
       },

@@ -1,8 +1,8 @@
 import * as t from '@composite/types';
 
-type ExtensionState = Record<string, any>;
+export type ExtensionState = Record<string, any>;
 
-type ExtensionConfig<S extends ExtensionState> = {
+export type ExtensionConfig<S extends ExtensionState> = {
   state: S;
   components: t.Component[];
   globals: Record<string, any>;

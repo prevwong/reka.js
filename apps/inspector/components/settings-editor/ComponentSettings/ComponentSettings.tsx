@@ -32,9 +32,7 @@ const ComponentHeader = styled('div', {
   },
 });
 
-type ComponentSettingsProps = {};
-
-export const ComponentSettings = (props: ComponentSettingsProps) => {
+export const ComponentSettings = () => {
   const editor = useEditor();
   const [isAddingNewState, setIsAddingNewState] = React.useState(false);
 
@@ -48,8 +46,6 @@ export const ComponentSettings = (props: ComponentSettingsProps) => {
     return null;
   }
 
-  console.log('comp', component);
-
   return (
     <Box css={{ display: 'flex', flexDirection: 'column' }}>
       <ComponentHeader>
@@ -59,20 +55,6 @@ export const ComponentSettings = (props: ComponentSettingsProps) => {
           value={component.name}
           onChange={() => {}}
         />
-        <Box
-          css={{
-            fontSize: '11px',
-            backgroundColor: '$primary2',
-            color: '$primary5',
-            display: 'inline-block',
-            width: 'auto',
-            px: '$4',
-            py: '$3',
-            borderRadius: '$4',
-          }}
-        >
-          Component
-        </Box>
       </ComponentHeader>
       <SettingSection title="State" onAdd={() => setIsAddingNewState(true)}>
         <PairInput
@@ -132,7 +114,7 @@ export const ComponentSettings = (props: ComponentSettingsProps) => {
       <Box css={{ position: 'relative', flex: 1 }}>
         <SettingsScreen route="component" hideBackButton>
           <SettingSection title="Template" collapsedOnInitial={false}>
-            <TemplateLayers component={component} />
+            <TemplateLayers componentId={component.id} />
           </SettingSection>
         </SettingsScreen>
         <SettingsScreen route="template" goBackText="Templates">
