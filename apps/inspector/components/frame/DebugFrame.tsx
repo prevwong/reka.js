@@ -142,6 +142,8 @@ export const DebugFrame = observer((props: DebugFrameProps) => {
           css={{
             px: '$2',
             py: '$1',
+            height: '100%',
+            width: '100%',
           }}
           onClick={() => {
             editor.setActiveFrame(frame);

@@ -56,9 +56,11 @@ export const RenderElementView = observer((props: RenderElementViewProps) => {
         connect(dom);
       },
     },
-    props.view.children.map((child) => (
-      <Renderer view={child} key={child.key} />
-    ))
+    props.view.children.length > 0
+      ? props.view.children.map((child) => (
+          <Renderer view={child} key={child.key} />
+        ))
+      : undefined
   );
 });
 

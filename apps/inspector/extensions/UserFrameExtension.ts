@@ -15,26 +15,24 @@ export const UserFrameExtension = createExtension<UserFrameExtensionState>({
   state: {
     frames: [
       { id: 'App', name: 'App' },
-      {
-        id: 'Button Primary',
-        name: 'Button',
-        props: { text: t.literal({ value: 'Hello' }) },
-      },
-      {
-        id: 'Button Secondary',
-        name: 'Button',
-        props: { text: t.literal({ value: 'Woah' }) },
-      },
-      {
-        id: 'Button Tertiary',
-        name: 'Button',
-        props: { text: t.literal({ value: 'Woah' }) },
-      },
-      {
-        id: 'Button Warning',
-        name: 'Button',
-        props: { text: t.literal({ value: 'Woah' }) },
-      },
+      // {
+      //   id: 'Button Secondary',
+      //   name: 'Button',
+      //   props: {
+      //     className: t.literal({ value: '' }),
+      //     text: t.literal({ value: 'Woah' }),
+      //   },
+      // },
+      // {
+      //   id: 'Button Tertiary',
+      //   name: 'Button',
+      //   props: { text: t.literal({ value: 'Woah' }) },
+      // },
+      // {
+      //   id: 'Button Warning',
+      //   name: 'Button',
+      //   props: { text: t.literal({ value: 'Woah' }) },
+      // },
     ],
   },
   globals: {},
