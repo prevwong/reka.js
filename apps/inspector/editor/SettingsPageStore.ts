@@ -1,6 +1,12 @@
+import {
+  UserFrame,
+  UserFrameExtension,
+} from '@app/extensions/UserFrameExtension';
+import { Frame } from '@composite/state';
 import * as t from '@composite/types';
 
-import { makeObservable, observable, action, computed } from 'mobx';
+import { makeObservable, observable, action } from 'mobx';
+import { Editor } from './Editor';
 
 type ComponentSettingsRoute = {
   type: 'component';
@@ -14,36 +20,95 @@ type TemplateSettingsRoute = {
 
 export type SettingsRoute = ComponentSettingsRoute | TemplateSettingsRoute;
 
-export class SettingsPageStore {
-  paths: SettingsRoute[];
+type SelectedFrame = {
+  state: Frame;
+  userData: UserFrame;
+  iframe: HTMLIFrameElement | null;
+};
 
-  constructor() {
-    this.paths = [];
+type ActiveView = {
+  component: t.Component;
+  frame: SelectedFrame | null;
+  availableUserFrames: UserFrame[];
+  template: t.Template | null;
+};
+
+export class SettingsPageStore {
+  active: ActiveView | null;
+
+  constructor(readonly editor: Editor) {
+    this.active = null;
 
     makeObservable(this, {
-      paths: observable,
-      goTo: action,
-      goBack: action,
-      current: computed,
+      active: observable,
+      setComponent: action,
+      setTemplate: action,
+      registerIframe: action,
     });
   }
 
-  get current() {
-    return this.paths[this.paths.length - 1];
-  }
-
-  goTo(route: SettingsRoute) {
-    return this.paths.push(route);
-  }
-
-  goBack(depth?: number) {
-    if (depth === undefined) {
-      this.paths.pop();
+  setComponent(component: t.Component) {
+    if (this.active?.component === component) {
       return;
     }
 
-    while (this.paths.length > depth) {
-      this.paths.pop();
+    let frame: SelectedFrame | null = null;
+
+    const userFrames =
+      this.editor.state.getExtensionState(UserFrameExtension).frames;
+
+    const availableUserFrames = userFrames.filter(
+      (frame) => frame.name === component.name
+    );
+
+    const firstComponentUserFrame = availableUserFrames.find(
+      (frame) => frame.name === component.name
+    );
+
+    if (firstComponentUserFrame) {
+      let stateFrame =
+        this.editor.state.frames.find(
+          (frame) => frame.id === firstComponentUserFrame.id
+        ) || null;
+
+      if (!stateFrame) {
+        stateFrame = this.editor.state.createFrame({
+          id: firstComponentUserFrame.id,
+          component: {
+            name: component.name,
+            props: firstComponentUserFrame.props,
+          },
+        });
+      }
+
+      frame = {
+        iframe: null,
+        state: stateFrame,
+        userData: firstComponentUserFrame,
+      };
     }
+
+    this.active = {
+      component,
+      frame,
+      availableUserFrames,
+      template: null,
+    };
+  }
+
+  setTemplate(template: t.Template) {
+    if (!this.active) {
+      return;
+    }
+
+    this.active.template = template;
+  }
+
+  registerIframe(dom: HTMLIFrameElement) {
+    if (!this.active?.frame) {
+      return;
+    }
+
+    this.active.frame.iframe = dom;
   }
 }

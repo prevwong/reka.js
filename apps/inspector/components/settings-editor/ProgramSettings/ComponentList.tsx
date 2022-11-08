@@ -111,7 +111,11 @@ const AddComponentModal = (props: AddComponentModalProps) => {
   );
 };
 
-export const ComponentList = () => {
+type ComponentListProps = {
+  onComponentSelected: (component: t.Component) => void;
+};
+
+export const ComponentList = (props: ComponentListProps) => {
   const editor = useEditor();
   const [showAddComponentModal, setShowAddCompnonentModal] =
     React.useState(false);
@@ -181,10 +185,7 @@ export const ComponentList = () => {
                       component instanceof t.CompositeComponent !== true
                     }
                     onClick={() => {
-                      editor.settings.goTo({
-                        type: 'component',
-                        component,
-                      });
+                      props.onComponentSelected(component);
                     }}
                     css={{
                       cursor:

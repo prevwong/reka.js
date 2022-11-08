@@ -9,7 +9,7 @@ const StyledInputField = styled('input', {
 
   outline: 'none',
   boxShadow: 'none',
-  padding: '$2 $2',
+  padding: '$2 $3',
   color: 'rgba(0,0,0,0.8)',
   transition: '0.2s ease-in',
   border: 'none',
@@ -86,6 +86,49 @@ export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
 );
 
 TextField.toString = () => '.text-field';
+
+type EnterTextFieldProps = InputFieldProps & {
+  value: any;
+  onCommit: (newValue: any) => void;
+};
+
+export const EnterTextField = ({
+  value: initialValue,
+  onCommit,
+  ...props
+}: EnterTextFieldProps) => {
+  const [value, setValue] = React.useState(initialValue);
+
+  const commit = () => {
+    onCommit(value);
+  };
+
+  // React.useEffect(() => {
+  //   setValue(initialValue);
+  // }, [initialValue]);
+  console.log('render');
+
+  return (
+    <TextField
+      {...props}
+      value={value}
+      onChange={(e) => {
+        console.log('change', e.target.value);
+        setValue(e.target.value);
+      }}
+      onKeyUp={(e) => {
+        if (e.key !== 'Enter') {
+          return;
+        }
+
+        commit();
+      }}
+      onBlur={() => {
+        commit();
+      }}
+    />
+  );
+};
 
 type CancellableInputFieldProps = InputFieldProps & {
   onCancel: () => void;

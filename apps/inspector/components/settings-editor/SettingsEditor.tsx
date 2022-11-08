@@ -1,11 +1,8 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { Box } from '../box';
-import { ComponentSettings } from './ComponentSettings';
 
-import { ComponentList } from './ProgramSettings/ComponentList';
-import { GlobalSettings } from './ProgramSettings/GlobalSettings';
-import { SettingsScreen } from './SettingsScreen';
+import { TemplateSettings } from './TemplateSettings';
 
 export const SettingsEditor = observer(() => {
   return (
@@ -19,20 +16,7 @@ export const SettingsEditor = observer(() => {
         flexDirection: 'column',
       }}
     >
-      <GlobalSettings />
-      <Box css={{ position: 'relative', flex: 1 }}>
-        <SettingsScreen>
-          <ComponentList />
-        </SettingsScreen>
-        <SettingsScreen
-          route="component"
-          goBackText="Components"
-          goBackToPageNumber={0}
-          includeParent
-        >
-          <ComponentSettings />
-        </SettingsScreen>
-      </Box>
+      <TemplateSettings />
     </Box>
   );
 });

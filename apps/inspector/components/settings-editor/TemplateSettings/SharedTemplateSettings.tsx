@@ -36,7 +36,7 @@ const ConditionalTemplateSetting = observer(
     }, [props.template, setCondition]);
 
     return (
-      <SettingSection title={'Conditional'}>
+      <SettingSection title={'Conditional'} collapsedOnInitial={false}>
         <Box>
           <CancellableInputField
             placeholder="counter > 0"
@@ -121,7 +121,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
   };
 
   return (
-    <SettingSection title="Loop">
+    <SettingSection title="Loop" collapsedOnInitial={false}>
       <Box css={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
         <CancellableInputField
           css={{ flex: 1 }}

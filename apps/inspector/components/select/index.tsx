@@ -87,7 +87,7 @@ export const Select = (props: SelectProps) => {
           placeholder={props.placeholder || 'Select a value'}
         />
         <SelectPrimitive.SelectIcon>
-          <ChevronDownIcon />
+          <ChevronDownIcon width={12} height={12} />
         </SelectPrimitive.SelectIcon>
       </StyledTrigger>
       <SelectPrimitive.Portal>

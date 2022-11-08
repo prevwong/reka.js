@@ -9,8 +9,6 @@ import { styled } from '@app/styles';
 import * as React from 'react';
 import { SettingSection } from '../SettingSection';
 import { TemplateLayers } from './TemplateLayers';
-import { SettingsScreen } from '../SettingsScreen';
-import { TemplateSettings } from '../TemplateSettings';
 
 const stringifier = new Stringifier();
 const parser = new Parser();
@@ -36,11 +34,11 @@ export const ComponentSettings = () => {
   const editor = useEditor();
   const [isAddingNewState, setIsAddingNewState] = React.useState(false);
 
-  if (editor.settings.current.type !== 'component') {
+  if (!editor.settings.active) {
     return null;
   }
 
-  const component = editor.settings.current.component;
+  const component = editor.settings.active.component;
 
   if (!(component instanceof t.CompositeComponent)) {
     return null;
@@ -112,14 +110,9 @@ export const ComponentSettings = () => {
         />
       </SettingSection>
       <Box css={{ position: 'relative', flex: 1 }}>
-        <SettingsScreen route="component" hideBackButton>
-          <SettingSection title="Template" collapsedOnInitial={false}>
-            <TemplateLayers componentId={component.id} />
-          </SettingSection>
-        </SettingsScreen>
-        <SettingsScreen route="template" goBackText="Templates">
-          <TemplateSettings />
-        </SettingsScreen>
+        <SettingSection title="Template" collapsedOnInitial={false}>
+          <TemplateLayers componentId={component.id} />
+        </SettingSection>
       </Box>
     </Box>
   );

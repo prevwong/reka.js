@@ -22,7 +22,11 @@ export const PropEditorSection = observer(
     const editor = useEditor();
 
     return (
-      <SettingSection onAdd={() => setAddNewProp(true)} title={'Props'}>
+      <SettingSection
+        onAdd={() => setAddNewProp(true)}
+        title={'Props'}
+        collapsedOnInitial={false}
+      >
         {!addNewProp && Object.keys(template.props).length === 0 && (
           <Text size="1">There're no props on this template.</Text>
         )}

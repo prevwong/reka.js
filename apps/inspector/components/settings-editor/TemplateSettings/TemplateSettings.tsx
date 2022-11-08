@@ -11,11 +11,13 @@ import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { SharedTemplateSettings } from './SharedTemplateSettings';
 import { TagTemplateSettings } from './TagTemplateSettings';
 import { ComponentTemplateSettings } from './ComponentTemplateSettings';
+import { observer } from 'mobx-react-lite';
 
 const Topbar = styled('div', {
   display: 'flex',
   px: '$4',
   py: '$3',
+  mt: '$4',
 });
 
 const StyledTemplateTypeHeading = styled('div', {
@@ -117,29 +119,33 @@ const TemplateHeading = (props: TemplateHeadingProps) => {
   );
 };
 
-export const TemplateSettings = () => {
-  const editor = useEditor();
-
-  if (editor.settings.current?.type !== 'template') {
-    return null;
-  }
-
-  const template = editor.settings.current.template;
-
+const InternalTemplateSettings = ({ template }: any) => {
   return (
     <Box>
       <Topbar>
-        <TemplateHeading template={template} />
+        <TemplateHeading key={template.id} template={template} />
       </Topbar>
       <Box css={{ mt: '$3' }}>
-        <SharedTemplateSettings template={template} />
+        <SharedTemplateSettings key={template.id} template={template} />
         {template instanceof t.TagTemplate && (
-          <TagTemplateSettings template={template} />
+          <TagTemplateSettings key={template.id} template={template} />
         )}
         {template instanceof t.ComponentTemplate && (
-          <ComponentTemplateSettings template={template} />
+          <ComponentTemplateSettings key={template.id} template={template} />
         )}
       </Box>
     </Box>
   );
 };
+
+export const TemplateSettings = observer(() => {
+  const editor = useEditor();
+
+  const template = editor.settings.active?.template;
+
+  if (!template) {
+    return null;
+  }
+
+  return <InternalTemplateSettings key={template.id} template={template} />;
+});

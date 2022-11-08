@@ -58,7 +58,7 @@ export class Editor {
     this.connected = true;
     this.frameToEvent = new WeakMap();
 
-    this.settings = new SettingsPageStore();
+    this.settings = new SettingsPageStore(this);
 
     makeObservable(this, {
       activeFrame: observable,
@@ -72,7 +72,6 @@ export class Editor {
     });
 
     if (typeof window !== 'undefined') {
-      console.log('connecting');
       const [crdt, provider] = setupExperimentalCollaborationSync(state);
 
       this.crdt = crdt;

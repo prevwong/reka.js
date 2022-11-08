@@ -10,6 +10,11 @@ import { EditorMode } from '@app/editor/Editor';
 import { observer } from 'mobx-react-lite';
 import { useCollector } from '@composite/react';
 
+import { LeftSettingsEditor } from '../settings-editor/LeftSettingsEditor';
+import { Text } from '../text';
+import { Box } from '../box';
+import { ComponentEditorView } from './ComponentEditorView';
+
 const StyledScreen = styled('div', {
   display: 'flex',
   flexDirection: 'row',
@@ -20,11 +25,6 @@ const StyledScreen = styled('div', {
 
 const StyledFramesContainer = styled(motion.div, {
   display: 'flex',
-  position: 'absolute',
-  left: 0,
-  top: 0,
-  height: '100%',
-  width: 'calc(100% - 300px)',
 });
 
 const StyledFramesGrid = styled(motion.div, {
@@ -50,7 +50,7 @@ const StyledSidebarContainer = styled(motion.div, {
   width: '300px',
   background: '#fff',
   borderLeft: '1px solid $grayA5',
-  position: 'absolute',
+  position: 'relative',
   right: 0,
   height: '100%',
 });
@@ -66,41 +66,39 @@ const StyledCodeContainer = styled(motion.div, {
   height: '100%',
 });
 
+const StyledFrameView = styled(motion.div, {
+  flex: 1,
+  background: '#fff',
+  height: '100%',
+});
+
+const EmptyFrameMessage = (props: any) => {
+  return (
+    <Box
+      css={{
+        height: '100%',
+        textAlign: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Text css={{ color: '$grayA9' }}>{props.message}</Text>
+    </Box>
+  );
+};
+
 export const EditorLayout = observer(
   (props: React.ComponentProps<typeof StyledScreen>) => {
     const editor = useEditor();
 
-    const { frames } = useCollector((query) => ({
-      frames: query.getExtensionState(UserFrameExtension).frames,
-    }));
-
     return (
       <StyledScreen {...props}>
         <AnimatePresence initial={false}>
-          <StyledFramesContainer
-            animate={editor.mode === EditorMode.Code ? 'code' : 'ui'}
-            variants={{
-              code: {
-                width: 'calc(100% - 500px)',
-                padding: 20,
-              },
-              ui: {
-                width: 'calc(100% - 300px)',
-                padding: 0,
-              },
-            }}
-            transition={{
-              ease: [0.19, 1, 0.22, 1],
-              duration: 0.4,
-            }}
-          >
-            <StyledFramesGrid>
-              {frames.map((frame, i) => (
-                <DebugFrame key={i} frame={frame} />
-              ))}
-            </StyledFramesGrid>
-          </StyledFramesContainer>
-
+          <LeftSettingsEditor />
+          <StyledFrameView>
+            <ComponentEditorView />
+          </StyledFrameView>
           <AnimatePresence initial={false}>
             {editor.mode === EditorMode.UI && (
               <StyledSidebarContainer

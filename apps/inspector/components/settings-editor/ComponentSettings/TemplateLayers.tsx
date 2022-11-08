@@ -159,10 +159,7 @@ const RenderTemplateNode = (props: RenderTemplateNodeProps) => {
           },
         }}
         onClick={(e) => {
-          editor.settings.goTo({
-            type: 'template',
-            template: template.data,
-          });
+          editor.settings.setTemplate(template.data);
         }}
       >
         <Box

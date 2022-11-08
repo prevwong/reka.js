@@ -7,6 +7,7 @@ import { WebrtcProvider } from 'y-webrtc';
 
 const loadInitialDocument = (state: State, type: Y.Map<any>) => {
   const existingDocument = type.get('document');
+
   if (existingDocument) {
     const existingState = t.unflattenType(existingDocument.toJSON());
     state.replace(existingState);
@@ -32,6 +33,7 @@ export const setupExperimentalCollaborationSync = (state: State) => {
   let webrtcProvider: WebrtcProvider;
 
   if (typeof window !== 'undefined') {
+    (window as any).crdt = crdt;
     webrtcProvider = new WebrtcProvider('composite-yjs-test', doc);
     webrtcProvider.signalingConns.map((c) => {
       return c.once('connect', () => {
