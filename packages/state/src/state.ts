@@ -166,7 +166,10 @@ export class State {
 
     if (!this.syncCleanupEnv) {
       this.syncCleanupEnv = computed(() => {
-        const globalVarNames = this.root.globals.map((global) => global.name);
+        const globalVarNames = [
+          ...Object.keys(this.config.globals),
+          this.root.globals.map((global) => global.name),
+        ];
         const componentNames = this.allComponents.map(
           (component) => component.name
         );

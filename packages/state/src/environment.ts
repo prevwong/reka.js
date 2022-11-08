@@ -62,7 +62,7 @@ export class Environment {
       this.state.resolver.identifiersToVariableDistance.get(identifier);
 
     if (distance === undefined || distance === -1) {
-      return;
+      return this.state.config.globals[identifier.name] || undefined;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias
