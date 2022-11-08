@@ -53,9 +53,9 @@ export class ComponentViewEvaluator {
 
       return [
         t.externalComponentView({
-          component,
-          key: this.key,
-          template: this.template,
+        component,
+        key: this.key,
+        template: this.template,
           props: Object.keys(this.template.props).reduce(
             (accum, key) => ({
               ...accum,
@@ -79,6 +79,10 @@ export class ComponentViewEvaluator {
       });
 
       untracked(() => {
+        if (this.compositeComponentRootComputation) {
+          return this.compositeComponentRootComputation.get();
+        }
+
         this.compositeComponentRootComputation = computed(() => {
           if (!this.compositeComponentPropsComputation) {
             this.compositeComponentPropsComputation = computed(() => {
@@ -92,6 +96,10 @@ export class ComponentViewEvaluator {
               this.env.set('$$children', slot);
 
               component.props.forEach((prop) => {
+                if (this.template.props[prop.name] === undefined) {
+                  return;
+                }
+
                 let propValue = this.tree.evaluateExpr(
                   this.template.props[prop.name],
                   this.ctx.env
@@ -104,8 +112,6 @@ export class ComponentViewEvaluator {
                   propValue = [propValue, ...this.ctx.classList]
                     .filter(Boolean)
                     .join(' ');
-
-                  // console.log(88, propValue);
                 }
 
                 this.env.set(prop.name, propValue);
