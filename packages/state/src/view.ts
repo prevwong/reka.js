@@ -150,6 +150,8 @@ export class ViewTree {
       classList: [],
     };
 
+    const baseKey = createKey(ctx.path);
+
     const renderTemplate = (
       template: t.Template,
       ctx: TemplateEvaluateContext
@@ -165,52 +167,61 @@ export class ViewTree {
         return existingTplComputationCache.computed.get();
       }
 
-      const computation = computed(
-        () => {
-          if (template.if) {
-            const bool = this.evaluateExpr(template.if, ctx.env);
+      let prevEachExpr = template.each;
 
-            if (!bool) {
-              return [];
-            }
+      const computation = computed(() => {
+        /**
+         * If the each expr for the template has changed, return the existing view
+         * A new view with the proper env values will be computed
+         */
+        if (prevEachExpr !== template.each && this.tplToView.get(template)) {
+          return this.tplToView.get(template) as t.View[];
+        }
+
+        if (template.if) {
+          const bool = this.evaluateExpr(template.if, ctx.env);
+
+          if (!bool) {
+            return [];
           }
+        }
 
-          const classList = template.classList;
+        const classList = template.classList;
 
-          if (classList) {
-            ctx.classList = Object.keys(classList.properties).reduce(
-              (accum, key) => {
-                const bool = this.evaluateExpr(
-                  classList.properties[key],
-                  ctx.env
-                );
-                if (bool) {
-                  accum.push(key);
-                }
+        if (classList) {
+          ctx.classList = Object.keys(classList.properties).reduce(
+            (accum, key) => {
+              const bool = this.evaluateExpr(
+                classList.properties[key],
+                ctx.env
+              );
+              if (bool) {
+                accum.push(key);
+              }
 
-                return accum;
-              },
-              [] as string[]
-            );
-          }
+              return accum;
+            },
+            [] as string[]
+          );
+        }
 
-          let view: t.View[] = [];
+        let view: t.View[] = [];
 
-          if (template instanceof t.TagTemplate) {
-            view = this.computeTagTemplate(template, ctx);
-          }
+        if (template instanceof t.TagTemplate) {
+          view = this.computeTagTemplate(template, ctx);
+        }
 
-          if (template instanceof t.ComponentTemplate) {
-            view = this.computeComponentTemplate(template, ctx);
-          }
+        if (template instanceof t.ComponentTemplate) {
+          view = this.computeComponentTemplate(template, ctx);
+        }
 
-          if (template instanceof t.SlotTemplate) {
-            view = this.computeSlotTemplate(template, ctx);
-          }
+        if (template instanceof t.SlotTemplate) {
+          view = this.computeSlotTemplate(template, ctx);
+        }
 
-          this.tplToView.set(template, view);
+        this.tplToView.set(template, view);
 
-          return view;
+        return view;
         },
         {
           keepAlive: true,
@@ -226,11 +237,16 @@ export class ViewTree {
     };
 
     if (!template.each) {
+      this.tplToEachComputationCache.delete(template);
+
       return renderTemplate(template, {
         ...ctx,
         env: ctx.env.inherit(),
       });
     }
+
+    this.tplKeyToViewComputationCache.delete(baseKey);
+    this.tplKeyToComponentEvaluator.delete(baseKey);
 
     const eachExpr = template.each;
 
@@ -384,7 +400,7 @@ export class ViewTree {
     template: t.ComponentTemplate,
     ctx: TemplateEvaluateContext
   ) {
-    const key = ctx.path.join('.');
+    const key = createKey(ctx.path);
 
     let componentEvaluator = this.tplKeyToComponentEvaluator.get(key);
 
