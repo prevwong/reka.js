@@ -47,8 +47,6 @@ class TemplateQuery {
       return 0;
     }
 
-    console.log(500, parent);
-
     return parent.data.children.indexOf(this.data);
   }
 
