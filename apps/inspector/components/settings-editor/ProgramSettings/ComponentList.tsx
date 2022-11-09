@@ -116,7 +116,6 @@ type ComponentListProps = {
 };
 
 export const ComponentList = (props: ComponentListProps) => {
-  const editor = useEditor();
   const [showAddComponentModal, setShowAddCompnonentModal] =
     React.useState(false);
 
@@ -141,6 +140,7 @@ export const ComponentList = (props: ComponentListProps) => {
         >
           {components.map((component) => (
             <Box
+              key={component.id}
               css={{
                 py: '$2',
                 px: '$4',
