@@ -63,7 +63,7 @@ export const AnimatedScreenSlider = (props: AnimatedScreenSliderProps) => {
     <React.Fragment>
       {props.screens.map((screen, i) => {
         return (
-          <AnimatePresence initial={false}>
+          <AnimatePresence initial={false} key={i}>
             {currentPath === screen.id && (
               <motion.div
                 key="route"
