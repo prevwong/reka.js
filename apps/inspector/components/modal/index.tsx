@@ -31,7 +31,7 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
   '@media (prefers-reduced-motion: no-preference)': {
     animation: `${overlayShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
   },
-  // zIndex: 99,
+  zIndex: '$2',
 });
 
 const StyledContent = styled(DialogPrimitive.Content, {
@@ -51,7 +51,7 @@ const StyledContent = styled(DialogPrimitive.Content, {
     animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
   },
   '&:focus': { outline: 'none' },
-  // zIndex: 100,
+  zIndex: '$2',
 });
 
 const StyledTitle = styled(DialogPrimitive.Title, {
