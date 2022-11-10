@@ -20,6 +20,7 @@ const StyledFrameContainer = styled('div', {
   overflow: 'hidden',
   display: 'flex',
   alignItems: 'center',
+  backgroundColor: '$grayA5',
   '> iframe': {
     display: 'block',
     margin: '0 auto',
@@ -28,13 +29,13 @@ const StyledFrameContainer = styled('div', {
     boxShadow: 'none',
     border: '1px solid transparent',
     borderRadius: 0,
+    background: '#fff',
   },
   variants: {
     isNotFullWidth: {
       true: {
         padding: '$4',
         '> iframe': {
-          boxShadow: 'rgb(0 0 0 / 9%) 0px 3px 12px',
           borderColor: 'rgb(0 0 0 / 7%)',
           borderRadius: '$1',
         },
@@ -57,8 +58,8 @@ export const RenderFrame = observer((props: RenderFrameProps) => {
         initialContent='<!DOCTYPE html><html><head><link href="/tailwind.css" rel="stylesheet" /><link href="/frame.css" rel="stylesheet" /></head><body><div id="root"></div></body></html>'
         mountTarget="#root"
         style={{
-          width: props.width,
-          height: props.height,
+          maxWidth: props.width,
+          maxHeight: props.height,
         }}
         ref={(dom: any) => {
           editor.settings.registerIframe(dom);
