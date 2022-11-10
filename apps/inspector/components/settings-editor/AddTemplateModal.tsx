@@ -112,15 +112,6 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
                     };
                   });
                 }}
-                onAdd={(id, value, clear) => {
-                  setTemplateProps((props) => {
-                    return {
-                      ...props,
-                      [id]: value,
-                    };
-                  });
-                  clear();
-                }}
                 values={Object.keys(templateProps).reduce((accum, key) => {
                   accum.push({
                     id: key,

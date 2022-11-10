@@ -29,7 +29,7 @@ export const GlobalSettings = observer(() => {
       <PairInput
         addingNewField={isAddingNewGlobal}
         onCancelAdding={() => setIsAddingNewGlobal(false)}
-        onAdd={(id, value, clear) => {
+        onChange={(id, value) => {
           const parsedValue = parser.parseExpressionFromSource(`{${value}}`);
 
           if (!id || !parsedValue) {
@@ -41,20 +41,20 @@ export const GlobalSettings = observer(() => {
               (global) => global.name === id
             );
 
-          if (existingGlobalStateName) {
-            return;
-          }
-
           editor.state.change(() => {
-            editor.state.data.program.globals.push(
-              t.val({
-                name: id,
-                init: parsedValue,
-              })
-            );
-          });
+            if (!existingGlobalStateName) {
+              editor.state.data.program.globals.push(
+                t.val({
+                  name: id,
+                  init: parsedValue,
+                })
+              );
 
-          clear();
+              return;
+            }
+
+            existingGlobalStateName.init = parsedValue;
+          });
         }}
         values={editor.state.data.program.globals.map((global) => ({
           id: global.name,

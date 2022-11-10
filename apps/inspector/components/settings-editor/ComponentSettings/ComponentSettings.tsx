@@ -34,11 +34,11 @@ export const ComponentSettings = () => {
   const editor = useEditor();
   const [isAddingNewState, setIsAddingNewState] = React.useState(false);
 
-  if (!editor.settings.active) {
+  if (!editor.activeComponentEditor) {
     return null;
   }
 
-  const component = editor.settings.active.component;
+  const component = editor.activeComponentEditor.component;
 
   if (!(component instanceof t.CompositeComponent)) {
     return null;
@@ -62,29 +62,30 @@ export const ComponentSettings = () => {
           }))}
           addingNewField={isAddingNewState}
           onCancelAdding={() => setIsAddingNewState(false)}
-          onChange={(id, value) => {
+          onChange={(id, value, type) => {
             const existingStateWithSameName = component.state.find(
               (state) => state.name === id
             );
 
-            if (!existingStateWithSameName) {
+            if (type === 'update') {
+              if (!existingStateWithSameName) {
+                return;
+              }
+
+              const parsedValue = parser.parseExpressionFromSource(
+                `{${value}}`
+              );
+
+              if (!parsedValue) {
+                return;
+              }
+
+              editor.state.change(() => {
+                existingStateWithSameName.init = parsedValue;
+              });
+
               return;
             }
-
-            const parsedValue = parser.parseExpressionFromSource(`{${value}}`);
-
-            if (!parsedValue) {
-              return;
-            }
-
-            editor.state.change(() => {
-              existingStateWithSameName.init = parsedValue;
-            });
-          }}
-          onAdd={(id, value, clear) => {
-            const existingStateWithSameName = component.state.find(
-              (state) => state.name === id
-            );
 
             if (existingStateWithSameName) {
               return;
@@ -103,8 +104,6 @@ export const ComponentSettings = () => {
                   init: parsedValue,
                 })
               );
-
-              clear();
             });
           }}
         />

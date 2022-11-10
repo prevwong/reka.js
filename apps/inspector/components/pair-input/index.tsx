@@ -6,7 +6,7 @@ import { TextField } from '../text-field';
 
 export const StyledPairInputField = styled('div', {
   display: 'grid',
-  gridTemplateColumns: '60px 1fr auto',
+  gridTemplateColumns: '80px 1fr auto',
   position: 'relative',
   gap: '0px',
   borderBottom: '1px solid $grayA5',
@@ -57,7 +57,7 @@ type PairInputValue = {
 
 type PairInputProps = {
   values: PairInputValue[];
-  onChange?: (id: string, value: string) => void;
+  onChange?: (id: string, value: string, type: 'update' | 'new') => void;
   onRemove?: (id: string, value: string) => void;
   onAdd?: (id: string, value: string, clear: () => void) => void;
   onCancelAdding?: () => void;
@@ -212,6 +212,9 @@ const PairInputField = ({
 
           commit();
         }}
+        onBlur={() => {
+          commit();
+        }}
         disabled={disableEditValue}
       />
       <IconButton
@@ -245,7 +248,7 @@ export const PairInput = (props: PairInputProps) => {
               props.onRemove?.(id, value);
             }}
             onChange={(id, value) => {
-              props.onChange?.(id, value);
+              props.onChange?.(id, value, 'update');
             }}
           />
         );
@@ -253,7 +256,8 @@ export const PairInput = (props: PairInputProps) => {
       {props.addingNewField && (
         <AddNewPairInputField
           onAdd={(id, value, clear) => {
-            props.onAdd?.(id, value, clear);
+            props.onChange?.(id, value, 'new');
+            clear();
           }}
           onCancel={() => {
             props.onCancelAdding?.();
