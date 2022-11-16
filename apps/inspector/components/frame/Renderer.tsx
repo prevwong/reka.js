@@ -2,8 +2,11 @@ import * as React from 'react';
 import * as t from '@composite/types';
 import { observer } from 'mobx-react-lite';
 
-import { useView, View } from './view';
+import { View } from './view';
 import { ComponentContext } from './ComponentContext';
+import { useEditor } from '@app/editor';
+import { ViewContext } from './view/ViewContext';
+import { autorun } from 'mobx';
 
 type RenderErrorViewProps = {
   view: t.ErrorSystemView;
@@ -21,40 +24,68 @@ type RenderElementViewProps = {
   view: t.ElementView;
 };
 
+const useConnectDOM = () => {
+  const editor = useEditor();
+
+  const component = React.useContext(ComponentContext);
+  const { view, parent: parentView } = React.useContext(ViewContext);
+
+  const connect = React.useCallback(
+    (dom: HTMLElement) => {
+      if (!editor.activeComponentEditor) {
+        return;
+      }
+
+      let template = view.template;
+
+      const isNonFrameRoot = () => {
+        if (
+          editor.activeComponentEditor?.activeFrame?.state.component.name ===
+          component.name
+        ) {
+          return false;
+        }
+
+        if (parentView && parentView instanceof t.CompositeComponentView) {
+          return parentView.render.indexOf(view) > -1;
+        }
+      };
+
+      if (isNonFrameRoot()) {
+        template = parentView?.template as any;
+      }
+
+      return editor.activeComponentEditor.connectTplDOM(dom, template);
+    },
+    [editor]
+  );
+
+  return {
+    connect,
+  };
+};
+
 export const RenderElementView = observer((props: RenderElementViewProps) => {
-  const { connect, className } = useView();
+  const { connect } = useConnectDOM();
+  const domRef = React.useRef<HTMLElement | null>(null);
+
+  React.useEffect(() => {
+    if (!domRef.current) {
+      return;
+    }
+
+    return connect(domRef.current);
+  }, [connect]);
 
   if (props.view.tag === 'text') {
-    return (
-      <span
-        className={className}
-        ref={(dom) => {
-          if (!dom) {
-            return;
-          }
-
-          connect(dom);
-        }}
-      >
-        {props.view.props.text as string}
-      </span>
-    );
+    return <span ref={domRef}>{props.view.props.text as string}</span>;
   }
 
   return React.createElement(
     props.view.tag,
     {
       ...props.view.props,
-      className: [props.view.props['className'], className]
-        .filter(Boolean)
-        .join(' '),
-      ref: (dom) => {
-        if (!dom) {
-          return;
-        }
-
-        connect(dom);
-      },
+      ref: domRef,
     },
     props.view.children.length > 0
       ? props.view.children.map((child) => (
@@ -104,10 +135,13 @@ export const RenderSlotView = observer((props: RenderSlotViewProps) => {
 
 type RendererProps = {
   view: t.View;
+  onComponentRootDOMReady?: (elements: HTMLElement[]) => void;
 };
 
 export const Renderer = (props: RendererProps) => {
-  let render;
+  let render: React.ReactElement | undefined;
+
+  const editor = useEditor();
 
   if (props.view instanceof t.ElementView) {
     render = <RenderElementView view={props.view} />;
@@ -124,6 +158,26 @@ export const Renderer = (props: RendererProps) => {
   if (props.view instanceof t.SlotView) {
     render = <RenderSlotView view={props.view} />;
   }
+
+  React.useEffect(() => {
+    const view = props.view;
+
+    if (!props.onComponentRootDOMReady) {
+      return;
+    }
+
+    if (!(view instanceof t.CompositeComponentView)) {
+      return;
+    }
+
+    const tplElements = editor.activeComponentEditor?.activeFrame?.tplElements;
+
+    const doms = view.render.flatMap((tpl) => [
+      ...(tplElements?.get(tpl.template) ?? []),
+    ]);
+
+    props.onComponentRootDOMReady(doms ?? []);
+  }, [props.view.template]);
 
   if (!render) {
     return null;

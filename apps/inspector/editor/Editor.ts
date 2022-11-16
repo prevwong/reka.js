@@ -1,6 +1,7 @@
 import { generateRandomName } from '@app/utils';
 import { WebrtcProvider } from 'y-webrtc';
 import { Frame, State } from '@composite/state';
+import * as t from '@composite/types';
 import { YjsCompositeSyncProvider } from '@composite/collaborative';
 import {
   action,
@@ -14,6 +15,7 @@ import shortUUID from 'short-uuid';
 import { Event } from './Event';
 import { SettingsPageStore } from './SettingsPageStore';
 import { setupExperimentalCollaborationSync } from '@app/utils/setupCollabSync';
+import { ComponentEditor } from './ComponentEditor';
 
 export type User = {
   id: string;
@@ -33,7 +35,9 @@ export class Editor {
   connected: boolean;
   frameToEvent: WeakMap<Frame, Event>;
 
-  settings: SettingsPageStore;
+  componentToComponentEditor: WeakMap<t.Component, ComponentEditor>;
+  activeComponentEditor: ComponentEditor | null;
+  iframe: HTMLIFrameElement | null;
 
   mode: EditorMode;
 
@@ -58,7 +62,9 @@ export class Editor {
     this.connected = true;
     this.frameToEvent = new WeakMap();
 
-    this.settings = new SettingsPageStore(this);
+    this.componentToComponentEditor = new WeakMap();
+    this.activeComponentEditor = null;
+    this.iframe = null;
 
     makeObservable(this, {
       activeFrame: observable,
@@ -69,6 +75,8 @@ export class Editor {
       setMode: action,
       mode: observable,
       allUsers: computed,
+      activeComponentEditor: observable,
+      setActiveComponentEditor: action,
     });
 
     if (typeof window !== 'undefined') {
@@ -93,8 +101,11 @@ export class Editor {
     this.provider.destroy();
   }
 
+  registerIframe(iframe: HTMLIFrameElement) {
+    this.iframe = iframe;
+  }
+
   private broadcastLocalUser() {
-    console.log('broadcasting');
     this.provider.awareness.setLocalState({
       user: this.user,
     });
@@ -116,8 +127,6 @@ export class Editor {
 
       users.push(state.user);
     }
-
-    console.log(200, users);
 
     return users;
   }
@@ -168,5 +177,18 @@ export class Editor {
     }
 
     return event;
+  }
+
+  setActiveComponentEditor(component: t.Component) {
+    let componentEditor = this.componentToComponentEditor.get(component);
+
+    if (!componentEditor) {
+      componentEditor = new ComponentEditor(component, this);
+      this.componentToComponentEditor.set(component, componentEditor);
+    }
+
+    this.activeComponentEditor = componentEditor;
+
+    return componentEditor;
   }
 }

@@ -158,15 +158,20 @@ const RenderTemplateNode = (props: RenderTemplateNodeProps) => {
             backgroundColor: '$secondary2',
           },
         }}
-        onClick={(e) => {
-          editor.settings.setTemplate(template.data);
-        }}
       >
         <Box
           css={{
             display: 'flex',
             marginLeft: depth * 10 + 'px',
             alignItems: 'center',
+          }}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            if (!editor.activeComponentEditor) {
+              return;
+            }
+
+            editor.activeComponentEditor.setTplEvent('selected', template.data);
           }}
         >
           <Text size="1" css={{ flex: 1 }}>

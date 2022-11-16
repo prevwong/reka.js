@@ -2,6 +2,8 @@ import * as React from 'react';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { styled } from '@app/styles';
 import { CheckIcon, ChevronDownIcon } from '@radix-ui/react-icons';
+import { Box } from '../box';
+import { Text } from '../text';
 
 const StyledTrigger = styled(SelectPrimitive.SelectTrigger, {
   all: 'unset',

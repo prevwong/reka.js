@@ -34,7 +34,7 @@ export const LeftSettingsEditor = () => {
                 return (
                   <ComponentList
                     onComponentSelected={(component) => {
-                      editor.settings.setComponent(component);
+                      editor.setActiveComponentEditor(component);
                       cb.goTo('component-editor');
                     }}
                   />
@@ -49,17 +49,6 @@ export const LeftSettingsEditor = () => {
             },
           ]}
         />
-        {/* <SettingsScreen>
-          <ComponentList />
-        </SettingsScreen>
-        <SettingsScreen
-          route="component"
-          goBackText="Components"
-          goBackToPageNumber={0}
-          includeParent
-        >
-          <ComponentSettings />
-        </SettingsScreen> */}
       </Box>
     </Box>
   );

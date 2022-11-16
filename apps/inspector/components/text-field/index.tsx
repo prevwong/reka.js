@@ -103,10 +103,9 @@ export const EnterTextField = ({
     onCommit(value);
   };
 
-  // React.useEffect(() => {
-  //   setValue(initialValue);
-  // }, [initialValue]);
-  console.log('render');
+  React.useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
 
   return (
     <TextField

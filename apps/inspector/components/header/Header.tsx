@@ -7,11 +7,9 @@ import { useEditor } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 import { observer } from 'mobx-react-lite';
 import { Text } from '../text';
-import { AddFrameModal } from './AddFrameModal';
 
 export const Header = observer(() => {
   const editor = useEditor();
-  const [isFrameModalShowing, setIsFrameModalShowing] = React.useState(false);
 
   return (
     <React.Fragment>
@@ -49,24 +47,9 @@ export const Header = observer(() => {
             >
               {editor.mode === EditorMode.Code ? 'Use Editor' : 'View Code'}
             </Button>
-            <Button
-              variant="bw"
-              css={{ py: '$3', px: '$4' }}
-              onClick={() => {
-                setIsFrameModalShowing(true);
-              }}
-            >
-              Add frame
-            </Button>
           </Box>
         </Box>
       </Box>
-      <AddFrameModal
-        isOpen={isFrameModalShowing}
-        onClose={() => {
-          setIsFrameModalShowing(false);
-        }}
-      />
     </React.Fragment>
   );
 });

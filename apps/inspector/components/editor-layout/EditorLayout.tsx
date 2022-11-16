@@ -5,7 +5,7 @@ import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
 import { DebugFrame } from '../frame';
 import { SettingsEditor } from '../settings-editor';
 import { CodeEditor } from '../code-editor';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import { EditorMode } from '@app/editor/Editor';
 import { observer } from 'mobx-react-lite';
 import { useCollector } from '@composite/react';
@@ -14,44 +14,41 @@ import { LeftSettingsEditor } from '../settings-editor/LeftSettingsEditor';
 import { Text } from '../text';
 import { Box } from '../box';
 import { ComponentEditorView } from './ComponentEditorView';
+import { GlobalSettings } from '../settings-editor/ProgramSettings/GlobalSettings';
+import { AnimatedScreenSlider } from '../animated-screen-slider/AnimatedScreenSlider';
+import { ComponentList } from '../settings-editor/ProgramSettings/ComponentList';
+import { ComponentSettings } from '../settings-editor/ComponentSettings';
+import { TemplateSettings } from '../settings-editor/TemplateSettings';
 
 const StyledScreen = styled('div', {
   display: 'flex',
   flexDirection: 'row',
   overflow: 'hidden',
-  background: '$grayA4',
+  background: '#fff',
   position: 'relative',
 });
 
-const StyledFramesContainer = styled(motion.div, {
+const LEFT_SIDEBAR_WIDTH = 250;
+const RIGHT_SIDEBAR_UI_WIDTH = 300;
+const RIGHT_SIDEBAR_CODE_WIDTH = 500;
+
+const StyledLeftSidebarContainer = styled(motion.div, {
+  overflow: 'auto',
+  position: 'relative',
+  height: '100%',
+  width: `${LEFT_SIDEBAR_WIDTH}px`,
   display: 'flex',
+  flexDirection: 'column',
+  borderRight: '1px solid $grayA5',
+  background: '#fff',
+  marginLeft: 0,
 });
 
-const StyledFramesGrid = styled(motion.div, {
-  display: 'grid',
-  gap: '1px',
-  '--grid-layout-gap': '1px',
-  '--grid-column-count': '2',
-  '--gap-count': 'calc(var(--grid-column-count) - 1)',
-  '--total-gap-width': 'calc(var(--gap-count) * var(--grid-layout-gap))',
-  '--grid-item--min-width': '200px',
-  '--grid-item--max-width':
-    'calc((100% - var(--total-gap-width)) / var(--grid-column-count))',
-  'grid-template-columns':
-    'repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr))',
-  width: '100%',
-  overflow: 'scroll',
-  [`& ${DebugFrame}`]: {
-    minHeight: '50vh',
-  },
-});
-
-const StyledSidebarContainer = styled(motion.div, {
-  width: '300px',
+const StyledRightSidebarContainer = styled(motion.div, {
+  width: `${RIGHT_SIDEBAR_UI_WIDTH}px`,
   background: '#fff',
   borderLeft: '1px solid $grayA5',
   position: 'relative',
-  right: 0,
   height: '100%',
 });
 
@@ -60,33 +57,28 @@ const StyledCodeContainer = styled(motion.div, {
   top: 0,
   right: 0,
   background: '#fff',
-  borderLeft: '1px solid $grayA4',
-  boxShadow: '0px 3px 68px 1px rgb(0 0 0 / 20%)',
-  width: '500px',
+  width: '100%',
   height: '100%',
+});
+
+const StyledSettingsEditor = styled(motion.div, {
+  overflow: 'auto',
+  position: 'absolute',
+  background: '#fff',
+  height: '100%',
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  top: 0,
+  right: 0,
 });
 
 const StyledFrameView = styled(motion.div, {
-  flex: 1,
   background: '#fff',
   height: '100%',
+  transition: '0.2s ease-in',
+  flex: 1,
 });
-
-const EmptyFrameMessage = (props: any) => {
-  return (
-    <Box
-      css={{
-        height: '100%',
-        textAlign: 'center',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Text css={{ color: '$grayA9' }}>{props.message}</Text>
-    </Box>
-  );
-};
 
 export const EditorLayout = observer(
   (props: React.ComponentProps<typeof StyledScreen>) => {
@@ -94,61 +86,111 @@ export const EditorLayout = observer(
 
     return (
       <StyledScreen {...props}>
-        <AnimatePresence initial={false}>
-          <LeftSettingsEditor />
-          <StyledFrameView>
-            <ComponentEditorView />
-          </StyledFrameView>
+        <StyledLeftSidebarContainer
+          initial={'ui'}
+          animate={editor.mode}
+          variants={{
+            code: {
+              marginLeft: 0 - LEFT_SIDEBAR_WIDTH,
+            },
+            ui: {
+              marginLeft: 0,
+            },
+          }}
+          transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+        >
+          <GlobalSettings />
+
+          <Box css={{ position: 'relative', flex: 1 }}>
+            <AnimatedScreenSlider
+              active={'component-list'}
+              screens={[
+                {
+                  id: 'component-list',
+                  render: (cb) => {
+                    return (
+                      <ComponentList
+                        onComponentSelected={(component) => {
+                          editor.setActiveComponentEditor(component);
+                          cb.goTo('component-editor');
+                        }}
+                      />
+                    );
+                  },
+                },
+                {
+                  id: 'component-editor',
+                  render: () => {
+                    return <ComponentSettings />;
+                  },
+                },
+              ]}
+            />
+          </Box>
+        </StyledLeftSidebarContainer>
+        <StyledFrameView>
+          <ComponentEditorView />
+        </StyledFrameView>
+        <StyledRightSidebarContainer
+          initial={false}
+          animate={editor.mode}
+          variants={{
+            ui: { width: RIGHT_SIDEBAR_UI_WIDTH },
+            code: { width: RIGHT_SIDEBAR_CODE_WIDTH },
+          }}
+          transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+        >
           <AnimatePresence initial={false}>
-            {editor.mode === EditorMode.UI && (
-              <StyledSidebarContainer
-                key="sidebar"
-                initial="hide"
+            {editor.mode === EditorMode.Code && (
+              <StyledCodeContainer
+                initial="enter"
                 animate="show"
                 exit="hide"
                 variants={{
-                  show: { right: 0 },
-                  hide: { right: '-100%' },
+                  enter: {
+                    opacity: 0,
+                    right: '-100%',
+                  },
+                  show: {
+                    opacity: 1,
+                    right: 0,
+                  },
+                  hide: {
+                    opacity: 0,
+                    right: '-100%',
+                  },
                 }}
-                transition={{
-                  ease: [0.19, 1, 0.22, 1],
-                  duration: 0.4,
-                }}
+                transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
               >
-                <SettingsEditor />
-              </StyledSidebarContainer>
+                <CodeEditor />
+              </StyledCodeContainer>
             )}
           </AnimatePresence>
 
           <AnimatePresence initial={false}>
-            {editor.mode === EditorMode.Code && (
-              <StyledCodeContainer
-                initial="hide"
+            {editor.mode === EditorMode.UI && (
+              <StyledSettingsEditor
+                initial="enter"
                 animate="show"
                 exit="hide"
                 variants={{
-                  hide: {
+                  enter: {
                     right: '-100%',
                   },
                   show: {
                     right: 0,
                   },
+                  hide: {
+                    right: '-100%',
+                  },
                 }}
-                transition={{
-                  ease: [0.19, 1, 0.22, 1],
-                  duration: 0.4,
-                }}
+                transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
               >
-                <CodeEditor
-                  css={{
-                    width: '100%',
-                    height: '100%',
-                  }}
-                />
-              </StyledCodeContainer>
+                <TemplateSettings />
+              </StyledSettingsEditor>
             )}
           </AnimatePresence>
-        </AnimatePresence>
+        </StyledRightSidebarContainer>
       </StyledScreen>
     );
   }

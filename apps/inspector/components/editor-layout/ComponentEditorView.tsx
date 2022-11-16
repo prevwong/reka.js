@@ -1,5 +1,4 @@
 import { useEditor } from '@app/editor';
-import * as t from '@composite/types';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
 import { styled } from '@app/styles';
 import { observer } from 'mobx-react-lite';
@@ -12,12 +11,13 @@ import { Text } from '../text';
 import { EnterTextField } from '../text-field';
 import { Tree } from '../tree';
 import { AnimatePresence, motion } from 'framer-motion';
+import { AddFrameModal } from './AddFrameModal';
 
 const StyledViewContainer = styled(motion.div, {
   position: 'absolute',
   background: 'rgba(255,255,255,0.9)',
   bottom: '10px',
-  left: '$4',
+  right: '$4',
   width: '40%',
   height: '80%',
   px: '$4',
@@ -26,6 +26,7 @@ const StyledViewContainer = styled(motion.div, {
   borderRadius: '$2',
   overflow: 'scroll',
   boxShadow: 'rgb(0 0 0 / 9%) 0px 3px 12px',
+  zIndex: '$4',
 });
 
 const NoFrameSelectedMessage = () => {
@@ -36,9 +37,10 @@ const NoFrameSelectedMessage = () => {
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center',
+        height: '100%',
       }}
     >
-      <Text>No frame selected</Text>
+      <Text css={{ color: '$grayA9' }}>No frame selected</Text>
     </Box>
   );
 };
@@ -47,8 +49,14 @@ export const ComponentEditorView = observer(() => {
   const editor = useEditor();
 
   const [showViewTree, setShowViewTree] = React.useState(false);
+  const [showAddFrameModal, setShowAddFrameModal] = React.useState(false);
+  const [isEditingFrame, setIsEditingFrame] = React.useState(false);
 
-  if (!editor.settings.active) {
+  const componentEditor = editor.activeComponentEditor;
+
+  console.log(66, isEditingFrame, componentEditor);
+
+  if (!componentEditor) {
     return (
       <Box
         css={{
@@ -74,21 +82,40 @@ export const ComponentEditorView = observer(() => {
           borderBottom: '1px solid $grayA5',
           width: '100%',
           alignItems: 'center',
+          position: 'relative',
+          zIndex: '$1',
+          background: '#fff',
         }}
       >
-        <Box css={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-          <Text css={{ mr: '$4' }}>
-            {editor.settings.active.component.name}
-          </Text>
+        <Box
+          css={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <Text css={{ mr: '$4' }}>{componentEditor.component.name}</Text>
           <Select
             placeholder="Select a frame"
-            value={editor.settings.active.frame?.state.id}
-            onChange={() => {}}
-            items={editor.settings.active.availableUserFrames.map((frame) => ({
+            value={componentEditor.activeFrame?.state.id}
+            onChange={(value) => {
+              componentEditor.setActiveFrame(value);
+            }}
+            items={componentEditor.frameOptions.map((frame) => ({
               value: frame.id,
               title: frame.id,
             }))}
           />
+          <Button
+            css={{ ml: '$2' }}
+            transparent
+            variant="primary"
+            onClick={() => {
+              setShowAddFrameModal(true);
+            }}
+          >
+            Add new Frame
+          </Button>
         </Box>
         <Box css={{ display: 'flex', alignItems: 'center' }}>
           <Text size={1} css={{ mr: '$3', color: '$grayA11' }}>
@@ -98,14 +125,14 @@ export const ComponentEditorView = observer(() => {
             <EnterTextField
               placeholder="100%"
               size={5}
-              value={editor.settings.active.frame?.userData.width}
+              value={componentEditor.activeFrame?.user.width ?? 'auto'}
               onCommit={(value) => {
                 editor.state.change(() => {
                   const frame = editor.state
                     .getExtensionState(UserFrameExtension)
                     .frames.find(
                       (frame) =>
-                        editor.settings.active?.frame?.userData.id === frame.id
+                        componentEditor.activeFrame?.user.id === frame.id
                     );
 
                   if (!frame) {
@@ -122,14 +149,14 @@ export const ComponentEditorView = observer(() => {
             <EnterTextField
               placeholder="100%"
               size={5}
-              value={editor.settings.active.frame?.userData.height}
+              value={componentEditor.activeFrame?.user.height ?? 'auto'}
               onCommit={(value) => {
                 editor.state.change(() => {
                   const frame = editor.state
                     .getExtensionState(UserFrameExtension)
                     .frames.find(
                       (frame) =>
-                        editor.settings.active?.frame?.userData.id === frame.id
+                        componentEditor.activeFrame?.user.id === frame.id
                     );
 
                   if (!frame) {
@@ -144,17 +171,17 @@ export const ComponentEditorView = observer(() => {
         </Box>
       </Box>
       <Box css={{ position: 'relative', flex: 1, height: '100%' }}>
-        {!editor.settings.active.frame ? (
+        {!componentEditor.activeFrame ? (
           <NoFrameSelectedMessage />
         ) : (
           <React.Fragment>
             <RenderFrame
-              frame={editor.settings.active.frame.state}
-              width={editor.settings.active.frame.userData.width}
-              height={editor.settings.active.frame.userData.height}
+              frame={componentEditor.activeFrame.state}
+              width={componentEditor.activeFrame.user.width}
+              height={componentEditor.activeFrame.user.height}
             />
             <AnimatePresence>
-              {editor.settings.active.frame.state.root && showViewTree && (
+              {componentEditor.activeFrame.state.root && showViewTree && (
                 <StyledViewContainer
                   initial="enter"
                   animate="show"
@@ -173,12 +200,9 @@ export const ComponentEditorView = observer(() => {
                       bottom: 0,
                     },
                   }}
-                  transition={{
-                    x: { type: 'spring', stiffness: 300, damping: 30 },
-                    opacity: { duration: 0.2 },
-                  }}
+                  transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
                 >
-                  <Tree root={editor.settings.active.frame.state.root} />
+                  <Tree root={componentEditor.activeFrame.state.root} />
                 </StyledViewContainer>
               )}
             </AnimatePresence>
@@ -192,8 +216,30 @@ export const ComponentEditorView = observer(() => {
           borderTop: '1px solid $grayA5',
           px: '$4',
           py: '$3',
+          position: 'relative',
+          zIndex: '$2',
+          background: '#fff',
         }}
       >
+        <Box
+          css={{
+            ml: '-$3',
+            display: 'flex',
+            alignItems: 'center',
+            flex: 1,
+          }}
+        >
+          <Button
+            transparent
+            variant="primary"
+            onClick={() => {
+              setShowAddFrameModal(true);
+              setIsEditingFrame(true);
+            }}
+          >
+            Edit Frame Props
+          </Button>
+        </Box>
         <Box
           css={{
             display: 'flex',
@@ -207,6 +253,18 @@ export const ComponentEditorView = observer(() => {
           </Button>
         </Box>
       </Box>
+      <AddFrameModal
+        component={componentEditor.component}
+        isOpen={showAddFrameModal}
+        key={isEditingFrame ? componentEditor.activeFrame?.user.id : undefined}
+        frameId={
+          isEditingFrame ? componentEditor.activeFrame?.user.id : undefined
+        }
+        onClose={() => {
+          setShowAddFrameModal(false);
+          setIsEditingFrame(false);
+        }}
+      />
     </Box>
   );
 });

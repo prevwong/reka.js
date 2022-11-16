@@ -141,7 +141,7 @@ const InternalTemplateSettings = ({ template }: any) => {
 export const TemplateSettings = observer(() => {
   const editor = useEditor();
 
-  const template = editor.settings.active?.template;
+  const template = editor.activeComponentEditor?.tplEvent.selected;
 
   if (!template) {
     return null;
