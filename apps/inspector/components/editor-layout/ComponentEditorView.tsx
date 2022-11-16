@@ -54,8 +54,6 @@ export const ComponentEditorView = observer(() => {
 
   const componentEditor = editor.activeComponentEditor;
 
-  console.log(66, isEditingFrame, componentEditor);
-
   if (!componentEditor) {
     return (
       <Box
@@ -95,17 +93,20 @@ export const ComponentEditorView = observer(() => {
           }}
         >
           <Text css={{ mr: '$4' }}>{componentEditor.component.name}</Text>
-          <Select
-            placeholder="Select a frame"
-            value={componentEditor.activeFrame?.state.id}
-            onChange={(value) => {
-              componentEditor.setActiveFrame(value);
-            }}
-            items={componentEditor.frameOptions.map((frame) => ({
-              value: frame.id,
-              title: frame.id,
-            }))}
-          />
+          {componentEditor.frameOptions.length > 0 && (
+            <Select
+              placeholder="Select a frame"
+              value={componentEditor.activeFrame?.state.id}
+              onChange={(value) => {
+                componentEditor.setActiveFrame(value);
+              }}
+              items={componentEditor.frameOptions.map((frame) => ({
+                value: frame.id,
+                title: frame.id,
+              }))}
+            />
+          )}
+
           <Button
             css={{ ml: '$2' }}
             transparent
@@ -209,50 +210,73 @@ export const ComponentEditorView = observer(() => {
           </React.Fragment>
         )}
       </Box>
-      <Box
-        css={{
-          display: 'flex',
-          alignItems: 'center',
-          borderTop: '1px solid $grayA5',
-          px: '$4',
-          py: '$3',
-          position: 'relative',
-          zIndex: '$2',
-          background: '#fff',
-        }}
-      >
+      {componentEditor.activeFrame && (
         <Box
           css={{
-            ml: '-$3',
             display: 'flex',
             alignItems: 'center',
-            flex: 1,
+            borderTop: '1px solid $grayA5',
+            px: '$4',
+            py: '$3',
+            position: 'relative',
+            zIndex: '$2',
+            background: '#fff',
           }}
         >
-          <Button
-            transparent
-            variant="primary"
-            onClick={() => {
-              setShowAddFrameModal(true);
-              setIsEditingFrame(true);
+          <Box
+            css={{
+              ml: '-$3',
+              display: 'flex',
+              alignItems: 'center',
+              flex: 1,
             }}
           >
-            Edit Frame Props
-          </Button>
+            <Button
+              transparent
+              variant="primary"
+              onClick={() => {
+                setShowAddFrameModal(true);
+                setIsEditingFrame(true);
+              }}
+            >
+              Edit Frame Props
+            </Button>
+            <Button
+              transparent
+              variant="danger"
+              onClick={() => {
+                editor.state.change(() => {
+                  const userFrame = componentEditor.activeFrame?.user;
+
+                  if (!userFrame) {
+                    return;
+                  }
+
+                  const frames =
+                    editor.state.getExtensionState(UserFrameExtension).frames;
+
+                  frames.splice(frames.indexOf(userFrame), 1);
+                });
+              }}
+            >
+              Remove Frame
+            </Button>
+          </Box>
+          <Box
+            css={{
+              display: 'flex',
+              alignItems: 'center',
+              alignSelf: 'flex-end',
+              justifySelf: 'flex-end',
+            }}
+          >
+            <Button onClick={() => setShowViewTree(!showViewTree)}>
+              Inspect View
+            </Button>
+          </Box>
         </Box>
-        <Box
-          css={{
-            display: 'flex',
-            alignItems: 'center',
-            alignSelf: 'flex-end',
-            justifySelf: 'flex-end',
-          }}
-        >
-          <Button onClick={() => setShowViewTree(!showViewTree)}>
-            Inspect View
-          </Button>
-        </Box>
-      </Box>
+      )}
+
       <AddFrameModal
         component={componentEditor.component}
         isOpen={showAddFrameModal}

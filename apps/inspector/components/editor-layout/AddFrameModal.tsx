@@ -135,14 +135,12 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
               if (!existingFrame) {
                 editor.state.getExtensionState(UserFrameExtension).frames.push({
                   id: frameName,
-                  name: component.name,
+                  name: props.component.name,
                   props: componentProps,
                 });
 
                 return;
               }
-
-              console.log('componentProps', componentProps);
 
               existingFrame.props = componentProps;
             });

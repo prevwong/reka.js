@@ -9,6 +9,7 @@ import { styled } from '@app/styles';
 import * as React from 'react';
 import { SettingSection } from '../SettingSection';
 import { TemplateLayers } from './TemplateLayers';
+import { observer } from 'mobx-react-lite';
 
 const stringifier = new Stringifier();
 const parser = new Parser();
@@ -30,7 +31,7 @@ const ComponentHeader = styled('div', {
   },
 });
 
-export const ComponentSettings = () => {
+export const ComponentSettings = observer(() => {
   const editor = useEditor();
   const [isAddingNewState, setIsAddingNewState] = React.useState(false);
 
@@ -91,7 +92,7 @@ export const ComponentSettings = () => {
               return;
             }
 
-            const parsedValue = parser.parseExpressionFromSource(`${value}`);
+            const parsedValue = parser.parseExpressionFromSource(`{${value}}`);
 
             if (!parsedValue) {
               return;
@@ -115,4 +116,4 @@ export const ComponentSettings = () => {
       </Box>
     </Box>
   );
-};
+});

@@ -47,6 +47,13 @@ const StyledButton = styled('button', {
           backgroundColor: '$secondary3',
         },
       },
+      danger: {
+        backgroundColor: '$red10',
+        borderColor: '$red10',
+        '&:hover': {
+          backgroundColor: '$red11',
+        },
+      },
       bw: {
         backgroundColor: '#000',
         color: '#fff',
@@ -73,6 +80,18 @@ const StyledButton = styled('button', {
         borderColor: 'transparent',
         '&:hover': {
           backgroundColor: '$indigoA3',
+        },
+      },
+    },
+    {
+      transparent: true,
+      variant: 'danger',
+      css: {
+        color: '$redA10',
+        backgroundColor: 'transparent',
+        borderColor: 'transparent',
+        '&:hover': {
+          backgroundColor: '$redA3',
         },
       },
     },

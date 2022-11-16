@@ -16,6 +16,7 @@ import { Tooltip } from '@app/components/tooltip';
 import { Dropdown } from '@app/components/dropdown';
 import { AddTemplateModal } from '../AddTemplateModal';
 import { useCollector } from '@composite/react';
+import { observer } from 'mobx-react-lite';
 
 type AddTemplateButtonProps = {
   target: t.Template;
@@ -116,7 +117,7 @@ type RenderTemplateNodeProps = {
   depth?: number;
 };
 
-const RenderTemplateNode = (props: RenderTemplateNodeProps) => {
+const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
   const depth = props.depth ?? 0;
 
   const editor = useEditor();
@@ -147,6 +148,9 @@ const RenderTemplateNode = (props: RenderTemplateNodeProps) => {
     return null;
   }
 
+  const isSelected =
+    editor.activeComponentEditor?.tplEvent.selected?.id === props.templateId;
+
   return (
     <Box>
       <Box
@@ -157,6 +161,7 @@ const RenderTemplateNode = (props: RenderTemplateNodeProps) => {
           '&:hover': {
             backgroundColor: '$secondary2',
           },
+          backgroundColor: isSelected ? '$indigoA3!important' : 'transparent',
         }}
       >
         <Box
@@ -172,6 +177,28 @@ const RenderTemplateNode = (props: RenderTemplateNodeProps) => {
             }
 
             editor.activeComponentEditor.setTplEvent('selected', template.data);
+          }}
+          onMouseOver={(e) => {
+            e.stopPropagation();
+            if (!editor.activeComponentEditor) {
+              return;
+            }
+
+            editor.activeComponentEditor.setTplEvent('hovered', template.data);
+          }}
+          onMouseOut={(e) => {
+            if (!editor.activeComponentEditor) {
+              return;
+            }
+
+            if (
+              editor.activeComponentEditor.tplEvent.hovered?.id !==
+              props.templateId
+            ) {
+              return;
+            }
+
+            editor.activeComponentEditor.setTplEvent('hovered', null);
           }}
         >
           <Text size="1" css={{ flex: 1 }}>
@@ -269,7 +296,7 @@ const RenderTemplateNode = (props: RenderTemplateNodeProps) => {
       ))}
     </Box>
   );
-};
+});
 
 type TemplateLayersProps = {
   componentId: string;

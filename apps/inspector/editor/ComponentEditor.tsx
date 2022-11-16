@@ -32,6 +32,7 @@ export class ComponentEditor {
   tplEvent: TplEvent;
 
   private disposeReaction: IReactionDisposer;
+  private disposeActiveFrameRemoval: IReactionDisposer;
 
   constructor(readonly component: t.Component, readonly editor: Editor) {
     this.activeFrame = null;
@@ -40,6 +41,16 @@ export class ComponentEditor {
       selected: null,
       hovered: null,
     };
+
+    makeObservable(this, {
+      createInitialFrame: action,
+      frameOptions: computed,
+      tplEvent: observable,
+      setTplEvent: action,
+      setActiveFrame: action,
+      activeFrame: observable,
+      frameToIframe: observable,
+    });
 
     this.disposeReaction = reaction(
       () => {
@@ -58,19 +69,29 @@ export class ComponentEditor {
       }
     );
 
-    makeObservable(this, {
-      createInitialFrame: action,
-      frameOptions: computed,
-      tplEvent: observable,
-      setTplEvent: action,
-      setActiveFrame: action,
-      activeFrame: observable,
-      frameToIframe: observable,
-    });
+    this.disposeActiveFrameRemoval = reaction(
+      () => {
+        if (!this.activeFrame?.user) {
+          return false;
+        }
+
+        return this.frameOptions.indexOf(this.activeFrame.user) > -1
+          ? false
+          : true;
+      },
+      (bool) => {
+        if (!bool) {
+          return;
+        }
+
+        this.setActiveFrame(null);
+      }
+    );
   }
 
   dispose() {
     this.disposeReaction();
+    this.disposeActiveFrameRemoval();
   }
 
   createInitialFrame() {
@@ -104,10 +125,13 @@ export class ComponentEditor {
     };
   }
 
-  setActiveFrame(frameId: string) {
-    const userFrame = this.frameOptions.find((frame) => frame.id === frameId);
+  setActiveFrame(frameId: string | null) {
+    if (!frameId) {
+      this.activeFrame = null;
+      return;
+    }
 
-    console.log('u', userFrame);
+    const userFrame = this.frameOptions.find((frame) => frame.id === frameId);
 
     if (!userFrame) {
       return;
@@ -144,7 +168,7 @@ export class ComponentEditor {
     return availableUserFrames;
   }
 
-  setTplEvent(event: 'selected' | 'hovered', tpl: t.Template) {
+  setTplEvent(event: 'selected' | 'hovered', tpl: t.Template | null) {
     this.tplEvent[event] = tpl;
   }
 

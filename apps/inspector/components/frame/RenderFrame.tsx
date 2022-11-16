@@ -50,6 +50,7 @@ const StyledFrameContainer = styled('div', {
 type SelectionBorderProps = {
   dom: HTMLElement;
   template: t.Template;
+  type: 'hovered' | 'selected';
 };
 
 const SelectionBorder = observer((props: SelectionBorderProps) => {
@@ -114,11 +115,6 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
     };
 
     setPos();
-
-    const scrollHandler = () => {
-      console.log('animate');
-      setPos();
-    };
 
     const animationLoop = () => {
       setPos();
@@ -190,7 +186,7 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
         css={{
           position: 'relative',
           top: '-22px',
-          background: '$indigo9',
+          background: props.type === 'selected' ? '$indigo9' : '$purple9',
           color: '#fff',
           px: '$3',
           py: '$2',
@@ -214,6 +210,7 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
 
 type SelectionBordersProps = {
   template: t.Template;
+  type: 'hovered' | 'selected';
 };
 
 const SelectionBorders = (props: SelectionBordersProps) => {
@@ -227,7 +224,12 @@ const SelectionBorders = (props: SelectionBordersProps) => {
   return (
     <React.Fragment>
       {[...doms].map((dom, i) => (
-        <SelectionBorder dom={dom} key={i} template={props.template} />
+        <SelectionBorder
+          dom={dom}
+          key={i}
+          template={props.template}
+          type={props.type}
+        />
       ))}
     </React.Fragment>
   );
@@ -251,8 +253,19 @@ const RenderSelectionBorders = observer(() => {
   return (
     <React.Fragment>
       {activeComponentEditor.tplEvent.selected && (
-        <SelectionBorders template={activeComponentEditor.tplEvent.selected} />
+        <SelectionBorders
+          template={activeComponentEditor.tplEvent.selected}
+          type="selected"
+        />
       )}
+      {activeComponentEditor.tplEvent.hovered &&
+        activeComponentEditor.tplEvent.hovered.id !==
+          activeComponentEditor.tplEvent.selected?.id && (
+          <SelectionBorders
+            template={activeComponentEditor.tplEvent.hovered}
+            type="hovered"
+          />
+        )}
     </React.Fragment>
   );
 });

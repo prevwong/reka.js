@@ -74,7 +74,6 @@ export const UserFrameExtensionFactory = () =>
         }
 
         stateFrame.updateProps(userFrameUpdated.props);
-        console.log('update', userFrameUpdated, stateFrame);
       },
     },
   });
