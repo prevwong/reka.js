@@ -44,7 +44,6 @@ export class ExtensionRegistry {
   }
 
   replace() {
-    console.log('replacing');
     Object.keys(this.composite.data.extensions).forEach((key) => {
       const extensionState = this.composite.data.extensions[key];
       const extension = this.getExtensionByKey(key);
