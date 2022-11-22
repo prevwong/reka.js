@@ -159,7 +159,7 @@ Schema.define('Assignment', {
 Schema.define('State', {
   fields: (t) => ({
     program: t.node('Program'),
-    extensions: t.array(t.node('ExtensionState')),
+    extensions: t.map(t.node('ExtensionState')),
   }),
 });
 

@@ -63,4 +63,8 @@ export class Frame {
   hardRerender() {
     this.tree.dispose();
   }
+
+  updateProps(props: Record<string, any>) {
+    this.tree.updateProps(props);
+  }
 }

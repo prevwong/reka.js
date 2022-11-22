@@ -4,13 +4,11 @@ import {
   IComputedValue,
   makeObservable,
   observable,
-  runInAction,
-  comparer,
   reaction,
 } from 'mobx';
 import { Environment } from './environment';
 import { computeExpression } from './expression';
-import { Extension, ExtensionState } from './extension';
+import { ExtensionDefinition, ExtensionRegistry } from './extension';
 import { Frame, FrameOpts } from './frame';
 import { Observer } from './observer';
 import { Query } from './query';
@@ -21,7 +19,7 @@ type StateOpts = {
   components?: t.Component[];
   globals?: Record<string, any>;
 
-  extensions?: Extension<any>[];
+  extensions?: ExtensionDefinition<any>[];
 };
 
 type StateConfig = {
@@ -29,13 +27,13 @@ type StateConfig = {
   components?: t.Component[];
 };
 
-type StateSubscriberOpts = {
+export type StateSubscriberOpts = {
   fireImmediately?: boolean;
 };
 
 type StateSubscriber<C> = {
   collect: (query: Query) => C;
-  onCollect: (collected: C) => void;
+  onCollect: (collected: C, prevCollected: C) => void;
   opts: StateSubscriberOpts;
 };
 
@@ -51,8 +49,8 @@ export class State {
   private syncGlobals: IComputedValue<void> | null = null;
   private syncComponents: IComputedValue<void> | null = null;
   private syncCleanupEnv: IComputedValue<void> | null = null;
-  private extensions: Set<Extension<any>>;
-  private extensionToIndex: WeakMap<Extension<any>, number> = new WeakMap();
+
+  private extensionRegistry: ExtensionRegistry;
   private idToFrame: Map<string, Frame> = new Map();
   private subscribers: Set<StateSubscriber<any>> = new Set();
   private subscriberDisposers: WeakMap<any, any> = new WeakMap();
@@ -60,25 +58,10 @@ export class State {
   constructor(private readonly opts: StateOpts) {
     this.data = t.state({
       program: opts.data,
-      extensions: [],
+      extensions: {},
     });
 
     this.query = new Query(this);
-
-    this.extensions = new Set(this.opts.extensions || []);
-    this.extensions.forEach((extension) => {
-      if (!extension.state) {
-        return;
-      }
-
-      this.data.extensions.push(
-        t.extensionState({
-          value: extension.state,
-        })
-      );
-
-      this.extensionToIndex.set(extension, this.data.extensions.length - 1);
-    });
 
     this.observer = new Observer(this.data, this.observerConfig);
     this.env = new Environment(this);
@@ -91,17 +74,24 @@ export class State {
       allComponents: computed,
     });
 
+    this.extensionRegistry = new ExtensionRegistry(
+      this,
+      this.opts.extensions ?? []
+    );
+
+    this.extensionRegistry.init();
+
     this.sync();
   }
 
-  getExtensionState<E extends Extension<any>>(extension: E) {
-    const index = this.extensionToIndex.get(extension);
+  getExtensionState<E extends ExtensionDefinition<any>>(extension: E) {
+    const value = this.extensionRegistry.getExtensionStateValue(extension);
 
-    if (index === undefined) {
+    if (!value) {
       throw new Error();
     }
 
-    return this.data.extensions[index].value as E['state'];
+    return value as E['state'];
   }
 
   get config(): StateConfig {
@@ -110,9 +100,9 @@ export class State {
       components: this.opts.components || [],
     };
 
-    this.extensions.forEach((extension) => {
-      Object.assign(config.globals, extension.globals);
-      config.components.push(...extension.components);
+    this.extensionRegistry.extensions.forEach((extension) => {
+      Object.assign(config.globals, extension.definition.globals);
+      config.components.push(...extension.definition.components);
     });
 
     return config;
@@ -249,9 +239,14 @@ export class State {
 
     this.env = new Environment(this);
     this.resolver = new Resolver(this);
+    this.frames = [];
+
     this.syncComponents = null;
     this.syncGlobals = null;
     this.syncCleanupEnv = null;
+
+    this.extensionRegistry.replace();
+
     this.frames.forEach((frame) => frame.hardRerender());
 
     oldSubscribers.forEach((subscriber) =>
@@ -259,6 +254,10 @@ export class State {
     );
 
     this.sync();
+  }
+
+  getExtension<E extends ExtensionDefinition<any>>(definition: E) {
+    return this.extensionRegistry.getExtensionFromDefinition(definition);
   }
 
   getTypeFromId(id: string) {
@@ -273,9 +272,14 @@ export class State {
     return this.observer.subscribe(...args);
   }
 
+  subscribe2(...args: any[]) {
+    // @ts-ignore
+    return this.observer.subscribe2(...args);
+  }
+
   subscribe<C>(
     collect: (query: Query) => C,
-    onCollect: (collected: C) => void,
+    onCollect: (collected: C, prevCollected: C) => void,
     opts?: StateSubscriberOpts
   ) {
     const subscriber: StateSubscriber<any> = {
@@ -291,8 +295,8 @@ export class State {
 
     const disposeReaction = reaction(
       () => subscriber.collect(this.query),
-      (collected) => {
-        subscriber.onCollect(collected);
+      (collected, prevCollected) => {
+        subscriber.onCollect(collected, prevCollected);
       },
       {
         fireImmediately: subscriber.opts.fireImmediately,
@@ -311,5 +315,9 @@ export class State {
 
   dispose() {
     this.observer.dispose();
+  }
+
+  toJSON() {
+    return this.data;
   }
 }

@@ -34,7 +34,8 @@ export class ComponentViewEvaluator {
     tree: ViewTree,
     ctx: TemplateEvaluateContext,
     template: t.ComponentTemplate,
-    env: Environment
+    env: Environment,
+    private readonly: boolean = false
   ) {
     this.tree = tree;
     this.ctx = ctx;
@@ -53,9 +54,9 @@ export class ComponentViewEvaluator {
 
       return [
         t.externalComponentView({
-        component,
-        key: this.key,
-        template: this.template,
+          component,
+          key: this.key,
+          template: this.template,
           props: Object.keys(this.template.props).reduce(
             (accum, key) => ({
               ...accum,

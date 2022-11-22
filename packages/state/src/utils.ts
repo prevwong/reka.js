@@ -1,4 +1,8 @@
 export const randUint16 = () => {
+  if (typeof window === 'undefined') {
+    return Math.random();
+  }
+
   return window.crypto.getRandomValues(new Uint16Array(1))[0];
 };
 

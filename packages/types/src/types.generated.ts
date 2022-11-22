@@ -248,7 +248,7 @@ export const assignment = (...args: ConstructorParameters<typeof Assignment>) =>
 
 export class State extends Type {
   declare program: Program;
-  declare extensions: ExtensionState[];
+  declare extensions: Record<string, ExtensionState>;
   constructor(value: TypeProperties<State>) {
     super("State", value);
   }

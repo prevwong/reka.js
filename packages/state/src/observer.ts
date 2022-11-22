@@ -48,6 +48,16 @@ export type ObserverOptions = {
   hooks?: Partial<ObserverHooks>;
 };
 
+export type Subscriber = {
+  deep: boolean;
+  onChange: (change?: any) => void;
+};
+
+export type SubscriberConfig = {
+  type: Type;
+  deep: boolean;
+};
+
 export class Observer<T extends Type = Type> {
   root: T;
   valueToParentMap: WeakMap<any, any>;
@@ -61,6 +71,8 @@ export class Observer<T extends Type = Type> {
 
   private isDisposing: boolean = false;
   private isMutation: boolean = false;
+
+  private typeSubscribers: WeakMap<Type, Subscriber[]> = new WeakMap();
 
   constructor(type: T, opts?: Partial<ObserverOptions>) {
     this.valueToParentMap = new WeakMap();
@@ -133,11 +145,43 @@ export class Observer<T extends Type = Type> {
     });
   }
 
-  subscribe(subscriber: any) {
+  subscribe(subscriber: any, type?: Type) {
     this.subscribers.push(subscriber);
 
     return () => {
       this.subscribers.splice(this.subscribers.indexOf(subscriber), 1);
+    };
+  }
+
+  subscribe2(onChange: () => void, config?: SubscriberConfig) {
+    const mergedConfig = {
+      deep: false,
+      type: this.root,
+      ...(config ?? {}),
+    };
+
+    let subscribers = this.typeSubscribers.get(mergedConfig.type);
+
+    if (!subscribers) {
+      subscribers = [];
+      this.typeSubscribers.set(mergedConfig.type, subscribers);
+    }
+
+    const subscriber: Subscriber = {
+      onChange,
+      deep: mergedConfig.deep,
+    };
+
+    subscribers.push(subscriber);
+
+    return () => {
+      const subscribers = this.typeSubscribers.get(mergedConfig.type);
+
+      if (!subscribers) {
+        return;
+      }
+
+      subscribers.splice(subscribers.indexOf(subscriber), 1);
     };
   }
 
@@ -171,10 +215,6 @@ export class Observer<T extends Type = Type> {
   setupType(value: Type, parent?: Parent) {
     if (parent) {
       this.valueToParentMap.set(value, parent);
-
-      // if (validator && validator.isRef) {
-      //   return;
-      // }
     }
 
     this.markedForDisposal.delete(value);
@@ -431,6 +471,37 @@ export class Observer<T extends Type = Type> {
 
     if (this.opts.hooks?.onChange) {
       this.opts.hooks.onChange(change);
+    }
+
+    let lastTypeInPath: Type | null = null;
+
+    for (let i = change.path.length - 1; i >= 0; i--) {
+      const path = change.path[i];
+
+      if (!(path.parent instanceof Type)) {
+        continue;
+      }
+
+      const typeSubscribers = this.typeSubscribers.get(path.parent);
+
+      if (typeSubscribers) {
+        for (let j = 0; j < typeSubscribers.length; j++) {
+          const subscriber = typeSubscribers[j];
+
+          if (!subscriber.deep && lastTypeInPath !== null) {
+            continue;
+          }
+
+          const relativePath = change.path.slice(i);
+
+          subscriber.onChange({
+            ...change,
+            path: relativePath,
+          });
+        }
+      }
+
+      lastTypeInPath = path.parent;
     }
 
     this.notify(change);

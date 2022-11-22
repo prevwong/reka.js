@@ -1,5 +1,5 @@
 import * as t from '@composite/types';
-import { Extension } from './extension';
+import { Extension, ExtensionDefinition } from './extension';
 
 import { State } from './state';
 
@@ -174,7 +174,7 @@ export class Query {
     return new PlaceholderComponentQuery(this, component);
   }
 
-  getExtensionState<E extends Extension<any>>(extension: E) {
+  getExtensionState<E extends ExtensionDefinition<any>>(extension: E) {
     return this.state.getExtensionState(extension);
   }
 }

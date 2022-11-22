@@ -3,6 +3,7 @@ import {
   computed,
   IComputedValue,
   IObservableValue,
+  makeObservable,
   observable,
   runInAction,
 } from 'mobx';
@@ -41,6 +42,7 @@ export class ViewTree {
   private declare rootObserver: Observer;
   private _root: IObservableValue<t.View | undefined>;
   private rootTemplate: t.ComponentTemplate;
+  private rootTemplateObserver: Observer;
 
   private tplToView: WeakMap<t.Template, t.View[]> = new WeakMap();
   private tplToEachComputationCache: WeakMap<
@@ -70,6 +72,8 @@ export class ViewTree {
       props: this.componentProps,
       children: [],
     });
+
+    this.rootTemplateObserver = new Observer(this.rootTemplate);
   }
 
   private diff(key: string, newView: t.View) {
@@ -169,59 +173,60 @@ export class ViewTree {
 
       let prevEachExpr = template.each;
 
-      const computation = computed(() => {
-        /**
-         * If the each expr for the template has changed, return the existing view
-         * A new view with the proper env values will be computed
-         */
-        if (prevEachExpr !== template.each && this.tplToView.get(template)) {
-          return this.tplToView.get(template) as t.View[];
-        }
-
-        if (template.if) {
-          const bool = this.evaluateExpr(template.if, ctx.env);
-
-          if (!bool) {
-            return [];
+      const computation = computed(
+        () => {
+          /**
+           * If the each expr for the template has changed, return the existing view
+           * A new view with the proper env values will be computed
+           */
+          if (prevEachExpr !== template.each && this.tplToView.get(template)) {
+            return this.tplToView.get(template) as t.View[];
           }
-        }
 
-        const classList = template.classList;
+          if (template.if) {
+            const bool = this.evaluateExpr(template.if, ctx.env);
 
-        if (classList) {
-          ctx.classList = Object.keys(classList.properties).reduce(
-            (accum, key) => {
-              const bool = this.evaluateExpr(
-                classList.properties[key],
-                ctx.env
-              );
-              if (bool) {
-                accum.push(key);
-              }
+            if (!bool) {
+              return [];
+            }
+          }
 
-              return accum;
-            },
-            [] as string[]
-          );
-        }
+          const classList = template.classList;
 
-        let view: t.View[] = [];
+          if (classList) {
+            ctx.classList = Object.keys(classList.properties).reduce(
+              (accum, key) => {
+                const bool = this.evaluateExpr(
+                  classList.properties[key],
+                  ctx.env
+                );
+                if (bool) {
+                  accum.push(key);
+                }
 
-        if (template instanceof t.TagTemplate) {
-          view = this.computeTagTemplate(template, ctx);
-        }
+                return accum;
+              },
+              [] as string[]
+            );
+          }
 
-        if (template instanceof t.ComponentTemplate) {
-          view = this.computeComponentTemplate(template, ctx);
-        }
+          let view: t.View[] = [];
 
-        if (template instanceof t.SlotTemplate) {
-          view = this.computeSlotTemplate(template, ctx);
-        }
+          if (template instanceof t.TagTemplate) {
+            view = this.computeTagTemplate(template, ctx);
+          }
 
-        this.tplToView.set(template, view);
+          if (template instanceof t.ComponentTemplate) {
+            view = this.computeComponentTemplate(template, ctx);
+          }
 
-        return view;
+          if (template instanceof t.SlotTemplate) {
+            view = this.computeSlotTemplate(template, ctx);
+          }
+
+          this.tplToView.set(template, view);
+
+          return view;
         },
         {
           keepAlive: true,
@@ -459,6 +464,7 @@ export class ViewTree {
   }
 
   dispose() {
+    this.rootTemplateObserver.dispose();
     this.rootObserver.dispose();
 
     this.tplToView = new Map();
@@ -468,5 +474,11 @@ export class ViewTree {
     this.tplKeyToViewComputationCache = new Map();
     this.tplKeyToComponentEvaluator = new Map();
     this.tplKeyToView = new Map();
+  }
+
+  updateProps(props: Record<string, any>) {
+    this.rootTemplate.props = props;
+
+    this.computeTree();
   }
 }
