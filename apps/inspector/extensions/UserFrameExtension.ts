@@ -15,6 +15,7 @@ export type UserFrameExtensionState = {
 
 export const UserFrameExtensionFactory = () =>
   createExtension<UserFrameExtensionState>({
+    key: 'user-frame-extension',
     state: {
       frames: [
         { id: 'Main App', name: 'App', width: '100%', height: '100%' },
@@ -40,41 +41,123 @@ export const UserFrameExtensionFactory = () =>
       ],
     },
     globals: {},
-    components: [],
-    hooks: {
-      onCreate: (state, pluginState) => {
-        pluginState.frames.forEach((frame) => {
-          state.createFrame({
-            id: frame.id,
-            component: {
-              name: frame.name,
-              props: frame.props,
-            },
+    components: [
+      t.compositeComponent({
+        name: 'ExtensionComponent',
+        props: [],
+        state: [],
+        template: t.tagTemplate({
+          tag: 'div',
+          props: {},
+          children: [
+            t.tagTemplate({
+              tag: 'button',
+              props: {},
+              children: [
+                t.tagTemplate({
+                  tag: 'text',
+                  props: {
+                    text: t.literal({
+                      value: 'Hello World From extension',
+                    }),
+                  },
+                  children: [],
+                }),
+              ],
+            }),
+          ],
+        }),
+      }),
+    ],
+    init: (ext) => {
+      ext.subscribe(
+        (state) => {
+          return {
+            frameProps: state.frames.reduce<
+              Record<string, Record<string, any>>
+            >(
+              (accum, frame) => ({
+                ...accum,
+                [frame.id]: frame.props ?? {},
+              }),
+              {}
+            ),
+          };
+        },
+        (collected) => {
+          Object.keys(collected.frameProps).forEach((key) => {
+            const props = collected.frameProps[key];
+
+            const stateFrame = ext.composite.frames.find(
+              (frame) => frame.id === key
+            );
+
+            if (!stateFrame) {
+              return;
+            }
+
+            stateFrame.updateProps(props);
           });
-        });
-      },
-      onStateChange: (state, _pluginState, change) => {
-        const isUserFrameUpdatePath =
-          change.path.length === 2 &&
-          change.path[0].key === 'frames' &&
-          typeof change.path[1].key === 'number';
-
-        if (!isUserFrameUpdatePath) {
-          return;
         }
+      );
 
-        const userFrameUpdated = change.object;
+      ext.subscribe(
+        (state) => {
+          return {
+            frameCount: state.frames.length,
+            frames: state.frames,
+          };
+        },
+        (state, prevState) => {
+          const currentFrames = state.frames;
 
-        const stateFrame = state.frames.find(
-          (frame) => frame.id === userFrameUpdated.id
-        );
+          currentFrames.forEach((currentFrame) => {
+            const stateFrame = ext.composite.frames.find(
+              (frame) => frame.id === currentFrame.id
+            );
 
-        if (!stateFrame) {
-          return;
+            if (stateFrame) {
+              return;
+            }
+
+            ext.composite.createFrame({
+              id: currentFrame.id,
+              component: {
+                name: currentFrame.name,
+                props: currentFrame.props,
+              },
+            });
+          });
+
+          if (!prevState) {
+            return;
+          }
+
+          if (prevState.frames.length <= currentFrames.length) {
+            return;
+          }
+
+          const currentFrameIds = currentFrames.map((frame) => frame.id);
+          const deletedFrames = prevState.frames.filter(
+            (frame) => currentFrameIds.includes(frame.id) === false
+          );
+
+          deletedFrames.forEach((deletedFrame) => {
+            const frame = ext.composite.frames.find(
+              (frame) => frame.id === deletedFrame.id
+            );
+
+            if (!frame) {
+              return;
+            }
+
+            ext.composite.removeFrame(frame);
+          });
+        },
+        {
+          fireImmediately: true,
         }
-
-        stateFrame.updateProps(userFrameUpdated.props);
-      },
+      );
     },
   });
 

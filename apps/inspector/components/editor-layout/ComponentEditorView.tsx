@@ -12,6 +12,7 @@ import { EnterTextField } from '../text-field';
 import { Tree } from '../tree';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AddFrameModal } from './AddFrameModal';
+import { useCollector } from '@composite/react';
 
 const StyledViewContainer = styled(motion.div, {
   position: 'absolute',
@@ -54,6 +55,25 @@ export const ComponentEditorView = observer(() => {
 
   const componentEditor = editor.activeComponentEditor;
 
+  const { frames } = useCollector(
+    (query) => {
+      if (!componentEditor) {
+        return {
+          frames: [],
+        };
+      }
+
+      return {
+        frames: query.state
+          .getExtension(UserFrameExtension)
+          .state.frames.filter(
+            (frame) => frame.name === componentEditor.component.name
+          ),
+      };
+    },
+    [componentEditor]
+  );
+
   if (!componentEditor) {
     return (
       <Box
@@ -93,14 +113,14 @@ export const ComponentEditorView = observer(() => {
           }}
         >
           <Text css={{ mr: '$4' }}>{componentEditor.component.name}</Text>
-          {componentEditor.frameOptions.length > 0 && (
+          {frames.length > 0 && (
             <Select
               placeholder="Select a frame"
               value={componentEditor.activeFrame?.state.id}
               onChange={(value) => {
                 componentEditor.setActiveFrame(value);
               }}
-              items={componentEditor.frameOptions.map((frame) => ({
+              items={frames.map((frame) => ({
                 value: frame.id,
                 title: frame.id,
               }))}
@@ -129,12 +149,9 @@ export const ComponentEditorView = observer(() => {
               value={componentEditor.activeFrame?.user.width ?? 'auto'}
               onCommit={(value) => {
                 editor.state.change(() => {
-                  const frame = editor.state
-                    .getExtensionState(UserFrameExtension)
-                    .frames.find(
-                      (frame) =>
-                        componentEditor.activeFrame?.user.id === frame.id
-                    );
+                  const frame = frames.find(
+                    (frame) => componentEditor.activeFrame?.user.id === frame.id
+                  );
 
                   if (!frame) {
                     return;
@@ -153,12 +170,9 @@ export const ComponentEditorView = observer(() => {
               value={componentEditor.activeFrame?.user.height ?? 'auto'}
               onCommit={(value) => {
                 editor.state.change(() => {
-                  const frame = editor.state
-                    .getExtensionState(UserFrameExtension)
-                    .frames.find(
-                      (frame) =>
-                        componentEditor.activeFrame?.user.id === frame.id
-                    );
+                  const frame = frames.find(
+                    (frame) => componentEditor.activeFrame?.user.id === frame.id
+                  );
 
                   if (!frame) {
                     return;
@@ -252,10 +266,10 @@ export const ComponentEditorView = observer(() => {
                     return;
                   }
 
-                  const frames =
-                    editor.state.getExtensionState(UserFrameExtension).frames;
+                  const userFrames =
+                    editor.state.getExtension(UserFrameExtension).state.frames;
 
-                  frames.splice(frames.indexOf(userFrame), 1);
+                  userFrames.splice(userFrames.indexOf(userFrame), 1);
                 });
               }}
             >

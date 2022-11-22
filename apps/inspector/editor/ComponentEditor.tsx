@@ -12,6 +12,7 @@ import {
   computed,
   observable,
 } from 'mobx';
+import invariant from 'tiny-invariant';
 
 import { Editor } from './Editor';
 
@@ -31,8 +32,7 @@ export class ComponentEditor {
   frameToIframe: WeakMap<Frame, HTMLIFrameElement>;
   tplEvent: TplEvent;
 
-  private disposeReaction: IReactionDisposer;
-  private disposeActiveFrameRemoval: IReactionDisposer;
+  private disposeActiveFrameRemoval: () => void;
 
   constructor(readonly component: t.Component, readonly editor: Editor) {
     this.activeFrame = null;
@@ -43,8 +43,6 @@ export class ComponentEditor {
     };
 
     makeObservable(this, {
-      createInitialFrame: action,
-      frameOptions: computed,
       tplEvent: observable,
       setTplEvent: action,
       setActiveFrame: action,
@@ -52,77 +50,52 @@ export class ComponentEditor {
       frameToIframe: observable,
     });
 
-    this.disposeReaction = reaction(
-      () => {
-        return this.frameOptions.length;
-      },
-      (count, _, cb) => {
-        if (count === 0) {
+    const userFrameExtension =
+      this.editor.state.getExtension(UserFrameExtension);
+
+    this.disposeActiveFrameRemoval = userFrameExtension.subscribe(
+      (state) => ({
+        framesCount: state.frames.length,
+      }),
+      (collected, prevCollected) => {
+        if (collected.framesCount >= prevCollected.framesCount) {
           return;
         }
 
-        this.createInitialFrame();
-        cb.dispose();
-      },
-      {
-        fireImmediately: true,
-      }
-    );
-
-    this.disposeActiveFrameRemoval = reaction(
-      () => {
         if (!this.activeFrame?.user) {
-          return false;
+          return;
         }
 
-        return this.frameOptions.indexOf(this.activeFrame.user) > -1
-          ? false
-          : true;
-      },
-      (bool) => {
-        if (!bool) {
+        // Check if current active frame has been deleted
+        const isActiveFrameDeleted = !userFrameExtension.state.frames.find(
+          (frame) => frame.id === this.activeFrame?.user.id
+        );
+
+        if (!isActiveFrameDeleted) {
           return;
         }
 
         this.setActiveFrame(null);
       }
     );
+
+    this.setInitialActiveFrame();
   }
 
-  dispose() {
-    this.disposeReaction();
-    this.disposeActiveFrameRemoval();
-  }
+  setInitialActiveFrame() {
+    const firstUserFrame = this.editor.state
+      .getExtension(UserFrameExtension)
+      .state.frames.filter((frame) => frame.name === this.component.name)[0];
 
-  createInitialFrame() {
-    const firstComponentUserFrame = this.frameOptions.find(
-      (frame) => frame.name === this.component.name
-    );
-
-    if (!firstComponentUserFrame) {
+    if (!firstUserFrame) {
       return;
     }
 
-    let stateFrame =
-      this.editor.state.frames.find(
-        (frame) => frame.id === firstComponentUserFrame.id
-      ) || null;
+    this.setActiveFrame(firstUserFrame.id);
+  }
 
-    if (!stateFrame) {
-      stateFrame = this.editor.state.createFrame({
-        id: firstComponentUserFrame.id,
-        component: {
-          name: this.component.name,
-          props: firstComponentUserFrame.props,
-        },
-      });
-    }
-
-    this.activeFrame = {
-      state: stateFrame,
-      user: firstComponentUserFrame,
-      tplElements: new WeakMap(),
-    };
+  dispose() {
+    this.disposeActiveFrameRemoval();
   }
 
   setActiveFrame(frameId: string | null) {
@@ -131,7 +104,9 @@ export class ComponentEditor {
       return;
     }
 
-    const userFrame = this.frameOptions.find((frame) => frame.id === frameId);
+    const userFrame = this.editor.state
+      .getExtension(UserFrameExtension)
+      .state.frames.find((frame) => frame.id === frameId);
 
     if (!userFrame) {
       return;
@@ -140,32 +115,13 @@ export class ComponentEditor {
     let stateFrame =
       this.editor.state.frames.find((frame) => frame.id === frameId) || null;
 
-    if (!stateFrame) {
-      stateFrame = this.editor.state.createFrame({
-        id: frameId,
-        component: {
-          name: this.component.name,
-          props: userFrame.props,
-        },
-      });
-    }
+    invariant(stateFrame, 'State frame not found');
 
     this.activeFrame = {
       state: stateFrame,
       user: userFrame,
       tplElements: new WeakMap(),
     };
-  }
-
-  get frameOptions() {
-    const userFrames =
-      this.editor.state.getExtensionState(UserFrameExtension).frames;
-
-    const availableUserFrames = userFrames.filter(
-      (frame) => frame.name === this.component.name
-    );
-
-    return availableUserFrames;
   }
 
   setTplEvent(event: 'selected' | 'hovered', tpl: t.Template | null) {

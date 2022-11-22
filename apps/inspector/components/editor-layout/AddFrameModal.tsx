@@ -54,7 +54,7 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
         .frames.find((frame) => frame.id === props.frameId)
     : null;
 
-  const [frameName, setFrameName] = React.useState('');
+  const [frameName, setFrameName] = React.useState(existingFrame?.name ?? '');
   const [componentProps, setComponentProps] = React.useState<
     Record<string, any>
   >(getInitialComponentProps(props.component, existingFrame?.props ?? {}));
@@ -144,6 +144,8 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
 
               existingFrame.props = componentProps;
             });
+
+            editor.activeComponentEditor?.setActiveFrame(frameName);
 
             props.onClose();
           }}

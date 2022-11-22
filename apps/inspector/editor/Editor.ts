@@ -13,7 +13,6 @@ import {
 import randomColor from 'randomcolor';
 import shortUUID from 'short-uuid';
 import { Event } from './Event';
-import { SettingsPageStore } from './SettingsPageStore';
 import { setupExperimentalCollaborationSync } from '@app/utils/setupCollabSync';
 import { ComponentEditor } from './ComponentEditor';
 

@@ -1,18 +1,12 @@
 import * as React from 'react';
 import { styled } from '@app/styles';
 import { useEditor } from '@app/editor';
-import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
-import { DebugFrame } from '../frame';
-import { SettingsEditor } from '../settings-editor';
 import { CodeEditor } from '../code-editor';
-import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { EditorMode } from '@app/editor/Editor';
 import { observer } from 'mobx-react-lite';
-import { useCollector } from '@composite/react';
-
-import { LeftSettingsEditor } from '../settings-editor/LeftSettingsEditor';
-import { Text } from '../text';
 import { Box } from '../box';
+
 import { ComponentEditorView } from './ComponentEditorView';
 import { GlobalSettings } from '../settings-editor/ProgramSettings/GlobalSettings';
 import { AnimatedScreenSlider } from '../animated-screen-slider/AnimatedScreenSlider';

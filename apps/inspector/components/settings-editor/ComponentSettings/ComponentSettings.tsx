@@ -55,7 +55,11 @@ export const ComponentSettings = observer(() => {
           onChange={() => {}}
         />
       </ComponentHeader>
-      <SettingSection title="State" onAdd={() => setIsAddingNewState(true)}>
+      <SettingSection
+        title="State"
+        onAdd={() => setIsAddingNewState(true)}
+        collapsedOnInitial={false}
+      >
         <PairInput
           values={component.state.map((state) => ({
             id: state.name,

@@ -6,10 +6,12 @@ import { Query } from '@composite/state';
 type Collector<C extends any> = (query: Query) => C;
 
 export const useCollector = <C extends Record<string, any>>(
-  collector: Collector<C>
+  collector: Collector<C>,
+  deps?: any[]
 ) => {
   const state = React.useContext(CompositeStateContext);
   const collectorRef = React.useRef(collector);
+  collectorRef.current = collector;
 
   const [collected, setCollected] = React.useState<C>(
     collectorRef.current(state.query)
@@ -18,12 +20,14 @@ export const useCollector = <C extends Record<string, any>>(
   React.useEffect(() => {
     return state.subscribe(
       () => collectorRef.current(state.query),
-      (collected) => setCollected(collected),
+      (collected) => {
+        return setCollected(collected);
+      },
       {
         fireImmediately: true,
       }
     );
-  }, [state]);
+  }, [state, ...(deps || [])]);
 
   return {
     state,
