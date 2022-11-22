@@ -50,8 +50,8 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
 
   const existingFrame = props.frameId
     ? editor.state
-        .getExtensionState(UserFrameExtension)
-        .frames.find((frame) => frame.id === props.frameId)
+        .getExtension(UserFrameExtension)
+        .state.frames.find((frame) => frame.id === props.frameId)
     : null;
 
   const [frameName, setFrameName] = React.useState(existingFrame?.name ?? '');
@@ -133,11 +133,13 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
           onClick={() => {
             editor.state.change(() => {
               if (!existingFrame) {
-                editor.state.getExtensionState(UserFrameExtension).frames.push({
-                  id: frameName,
-                  name: props.component.name,
-                  props: componentProps,
-                });
+                editor.state
+                  .getExtension(UserFrameExtension)
+                  .state.frames.push({
+                    id: frameName,
+                    name: props.component.name,
+                    props: componentProps,
+                  });
 
                 return;
               }

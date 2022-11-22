@@ -174,7 +174,7 @@ export class Query {
     return new PlaceholderComponentQuery(this, component);
   }
 
-  getExtensionState<E extends ExtensionDefinition<any>>(extension: E) {
-    return this.state.getExtensionState(extension);
+  getExtension<E extends ExtensionDefinition<any>>(extension: E) {
+    return this.state.getExtension(extension);
   }
 }

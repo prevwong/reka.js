@@ -31,7 +31,7 @@ export class Extension<S extends ExtensionStateDefinition | any = undefined> {
     opts?: StateSubscriberOpts
   ) {
     return this.composite.subscribe(
-      (query) => collector(query.getExtensionState(this.definition)),
+      (query) => collector(query.getExtension(this.definition).state),
       subscriber,
       opts
     );

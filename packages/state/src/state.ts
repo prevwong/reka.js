@@ -84,16 +84,6 @@ export class State {
     this.sync();
   }
 
-  getExtensionState<E extends ExtensionDefinition<any>>(extension: E) {
-    const value = this.extensionRegistry.getExtensionStateValue(extension);
-
-    if (!value) {
-      throw new Error();
-    }
-
-    return value as E['state'];
-  }
-
   get config(): StateConfig {
     const config = {
       globals: this.opts.globals || {},
@@ -270,11 +260,6 @@ export class State {
 
   listenToChanges(...args: Parameters<Observer<any>['subscribe']>) {
     return this.observer.subscribe(...args);
-  }
-
-  subscribe2(...args: any[]) {
-    // @ts-ignore
-    return this.observer.subscribe2(...args);
   }
 
   subscribe<C>(
