@@ -41,7 +41,7 @@ export class YjsCompositeSyncProvider {
   }
 
   dispose() {
-    this.yDoc.getMap('root').unobserveDeep(this.yDocChangeListener);
+    this.root.unobserveDeep(this.yDocChangeListener);
     this.compositeChangeUnsubscriber();
   }
 
@@ -259,7 +259,7 @@ export class YjsCompositeSyncProvider {
     );
   }
 
-  sync() {
+  init() {
     // Listen to Composite state changes
     this.compositeChangeUnsubscriber = this.state.listenToChanges((change) => {
       if (this.isSynchingToMobx) {
@@ -283,7 +283,7 @@ export class YjsCompositeSyncProvider {
     });
 
     // Listen to Y.js doc changes
-    this.yDoc.getMap('root').observeDeep(this.yDocChangeListener);
+    this.root.observeDeep(this.yDocChangeListener);
   }
 
   destroy() {
@@ -291,29 +291,6 @@ export class YjsCompositeSyncProvider {
       this.compositeChangeUnsubscriber();
     }
 
-    this.yDoc.getMap('root').unobserveDeep(this.yDocChangeListener);
-  }
-
-  private loadInitialDocument() {
-    const existingDocument = this.root.get('document');
-    if (existingDocument) {
-      const existingState = t.unflattenType(existingDocument.toJSON());
-      this.state.replace(existingState);
-      return;
-    }
-
-    const flattenState = t.flattenType(this.state.root);
-    const { converted } = jsToYType(flattenState);
-
-    this.root.set('document', converted);
-  }
-
-  load() {
-    if (this.loaded) {
-      return;
-    }
-
-    this.loaded = true;
-    this.loadInitialDocument();
+    this.root.unobserveDeep(this.yDocChangeListener);
   }
 }

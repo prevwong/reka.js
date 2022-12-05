@@ -10,7 +10,8 @@
     "dev": "run-p tailwind:watch next:dev",
     "build": "run-s tailwind:build next:build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "encode-dummy-program": "tsx ./scripts/encodeInitialContent.ts"
   },
   "dependencies": {
     "@codemirror/basic-setup": "^0.19.1",
@@ -46,6 +47,7 @@
     "react-frame-component": "^5.2.3",
     "short-uuid": "^4.2.0",
     "tiny-invariant": "^1.2.0",
+    "tsx": "^3.12.1",
     "unique-names-generator": "^4.7.1",
     "y-webrtc": "^10.2.2",
     "yjs": "^13.5.27"
