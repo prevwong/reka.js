@@ -17,6 +17,8 @@ export const EditorContextProvider = ({
   React.useEffect(() => {
     const editor = new Editor();
 
+    (window as any).state = editor.state;
+
     setEditor(editor);
 
     return () => {

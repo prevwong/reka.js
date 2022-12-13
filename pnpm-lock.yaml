@@ -154,11 +154,13 @@ importers:
     specifiers:
       '@composite/state': workspace:*
       '@composite/types': workspace:*
+      tiny-invariant: ^1.2.0
       y-protocols: ^1.0.5
       yjs: ^13.5.27
     dependencies:
       '@composite/state': link:../state
       '@composite/types': link:../types
+      tiny-invariant: 1.2.0
       yjs: 13.5.41
     devDependencies:
       y-protocols: 1.0.5

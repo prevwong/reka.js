@@ -23,6 +23,10 @@ export class ExtensionRegistry {
     this.extensions.map((extension) => extension.init());
   }
 
+  dispose() {
+    this.extensions.map((extension) => extension.dispose());
+  }
+
   getExtensionFromDefinition<E extends ExtensionDefinition<any>>(
     definition: E
   ): Extension<E['state']> {
@@ -41,23 +45,5 @@ export class ExtensionRegistry {
     invariant(extension, `Extension "${key}" not found`);
 
     return extension;
-  }
-
-  replace() {
-    Object.keys(this.composite.data.extensions).forEach((key) => {
-      const extensionState = this.composite.data.extensions[key];
-      const extension = this.getExtensionByKey(key);
-
-      extension['_state'] = extensionState;
-
-      extension.init();
-    });
-
-    // this.composite.data.extensions.forEach((extensionState, i) => {
-    //   this.extensions[i]['_state'] = extensionState;
-    //   this.extensionToExtensionState.set(this.extensions[i], extensionState);
-    //   this.extensionStateToExtension.set(extensionState, this.extensions[i]);
-    //   this.extensions[i].init(this.extensions[i]);
-    // });
   }
 }

@@ -7,5 +7,5 @@ export const programFromJSON = t.Schema.fromJSON(
 );
 export * from './dummy-program';
 export * from './encoded-dummy-program';
-export * from './state-config';
+export * from './shared-state-globals';
 export * from './yjs';

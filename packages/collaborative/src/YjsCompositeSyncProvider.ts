@@ -6,7 +6,6 @@ import * as Y from 'yjs';
 import { getTypePathFromMobxChangePath, jsToYType, yTypeToJS } from './utils';
 
 export class YjsCompositeSyncProvider {
-  private loaded: boolean = false;
   private mobxChangesToSync: any[] = [];
   private isBatchingMobxChanges = false;
   private isSynchingToMobx = false;
@@ -14,16 +13,14 @@ export class YjsCompositeSyncProvider {
   private declare compositeChangeUnsubscriber: () => void;
   private yDocChangeListener: (events: any, tr: any) => void;
 
-  root: Y.Map<any>;
-  yDoc: Y.Doc;
+  private yDoc: Y.Doc;
 
-  constructor(readonly state: State, type: Y.Map<any>) {
+  constructor(readonly state: State, readonly type: Y.Map<any>) {
     if (!type.doc) {
       throw new Error();
     }
 
     this.yDoc = type.doc;
-    this.root = type;
 
     this.yDocChangeListener = (events, tr) => {
       if (!this.state) {
@@ -41,7 +38,7 @@ export class YjsCompositeSyncProvider {
   }
 
   dispose() {
-    this.root.unobserveDeep(this.yDocChangeListener);
+    this.type.unobserveDeep(this.yDocChangeListener);
     this.compositeChangeUnsubscriber();
   }
 
@@ -52,8 +49,8 @@ export class YjsCompositeSyncProvider {
     this.isSynchingToMobx = prev;
   }
 
-  get document() {
-    return this.root.get('document');
+  get yCompositeDocument() {
+    return this.type.get('document');
   }
 
   syncToState(event: Y.YEvent<any>) {
@@ -61,7 +58,7 @@ export class YjsCompositeSyncProvider {
       return;
     }
 
-    const toJsObject = (root: Y.Map<any>, paths: any[]): any => {
+    const toJsObject = (paths: any[]): any => {
       // mutating a type object property
       if (paths[0] === 'types' && paths.length > 1) {
         const traverse = (value: any, paths) => {
@@ -80,7 +77,7 @@ export class YjsCompositeSyncProvider {
       return null;
     };
 
-    const yDocRoot = this.document as Y.Map<any>;
+    const yDocRoot = this.yCompositeDocument as Y.Map<any>;
 
     if (event.path.length === 0) {
       return;
@@ -88,7 +85,9 @@ export class YjsCompositeSyncProvider {
 
     this.state.change(() => {
       // console.log("synching to state", event);
-      const obj = toJsObject(yDocRoot, [...event.path.slice(1)]);
+      const obj = toJsObject([...event.path.slice(1)]);
+
+      console.log('obj', event, obj);
 
       if (!obj) {
         return;
@@ -148,7 +147,7 @@ export class YjsCompositeSyncProvider {
         let removed: any[] = [];
         let insert: Record<string, any> = {};
 
-        const yDocRoot = this.root.get('document') as Y.Map<any>;
+        const yDocRoot = this.yCompositeDocument;
 
         changes.forEach((change) => {
           if (change.type === 'replace') {
@@ -176,7 +175,7 @@ export class YjsCompositeSyncProvider {
               return traverse(target, paths);
             };
 
-            console.log('root', this.root, yDocRoot, paths, rootType);
+            console.log('root', this.type, yDocRoot, paths, rootType);
 
             const type = yDocRoot.get('types').get(rootType.id);
 
@@ -283,14 +282,6 @@ export class YjsCompositeSyncProvider {
     });
 
     // Listen to Y.js doc changes
-    this.root.observeDeep(this.yDocChangeListener);
-  }
-
-  destroy() {
-    if (this.compositeChangeUnsubscriber) {
-      this.compositeChangeUnsubscriber();
-    }
-
-    this.root.unobserveDeep(this.yDocChangeListener);
+    this.type.observeDeep(this.yDocChangeListener);
   }
 }

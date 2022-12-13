@@ -14,6 +14,8 @@ export interface ExtensionConfig<
   components: t.Component[];
   state: S;
   init: (extension: Extension<S>) => void;
+  dispose: (extension: Extension<S>) => void;
+  fromJSON: (state: any) => S;
 }
 
 export class ExtensionDefinition<
@@ -23,15 +25,29 @@ export class ExtensionDefinition<
   declare globals: Record<string, any>;
   declare components: t.Component[];
   declare state: S;
+
+  declare fromJSON: (state: any) => S;
   declare init: (extension: Extension<S>) => void;
+  declare dispose: (extension: Extension<S>) => void;
 
   constructor(config: Require<Partial<ExtensionConfig<S>>, 'key'>) {
-    Object.assign(this, config);
+    this.key = config.key;
+    this.globals = config.globals || {};
+    this.components = config.components || [];
+    this.state = config.state as S;
+    this.fromJSON =
+      config.fromJSON ||
+      ((state) => {
+        return state;
+      });
+
+    this.init = config.init || (() => {});
+    this.dispose = config.dispose || (() => {});
   }
 }
 
 export const createExtension = <S extends ExtensionStateDefinition>(
-  config: ExtensionConfig<S>
+  config: Require<Partial<ExtensionConfig<S>>, 'key'>
 ) => {
   return new ExtensionDefinition<S>(config);
 };

@@ -14,17 +14,10 @@ import { Observer } from './observer';
 import { Query } from './query';
 import { Resolver } from './resolver';
 
-type StateOpts = {
-  data: t.Program;
+export type StateOpts = {
   components?: t.Component[];
   globals?: Record<string, any>;
-
   extensions?: ExtensionDefinition<any>[];
-};
-
-type StateConfig = {
-  globals: Record<string, any>;
-  components?: t.Component[];
 };
 
 export type StateSubscriberOpts = {
@@ -38,32 +31,30 @@ type StateSubscriber<C> = {
 };
 
 export class State {
-  env: Environment;
-  resolver: Resolver;
   frames: Frame[];
-  data: t.State;
 
-  query: Query;
+  declare env: Environment;
+  declare resolver: Resolver;
+  declare data: t.State;
+  declare query: Query;
 
-  private observer: Observer<t.State>;
+  private declare observer: Observer<t.State>;
+  private declare extensionRegistry: ExtensionRegistry;
+
   private syncGlobals: IComputedValue<void> | null = null;
   private syncComponents: IComputedValue<void> | null = null;
   private syncCleanupEnv: IComputedValue<void> | null = null;
-
-  private extensionRegistry: ExtensionRegistry;
   private idToFrame: Map<string, Frame> = new Map();
   private subscribers: Set<StateSubscriber<any>> = new Set();
   private subscriberDisposers: WeakMap<any, any> = new WeakMap();
 
   constructor(private readonly opts: StateOpts) {
-    this.data = t.state({
-      program: opts.data,
-      extensions: {},
-    });
+    this.frames = [];
+  }
 
+  load(state: t.State) {
+    this.data = t.state(state);
     this.query = new Query(this);
-
-    this.observer = new Observer(this.data, this.observerConfig);
     this.env = new Environment(this);
     this.resolver = new Resolver(this);
     this.frames = [];
@@ -79,12 +70,12 @@ export class State {
       this.opts.extensions ?? []
     );
 
+    this.observer = new Observer(this.data, this.observerConfig);
     this.extensionRegistry.init();
-
     this.sync();
   }
 
-  get config(): StateConfig {
+  get config() {
     const config = {
       globals: this.opts.globals || {},
       components: this.opts.components || [],
@@ -211,41 +202,6 @@ export class State {
     return this.idToFrame.get(id);
   }
 
-  replace(state: t.State) {
-    const oldSubscribers = new Set(this.subscribers);
-
-    this.subscribers.forEach((subscriber) => {
-      if (!this.subscriberDisposers.get(subscriber)) {
-        return;
-      }
-
-      this.subscriberDisposers.get(subscriber)();
-    });
-
-    this.subscribers = new Set();
-
-    this.data = state;
-    this.observer.replace(this.data);
-
-    this.env = new Environment(this);
-    this.resolver = new Resolver(this);
-    this.frames = [];
-
-    this.syncComponents = null;
-    this.syncGlobals = null;
-    this.syncCleanupEnv = null;
-
-    this.extensionRegistry.replace();
-
-    this.frames.forEach((frame) => frame.hardRerender());
-
-    oldSubscribers.forEach((subscriber) =>
-      this.subscribe(subscriber.collect, subscriber.onCollect, subscriber.opts)
-    );
-
-    this.sync();
-  }
-
   getExtension<E extends ExtensionDefinition<any>>(definition: E) {
     return this.extensionRegistry.getExtensionFromDefinition(definition);
   }
@@ -300,6 +256,7 @@ export class State {
 
   dispose() {
     this.observer.dispose();
+    this.extensionRegistry.dispose();
   }
 
   toJSON() {

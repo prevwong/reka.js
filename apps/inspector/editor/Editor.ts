@@ -1,10 +1,14 @@
-import { generateRandomName } from '@app/utils';
+import {
+  generateRandomName,
+  getCollaborativeYjsDocument,
+  getCollaborativeYjsCompositeState,
+} from '@app/utils';
 import * as Y from 'yjs';
 import { WebrtcProvider } from 'y-webrtc';
 import invariant from 'tiny-invariant';
 import { Frame, State } from '@composite/state';
 import * as t from '@composite/types';
-import { YjsCompositeSyncProvider } from '@composite/collaborative';
+import { CollabExtensionFactory } from '@composite/collaborative';
 import {
   action,
   makeObservable,
@@ -17,11 +21,11 @@ import shortUUID from 'short-uuid';
 import { Event } from './Event';
 import { ComponentEditor } from './ComponentEditor';
 import {
-  DUMMY_PROGRAM,
   ENCODED_DUMMY_PROGRAM,
-  STATE_CONFIG,
+  createSharedStateGlobals,
   Y_ROOT_DOCUMENT,
 } from '@app/constants';
+import { CollabExtension } from '@app/extensions/CollabExtension';
 
 export type User = {
   id: string;
@@ -47,7 +51,6 @@ export class Editor {
 
   mode: EditorMode;
 
-  declare crdt: YjsCompositeSyncProvider;
   declare provider: WebrtcProvider;
 
   state: State;
@@ -87,41 +90,25 @@ export class Editor {
       setActiveComponentEditor: action,
     });
 
-    if (typeof window === 'undefined') {
-      this.state = new State({
-        data: DUMMY_PROGRAM,
-        ...STATE_CONFIG,
-      });
+    this.state = new State({
+      ...createSharedStateGlobals({
+        extensions: [CollabExtension],
+      }),
+    });
 
+    this.state.load(
+      t.unflattenType(getCollaborativeYjsCompositeState().toJSON() as any)
+    );
+
+    if (typeof window === 'undefined') {
       return;
     }
 
-    const doc = new Y.Doc();
-    const type = doc.getMap<{ document: any }>(Y_ROOT_DOCUMENT);
-    const myBuffer = Buffer.from(ENCODED_DUMMY_PROGRAM, 'base64');
-    Y.applyUpdate(doc, myBuffer);
-
-    const document = type.get('document');
-
-    invariant(
-      document && document instanceof Y.Map,
-      'Collaborative document not found!'
+    const provider = new WebrtcProvider(
+      'composite-yjs-test',
+      getCollaborativeYjsDocument()
     );
 
-    const data = t.unflattenType(document.toJSON() as any);
-
-    this.state = new State({
-      data,
-      ...STATE_CONFIG,
-    });
-
-    const crdt = new YjsCompositeSyncProvider(this.state, type);
-
-    crdt.init();
-
-    const provider = new WebrtcProvider('composite-yjs-test', doc);
-
-    this.crdt = crdt;
     this.provider = provider;
 
     this.peers = this.getPeers();
@@ -130,11 +117,11 @@ export class Editor {
   }
 
   dispose() {
-    if (!this.crdt || !this.provider) {
+    if (!this.provider) {
       return;
     }
 
-    this.crdt.dispose();
+    this.state.dispose();
     this.provider.disconnect();
     this.provider.destroy();
   }

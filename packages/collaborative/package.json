@@ -14,6 +14,7 @@
   "dependencies": {
     "@composite/state": "workspace:*",
     "@composite/types": "workspace:*",
+    "tiny-invariant": "^1.2.0",
     "yjs": "^13.5.27"
   },
   "devDependencies": {

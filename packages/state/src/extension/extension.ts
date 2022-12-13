@@ -10,15 +10,29 @@ export class Extension<S extends ExtensionStateDefinition | any = undefined> {
     readonly composite: State,
     readonly definition: ExtensionDefinition<S>
   ) {
-    this._state = t.extensionState({
-      value: definition.state || null,
-    });
+    const existingState = composite.data.extensions[definition.key];
 
-    this.composite.data.extensions[definition.key] = this._state;
+    if (existingState) {
+      existingState['_d'] = true;
+    }
+
+    this._state = existingState
+      ? t.extensionState(existingState)
+      : t.extensionState({
+          value: definition.state || null,
+        });
+
+    if (definition.state) {
+      this.composite.data.extensions[definition.key] = this._state;
+    }
   }
 
   init() {
     return this.definition.init(this);
+  }
+
+  dispose() {
+    return this.definition.dispose(this);
   }
 
   get state() {
