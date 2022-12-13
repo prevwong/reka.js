@@ -17,6 +17,7 @@ import { Link } from '../link';
 import { ParserStatus, ParserStatusBadge } from './ParserStatusBadge';
 import { motion } from 'framer-motion';
 import { capitalize } from 'lodash';
+import { Tree } from '../tree';
 
 const diffAST = (oldAST: t.Program, newAST: t.Program) => {
   const oldComponents = oldAST.components;
@@ -302,7 +303,32 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
             <ParserStatusBadge status={status} />
           </Box>
         </Box>
-        <StyledCodeEditorContainer ref={domRef} />
+        <Box
+          css={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+          }}
+        >
+          <Box
+            css={{
+              height: '100%',
+              display: currentTab === 'code' ? 'block' : 'none',
+            }}
+          >
+            <StyledCodeEditorContainer ref={domRef} />
+          </Box>
+          <Box
+            css={{
+              overflow: 'auto',
+              py: '$4',
+              display: currentTab === 'ast' ? 'block' : 'none',
+            }}
+          >
+            <Tree root={editor.state.root} />
+          </Box>
+        </Box>
       </Box>
     </Box>
   );
