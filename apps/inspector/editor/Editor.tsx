@@ -26,6 +26,8 @@ import {
   Y_ROOT_DOCUMENT,
 } from '@app/constants';
 import { CollabExtension } from '@app/extensions/CollabExtension';
+import { UserHeader } from '@app/external/UserHeader';
+import { UserIcon } from '@app/external/UserIcon';
 
 export type User = {
   id: string;
@@ -91,6 +93,20 @@ export class Editor {
     });
 
     this.state = new State({
+      components: [
+        t.externalComponent({
+          name: 'Header',
+          render: () => {
+            return <UserHeader />;
+          },
+        }),
+        t.externalComponent({
+          name: 'Icon',
+          render: (props: { name: string }) => {
+            return <UserIcon name={props.name} />;
+          },
+        }),
+      ],
       ...createSharedStateGlobals({
         extensions: [CollabExtension],
       }),
