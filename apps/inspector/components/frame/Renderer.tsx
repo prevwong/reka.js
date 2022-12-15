@@ -78,7 +78,7 @@ export const RenderElementView = observer((props: RenderElementViewProps) => {
   }, [connect]);
 
   if (props.view.tag === 'text') {
-    return <span ref={domRef}>{props.view.props.text as string}</span>;
+    return <span ref={domRef}>{props.view.props.value as string}</span>;
   }
 
   return React.createElement(
