@@ -18,7 +18,6 @@ export const UserIcon = (props: UserIconProps) => {
         return;
       }
 
-      console.log('icon', res[props.name]);
       setIcon(res[props.name]);
     });
   }, [props.name]);

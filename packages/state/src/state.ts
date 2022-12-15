@@ -70,7 +70,16 @@ export class State {
       this.opts.extensions ?? []
     );
 
-    this.observer = new Observer(this.data, this.observerConfig);
+    this.observer = new Observer(this.data, {
+      hooks: {
+        onDispose: (payload) => {
+          if (payload.type instanceof t.Identifier) {
+            this.resolver.identifiersToVariableDistance.delete(payload.type);
+          }
+        },
+      },
+    });
+
     this.extensionRegistry.init();
     this.sync();
   }
@@ -91,18 +100,6 @@ export class State {
 
   get root() {
     return this.data.program;
-  }
-
-  private get observerConfig() {
-    return {
-      hooks: {
-        onDispose: (payload) => {
-          if (payload.type instanceof t.Identifier) {
-            this.resolver.identifiersToVariableDistance.delete(payload.type);
-          }
-        },
-      },
-    };
   }
 
   get allComponents() {
@@ -212,6 +209,10 @@ export class State {
 
   getParentType(type: t.Type) {
     return this.observer.getParent(type);
+  }
+
+  getParentNode(node: t.Type) {
+    return this.observer.getParentNode(node);
   }
 
   listenToChanges(...args: Parameters<Observer<any>['subscribe']>) {

@@ -1,5 +1,5 @@
 import * as t from '@composite/types';
-import { Extension, ExtensionDefinition } from './extension';
+import { ExtensionDefinition } from './extension';
 
 import { State } from './state';
 

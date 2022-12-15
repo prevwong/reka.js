@@ -208,65 +208,7 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
             <Tooltip content="Add new template">
               <AddTemplateButton target={template.data} />
             </Tooltip>
-            <Tooltip content="Move template up">
-              <IconButton
-                transparent
-                onClick={(e) => {
-                  e.stopPropagation();
 
-                  if (!template.parent) {
-                    return;
-                  }
-
-                  const originalParent = template.parent;
-
-                  let newParent = originalParent;
-
-                  let newIndex = template.index - 1;
-
-                  if (newIndex < 0) {
-                    // grandparent's children array:
-                    if (!template.grandparent) {
-                      return;
-                    }
-
-                    newParent = template.grandparent;
-                    newIndex = template.parent.index - 1;
-                  }
-
-                  editor.state.change(() => {
-                    originalParent.data.children.splice(template.index, 1);
-                    newParent.data.children.splice(newIndex, 0, template.data);
-                  });
-                }}
-              >
-                <ArrowUpIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip content="Move template down">
-              <IconButton
-                transparent
-                onClick={(e) => {
-                  e.stopPropagation();
-
-                  const originalParent = template.parent;
-
-                  if (!originalParent) {
-                    return;
-                  }
-
-                  let newParent = originalParent;
-                  let newIndex = template.index + 2;
-
-                  editor.state.change(() => {
-                    newParent.data.children.splice(newIndex, 0, template.data);
-                    originalParent.data.children.splice(template.index, 1);
-                  });
-                }}
-              >
-                <ArrowDownIcon />
-              </IconButton>
-            </Tooltip>
             <Tooltip content="Remove template">
               <IconButton
                 transparent

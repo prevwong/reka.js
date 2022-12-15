@@ -76,8 +76,6 @@ export class Observer<T extends Type = Type> {
   private isDisposing: boolean = false;
   private isMutation: boolean = false;
 
-  private typeSubscribers: WeakMap<Type, Subscriber[]> = new WeakMap();
-
   constructor(type: T, opts?: Partial<ObserverOptions>) {
     this.valueToParentMap = new WeakMap();
     this.typeDisposers = new WeakMap();
@@ -158,38 +156,6 @@ export class Observer<T extends Type = Type> {
 
     return () => {
       this.subscribers.splice(this.subscribers.indexOf(subscriber), 1);
-    };
-  }
-
-  subscribe2(onChange: () => void, config?: SubscriberConfig) {
-    const mergedConfig = {
-      deep: false,
-      type: this.root,
-      ...(config ?? {}),
-    };
-
-    let subscribers = this.typeSubscribers.get(mergedConfig.type);
-
-    if (!subscribers) {
-      subscribers = [];
-      this.typeSubscribers.set(mergedConfig.type, subscribers);
-    }
-
-    const subscriber: Subscriber = {
-      onChange,
-      deep: mergedConfig.deep,
-    };
-
-    subscribers.push(subscriber);
-
-    return () => {
-      const subscribers = this.typeSubscribers.get(mergedConfig.type);
-
-      if (!subscribers) {
-        return;
-      }
-
-      subscribers.splice(subscribers.indexOf(subscriber), 1);
     };
   }
 
@@ -481,37 +447,6 @@ export class Observer<T extends Type = Type> {
       this.opts.hooks.onChange(change);
     }
 
-    let lastTypeInPath: Type | null = null;
-
-    for (let i = change.path.length - 1; i >= 0; i--) {
-      const path = change.path[i];
-
-      if (!(path.parent instanceof Type)) {
-        continue;
-      }
-
-      const typeSubscribers = this.typeSubscribers.get(path.parent);
-
-      if (typeSubscribers) {
-        for (let j = 0; j < typeSubscribers.length; j++) {
-          const subscriber = typeSubscribers[j];
-
-          if (!subscriber.deep && lastTypeInPath !== null) {
-            continue;
-          }
-
-          const relativePath = change.path.slice(i);
-
-          subscriber.onChange({
-            ...change,
-            path: relativePath,
-          });
-        }
-      }
-
-      lastTypeInPath = path.parent;
-    }
-
     this.notify(change);
 
     return change;
@@ -521,7 +456,7 @@ export class Observer<T extends Type = Type> {
     this.subscribers.forEach((subscriber) => subscriber(change));
   }
 
-  getPath(value) {
+  private getPath(value: Type | Array<any> | Object) {
     if (value === this.root) {
       return [];
     }
@@ -541,6 +476,34 @@ export class Observer<T extends Type = Type> {
 
   getParent(type: Type) {
     return this.valueToParentMap.get(type);
+  }
+
+  getParentNode(node: Type) {
+    if (node === this.root) {
+      return null;
+    }
+
+    let path: any[] = [];
+
+    let parentMap;
+    let current = node;
+
+    do {
+      parentMap = this.valueToParentMap.get(current);
+      invariant(!!parentMap, 'Parent-child map not found');
+      path.unshift(parentMap);
+      current = parentMap.value;
+    } while (!(parentMap.value instanceof Type));
+
+    console.log(100, path);
+
+    const { value: parentNode, key } = path.shift();
+
+    return {
+      node: parentNode,
+      key,
+      path,
+    };
   }
 
   change(mutation: () => void, opts: ChangeOpts = { batch: true }) {
