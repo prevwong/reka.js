@@ -85,7 +85,9 @@ export class Stringifier {
         return `<${tag}${props}${directives} />`;
       },
       ComponentProp: (node) => {
-        return `${node.name}`;
+        return `${node.name}${
+          node.init ? `=${this.stringify(node.init)}` : ''
+        }`;
       },
       CompositeComponent: (node) => {
         return [
