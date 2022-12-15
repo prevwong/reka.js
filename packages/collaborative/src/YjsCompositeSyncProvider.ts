@@ -87,8 +87,6 @@ export class YjsCompositeSyncProvider {
       // console.log("synching to state", event);
       const obj = toJsObject([...event.path.slice(1)]);
 
-      console.log('obj', event, obj);
-
       if (!obj) {
         return;
       }
@@ -174,9 +172,6 @@ export class YjsCompositeSyncProvider {
 
               return traverse(target, paths);
             };
-
-            console.log('root', this.type, yDocRoot, paths, rootType);
-
             const type = yDocRoot.get('types').get(rootType.id);
 
             return traverse(type, paths);
@@ -274,7 +269,6 @@ export class YjsCompositeSyncProvider {
       this.isBatchingMobxChanges = true;
 
       Promise.resolve().then(() => {
-        console.log('mobx', this.mobxChangesToSync);
         this.syncMobxChangesToYDoc(this.mobxChangesToSync);
         this.mobxChangesToSync = [];
         this.isBatchingMobxChanges = false;
