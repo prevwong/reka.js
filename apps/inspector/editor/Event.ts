@@ -1,6 +1,5 @@
-import * as t from '@composite/types';
 import { Frame } from '@composite/state';
-
+import * as t from '@composite/types';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 type EventState = {

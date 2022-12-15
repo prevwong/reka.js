@@ -1,7 +1,8 @@
 import * as t from '@composite/types';
 
-import { State, StateSubscriberOpts } from '../state';
 import { ExtensionDefinition, ExtensionStateDefinition } from './definition';
+
+import { State, StateSubscriberOpts } from '../state';
 
 export class Extension<S extends ExtensionStateDefinition | any = undefined> {
   private _state: t.ExtensionState;

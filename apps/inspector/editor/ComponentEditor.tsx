@@ -1,18 +1,12 @@
+import { Frame } from '@composite/state';
+import * as t from '@composite/types';
+import { makeObservable, action, observable } from 'mobx';
+import invariant from 'tiny-invariant';
+
 import {
   UserFrame,
   UserFrameExtension,
 } from '@app/extensions/UserFrameExtension';
-import * as t from '@composite/types';
-import { Frame } from '@composite/state';
-import {
-  reaction,
-  IReactionDisposer,
-  makeObservable,
-  action,
-  computed,
-  observable,
-} from 'mobx';
-import invariant from 'tiny-invariant';
 
 import { Editor } from './Editor';
 
@@ -112,7 +106,7 @@ export class ComponentEditor {
       return;
     }
 
-    let stateFrame =
+    const stateFrame =
       this.editor.state.frames.find((frame) => frame.id === frameId) || null;
 
     invariant(stateFrame, 'State frame not found');
@@ -130,6 +124,7 @@ export class ComponentEditor {
 
   connectTplDOM(dom: HTMLElement, tpl: t.Template) {
     if (!this.activeFrame) {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       return () => {};
     }
 

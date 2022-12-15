@@ -1,14 +1,5 @@
-import {
-  generateRandomName,
-  getCollaborativeYjsDocument,
-  getCollaborativeYjsCompositeState,
-} from '@app/utils';
-import * as Y from 'yjs';
-import { WebrtcProvider } from 'y-webrtc';
-import invariant from 'tiny-invariant';
 import { Frame, State } from '@composite/state';
 import * as t from '@composite/types';
-import { CollabExtensionFactory } from '@composite/collaborative';
 import {
   action,
   makeObservable,
@@ -17,17 +8,22 @@ import {
   computed,
 } from 'mobx';
 import randomColor from 'randomcolor';
+import * as React from 'react';
 import shortUUID from 'short-uuid';
-import { Event } from './Event';
-import { ComponentEditor } from './ComponentEditor';
-import {
-  ENCODED_DUMMY_PROGRAM,
-  createSharedStateGlobals,
-  Y_ROOT_DOCUMENT,
-} from '@app/constants';
+import { WebrtcProvider } from 'y-webrtc';
+
+import { createSharedStateGlobals } from '@app/constants';
 import { CollabExtension } from '@app/extensions/CollabExtension';
 import { UserHeader } from '@app/external/UserHeader';
 import { UserIcon } from '@app/external/UserIcon';
+import {
+  generateRandomName,
+  getCollaborativeYjsDocument,
+  getCollaborativeYjsCompositeState,
+} from '@app/utils';
+
+import { ComponentEditor } from './ComponentEditor';
+import { Event } from './Event';
 
 export type User = {
   id: string;

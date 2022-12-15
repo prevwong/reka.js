@@ -1,22 +1,17 @@
+import { useCollector } from '@composite/react';
 import * as t from '@composite/types';
+import { PlusIcon, TrashIcon } from '@radix-ui/react-icons';
+import { observer } from 'mobx-react-lite';
+import * as React from 'react';
 
 import { Box } from '@app/components/box';
-
-import * as React from 'react';
-import { Text } from '@app/components/text';
-import { useEditor } from '@app/editor';
 import { IconButton } from '@app/components/button';
-import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  PlusIcon,
-  TrashIcon,
-} from '@radix-ui/react-icons';
-import { Tooltip } from '@app/components/tooltip';
 import { Dropdown } from '@app/components/dropdown';
+import { Text } from '@app/components/text';
+import { Tooltip } from '@app/components/tooltip';
+import { useEditor } from '@app/editor';
+
 import { AddTemplateModal } from '../AddTemplateModal';
-import { useCollector } from '@composite/react';
-import { observer } from 'mobx-react-lite';
 
 type AddTemplateButtonProps = {
   target: t.Template;
@@ -186,7 +181,7 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
 
             editor.activeComponentEditor.setTplEvent('hovered', template.data);
           }}
-          onMouseOut={(e) => {
+          onMouseOut={() => {
             if (!editor.activeComponentEditor) {
               return;
             }

@@ -1,22 +1,22 @@
-import * as React from 'react';
-import { EditorView, keymap } from '@codemirror/view';
 import { EditorState, basicSetup } from '@codemirror/basic-setup';
 import { indentWithTab } from '@codemirror/commands';
-import * as t from '@composite/types';
-import { Parser, Stringifier } from '@composite/parser';
+import { EditorView, keymap } from '@codemirror/view';
 import { composite } from '@composite/codemirror';
-
-import { styled } from '@app/styles';
-import { useEditor } from '@app/editor';
-
+import { Parser, Stringifier } from '@composite/parser';
+import * as t from '@composite/types';
+import { ExternalLinkIcon } from '@radix-ui/react-icons';
+import { motion } from 'framer-motion';
 import debounce from 'lodash/debounce';
 import { observe } from 'mobx';
-import { Box } from '../box';
-import { ExternalLinkIcon } from '@radix-ui/react-icons';
-import { Link } from '../link';
+import * as React from 'react';
+
+import { useEditor } from '@app/editor';
+import { styled } from '@app/styles';
+
 import { ParserStatus, ParserStatusBadge } from './ParserStatusBadge';
-import { motion } from 'framer-motion';
-import { capitalize } from 'lodash';
+
+import { Box } from '../box';
+import { Link } from '../link';
 import { Tree } from '../tree';
 
 const diffAST = (oldAST: t.Program, newAST: t.Program) => {
@@ -114,6 +114,7 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
   const isSynchingFromExternal = React.useRef(false);
   const isTypingRef = React.useRef(false);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const syncCodeToState = React.useCallback(
     debounce((code: string) => {
       if (isSynchingFromExternal.current) {
@@ -196,21 +197,6 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
     );
   }, [syncCodeToState]);
 
-  React.useEffect(() => {
-    if (!codemirrorView) {
-      return;
-    }
-
-    const disposeObserver = observe(editor.state.root, () => {
-      onExternalChange();
-    });
-
-    return () => {
-      codemirrorView.destroy();
-      disposeObserver();
-    };
-  }, [codemirrorView]);
-
   const onExternalChange = React.useCallback(() => {
     if (isSynchingFromCodeMirror.current || isTypingRef.current) {
       return;
@@ -249,6 +235,21 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
     }
   }, [editor, codemirrorView]);
 
+  React.useEffect(() => {
+    if (!codemirrorView) {
+      return;
+    }
+
+    const disposeObserver = observe(editor.state.root, () => {
+      onExternalChange();
+    });
+
+    return () => {
+      codemirrorView.destroy();
+      disposeObserver();
+    };
+  }, [codemirrorView, onExternalChange, editor.state.root]);
+
   // If the AST changes (ie: from undo/redo or from multiplayer),
   // Then, sync those changes to the CodeMirror editor
   React.useEffect(() => {
@@ -259,7 +260,7 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
     return () => {
       unsubscribe();
     };
-  }, [editor, codemirrorView]);
+  }, [editor, codemirrorView, onExternalChange]);
 
   return (
     <Box css={{ ...css, height: '100%' }} {...props}>
@@ -274,6 +275,7 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
           <Box css={{ flex: 1 }}>
             {tabs.map((tab) => (
               <StyledTabItem
+                key={tab.id}
                 onClick={() => {
                   setCurrentTab(tab.id);
                 }}

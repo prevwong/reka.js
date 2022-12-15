@@ -1,9 +1,11 @@
+import { AnimatePresence, motion } from 'framer-motion';
+import { observer } from 'mobx-react-lite';
+import * as React from 'react';
+
 import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
-import * as React from 'react';
-import { observer } from 'mobx-react-lite';
+
 import { Tooltip } from '../tooltip';
-import { AnimatePresence, motion } from 'framer-motion';
 
 const StyledCollaboratorsContainers = styled('div', {
   ml: '$2',

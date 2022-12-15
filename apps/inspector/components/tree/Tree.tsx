@@ -1,8 +1,8 @@
 import * as t from '@composite/types';
-import * as React from 'react';
 import cx from 'classnames';
-import { observer } from 'mobx-react-lite';
 import { IObservable, IObservableArray, isObservable, observe } from 'mobx';
+import { observer } from 'mobx-react-lite';
+import * as React from 'react';
 
 import { styled } from '@app/styles';
 
@@ -125,7 +125,7 @@ const Element = observer(
         _setIsCollapsed(bool);
         COLLAPSIBLE_STATE.set(value, bool);
       },
-      [_setIsCollapsed]
+      [_setIsCollapsed, value]
     );
 
     const isOpen = React.useMemo(() => !isCollapsed, [isCollapsed]);
@@ -292,7 +292,7 @@ const Element = observer(
       return observe(value as IObservable, (e) => {
         change(e.name.toString());
       });
-    }, []);
+    }, [value]);
 
     return (
       <li

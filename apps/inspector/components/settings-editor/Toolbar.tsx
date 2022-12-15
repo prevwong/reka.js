@@ -2,9 +2,9 @@ import * as t from '@composite/types';
 import { ArrowDownIcon, ArrowUpIcon, TrashIcon } from '@radix-ui/react-icons';
 import * as React from 'react';
 
+import { Button } from '@app/components/button';
 import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
-import { Button } from '@app/components/button';
 
 const StyledToolbarContainer = styled('div', {
   flex: 1,

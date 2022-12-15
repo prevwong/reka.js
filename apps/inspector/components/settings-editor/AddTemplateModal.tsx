@@ -1,11 +1,13 @@
-import * as t from '@composite/types';
 import { Parser } from '@composite/parser';
+import * as t from '@composite/types';
+import * as React from 'react';
+
 import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
-import * as React from 'react';
+
 import { Box } from '../box';
 import { Button } from '../button';
-import { Modal, ModalProps } from '../modal';
+import { Modal } from '../modal';
 import { PairInput } from '../pair-input';
 import { Select } from '../select';
 import { Text } from '../text';

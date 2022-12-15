@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { State } from '@composite/state';
+import * as React from 'react';
 
 import { CompositeStateContext } from './CompositeStateContext';
 

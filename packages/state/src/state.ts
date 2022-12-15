@@ -6,6 +6,7 @@ import {
   observable,
   reaction,
 } from 'mobx';
+
 import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { ExtensionDefinition, ExtensionRegistry } from './extension';

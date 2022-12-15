@@ -41,8 +41,10 @@ export class ExtensionDefinition<
         return state;
       });
 
+    /* eslint-disable no-alert, @typescript-eslint/no-empty-function */
     this.init = config.init || (() => {});
     this.dispose = config.dispose || (() => {});
+    /* eslint-enable no-alert, @typescript-eslint/no-empty-function */
   }
 }
 

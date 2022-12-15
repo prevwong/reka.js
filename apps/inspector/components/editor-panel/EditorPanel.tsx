@@ -1,15 +1,17 @@
-import * as React from 'react';
 import { observer } from 'mobx-react-lite';
+import * as React from 'react';
 
-import { useEditor } from '@app/editor';
-import { styled } from '@app/styles';
 import { Box } from '@app/components/box';
 import { Button } from '@app/components/button';
 import { CodeEditor } from '@app/components/code-editor';
 import { Text } from '@app/components/text';
 import { Tree } from '@app/components/tree';
-import { Header } from '../header';
+import { useEditor } from '@app/editor';
+import { styled } from '@app/styles';
+
 import { Collaborators } from './Collaborators';
+
+import { Header } from '../header';
 
 const StyledEditorPanelContainer = styled('div', {
   display: 'flex',

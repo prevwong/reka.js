@@ -1,8 +1,9 @@
 import invariant from 'tiny-invariant';
 
-import { State } from '../state';
 import { ExtensionDefinition } from './definition';
 import { Extension } from './extension';
+
+import { State } from '../state';
 
 export class ExtensionRegistry {
   private definitionToExtension: WeakMap<ExtensionDefinition, Extension> =

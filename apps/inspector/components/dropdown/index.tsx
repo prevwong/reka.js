@@ -1,7 +1,8 @@
-import { styled } from '@app/styles';
-import { mauve, violet } from '@radix-ui/colors';
+import { mauve } from '@radix-ui/colors';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import * as React from 'react';
+
+import { styled } from '@app/styles';
 
 const StyledContent = styled(DropdownMenuPrimitive.Content, {
   minWidth: '140px',
@@ -13,12 +14,6 @@ const StyledContent = styled(DropdownMenuPrimitive.Content, {
     animationDuration: '400ms',
     animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
     willChange: 'transform, opacity',
-    //   '&[data-state="open"]': {
-    //     '&[data-side="top"]': { animationName: slideDownAndFade },
-    //     '&[data-side="right"]': { animationName: slideLeftAndFade },
-    //     '&[data-side="bottom"]': { animationName: slideUpAndFade },
-    //     '&[data-side="left"]': { animationName: slideRightAndFade },
-    //   },
   },
 });
 

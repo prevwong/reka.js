@@ -1,13 +1,10 @@
 import { Parser, Stringifier } from '@composite/parser';
 import * as t from '@composite/types';
-
-import { Box } from '@app/components/box';
-import { PairInput } from '@app/components/pair-input';
-import { Text } from '@app/components/text';
-import { useEditor } from '@app/editor';
-
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
+
+import { PairInput } from '@app/components/pair-input';
+import { useEditor } from '@app/editor';
 
 import { SettingSection } from '../SettingSection';
 

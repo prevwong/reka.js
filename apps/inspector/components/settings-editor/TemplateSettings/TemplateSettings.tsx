@@ -1,17 +1,15 @@
 import * as t from '@composite/types';
+import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { Box } from '@app/components/box';
-import { useEditor } from '@app/editor';
 import { TextField } from '@app/components/text-field';
-import { Dropdown } from '@app/components/dropdown';
+import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
-import { ChevronDownIcon } from '@radix-ui/react-icons';
 
+import { ComponentTemplateSettings } from './ComponentTemplateSettings';
 import { SharedTemplateSettings } from './SharedTemplateSettings';
 import { TagTemplateSettings } from './TagTemplateSettings';
-import { ComponentTemplateSettings } from './ComponentTemplateSettings';
-import { observer } from 'mobx-react-lite';
 
 const Topbar = styled('div', {
   display: 'flex',

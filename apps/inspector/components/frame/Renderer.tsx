@@ -1,12 +1,12 @@
-import * as React from 'react';
 import * as t from '@composite/types';
 import { observer } from 'mobx-react-lite';
+import * as React from 'react';
 
-import { View } from './view';
-import { ComponentContext } from './ComponentContext';
 import { useEditor } from '@app/editor';
+
+import { ComponentContext } from './ComponentContext';
+import { View } from './view';
 import { ViewContext } from './view/ViewContext';
-import { autorun } from 'mobx';
 
 type RenderErrorViewProps = {
   view: t.ErrorSystemView;
@@ -57,7 +57,7 @@ const useConnectDOM = () => {
 
       return editor.activeComponentEditor.connectTplDOM(dom, template);
     },
-    [editor]
+    [editor, component.name, parentView, view]
   );
 
   return {
@@ -177,7 +177,13 @@ export const Renderer = (props: RendererProps) => {
     ]);
 
     props.onComponentRootDOMReady(doms ?? []);
-  }, [props.view.template]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    props.view.template,
+    props.view,
+    props.onComponentRootDOMReady,
+    editor.activeComponentEditor?.activeFrame?.tplElements,
+  ]);
 
   if (!render) {
     return null;

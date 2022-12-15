@@ -1,5 +1,5 @@
-import * as React from 'react';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
+
 import { styled } from '@app/styles';
 
 export const ToggleGroup = styled(ToggleGroupPrimitive.Root, {

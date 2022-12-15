@@ -1,8 +1,10 @@
-import * as React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { styled, keyframes } from '@app/styles';
-import { Button, IconButton } from '../button';
 import { Cross2Icon } from '@radix-ui/react-icons';
+import * as React from 'react';
+
+import { styled, keyframes } from '@app/styles';
+
+import { IconButton } from '../button';
 
 export type ModalProps = {
   isOpen?: boolean;

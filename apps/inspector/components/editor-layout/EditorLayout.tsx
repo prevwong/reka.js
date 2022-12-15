@@ -1,17 +1,19 @@
-import * as React from 'react';
-import { styled } from '@app/styles';
-import { useEditor } from '@app/editor';
-import { CodeEditor } from '../code-editor';
 import { AnimatePresence, motion } from 'framer-motion';
-import { EditorMode } from '@app/editor/Editor';
 import { observer } from 'mobx-react-lite';
-import { Box } from '../box';
+import * as React from 'react';
+
+import { useEditor } from '@app/editor';
+import { EditorMode } from '@app/editor/Editor';
+import { styled } from '@app/styles';
 
 import { ComponentEditorView } from './ComponentEditorView';
-import { GlobalSettings } from '../settings-editor/ProgramSettings/GlobalSettings';
+
 import { AnimatedScreenSlider } from '../animated-screen-slider/AnimatedScreenSlider';
-import { ComponentList } from '../settings-editor/ProgramSettings/ComponentList';
+import { Box } from '../box';
+import { CodeEditor } from '../code-editor';
 import { ComponentSettings } from '../settings-editor/ComponentSettings';
+import { ComponentList } from '../settings-editor/ProgramSettings/ComponentList';
+import { GlobalSettings } from '../settings-editor/ProgramSettings/GlobalSettings';
 import { TemplateSettings } from '../settings-editor/TemplateSettings';
 
 const StyledScreen = styled('div', {

@@ -12,6 +12,7 @@ import {
   runInAction,
 } from 'mobx';
 import invariant from 'tiny-invariant';
+
 import { isObjectLiteral } from './utils';
 
 type Parent = {
@@ -151,7 +152,7 @@ export class Observer<T extends Type = Type> {
     });
   }
 
-  subscribe(subscriber: any, type?: Type) {
+  subscribe(subscriber: any) {
     this.subscribers.push(subscriber);
 
     return () => {
@@ -483,7 +484,7 @@ export class Observer<T extends Type = Type> {
       return null;
     }
 
-    let path: any[] = [];
+    const path: any[] = [];
 
     let parentMap;
     let current = node;

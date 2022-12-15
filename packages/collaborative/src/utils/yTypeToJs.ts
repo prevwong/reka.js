@@ -1,5 +1,5 @@
-import * as t from '@composite/types';
 import { State } from '@composite/state';
+import * as t from '@composite/types';
 import * as Y from 'yjs';
 
 export const yTypeToJS = (state: State, types: any, yType: any) => {

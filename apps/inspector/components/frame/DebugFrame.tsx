@@ -1,21 +1,19 @@
-import * as Tabs from '@radix-ui/react-tabs';
-import * as React from 'react';
-import cx from 'classnames';
-
-import { observer } from 'mobx-react-lite';
-
-import * as t from '@composite/types';
 import { Frame } from '@composite/state';
+import * as t from '@composite/types';
+import * as Tabs from '@radix-ui/react-tabs';
+import cx from 'classnames';
+import { observer } from 'mobx-react-lite';
+import * as React from 'react';
 
-import { Switch } from '@app/components/switch';
-import { Tree } from '@app/components/tree';
-
-import { styled } from '@app/styles';
 import { Box } from '@app/components/box';
+import { Switch } from '@app/components/switch';
 import { Text } from '@app/components/text';
+import { Tree } from '@app/components/tree';
 import { useEditor } from '@app/editor';
-import { RenderFrame } from './RenderFrame';
 import { UserFrame } from '@app/extensions/UserFrameExtension';
+import { styled } from '@app/styles';
+
+import { RenderFrame } from './RenderFrame';
 
 type DebugFrameProps = {
   className?: string;
@@ -76,7 +74,7 @@ export const DebugFrame = observer((props: DebugFrameProps) => {
     }
 
     setFrame(frame);
-  }, [props.frame]);
+  }, [props.frame, editor.state]);
 
   if (!frame) {
     return null;

@@ -3,18 +3,17 @@ import {
   computed,
   IComputedValue,
   IObservableValue,
-  makeObservable,
   observable,
   runInAction,
 } from 'mobx';
 
-import { State } from './state';
-import { Environment } from './environment';
-import { Observer } from './observer';
-import { Frame } from './frame';
-import { computeExpression } from './expression';
-import { createKey, isPrimitive, valueToHash } from './utils';
 import { ComponentViewEvaluator } from './component';
+import { Environment } from './environment';
+import { computeExpression } from './expression';
+import { Frame } from './frame';
+import { Observer } from './observer';
+import { State } from './state';
+import { createKey, isPrimitive, valueToHash } from './utils';
 
 export type TemplateEvaluateContext = {
   env: Environment;
@@ -171,7 +170,7 @@ export class ViewTree {
         return existingTplComputationCache.computed.get();
       }
 
-      let prevEachExpr = template.each;
+      const prevEachExpr = template.each;
 
       const computation = computed(
         () => {
@@ -360,7 +359,7 @@ export class ViewTree {
     let view: t.View;
 
     try {
-      let props = Object.keys(template.props).reduce((accum, key) => {
+      const props = Object.keys(template.props).reduce((accum, key) => {
         const value = this.evaluateExpr(template.props[key], ctx.env);
 
         return {
@@ -445,7 +444,7 @@ export class ViewTree {
       if (this.root !== view) {
         this.setRoot(view);
       } else {
-        this.tplKeyToComponentEvaluator.forEach((componentEvaluator, key) => {
+        this.tplKeyToComponentEvaluator.forEach((componentEvaluator) => {
           componentEvaluator.compute();
         });
       }

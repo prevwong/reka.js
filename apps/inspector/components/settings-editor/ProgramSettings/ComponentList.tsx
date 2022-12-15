@@ -1,21 +1,22 @@
+import { useCollector } from '@composite/react';
 import * as t from '@composite/types';
-
-import { Box } from '@app/components/box';
-import { Button } from '@app/components/button';
-import { Text } from '@app/components/text';
-import { useEditor } from '@app/editor';
 import {
   ComponentBooleanIcon,
   ComponentPlaceholderIcon,
 } from '@radix-ui/react-icons';
-import * as React from 'react';
-import { SettingSection } from '../SettingSection';
-import { Tooltip } from '@app/components/tooltip';
-import { Modal } from '@app/components/modal';
-import { TextField } from '@app/components/text-field';
 import { pascalCase } from 'pascal-case';
+import * as React from 'react';
+
+import { Box } from '@app/components/box';
+import { Button } from '@app/components/button';
+import { Modal } from '@app/components/modal';
+import { Text } from '@app/components/text';
+import { TextField } from '@app/components/text-field';
+import { Tooltip } from '@app/components/tooltip';
+import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
-import { useCollector } from '@composite/react';
+
+import { SettingSection } from '../SettingSection';
 
 type AddComponentModalProps = {
   isOpen: boolean;

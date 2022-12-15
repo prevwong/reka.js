@@ -1,6 +1,6 @@
 import * as t from '@composite/types';
-
 import { action, makeObservable, observable } from 'mobx';
+
 import { State } from './state';
 
 export class Environment {

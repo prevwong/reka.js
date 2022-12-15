@@ -1,8 +1,14 @@
+import { useCollector } from '@composite/react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { observer } from 'mobx-react-lite';
+import * as React from 'react';
+
 import { useEditor } from '@app/editor';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
 import { styled } from '@app/styles';
-import { observer } from 'mobx-react-lite';
-import * as React from 'react';
+
+import { AddFrameModal } from './AddFrameModal';
+
 import { Box } from '../box';
 import { Button } from '../button';
 import { RenderFrame } from '../frame/RenderFrame';
@@ -10,9 +16,6 @@ import { Select } from '../select';
 import { Text } from '../text';
 import { EnterTextField } from '../text-field';
 import { Tree } from '../tree';
-import { AnimatePresence, motion } from 'framer-motion';
-import { AddFrameModal } from './AddFrameModal';
-import { useCollector } from '@composite/react';
 
 const StyledViewContainer = styled(motion.div, {
   position: 'absolute',

@@ -182,9 +182,6 @@ export class Lexer {
       case '*': {
         return this.tokenize(TokenType.STAR);
       }
-      case '/': {
-        return this.tokenize(TokenType.SLASH);
-      }
       default: {
         this.error(`Unknown token type "${c}"`);
       }

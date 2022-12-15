@@ -1,7 +1,9 @@
-import { styled } from '@app/styles';
 import { CheckIcon, Cross1Icon, UpdateIcon } from '@radix-ui/react-icons';
 import { motion } from 'framer-motion';
 import * as React from 'react';
+
+import { styled } from '@app/styles';
+
 import { Tooltip } from '../tooltip';
 
 const MotionUpdateIcon = motion(UpdateIcon);

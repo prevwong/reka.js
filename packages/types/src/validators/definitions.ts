@@ -1,6 +1,6 @@
-import { Schema, Type } from '../schema';
-
 import { Validator } from './validator';
+
+import { Schema, Type } from '../schema';
 
 export class TypeValidator extends Validator {
   type: string;

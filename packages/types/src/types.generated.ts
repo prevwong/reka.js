@@ -1,4 +1,4 @@
-import { Schema, Type, TypeProperties } from "./schema";
+import { Schema, Type } from './schema';
 
 type LiteralParameters = {
   value: string | number | boolean;
@@ -7,11 +7,11 @@ type LiteralParameters = {
 export class Literal extends Type {
   declare value: string | number | boolean;
   constructor(value: LiteralParameters) {
-    super("Literal", value);
+    super('Literal', value);
   }
 }
 
-Schema.register("Literal", Literal);
+Schema.register('Literal', Literal);
 
 export const literal = (...args: ConstructorParameters<typeof Literal>) =>
   new Literal(...args);
@@ -23,11 +23,11 @@ type IdentifierParameters = {
 export class Identifier extends Type {
   declare name: string;
   constructor(value: IdentifierParameters) {
-    super("Identifier", value);
+    super('Identifier', value);
   }
 }
 
-Schema.register("Identifier", Identifier);
+Schema.register('Identifier', Identifier);
 
 export const identifier = (...args: ConstructorParameters<typeof Identifier>) =>
   new Identifier(...args);
@@ -41,11 +41,11 @@ export class Val extends Type {
   declare name: string;
   declare init: Expression;
   constructor(value: ValParameters) {
-    super("Val", value);
+    super('Val', value);
   }
 }
 
-Schema.register("Val", Val);
+Schema.register('Val', Val);
 
 export const val = (...args: ConstructorParameters<typeof Val>) =>
   new Val(...args);
@@ -57,11 +57,11 @@ type ArrayExpressionParameters = {
 export class ArrayExpression extends Type {
   declare elements: Expression[];
   constructor(value: ArrayExpressionParameters) {
-    super("ArrayExpression", value);
+    super('ArrayExpression', value);
   }
 }
 
-Schema.register("ArrayExpression", ArrayExpression);
+Schema.register('ArrayExpression', ArrayExpression);
 
 export const arrayExpression = (
   ...args: ConstructorParameters<typeof ArrayExpression>
@@ -69,30 +69,30 @@ export const arrayExpression = (
 
 type BinaryExpressionParameters = {
   left: Expression;
-  operator: "+" | "-" | "*" | "/" | "!=" | "==" | "<" | "<=" | ">" | ">=";
+  operator: '+' | '-' | '*' | '/' | '!=' | '==' | '<' | '<=' | '>' | '>=';
   right: Expression;
 };
 
 export class BinaryExpression extends Type {
   declare left: Expression;
   declare operator:
-    | "+"
-    | "-"
-    | "*"
-    | "/"
-    | "!="
-    | "=="
-    | "<"
-    | "<="
-    | ">"
-    | ">=";
+    | '+'
+    | '-'
+    | '*'
+    | '/'
+    | '!='
+    | '=='
+    | '<'
+    | '<='
+    | '>'
+    | '>=';
   declare right: Expression;
   constructor(value: BinaryExpressionParameters) {
-    super("BinaryExpression", value);
+    super('BinaryExpression', value);
   }
 }
 
-Schema.register("BinaryExpression", BinaryExpression);
+Schema.register('BinaryExpression', BinaryExpression);
 
 export const binaryExpression = (
   ...args: ConstructorParameters<typeof BinaryExpression>
@@ -105,11 +105,11 @@ type ObjectExpressionParameters = {
 export class ObjectExpression extends Type {
   declare properties: Record<string, Expression>;
   constructor(value: ObjectExpressionParameters) {
-    super("ObjectExpression", value);
+    super('ObjectExpression', value);
   }
 }
 
-Schema.register("ObjectExpression", ObjectExpression);
+Schema.register('ObjectExpression', ObjectExpression);
 
 export const objectExpression = (
   ...args: ConstructorParameters<typeof ObjectExpression>
@@ -124,11 +124,11 @@ export class ComponentProp extends Type {
   declare name: string;
   declare init: Expression | null;
   constructor(value: ComponentPropParameters) {
-    super("ComponentProp", value);
+    super('ComponentProp', value);
   }
 }
 
-Schema.register("ComponentProp", ComponentProp);
+Schema.register('ComponentProp', ComponentProp);
 
 export const componentProp = (
   ...args: ConstructorParameters<typeof ComponentProp>
@@ -145,7 +145,7 @@ export abstract class Component extends Type {
   }
 }
 
-Schema.register("Component", Component);
+Schema.register('Component', Component);
 
 type CompositeComponentParameters = {
   name: string;
@@ -159,11 +159,11 @@ export class CompositeComponent extends Component {
   declare state: Val[];
   declare props: ComponentProp[];
   constructor(value: CompositeComponentParameters) {
-    super("CompositeComponent", value);
+    super('CompositeComponent', value);
   }
 }
 
-Schema.register("CompositeComponent", CompositeComponent);
+Schema.register('CompositeComponent', CompositeComponent);
 
 export const compositeComponent = (
   ...args: ConstructorParameters<typeof CompositeComponent>
@@ -177,11 +177,11 @@ type ExternalComponentParameters = {
 export class ExternalComponent extends Component {
   declare render: Function;
   constructor(value: ExternalComponentParameters) {
-    super("ExternalComponent", value);
+    super('ExternalComponent', value);
   }
 }
 
-Schema.register("ExternalComponent", ExternalComponent);
+Schema.register('ExternalComponent', ExternalComponent);
 
 export const externalComponent = (
   ...args: ConstructorParameters<typeof ExternalComponent>
@@ -198,11 +198,11 @@ export class ElementEach extends Type {
   declare index: Identifier | null;
   declare iterator: Identifier;
   constructor(value: ElementEachParameters) {
-    super("ElementEach", value);
+    super('ElementEach', value);
   }
 }
 
-Schema.register("ElementEach", ElementEach);
+Schema.register('ElementEach', ElementEach);
 
 export const elementEach = (
   ...args: ConstructorParameters<typeof ElementEach>
@@ -227,7 +227,7 @@ export abstract class Template extends Type {
   }
 }
 
-Schema.register("Template", Template);
+Schema.register('Template', Template);
 
 type TagTemplateParameters = {
   props: Record<string, Expression>;
@@ -241,11 +241,11 @@ type TagTemplateParameters = {
 export class TagTemplate extends Template {
   declare tag: string;
   constructor(value: TagTemplateParameters) {
-    super("TagTemplate", value);
+    super('TagTemplate', value);
   }
 }
 
-Schema.register("TagTemplate", TagTemplate);
+Schema.register('TagTemplate', TagTemplate);
 
 export const tagTemplate = (
   ...args: ConstructorParameters<typeof TagTemplate>
@@ -263,11 +263,11 @@ type ComponentTemplateParameters = {
 export class ComponentTemplate extends Template {
   declare component: Identifier;
   constructor(value: ComponentTemplateParameters) {
-    super("ComponentTemplate", value);
+    super('ComponentTemplate', value);
   }
 }
 
-Schema.register("ComponentTemplate", ComponentTemplate);
+Schema.register('ComponentTemplate', ComponentTemplate);
 
 export const componentTemplate = (
   ...args: ConstructorParameters<typeof ComponentTemplate>
@@ -283,11 +283,11 @@ type SlotTemplateParameters = {
 
 export class SlotTemplate extends Template {
   constructor(value: SlotTemplateParameters) {
-    super("SlotTemplate", value);
+    super('SlotTemplate', value);
   }
 }
 
-Schema.register("SlotTemplate", SlotTemplate);
+Schema.register('SlotTemplate', SlotTemplate);
 
 export const slotTemplate = (
   ...args: ConstructorParameters<typeof SlotTemplate>
@@ -302,11 +302,11 @@ export class MemberExpression extends Type {
   declare object: Identifier | MemberExpression;
   declare property: Identifier;
   constructor(value: MemberExpressionParameters) {
-    super("MemberExpression", value);
+    super('MemberExpression', value);
   }
 }
 
-Schema.register("MemberExpression", MemberExpression);
+Schema.register('MemberExpression', MemberExpression);
 
 export const memberExpression = (
   ...args: ConstructorParameters<typeof MemberExpression>
@@ -323,31 +323,31 @@ export class Func extends Type {
   declare params: Identifier[];
   declare body: Block;
   constructor(value: FuncParameters) {
-    super("Func", value);
+    super('Func', value);
   }
 }
 
-Schema.register("Func", Func);
+Schema.register('Func', Func);
 
 export const func = (...args: ConstructorParameters<typeof Func>) =>
   new Func(...args);
 
 type AssignmentParameters = {
   left: Identifier;
-  operator: "=" | "+=" | "-=";
+  operator: '=' | '+=' | '-=';
   right: Expression;
 };
 
 export class Assignment extends Type {
   declare left: Identifier;
-  declare operator: "=" | "+=" | "-=";
+  declare operator: '=' | '+=' | '-=';
   declare right: Expression;
   constructor(value: AssignmentParameters) {
-    super("Assignment", value);
+    super('Assignment', value);
   }
 }
 
-Schema.register("Assignment", Assignment);
+Schema.register('Assignment', Assignment);
 
 export const assignment = (...args: ConstructorParameters<typeof Assignment>) =>
   new Assignment(...args);
@@ -361,11 +361,11 @@ export class State extends Type {
   declare program: Program;
   declare extensions: Record<string, ExtensionState>;
   constructor(value: StateParameters) {
-    super("State", value);
+    super('State', value);
   }
 }
 
-Schema.register("State", State);
+Schema.register('State', State);
 
 export const state = (...args: ConstructorParameters<typeof State>) =>
   new State(...args);
@@ -379,11 +379,11 @@ export class Program extends Type {
   declare globals: Val[];
   declare components: CompositeComponent[];
   constructor(value: ProgramParameters) {
-    super("Program", value);
+    super('Program', value);
   }
 }
 
-Schema.register("Program", Program);
+Schema.register('Program', Program);
 
 export const program = (...args: ConstructorParameters<typeof Program>) =>
   new Program(...args);
@@ -401,7 +401,7 @@ export abstract class View extends Type {
   }
 }
 
-Schema.register("View", View);
+Schema.register('View', View);
 
 type ElementViewParameters = {
   key: string;
@@ -416,11 +416,11 @@ export class ElementView extends View {
   declare children: View[];
   declare props: Record<string, string | number | boolean | Function>;
   constructor(value: ElementViewParameters) {
-    super("ElementView", value);
+    super('ElementView', value);
   }
 }
 
-Schema.register("ElementView", ElementView);
+Schema.register('ElementView', ElementView);
 
 export const elementView = (
   ...args: ConstructorParameters<typeof ElementView>
@@ -439,7 +439,7 @@ export abstract class ComponentView extends View {
   }
 }
 
-Schema.register("ComponentView", ComponentView);
+Schema.register('ComponentView', ComponentView);
 
 type CompositeComponentViewParameters = {
   key: string;
@@ -451,11 +451,11 @@ type CompositeComponentViewParameters = {
 export class CompositeComponentView extends ComponentView {
   declare render: View[];
   constructor(value: CompositeComponentViewParameters) {
-    super("CompositeComponentView", value);
+    super('CompositeComponentView', value);
   }
 }
 
-Schema.register("CompositeComponentView", CompositeComponentView);
+Schema.register('CompositeComponentView', CompositeComponentView);
 
 export const compositeComponentView = (
   ...args: ConstructorParameters<typeof CompositeComponentView>
@@ -472,11 +472,11 @@ export class ExternalComponentView extends ComponentView {
   declare component: ExternalComponent;
   declare props: Record<string, string | number | boolean | Function>;
   constructor(value: ExternalComponentViewParameters) {
-    super("ExternalComponentView", value);
+    super('ExternalComponentView', value);
   }
 }
 
-Schema.register("ExternalComponentView", ExternalComponentView);
+Schema.register('ExternalComponentView', ExternalComponentView);
 
 export const externalComponentView = (
   ...args: ConstructorParameters<typeof ExternalComponentView>
@@ -491,11 +491,11 @@ type SlotViewParameters = {
 export class SlotView extends View {
   declare view: View[];
   constructor(value: SlotViewParameters) {
-    super("SlotView", value);
+    super('SlotView', value);
   }
 }
 
-Schema.register("SlotView", SlotView);
+Schema.register('SlotView', SlotView);
 
 export const slotView = (...args: ConstructorParameters<typeof SlotView>) =>
   new SlotView(...args);
@@ -511,7 +511,7 @@ export abstract class SystemView extends View {
   }
 }
 
-Schema.register("SystemView", SystemView);
+Schema.register('SystemView', SystemView);
 
 type EachSystemViewParameters = {
   key: string;
@@ -522,11 +522,11 @@ type EachSystemViewParameters = {
 export class EachSystemView extends SystemView {
   declare children: View[];
   constructor(value: EachSystemViewParameters) {
-    super("EachSystemView", value);
+    super('EachSystemView', value);
   }
 }
 
-Schema.register("EachSystemView", EachSystemView);
+Schema.register('EachSystemView', EachSystemView);
 
 export const eachSystemView = (
   ...args: ConstructorParameters<typeof EachSystemView>
@@ -541,11 +541,11 @@ type ErrorSystemViewParameters = {
 export class ErrorSystemView extends SystemView {
   declare error: string;
   constructor(value: ErrorSystemViewParameters) {
-    super("ErrorSystemView", value);
+    super('ErrorSystemView', value);
   }
 }
 
-Schema.register("ErrorSystemView", ErrorSystemView);
+Schema.register('ErrorSystemView', ErrorSystemView);
 
 export const errorSystemView = (
   ...args: ConstructorParameters<typeof ErrorSystemView>
@@ -558,11 +558,11 @@ type BlockParameters = {
 export class Block extends Type {
   declare statements: Statement[];
   constructor(value: BlockParameters) {
-    super("Block", value);
+    super('Block', value);
   }
 }
 
-Schema.register("Block", Block);
+Schema.register('Block', Block);
 
 export const block = (...args: ConstructorParameters<typeof Block>) =>
   new Block(...args);
@@ -574,11 +574,11 @@ type ExtensionStateParameters = {
 export class ExtensionState extends Type {
   declare value: null | Record<string, any>;
   constructor(value: ExtensionStateParameters) {
-    super("ExtensionState", value);
+    super('ExtensionState', value);
   }
 }
 
-Schema.register("ExtensionState", ExtensionState);
+Schema.register('ExtensionState', ExtensionState);
 
 export const extensionState = (
   ...args: ConstructorParameters<typeof ExtensionState>

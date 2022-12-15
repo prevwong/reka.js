@@ -1,6 +1,7 @@
 import { createExtension } from '@composite/state';
-import * as Y from 'yjs';
 import invariant from 'tiny-invariant';
+import * as Y from 'yjs';
+
 import { YjsCompositeSyncProvider } from './YjsCompositeSyncProvider';
 
 const CompositeToYSyncProviders = new WeakMap();

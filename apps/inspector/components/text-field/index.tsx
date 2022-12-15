@@ -1,8 +1,9 @@
+import { Cross2Icon } from '@radix-ui/react-icons';
 import * as React from 'react';
 
 import { styled } from '@app/styles';
+
 import { IconButton } from '../button';
-import { Cross2Icon } from '@radix-ui/react-icons';
 
 const StyledInputField = styled('input', {
   background: 'transparent',

@@ -7,7 +7,7 @@ const stringifyField = require('./stringifyField');
 const { Schema } = require('../../src/schema');
 
 let code = `
-import { Schema, Type, TypeProperties } from './schema';\n
+import { Schema, Type } from './schema';\n
 `;
 
 const aliases = {};

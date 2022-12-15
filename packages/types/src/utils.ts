@@ -277,7 +277,7 @@ export const unflattenType = ({ root, types }) => {
 export const collectNestedTypes = (type: any) => {
   const types: any[] = [];
 
-  const collect = (value: any, k?: string) => {
+  const collect = (value: any) => {
     if (!value) {
       return;
     }
@@ -293,7 +293,7 @@ export const collectNestedTypes = (type: any) => {
       }
 
       Object.keys(value).forEach((key) => {
-        collect(value[key], key);
+        collect(value[key]);
       });
 
       return;

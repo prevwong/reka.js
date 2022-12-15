@@ -1,9 +1,9 @@
+import { Query } from '@composite/state';
 import * as React from 'react';
 
 import { CompositeStateContext } from '../CompositeStateContext';
-import { Query } from '@composite/state';
 
-type Collector<C extends any> = (query: Query) => C;
+type Collector<C extends Record<string, any>> = (query: Query) => C;
 
 export const useCollector = <C extends Record<string, any>>(
   collector: Collector<C>,
@@ -27,6 +27,7 @@ export const useCollector = <C extends Record<string, any>>(
         fireImmediately: true,
       }
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, ...(deps || [])]);
 
   return {

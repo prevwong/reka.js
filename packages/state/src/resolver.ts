@@ -1,5 +1,4 @@
 import * as t from '@composite/types';
-import { string } from '@composite/types/src/validators/assertions';
 import { computed, IComputedValue, makeObservable, observable } from 'mobx';
 
 import { Scope } from './scope';

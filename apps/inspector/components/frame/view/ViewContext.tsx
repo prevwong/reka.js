@@ -1,5 +1,4 @@
 import * as t from '@composite/types';
-
 import * as React from 'react';
 
 type ViewContextType = {

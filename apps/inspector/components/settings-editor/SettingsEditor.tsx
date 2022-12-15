@@ -1,8 +1,9 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
-import { Box } from '../box';
 
 import { TemplateSettings } from './TemplateSettings';
+
+import { Box } from '../box';
 
 export const SettingsEditor = observer(() => {
   return (

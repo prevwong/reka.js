@@ -1,13 +1,14 @@
-import * as React from 'react';
-import { Box } from '@app/components/box';
+import { observer } from 'mobx-react-lite';
 import Image from 'next/image';
-import { Button } from '../button';
-import { Collaborators } from '../editor-panel/Collaborators';
+import * as React from 'react';
+
+import { Box } from '@app/components/box';
 import { useEditor } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
-import { observer } from 'mobx-react-lite';
-import { Text } from '../text';
 import { styled } from '@app/styles';
+
+import { Button } from '../button';
+import { Collaborators } from '../editor-panel/Collaborators';
 
 const Menu = styled('div', {
   display: 'flex',

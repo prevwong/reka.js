@@ -1,10 +1,11 @@
-import { useEditor } from '@app/editor';
-import * as t from '@composite/types';
 import { Stringifier, Parser } from '@composite/parser';
+import * as t from '@composite/types';
+import * as React from 'react';
+
+import { useEditor } from '@app/editor';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
 import { styled } from '@app/styles';
 
-import * as React from 'react';
 import { Box } from '../box';
 import { Button } from '../button';
 import { Modal } from '../modal';
@@ -105,7 +106,6 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
                   // TODO: err
                 }
               }}
-              onRemove={() => {}}
               values={Object.keys(componentProps).reduce((accum, propKey) => {
                 return [
                   ...accum,

@@ -1,5 +1,5 @@
-import { Token } from './tokens';
 import { TokContext } from './context';
+import { Token } from './tokens';
 export class State {
   start: number;
   current: number;

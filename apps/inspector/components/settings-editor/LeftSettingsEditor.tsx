@@ -1,10 +1,13 @@
-import { useEditor } from '@app/editor';
 import * as React from 'react';
-import { AnimatedScreenSlider } from '../animated-screen-slider/AnimatedScreenSlider';
-import { Box } from '../box';
+
+import { useEditor } from '@app/editor';
+
 import { ComponentSettings } from './ComponentSettings';
 import { ComponentList } from './ProgramSettings/ComponentList';
 import { GlobalSettings } from './ProgramSettings/GlobalSettings';
+
+import { AnimatedScreenSlider } from '../animated-screen-slider/AnimatedScreenSlider';
+import { Box } from '../box';
 
 export const LeftSettingsEditor = () => {
   const editor = useEditor();

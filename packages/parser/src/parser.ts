@@ -72,7 +72,7 @@ export const jsToComposite = (node: b.Node) => {
       });
     }
     default: {
-        return t.Schema.fromJSON(node);
+      return t.Schema.fromJSON(node);
     }
   }
 };
@@ -137,7 +137,7 @@ export class Parser extends Lexer {
 
     this.consume(TokenType.LPAREN);
 
-    let startToken = this.currentToken;
+    const startToken = this.currentToken;
 
     while (!this.check(TokenType.RPAREN)) {
       if (this.check(TokenType.LPAREN)) {
@@ -151,7 +151,7 @@ export class Parser extends Lexer {
       this.next();
     }
 
-    let endToken = this.currentToken;
+    const endToken = this.currentToken;
 
     const paramsStr = this.source.slice(startToken.pos, endToken.pos);
 

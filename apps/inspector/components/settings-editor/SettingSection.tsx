@@ -1,8 +1,9 @@
-import * as React from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { styled } from '@app/styles';
-import { IconButton } from '@app/components/button';
 import { ChevronDownIcon, PlusIcon } from '@radix-ui/react-icons';
+import { AnimatePresence, motion } from 'framer-motion';
+import * as React from 'react';
+
+import { IconButton } from '@app/components/button';
+import { styled } from '@app/styles';
 
 const StyledSettingSectionHeader = styled(motion.div, {
   display: 'flex',

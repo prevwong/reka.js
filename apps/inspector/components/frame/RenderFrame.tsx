@@ -1,12 +1,15 @@
-import * as React from 'react';
-import * as t from '@composite/types';
 import { Frame as CompositeFrame } from '@composite/state';
-import IFrame from 'react-frame-component';
+import * as t from '@composite/types';
 import { observer } from 'mobx-react-lite';
-import { Renderer } from './Renderer';
-import { FrameContext } from './FrameContext';
-import { styled } from '@app/styles';
+import * as React from 'react';
+import IFrame from 'react-frame-component';
+
 import { useEditor } from '@app/editor';
+import { styled } from '@app/styles';
+
+import { FrameContext } from './FrameContext';
+import { Renderer } from './Renderer';
+
 import { Box } from '../box';
 import { Text } from '../text';
 

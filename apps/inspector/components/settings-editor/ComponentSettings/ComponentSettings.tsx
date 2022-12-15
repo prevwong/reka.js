@@ -1,15 +1,17 @@
-import * as t from '@composite/types';
 import { Stringifier, Parser } from '@composite/parser';
+import * as t from '@composite/types';
+import { observer } from 'mobx-react-lite';
+import * as React from 'react';
 
 import { Box } from '@app/components/box';
 import { PairInput } from '@app/components/pair-input';
 import { TextField } from '@app/components/text-field';
 import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
-import * as React from 'react';
-import { SettingSection } from '../SettingSection';
+
 import { TemplateLayers } from './TemplateLayers';
-import { observer } from 'mobx-react-lite';
+
+import { SettingSection } from '../SettingSection';
 
 const stringifier = new Stringifier();
 const parser = new Parser();
@@ -49,12 +51,7 @@ export const ComponentSettings = observer(() => {
   return (
     <Box css={{ display: 'flex', flexDirection: 'column' }}>
       <ComponentHeader>
-        <TextField
-          css={{ flex: 1 }}
-          transparent
-          value={component.name}
-          onChange={() => {}}
-        />
+        <TextField css={{ flex: 1 }} transparent value={component.name} />
       </ComponentHeader>
       <SettingSection
         title="Props"

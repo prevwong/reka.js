@@ -8,6 +8,8 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'prettier',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
     'plugin:prettier/recommended',
   ],
   parser: '@typescript-eslint/parser',
@@ -18,8 +20,25 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint', 'prettier'],
+  plugins: ['@typescript-eslint', 'prettier', 'import'],
   rules: {
+    'import/order': [
+      'error',
+      {
+        alphabetize: { order: 'asc' },
+        'newlines-between': 'always',
+        groups: ['builtin', 'external', 'internal', 'sibling', 'index'],
+        pathGroups: [
+          {
+            pattern: '@app/**',
+            group: 'internal',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['builtin'],
+      },
+    ],
+    'react/display-name': 0,
+    'react/prop-types': 0,
     '@typescript-eslint/no-explicit-any': 0,
     '@typescript-eslint/no-inferrable-types': 0,
     '@typescript-eslint/ban-types': 'off',

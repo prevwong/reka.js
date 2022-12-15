@@ -1,6 +1,7 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { styled } from '@stitches/react';
 import * as React from 'react';
+
 import { Box } from '../box';
 import { IconButton } from '../button';
 import { Text } from '../text';

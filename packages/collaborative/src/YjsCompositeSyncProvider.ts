@@ -1,6 +1,5 @@
-import * as t from '@composite/types';
 import { State } from '@composite/state';
-
+import * as t from '@composite/types';
 import * as Y from 'yjs';
 
 import { getTypePathFromMobxChangePath, jsToYType, yTypeToJS } from './utils';

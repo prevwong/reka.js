@@ -1,12 +1,13 @@
-import * as React from 'react';
-import { autorun } from 'mobx';
 import * as t from '@composite/types';
+import { autorun } from 'mobx';
+import * as React from 'react';
+
+import { useEditor } from '@app/editor';
 
 import { ViewContext } from './ViewContext';
 
-import { FrameContext } from '../FrameContext';
-import { useEditor } from '@app/editor';
 import { ComponentContext } from '../ComponentContext';
+import { FrameContext } from '../FrameContext';
 
 export const useView = () => {
   const frame = React.useContext(FrameContext);
@@ -31,7 +32,7 @@ export const useView = () => {
     if (parentView && parentView instanceof t.CompositeComponentView) {
       return parentView.render.indexOf(view) > -1;
     }
-  }, [frame, parentView, view]);
+  }, [frame, parentView, view, component.name]);
 
   const connect = React.useMemo(() => {
     return (dom: HTMLElement) => {
@@ -63,7 +64,13 @@ export const useView = () => {
 
       setIsSelected(isSelected);
     });
-  }, [editor, frame, isNonFrameComponentRoot]);
+  }, [
+    editor,
+    frame,
+    isNonFrameComponentRoot,
+    view.template,
+    parentView?.template,
+  ]);
 
   React.useEffect(() => {
     return autorun(() => {
@@ -79,7 +86,13 @@ export const useView = () => {
 
       setIsHovered(isHovered);
     });
-  }, [editor, frame, isNonFrameComponentRoot]);
+  }, [
+    editor,
+    frame,
+    isNonFrameComponentRoot,
+    view.template,
+    parentView?.template,
+  ]);
 
   const classes = [
     isSelected && 'template-selected',

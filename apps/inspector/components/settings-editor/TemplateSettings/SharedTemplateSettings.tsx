@@ -1,14 +1,13 @@
-import * as t from '@composite/types';
 import { Parser, Stringifier } from '@composite/parser';
-
-import * as React from 'react';
+import * as t from '@composite/types';
 import { observer } from 'mobx-react-lite';
+import * as React from 'react';
 
-import { useEditor } from '@app/editor';
 import { Box } from '@app/components/box';
-import { CancellableInputField, TextField } from '@app/components/text-field';
-import { Text } from '@app/components/text';
 import { Button } from '@app/components/button';
+import { Text } from '@app/components/text';
+import { CancellableInputField, TextField } from '@app/components/text-field';
+import { useEditor } from '@app/editor';
 
 import { SettingSection } from '../SettingSection';
 
