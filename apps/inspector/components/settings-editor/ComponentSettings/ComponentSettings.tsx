@@ -33,6 +33,7 @@ const ComponentHeader = styled('div', {
 
 export const ComponentSettings = observer(() => {
   const editor = useEditor();
+  const [isAddingNewProp, setIsAddingNewProp] = React.useState(false);
   const [isAddingNewState, setIsAddingNewState] = React.useState(false);
 
   if (!editor.activeComponentEditor) {
@@ -56,6 +57,64 @@ export const ComponentSettings = observer(() => {
         />
       </ComponentHeader>
       <SettingSection
+        title="Props"
+        onAdd={() => setIsAddingNewProp(true)}
+        collapsedOnInitial={false}
+      >
+        <PairInput
+          values={component.props.map((prop) => ({
+            id: prop.name,
+            value: prop.init ? stringifier.toString(prop.init) : '',
+          }))}
+          emptyValuesText={'No props set'}
+          valuePlaceholder="No default value"
+          addingNewField={isAddingNewProp}
+          onCancelAdding={() => setIsAddingNewProp(false)}
+          onChange={(id, value, type) => {
+            const existingPropWithSameName = component.props.find(
+              (prop) => prop.name === id
+            );
+
+            if (type === 'update') {
+              if (!existingPropWithSameName) {
+                return;
+              }
+
+              const parsedValue = parser.parseExpressionFromSource(value);
+
+              if (!parsedValue) {
+                return;
+              }
+
+              editor.state.change(() => {
+                existingPropWithSameName.init = parsedValue;
+              });
+
+              return;
+            }
+
+            if (existingPropWithSameName) {
+              return;
+            }
+
+            const parsedValue = parser.parseExpressionFromSource(value);
+
+            if (!parsedValue) {
+              return;
+            }
+
+            editor.state.change(() => {
+              component.props.push(
+                t.val({
+                  name: id,
+                  init: parsedValue,
+                })
+              );
+            });
+          }}
+        />
+      </SettingSection>
+      <SettingSection
         title="State"
         onAdd={() => setIsAddingNewState(true)}
         collapsedOnInitial={false}
@@ -65,6 +124,7 @@ export const ComponentSettings = observer(() => {
             id: state.name,
             value: stringifier.toString(state.init),
           }))}
+          emptyValuesText="No state values"
           addingNewField={isAddingNewState}
           onCancelAdding={() => setIsAddingNewState(false)}
           onChange={(id, value, type) => {
@@ -77,9 +137,7 @@ export const ComponentSettings = observer(() => {
                 return;
               }
 
-              const parsedValue = parser.parseExpressionFromSource(
-                `{${value}}`
-              );
+              const parsedValue = parser.parseExpressionFromSource(value);
 
               if (!parsedValue) {
                 return;
@@ -96,7 +154,7 @@ export const ComponentSettings = observer(() => {
               return;
             }
 
-            const parsedValue = parser.parseExpressionFromSource(`{${value}}`);
+            const parsedValue = parser.parseExpressionFromSource(value);
 
             if (!parsedValue) {
               return;

@@ -1,7 +1,9 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { styled } from '@stitches/react';
 import * as React from 'react';
+import { Box } from '../box';
 import { IconButton } from '../button';
+import { Text } from '../text';
 import { TextField } from '../text-field';
 
 export const StyledPairInputField = styled('div', {
@@ -57,11 +59,13 @@ type PairInputValue = {
 
 type PairInputProps = {
   values: PairInputValue[];
+  valuePlaceholder?: string;
   onChange?: (id: string, value: string, type: 'update' | 'new') => void;
   onRemove?: (id: string, value: string) => void;
   onAdd?: (id: string, value: string, clear: () => void) => void;
   onCancelAdding?: () => void;
   addingNewField?: boolean;
+  emptyValuesText?: string;
 };
 
 type AddNewPairInputFieldProps = {
@@ -155,6 +159,7 @@ type PairInputFieldProps = {
   disableEditValue?: boolean;
   onRemove?: () => void;
   onChange?: (id: string, value: string) => void;
+  valuePlaceholder?: string;
 };
 
 const PairInputField = ({
@@ -164,6 +169,7 @@ const PairInputField = ({
   disableEditValue,
   onRemove,
   onChange,
+  valuePlaceholder,
 }: PairInputFieldProps) => {
   const [newId, setNewId] = React.useState(id);
   const [newValue, setNewValue] = React.useState(value);
@@ -216,6 +222,7 @@ const PairInputField = ({
           commit();
         }}
         disabled={disableEditValue}
+        placeholder={valuePlaceholder}
       />
       <IconButton
         transparent
@@ -250,9 +257,17 @@ export const PairInput = (props: PairInputProps) => {
             onChange={(id, value) => {
               props.onChange?.(id, value, 'update');
             }}
+            valuePlaceholder={props.valuePlaceholder}
           />
         );
       })}
+      {!props.addingNewField && props.values.length === 0 && (
+        <Box>
+          <Text size={1} css={{ color: '$gray11' }}>
+            {props.emptyValuesText || 'No values yet'}
+          </Text>
+        </Box>
+      )}
       {props.addingNewField && (
         <AddNewPairInputField
           onAdd={(id, value, clear) => {
