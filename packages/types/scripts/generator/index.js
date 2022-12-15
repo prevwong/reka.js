@@ -1,10 +1,10 @@
-require("../../src/types.definition");
+require('../../src/types.definition');
 
-const fs = require("fs");
-const prettier = require("prettier");
-const formatBuilderName = require("./formatBuilderName");
-const stringifyField = require("./stringifyField");
-const { Schema } = require("../../src/schema");
+const fs = require('fs');
+const prettier = require('prettier');
+const formatBuilderName = require('./formatBuilderName');
+const stringifyField = require('./stringifyField');
+const { Schema } = require('../../src/schema');
 
 let code = `
 import { Schema, Type, TypeProperties } from './schema';\n
@@ -24,21 +24,28 @@ for (const type in Schema.getRegistry()) {
     });
   }
   code += `
-  export ${schema.abstract ? "abstract" : ""} class ${type} extends ${
-    schema.extends || "Type"
-  } {
-    ${schema.ownFields
+
+  type ${type}Parameters = {
+    ${schema.fields
       .map(
         (field) =>
-          `declare ${field.name}${
-            field.type.is === "optional" ? "?" : ""
+          `${field.name}${
+            field.type.is === 'default' ? '?' : ''
           }: ${stringifyField(field.type)}`
       )
-      .join(";")}
+      .join(';')}
+  }
+
+  export ${schema.abstract ? 'abstract' : ''} class ${type} extends ${
+    schema.extends || 'Type'
+  } {
+    ${schema.ownFields
+      .map((field) => `declare ${field.name}: ${stringifyField(field.type)}`)
+      .join(';')}
     constructor(${
-      schema.abstract ? "type: string," : ""
-    }value: TypeProperties<${type}>) {
-      super(${schema.abstract ? "type" : `"${type}"`}, value)
+      schema.abstract ? 'type: string,' : ''
+    }value: ${type}Parameters) {
+      super(${schema.abstract ? 'type' : `"${type}"`}, value)
     }
   }
   
@@ -47,7 +54,7 @@ for (const type in Schema.getRegistry()) {
 
   ${
     schema.abstract
-      ? ""
+      ? ''
       : `export const ${formatBuilderName(
           type
         )} = (...args: ConstructorParameters<typeof ${type}>) => new ${type}(...args);`
@@ -56,10 +63,10 @@ for (const type in Schema.getRegistry()) {
 }
 
 for (const alias in aliases) {
-  code += `export type ${alias} = ${aliases[alias].join(" | ")};\n`;
+  code += `export type ${alias} = ${aliases[alias].join(' | ')};\n`;
 }
 
-code += `export type Any = ${Object.keys(Schema.getRegistry()).join("|")};`;
+code += `export type Any = ${Object.keys(Schema.getRegistry()).join('|')};`;
 
 code += `export type Visitor = {`;
 for (const type in Schema.getRegistry()) {
@@ -68,6 +75,6 @@ for (const type in Schema.getRegistry()) {
 code += `}`;
 
 code = prettier.format(code, {
-  parser: "babel-ts",
+  parser: 'babel-ts',
 });
-fs.writeFileSync("./src/types.generated.ts", code);
+fs.writeFileSync('./src/types.generated.ts', code);

@@ -54,7 +54,9 @@ const ConditionalTemplateSetting = observer(
                 return;
               }
 
-              const parsedValue = parser.parseExpressionFromSource(condition);
+              const parsedValue = parser.parseExpressionFromSource(
+                condition || ''
+              );
 
               if (!parsedValue) {
                 return;
@@ -66,7 +68,7 @@ const ConditionalTemplateSetting = observer(
             }}
             onCancel={() => {
               editor.state.change(() => {
-                props.template.if = undefined;
+                props.template.if = null;
               });
 
               resetCondition();
@@ -113,7 +115,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
         alias: t.identifier({
           name: alias,
         }),
-        ...(index ? { index: t.identifier({ name: index }) } : {}),
+        index: index ? t.identifier({ name: index }) : null,
       });
     });
   };
@@ -131,7 +133,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
             setIndexValue('');
 
             editor.state.change(() => {
-              props.template.each = undefined;
+              props.template.each = null;
             });
           }}
           onChange={(e) => {
@@ -213,7 +215,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
                       return;
                     }
 
-                    props.template.each.index = undefined;
+                    props.template.each.index = null;
                   });
                 }}
                 onChange={(e) => {

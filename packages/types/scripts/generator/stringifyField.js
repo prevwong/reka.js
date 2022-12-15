@@ -1,13 +1,16 @@
 const fieldsToString = {
   type: (self) => {
-    if (self.type === "Record") {
-      return "Record<string, any>";
+    if (self.type === 'Record') {
+      return 'Record<string, any>';
     }
 
     return self.type;
   },
+  default: (self) => {
+    return `${stringifyField(self.type)}`;
+  },
   union: (self) => {
-    return self.union.map((u) => stringifyField(u)).join(" | ");
+    return self.union.map((u) => stringifyField(u)).join(' | ');
   },
   optional: (self) => {
     return stringifyField(self.type);
@@ -24,13 +27,13 @@ const fieldsToString = {
   model: (self) => {
     let typing = `{\n`;
     Object.keys(self.model).forEach((key) => {
-      const isOptional = self.model[key].is === "optional";
+      const isOptional = self.model[key].is === 'optional';
 
-      typing += `${key}${isOptional ? "?" : ""}: ${stringifyField(
+      typing += `${key}${isOptional ? '?' : ''}: ${stringifyField(
         self.model[key]
       )};\n`;
     });
-    typing += "}";
+    typing += '}';
     return typing;
   },
   constant: (self) => {

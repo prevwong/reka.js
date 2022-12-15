@@ -66,7 +66,7 @@ Schema.define('ObjectExpression', {
 Schema.define('ComponentProp', {
   fields: (t) => ({
     name: t.string,
-    init: t.optional(t.node('Expression')),
+    init: t.defaultValue(t.union(t.node('Expression'), t.nullish), null),
   }),
 });
 
@@ -96,7 +96,7 @@ Schema.define('ExternalComponent', {
 Schema.define('ElementEach', {
   fields: (t) => ({
     alias: t.node('Identifier'),
-    index: t.optional(t.node('Identifier')),
+    index: t.defaultValue(t.union(t.node('Identifier'), t.nullish), null),
     iterator: t.node('Identifier'),
   }),
 });
@@ -106,9 +106,12 @@ Schema.define('Template', {
   fields: (t) => ({
     props: t.map(t.node('Expression')),
     children: t.array(t.node('Template')),
-    if: t.optional(t.node('Expression')),
-    each: t.optional(t.node('ElementEach')),
-    classList: t.optional(t.node('ObjectExpression')),
+    if: t.defaultValue(t.union(t.node('Expression'), t.nullish), null),
+    each: t.defaultValue(t.union(t.node('ElementEach'), t.nullish), null),
+    classList: t.defaultValue(
+      t.union(t.node('ObjectExpression'), t.nullish),
+      null
+    ),
   }),
 });
 
@@ -142,7 +145,7 @@ Schema.define('MemberExpression', {
 Schema.define('Func', {
   alias: ['Expression'],
   fields: (t) => ({
-    name: t.optional(t.string),
+    name: t.defaultValue(t.union(t.string, t.nullish), null),
     params: t.array(t.node('Identifier')),
     body: t.node('Block'),
   }),

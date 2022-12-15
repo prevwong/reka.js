@@ -2,6 +2,7 @@ import {
   AnyValidator,
   ArrayValidator,
   ConstantValidator,
+  DefaultValidator,
   MapValidator,
   ModelValidator,
   NodeValidator,
@@ -25,6 +26,9 @@ export const model = (model: Record<string, Validator>) =>
 export const constant = (value: string) => new ConstantValidator(value);
 export const enumeration = (...constants: string[]) =>
   union(...constants.map((c) => constant(c)));
+export const defaultValue = (validator: Validator, defaultValue: any) =>
+  new DefaultValidator(validator, defaultValue);
+
 export const any = new AnyValidator();
 export const string = type('string');
 export const number = type('number');

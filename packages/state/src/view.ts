@@ -375,7 +375,7 @@ export class ViewTree {
           .join(' ');
       }
 
-      view = new t.ElementView({
+      view = t.elementView({
         tag: template.tag,
         children,
         props,

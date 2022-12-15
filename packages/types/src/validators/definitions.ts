@@ -23,6 +23,21 @@ export class TypeValidator extends Validator {
   }
 }
 
+export class DefaultValidator extends Validator {
+  type: Validator;
+  defaultValue: any;
+
+  constructor(validator: Validator, defaultValue: any) {
+    super('default');
+    this.type = validator;
+    this.defaultValue = defaultValue;
+  }
+
+  format(value: any) {
+    return this.type.get(value === undefined ? this.defaultValue : value);
+  }
+}
+
 export class OptionalValidator extends Validator {
   type: Validator;
 

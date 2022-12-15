@@ -194,6 +194,10 @@ export const flattenType = <T extends Type>(root: T) => {
   const types: Record<string, any> = {};
 
   const convert = (value: any) => {
+    if (!value) {
+      return value;
+    }
+
     if (Array.isArray(value)) {
       return value.map((c) => convert(c));
     }
@@ -229,6 +233,10 @@ export const flattenType = <T extends Type>(root: T) => {
 
 export const unflattenType = ({ root, types }) => {
   const convert = (value) => {
+    if (!value) {
+      return value;
+    }
+
     if (Array.isArray(value)) {
       return value.map((child) => convert(child));
     }
@@ -269,7 +277,11 @@ export const unflattenType = ({ root, types }) => {
 export const collectNestedTypes = (type: any) => {
   const types: any[] = [];
 
-  const collect = (value: any) => {
+  const collect = (value: any, k?: string) => {
+    if (!value) {
+      return;
+    }
+
     if (Array.isArray(value)) {
       value.forEach((c) => collect(c));
       return;
@@ -280,8 +292,8 @@ export const collectNestedTypes = (type: any) => {
         types.push(value);
       }
 
-      Object.values(value).forEach((v) => {
-        collect(v);
+      Object.keys(value).forEach((key) => {
+        collect(value[key], key);
       });
 
       return;
