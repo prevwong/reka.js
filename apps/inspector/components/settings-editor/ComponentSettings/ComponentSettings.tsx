@@ -105,7 +105,7 @@ export const ComponentSettings = observer(() => {
 
             editor.state.change(() => {
               component.props.push(
-                t.val({
+                t.componentProp({
                   name: id,
                   init: parsedValue,
                 })
