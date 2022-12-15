@@ -112,6 +112,10 @@ export class Editor {
       t.unflattenType(getCollaborativeYjsCompositeState().toJSON() as any)
     );
 
+    if (this.state.root.components.length > 0) {
+      this.setActiveComponentEditor(this.state.root.components[0]);
+    }
+
     if (typeof window === 'undefined') {
       return;
     }
