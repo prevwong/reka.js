@@ -85,6 +85,7 @@ export class ComponentViewEvaluator {
         }
 
         this.compositeComponentRootComputation = computed(() => {
+          let render: t.View[] = [];
           if (!this.compositeComponentPropsComputation) {
             this.compositeComponentPropsComputation = computed(() => {
               const slot = this.template.children.flatMap((child) =>
@@ -116,8 +117,6 @@ export class ComponentViewEvaluator {
             });
           }
 
-          this.compositeComponentPropsComputation.get();
-
           if (!this.compositeComponentStateComputation) {
             this.compositeComponentStateComputation = computed(() => {
               component.state.forEach((val) => {
@@ -129,13 +128,24 @@ export class ComponentViewEvaluator {
             });
           }
 
-          this.compositeComponentStateComputation.get();
+          try {
+            this.compositeComponentPropsComputation.get();
+            this.compositeComponentStateComputation.get();
 
-          const render = this.tree.computeTemplate(component.template, {
-            path: [this.key, 'root'],
-            env: this.env,
-            classList: [],
-          });
+            render = this.tree.computeTemplate(component.template, {
+              path: [this.key, 'root'],
+              env: this.env,
+              classList: [],
+            });
+          } catch (err) {
+            render = [
+              t.errorSystemView({
+                error: 'Something went wrong when evaluating component',
+                template: this.template,
+                key: this.key,
+              }),
+            ];
+          }
 
           componentViewTree.render.length = render.length;
 
