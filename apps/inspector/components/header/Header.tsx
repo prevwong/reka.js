@@ -7,6 +7,19 @@ import { useEditor } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 import { observer } from 'mobx-react-lite';
 import { Text } from '../text';
+import { styled } from '@app/styles';
+
+const Menu = styled('div', {
+  display: 'flex',
+  gap: '$4',
+  ml: '$5',
+  '> a': {
+    fontSize: '$2',
+    cursor: 'pointer',
+    textDecoration: 'none',
+    color: '$slate12',
+  },
+});
 
 export const Header = observer(() => {
   const editor = useEditor();
@@ -28,9 +41,12 @@ export const Header = observer(() => {
             <Box css={{ ml: '$2' }}>
               <Image src="/logo.svg" width={30} height={30} />
             </Box>
-            <Box css={{ ml: '$4' }}>
-              <Text size={'2'}>Projects</Text>
-            </Box>
+            <Menu>
+              <a href="https://github.com/prevwong/composite" target="__blank">
+                Github
+              </a>
+              <a href="#">Documentation</a>
+            </Menu>
           </Box>
           <Box css={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Collaborators />
