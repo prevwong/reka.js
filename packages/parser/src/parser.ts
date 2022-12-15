@@ -1,9 +1,16 @@
 import * as b from '@babel/types';
 import * as t from '@composite/types';
-import { parseExpressionAt } from 'acorn';
+import acorn, { parseExpressionAt } from 'acorn';
+import invariant from 'tiny-invariant';
 
 import { Lexer } from './lexer';
 import { TokenType } from './tokens';
+
+const parseWithAcorn = (source: string, loc: number) => {
+  return parseExpressionAt(source, loc, {
+    ecmaVersion: 2020,
+  }) as b.Node & acorn.Node;
+};
 
 export const jsToComposite = (node: b.Node) => {
   switch (node.type) {
@@ -65,7 +72,7 @@ export const jsToComposite = (node: b.Node) => {
       });
     }
     default: {
-      return t.Schema.fromJSON(node);
+        return t.Schema.fromJSON(node);
     }
   }
 };
@@ -129,18 +136,57 @@ export class Parser extends Lexer {
     const name = this.consume(TokenType.IDENTIFIER);
 
     this.consume(TokenType.LPAREN);
-    const props: t.ComponentProp[] = [];
+
+    let startToken = this.currentToken;
+
     while (!this.check(TokenType.RPAREN)) {
-      props.push(
-        t.componentProp({
-          name: this.consume(TokenType.IDENTIFIER).value,
-        })
+      if (this.check(TokenType.LPAREN)) {
+        while (!this.check(TokenType.RPAREN)) {
+          this.next();
+        }
+
+        continue;
+      }
+
+      this.next();
+    }
+
+    let endToken = this.currentToken;
+
+    const paramsStr = this.source.slice(startToken.pos, endToken.pos);
+
+    const parsedDummyFn = parseWithAcorn(`function (${paramsStr}) {}`, 0);
+
+    invariant(b.isFunctionExpression(parsedDummyFn), 'Not function expr');
+
+    const props = parsedDummyFn.params.map((param) => {
+      let init: t.Expression | undefined;
+      let name: string;
+
+      invariant(
+        b.isAssignmentPattern(param) || b.isIdentifier(param),
+        'Invalid component prop'
       );
 
-      this.match(TokenType.COMMA);
-    }
+      if (b.isAssignmentPattern(param)) {
+        init = jsToComposite(param.right);
+        invariant(
+          b.isIdentifier(param.left),
+          'Invalid component prop assignment'
+        );
+        name = param.left.name;
+      } else {
+        name = param.name;
+      }
+
+      return t.componentProp({
+        name,
+        init,
+      });
+    });
+
     this.consume(TokenType.RPAREN);
-    // let state = [];
+
     const state = this.parseComponentStateDeclaration();
     this.consume(TokenType.ARROW);
     this.consume(TokenType.COMPONENT_TMPL_START);
@@ -339,24 +385,24 @@ export class Parser extends Lexer {
   }
 
   parseExpressionFromSource(source: string) {
-    super.parse(source);
+    const tempParser = new Parser();
 
-    return this.parseExpressionAt(
-      this.state.currentToken.pos + 1
+    tempParser.parse(`{${source}}`);
+
+    return tempParser.parseExpressionAt(
+      tempParser.state.currentToken.pos + 1
     ) as t.Expression;
   }
 
-  private parseExpressionAt(loc: number) {
+  parseExpressionAt(loc: number) {
     // Bootstrapping on acorn's parser for parsing basic expressions
-    const expression = parseExpressionAt(this.source, loc, {
-      ecmaVersion: 2020,
-    });
-
+    const expression = parseWithAcorn(this.source, loc);
+    const compositeType = jsToComposite(expression as unknown as b.Node);
     // Since we're using acorn to parse the expression
     // Move the lexer to the end of the expression
     this.state.current = expression.end;
     this.next();
 
-    return jsToComposite(expression as unknown as b.Node);
+    return compositeType;
   }
 }

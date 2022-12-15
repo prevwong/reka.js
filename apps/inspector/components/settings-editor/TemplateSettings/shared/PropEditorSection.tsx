@@ -35,9 +35,7 @@ export const PropEditorSection = observer(
           onCancelAdding={() => setAddNewProp(false)}
           onChange={(id, value) => {
             try {
-              const parsedValue = parser.parseExpressionFromSource(
-                `{${value}}`
-              );
+              const parsedValue = parser.parseExpressionFromSource(value);
               //   console.log("parsedValue", parsedValue);
               editor.state.change(() => {
                 template.props[id] = parsedValue;

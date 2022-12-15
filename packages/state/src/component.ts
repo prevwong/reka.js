@@ -102,7 +102,7 @@ export class ComponentViewEvaluator {
                 }
 
                 let propValue = this.tree.evaluateExpr(
-                  this.template.props[prop.name],
+                  this.template.props[prop.name] || prop.init,
                   this.ctx.env
                 );
 

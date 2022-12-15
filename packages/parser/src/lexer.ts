@@ -173,6 +173,18 @@ export class Lexer {
       case ']': {
         return this.tokenize(TokenType.RBRACKET);
       }
+      case '+': {
+        return this.tokenize(TokenType.PLUS);
+      }
+      case '-': {
+        return this.tokenize(TokenType.MINUS);
+      }
+      case '*': {
+        return this.tokenize(TokenType.STAR);
+      }
+      case '/': {
+        return this.tokenize(TokenType.SLASH);
+      }
       default: {
         this.error(`Unknown token type "${c}"`);
       }

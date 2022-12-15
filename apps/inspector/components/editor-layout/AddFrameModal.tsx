@@ -93,9 +93,7 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
               addingNewField={true}
               onChange={(id, value) => {
                 try {
-                  const parsedValue = parser.parseExpressionFromSource(
-                    `{${value}}`
-                  );
+                  const parsedValue = parser.parseExpressionFromSource(value);
 
                   setComponentProps((props) => {
                     return {

@@ -66,6 +66,7 @@ Schema.define('ObjectExpression', {
 Schema.define('ComponentProp', {
   fields: (t) => ({
     name: t.string,
+    init: t.optional(t.node('Expression')),
   }),
 });
 

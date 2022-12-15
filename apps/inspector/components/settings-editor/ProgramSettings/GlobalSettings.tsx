@@ -30,7 +30,7 @@ export const GlobalSettings = observer(() => {
         addingNewField={isAddingNewGlobal}
         onCancelAdding={() => setIsAddingNewGlobal(false)}
         onChange={(id, value) => {
-          const parsedValue = parser.parseExpressionFromSource(`{${value}}`);
+          const parsedValue = parser.parseExpressionFromSource(value);
 
           if (!id || !parsedValue) {
             return;

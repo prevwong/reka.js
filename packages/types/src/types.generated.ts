@@ -90,6 +90,7 @@ export const objectExpression = (
 
 export class ComponentProp extends Type {
   declare name: string;
+  declare init?: Expression;
   constructor(value: TypeProperties<ComponentProp>) {
     super("ComponentProp", value);
   }

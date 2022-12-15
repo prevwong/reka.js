@@ -54,9 +54,7 @@ const ConditionalTemplateSetting = observer(
                 return;
               }
 
-              const parsedValue = parser.parseExpressionFromSource(
-                `{${condition}}`
-              );
+              const parsedValue = parser.parseExpressionFromSource(condition);
 
               if (!parsedValue) {
                 return;
