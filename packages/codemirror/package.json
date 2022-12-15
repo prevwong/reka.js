@@ -8,7 +8,9 @@
     "generate-lezer-parser": "mkdir -p src/parser && lezer-generator src/composite.grammar -o src/parser/index.js",
     "generate-lezer-parser:watch": "nodemon --watch src/composite.grammar -x pnpm run generate-lezer-parser",
     "rollup:watch": "rollup -w -c rollup.config.js",
-    "dev": "run-p rollup:watch generate-lezer-parser:watch"
+    "rollup:build": "rollup -c rollup.config.js",
+    "dev": "run-p rollup:watch generate-lezer-parser:watch",
+    "build": "run-s generate-lezer-parser rollup:build"
   },
   "keywords": [],
   "author": "Prev Wong",

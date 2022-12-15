@@ -6,6 +6,7 @@
   "types": "./src/index.ts",
   "scripts": {
     "dev": "rollup -w -c rollup.config.js",
+    "build": "rollup -c rollup.config.js",
     "generate-ast": "./scripts/generate-ast.js"
   },
   "keywords": [],
