@@ -74,18 +74,18 @@ export class Event {
 
     tplToElements.add(dom);
 
-    const onMouseDown = (e) => {
+    const onMouseDown = (e: MouseEvent) => {
       e.stopPropagation();
       this.clearEvent('selected');
       this.setEvent('selected', template);
     };
 
-    const onMouseOver = (e) => {
+    const onMouseOver = (e: MouseEvent) => {
       e.stopPropagation();
       this.setEvent('hovered', template);
     };
 
-    const onMouseOut = (e) => {
+    const onMouseOut = (e: MouseEvent) => {
       e.stopPropagation();
       this.removeEvent('hovered', template);
     };

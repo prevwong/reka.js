@@ -5,13 +5,12 @@ import * as React from 'react';
 
 import { Box } from '@app/components/box';
 import { PairInput } from '@app/components/pair-input';
+import { SettingSection } from '@app/components/settings-section';
 import { TextField } from '@app/components/text-field';
 import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
 
 import { TemplateLayers } from './TemplateLayers';
-
-import { SettingSection } from '../SettingSection';
 
 const stringifier = new Stringifier();
 const parser = new Parser();

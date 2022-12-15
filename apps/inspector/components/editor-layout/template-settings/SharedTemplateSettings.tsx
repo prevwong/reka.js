@@ -5,11 +5,10 @@ import * as React from 'react';
 
 import { Box } from '@app/components/box';
 import { Button } from '@app/components/button';
+import { SettingSection } from '@app/components/settings-section';
 import { Text } from '@app/components/text';
 import { CancellableInputField, TextField } from '@app/components/text-field';
 import { useEditor } from '@app/editor';
-
-import { SettingSection } from '../SettingSection';
 
 type SharedTemplateSettingsProps = {
   template: t.Template;

@@ -141,7 +141,7 @@ const Element = observer(
       setIsCollapsed(!isCollapsed);
     }, [isCollapsed, setIsCollapsed]);
 
-    function renderChild(key, value, parent, name) {
+    function renderChild(key: string, value: any, parent: any, name: string) {
       if (typeof value === 'function') {
         return <PrimitiveElement key={key} name={name} value={'Function()'} />;
       }
@@ -200,7 +200,9 @@ const Element = observer(
           const node = value;
           const elements = value
             .filter(({ key }) => key !== 'length')
-            .map((value, key) => renderChild(key, value, node, key));
+            .map((value, key) =>
+              renderChild(key.toString(), value, node, key.toString())
+            );
 
           content = <ul className="value-body">{elements}</ul>;
         } else {

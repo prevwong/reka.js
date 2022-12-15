@@ -4,9 +4,8 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { PairInput } from '@app/components/pair-input';
+import { SettingSection } from '@app/components/settings-section';
 import { useEditor } from '@app/editor';
-
-import { SettingSection } from '../SettingSection';
 
 const parser = new Parser();
 const stringifier = new Stringifier();

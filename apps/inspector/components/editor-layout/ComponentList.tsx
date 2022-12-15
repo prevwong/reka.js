@@ -16,7 +16,7 @@ import { Tooltip } from '@app/components/tooltip';
 import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
 
-import { SettingSection } from '../SettingSection';
+import { SettingSection } from '../settings-section';
 
 type AddComponentModalProps = {
   isOpen: boolean;

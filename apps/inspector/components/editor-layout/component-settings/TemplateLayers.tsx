@@ -11,7 +11,7 @@ import { Text } from '@app/components/text';
 import { Tooltip } from '@app/components/tooltip';
 import { useEditor } from '@app/editor';
 
-import { AddTemplateModal } from '../AddTemplateModal';
+import { AddTemplateModal } from './AddTemplateModal';
 
 type AddTemplateButtonProps = {
   target: t.Template;

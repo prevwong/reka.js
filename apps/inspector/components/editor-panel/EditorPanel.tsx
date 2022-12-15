@@ -66,7 +66,7 @@ export const EditorPanel = observer(() => {
               css={{
                 ml: '$1',
               }}
-              variant="indigo"
+              variant="secondary"
               onClick={() => {
                 setEditView(editView === 'code' ? 'ast' : 'code');
               }}

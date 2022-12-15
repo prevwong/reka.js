@@ -2,17 +2,16 @@ import { Parser } from '@composite/parser';
 import * as t from '@composite/types';
 import * as React from 'react';
 
+import { Box } from '@app/components/box';
+import { Button } from '@app/components/button';
+import { Modal } from '@app/components/modal';
+import { PairInput } from '@app/components/pair-input';
+import { Select } from '@app/components/select';
+import { Text } from '@app/components/text';
+import { TextField } from '@app/components/text-field';
+import { ToggleGroup, ToggleGroupItem } from '@app/components/toggle-group';
 import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
-
-import { Box } from '../box';
-import { Button } from '../button';
-import { Modal } from '../modal';
-import { PairInput } from '../pair-input';
-import { Select } from '../select';
-import { Text } from '../text';
-import { TextField } from '../text-field';
-import { ToggleGroup, ToggleGroupItem } from '../toggle-group';
 
 const parser = new Parser();
 

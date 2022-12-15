@@ -7,14 +7,14 @@ import { EditorMode } from '@app/editor/Editor';
 import { styled } from '@app/styles';
 
 import { ComponentEditorView } from './ComponentEditorView';
+import { ComponentList } from './ComponentList';
+import { GlobalSettings } from './GlobalSettings';
+import { ComponentSettings } from './component-settings';
+import { TemplateSettings } from './template-settings';
 
 import { AnimatedScreenSlider } from '../animated-screen-slider/AnimatedScreenSlider';
 import { Box } from '../box';
 import { CodeEditor } from '../code-editor';
-import { ComponentSettings } from '../settings-editor/ComponentSettings';
-import { ComponentList } from '../settings-editor/ProgramSettings/ComponentList';
-import { GlobalSettings } from '../settings-editor/ProgramSettings/GlobalSettings';
-import { TemplateSettings } from '../settings-editor/TemplateSettings';
 
 const StyledScreen = styled('div', {
   display: 'flex',
