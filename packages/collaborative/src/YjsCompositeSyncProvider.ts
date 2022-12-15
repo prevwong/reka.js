@@ -154,6 +154,10 @@ export class YjsCompositeSyncProvider {
 
           const path = getTypePathFromMobxChangePath([...change.path]);
 
+          const getTypeFromId = (id: string) => {
+            return yDocRoot.get('types').get(id);
+          };
+
           const getYTypeFromPath = (paths: any[]) => {
             const rootType = paths.shift();
 
@@ -167,17 +171,41 @@ export class YjsCompositeSyncProvider {
               let target = obj.get(curr);
 
               if (target.get('$$typeId') !== undefined) {
-                target = yDocRoot.get('types').get(target.get('$$typeId'));
+                target = getTypeFromId(target.get('$$typeId'));
               }
 
               return traverse(target, paths);
             };
-            const type = yDocRoot.get('types').get(rootType.id);
+
+            const type = getTypeFromId(rootType.id);
+
+            /**
+             * There's an edge case when we cannot resolve the root type from the Yjs Document
+             *
+             * This is when we just added a new Node and we instantly mutate a property in that node. For example:
+             * composite.change(() => {
+             *    // New node created here
+             *    template.classList = t.objectExpression({...})
+             *
+             *    // Instantly modifiying a property of the newly created noew
+             *    template.classList.properties['bg-blue-900'] = true;
+             * });
+             *
+             * In this case, we can safely abort making changes to the yDoc since the newly created node is stored in the "insert" array
+             * and any subsequent changes will be reflected in the newly created node anyway
+             */
+            if (!type) {
+              return;
+            }
 
             return traverse(type, paths);
           };
 
           const yType = getYTypeFromPath([...path]);
+
+          if (!yType) {
+            return;
+          }
 
           if (yType instanceof Y.Map) {
             const newValue = jsToYType(change.newValue);
