@@ -97,10 +97,6 @@ export class ComponentViewEvaluator {
               this.env.set('$$children', slot);
 
               component.props.forEach((prop) => {
-                if (this.template.props[prop.name] === undefined) {
-                  return;
-                }
-
                 let propValue = this.tree.evaluateExpr(
                   this.template.props[prop.name] || prop.init,
                   this.ctx.env

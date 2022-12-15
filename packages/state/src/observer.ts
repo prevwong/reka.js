@@ -58,6 +58,10 @@ export type SubscriberConfig = {
   deep: boolean;
 };
 
+export type ChangeOpts = {
+  batch: boolean;
+};
+
 export class Observer<T extends Type = Type> {
   root: T;
   valueToParentMap: WeakMap<any, any>;
@@ -81,14 +85,18 @@ export class Observer<T extends Type = Type> {
     this.root = type;
     this.opts = opts ?? {};
 
-    this.setupRootType(type);
+    this.setRoot(type);
 
     makeObservable(this, {
       root: observable,
     });
   }
 
-  private setupRootType(type: T) {
+  setRoot(type: T) {
+    if (this.rootDisposer) {
+      this.rootDisposer();
+    }
+
     const rootDisposer = this.setupType(type);
 
     invariant(
@@ -138,7 +146,7 @@ export class Observer<T extends Type = Type> {
       this.root = type;
     });
 
-    this.setupRootType(type);
+    this.setRoot(type);
 
     this.notify({
       type: 'replace',
@@ -535,20 +543,31 @@ export class Observer<T extends Type = Type> {
     return this.valueToParentMap.get(type);
   }
 
-  change(mutation: () => void) {
-    if (this.isMutation) {
-      mutation();
+  change(mutation: () => void, opts: ChangeOpts = { batch: true }) {
+    const _change = () => {
+      if (this.isMutation) {
+        mutation();
+        return;
+      }
+
+      this.isMutation = true;
+
+      runInAction(() => {
+        mutation();
+      });
+
+      this.isMutation = false;
+
+      this.disposeTypes();
+    };
+
+    if (opts.batch) {
+      _change();
       return;
     }
 
-    this.isMutation = true;
-
-    runInAction(() => {
-      mutation();
+    this.whileDisposing(() => {
+      _change();
     });
-
-    this.isMutation = false;
-
-    this.disposeTypes();
   }
 }

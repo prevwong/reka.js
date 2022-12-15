@@ -138,7 +138,7 @@ export class ViewTree {
         onDispose: (payload) => {
           const disposedType = payload.type;
 
-          if (disposedType instanceof t.View) {
+          if (disposedType instanceof t.View && disposedType.key !== 'frame') {
             this.tplKeyToViewComputationCache.delete(disposedType.key);
             this.tplKeyToComponentEvaluator.delete(disposedType.key);
             this.tplKeyToView.delete(disposedType.key);
@@ -373,7 +373,6 @@ export class ViewTree {
         props['className'] = [props['className'], ...ctx.classList]
           .filter(Boolean)
           .join(' ');
-        console.log(200, props, props['className']);
       }
 
       view = new t.ElementView({
@@ -414,15 +413,7 @@ export class ViewTree {
 
       componentEvaluator = new ComponentViewEvaluator(
         this,
-        {
-          ...ctx,
-          /**
-           * Note: we append "comp" as part of the path
-           * This is so that the resulting inner Component's view does not get confused with
-           * the Component's template
-           */
-          path: [...ctx.path, 'comp'],
-        },
+        ctx,
         template,
         componentEnv
       );
@@ -442,7 +433,7 @@ export class ViewTree {
   }
 
   computeTree() {
-    runInAction(() => {
+    const _compute = () => {
       // TODO: if root element has @each, this only renders the first @each iteration
       // We need to render the root view with a Fragment
       const view = this.computeTemplate(this.rootTemplate, {
@@ -454,13 +445,27 @@ export class ViewTree {
       if (this.root !== view) {
         this.setRoot(view);
       } else {
-        this.tplKeyToComponentEvaluator.forEach((componentEvaluator) =>
-          componentEvaluator.compute()
-        );
+        this.tplKeyToComponentEvaluator.forEach((componentEvaluator, key) => {
+          componentEvaluator.compute();
+        });
       }
 
       return view;
-    });
+    };
+
+    if (!this.rootObserver) {
+      _compute();
+      return;
+    }
+
+    this.rootObserver.change(
+      () => {
+        _compute();
+      },
+      {
+        batch: false,
+      }
+    );
   }
 
   dispose() {
