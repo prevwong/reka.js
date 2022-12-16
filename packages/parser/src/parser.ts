@@ -144,8 +144,6 @@ export class Parser extends Lexer {
         while (!this.check(TokenType.RPAREN)) {
           this.next();
         }
-
-        continue;
       }
 
       this.next();
