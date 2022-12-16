@@ -8,7 +8,7 @@
     "next:dev": "next dev",
     "next:build": "next build",
     "dev": "run-p tailwind:watch next:dev",
-    "build": "run-s tailwind:build next:build",
+    "build": "run-s next:build",
     "start": "next start",
     "lint": "next lint",
     "encode-dummy-program": "tsx ./scripts/encodeInitialContent.ts"
