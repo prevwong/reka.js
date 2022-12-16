@@ -66,7 +66,7 @@ const getInitials = (name: string) => {
 const CollabUser = React.forwardRef<any, any>(
   ({ active, user, disconnected }, ref) => {
     return (
-      <Tooltip content={user.name}>
+      <Tooltip content={`${user.name}${active ? ' (You)' : ''}`}>
         <StyledUserIcon
           active={active}
           css={{ backgroundColor: user.color }}
