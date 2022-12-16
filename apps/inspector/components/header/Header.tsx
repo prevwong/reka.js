@@ -62,7 +62,9 @@ export const Header = observer(() => {
                 editor.setMode(EditorMode.Code);
               }}
             >
-              {editor.mode === EditorMode.Code ? 'Use Editor' : 'View Code'}
+              {editor.mode === EditorMode.Code
+                ? 'Exit Code Editor'
+                : 'Edit Code'}
             </Button>
           </Box>
         </Box>
