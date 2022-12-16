@@ -1,4 +1,4 @@
-import { Stringifier, Parser } from '@composite/parser';
+import { Parser } from '@composite/parser';
 import * as t from '@composite/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
@@ -11,9 +11,6 @@ import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
 
 import { TemplateLayers } from './TemplateLayers';
-
-const stringifier = new Stringifier();
-const parser = new Parser();
 
 const ComponentHeader = styled('div', {
   px: '$4',
@@ -60,7 +57,7 @@ export const ComponentSettings = observer(() => {
         <PairInput
           values={component.props.map((prop) => ({
             id: prop.name,
-            value: prop.init ? stringifier.toString(prop.init) : '',
+            value: prop.init ? Parser.stringify(prop.init) : '',
           }))}
           emptyValuesText={'No props set'}
           valuePlaceholder="No default value"
@@ -76,7 +73,10 @@ export const ComponentSettings = observer(() => {
                 return;
               }
 
-              const parsedValue = parser.parseExpressionFromSource(value);
+              const parsedValue = Parser.parseExpressionFromSource(
+                value,
+                t.Expression
+              );
 
               if (!parsedValue) {
                 return;
@@ -93,7 +93,10 @@ export const ComponentSettings = observer(() => {
               return;
             }
 
-            const parsedValue = parser.parseExpressionFromSource(value);
+            const parsedValue = Parser.parseExpressionFromSource(
+              value,
+              t.Expression
+            );
 
             if (!parsedValue) {
               return;
@@ -118,7 +121,7 @@ export const ComponentSettings = observer(() => {
         <PairInput
           values={component.state.map((state) => ({
             id: state.name,
-            value: stringifier.toString(state.init),
+            value: Parser.stringify(state.init),
           }))}
           emptyValuesText="No state values"
           addingNewField={isAddingNewState}
@@ -133,7 +136,10 @@ export const ComponentSettings = observer(() => {
                 return;
               }
 
-              const parsedValue = parser.parseExpressionFromSource(value);
+              const parsedValue = Parser.parseExpressionFromSource(
+                value,
+                t.Expression
+              );
 
               if (!parsedValue) {
                 return;
@@ -150,7 +156,10 @@ export const ComponentSettings = observer(() => {
               return;
             }
 
-            const parsedValue = parser.parseExpressionFromSource(value);
+            const parsedValue = Parser.parseExpressionFromSource(
+              value,
+              t.Expression
+            );
 
             if (!parsedValue) {
               return;

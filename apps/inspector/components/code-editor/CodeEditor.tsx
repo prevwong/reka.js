@@ -2,7 +2,7 @@ import { EditorState, basicSetup } from '@codemirror/basic-setup';
 import { indentWithTab } from '@codemirror/commands';
 import { EditorView, keymap } from '@codemirror/view';
 import { composite } from '@composite/codemirror';
-import { Parser, Stringifier } from '@composite/parser';
+import { Parser } from '@composite/parser';
 import * as t from '@composite/types';
 import { ExternalLinkIcon } from '@radix-ui/react-icons';
 import { motion } from 'framer-motion';
@@ -81,8 +81,6 @@ const StyledTabItemUnderline = styled(motion.div, {
 
 type CodeEditorProps = React.ComponentProps<typeof StyledCodeEditorContainer>;
 
-const stringifier = new Stringifier();
-
 const tabs = [
   {
     id: 'code',
@@ -107,7 +105,7 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
 
   const currentStateRef = React.useRef(t.Schema.fromJSON(editor.state.root));
   const currentCodeStringRef = React.useRef<string>(
-    stringifier.toString(editor.state.root)
+    Parser.stringify(editor.state.root)
   );
 
   const isSynchingFromCodeMirror = React.useRef(false);
@@ -123,8 +121,7 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
 
       isSynchingFromCodeMirror.current = true;
       try {
-        const parser = new Parser();
-        const newAST = parser.parse(code);
+        const newAST = Parser.parse(code);
         editor.state.change(() => {
           diffAST(currentStateRef.current, newAST);
           diffAST(editor.state.root, currentStateRef.current);
@@ -211,7 +208,7 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
 
       Promise.resolve().then(() => {
         const oldCode = currentCodeStringRef.current;
-        const newCode = stringifier.toString(editor.state.root);
+        const newCode = Parser.stringify(editor.state.root);
 
         if (newCode === oldCode) {
           isSynchingFromExternal.current = false;

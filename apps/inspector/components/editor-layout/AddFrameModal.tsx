@@ -1,4 +1,4 @@
-import { Stringifier, Parser } from '@composite/parser';
+import { Parser } from '@composite/parser';
 import * as t from '@composite/types';
 import * as React from 'react';
 
@@ -12,9 +12,6 @@ import { Modal } from '../modal';
 import { PairInput } from '../pair-input';
 import { Text } from '../text';
 import { TextField } from '../text-field';
-
-const stringifier = new Stringifier();
-const parser = new Parser();
 
 type AddFrameModalProps = {
   frameId?: string;
@@ -94,7 +91,10 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
               addingNewField={true}
               onChange={(id, value) => {
                 try {
-                  const parsedValue = parser.parseExpressionFromSource(value);
+                  const parsedValue = Parser.parseExpressionFromSource(
+                    value,
+                    t.Expression
+                  );
 
                   setComponentProps((props) => {
                     return {
@@ -112,7 +112,7 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
                   {
                     id: propKey,
                     value: componentProps[propKey]
-                      ? stringifier.toString(componentProps[propKey])
+                      ? Parser.stringify(componentProps[propKey])
                       : '',
                   },
                 ];

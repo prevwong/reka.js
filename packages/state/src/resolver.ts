@@ -96,6 +96,9 @@ export class Resolver {
 
               component.props.forEach((prop) => {
                 componentScope.defineVariableName(prop.name);
+                if (prop.init) {
+                  this.resolveExpr(prop.init, scope);
+                }
               });
 
               component.state.forEach((state) => {

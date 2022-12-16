@@ -1,7 +1,7 @@
 import * as t from '@composite/types';
 import invariant from 'tiny-invariant';
 
-export class Stringifier {
+class _Stringifier {
   stringify(node: t.Any) {
     return t.switchTypes(node, {
       Literal: (node) => {
@@ -147,3 +147,5 @@ export class Stringifier {
     return str;
   }
 }
+
+export const Stringifier = new _Stringifier();

@@ -1,4 +1,4 @@
-import { Parser, Stringifier } from '@composite/parser';
+import { Parser } from '@composite/parser';
 import * as t from '@composite/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
@@ -14,14 +14,11 @@ type SharedTemplateSettingsProps = {
   template: t.Template;
 };
 
-const parser = new Parser();
-const stringifier = new Stringifier();
-
 const ConditionalTemplateSetting = observer(
   (props: SharedTemplateSettingsProps) => {
     const editor = useEditor();
     const [condition, setCondition] = React.useState<string | null>(
-      props.template.if ? stringifier.toString(props.template.if) : null
+      props.template.if ? Parser.stringify(props.template.if) : null
     );
 
     const resetCondition = React.useCallback(() => {
@@ -30,7 +27,7 @@ const ConditionalTemplateSetting = observer(
         return;
       }
 
-      setCondition(stringifier.toString(props.template.if));
+      setCondition(Parser.stringify(props.template.if));
     }, [props.template, setCondition]);
 
     return (
@@ -52,8 +49,9 @@ const ConditionalTemplateSetting = observer(
                 return;
               }
 
-              const parsedValue = parser.parseExpressionFromSource(
-                condition || ''
+              const parsedValue = Parser.parseExpressionFromSource(
+                condition || '',
+                t.Expression
               );
 
               if (!parsedValue) {

@@ -1,21 +1,25 @@
 import { Schema } from './schema';
 
+Schema.define('Expression', {
+  abstract: true,
+});
+
 Schema.define('Literal', {
-  alias: ['Expression'],
+  extends: 'Expression',
   fields: (t) => ({
     value: t.union(t.string, t.number, t.boolean),
   }),
 });
 
 Schema.define('Identifier', {
-  alias: ['Expression'],
+  extends: 'Expression',
   fields: (t) => ({
     name: t.string,
   }),
 });
 
 Schema.define('Val', {
-  alias: ['Expression'],
+  extends: 'Expression',
   fields: (t) => ({
     name: t.string,
     init: t.node('Expression'),
@@ -23,14 +27,14 @@ Schema.define('Val', {
 });
 
 Schema.define('ArrayExpression', {
-  alias: ['Expression'],
+  extends: 'Expression',
   fields: (t) => ({
     elements: t.array(t.node('Expression')),
   }),
 });
 
 Schema.define('BinaryExpression', {
-  alias: ['Expression'],
+  extends: 'Expression',
   fields: (t) => ({
     left: t.node('Expression'),
     operator: t.enumeration(
@@ -50,14 +54,14 @@ Schema.define('BinaryExpression', {
 });
 
 Schema.define('ArrayExpression', {
-  alias: ['Expression'],
+  extends: 'Expression',
   fields: (t) => ({
     elements: t.array(t.node('Expression')),
   }),
 });
 
 Schema.define('ObjectExpression', {
-  alias: ['Expression'],
+  extends: 'Expression',
   fields: (t) => ({
     properties: t.map(t.node('Expression')),
   }),
@@ -135,7 +139,7 @@ Schema.define('SlotTemplate', {
 });
 
 Schema.define('MemberExpression', {
-  alias: ['Expression'],
+  extends: 'Expression',
   fields: (t) => ({
     object: t.union(t.node('Identifier'), t.node('MemberExpression')),
     property: t.node('Identifier'),
@@ -143,7 +147,7 @@ Schema.define('MemberExpression', {
 });
 
 Schema.define('Func', {
-  alias: ['Expression'],
+  extends: 'Expression',
   fields: (t) => ({
     name: t.defaultValue(t.union(t.string, t.nullish), null),
     params: t.array(t.node('Identifier')),
@@ -243,7 +247,7 @@ Schema.define('ErrorSystemView', {
 });
 
 Schema.define('Block', {
-  alias: ['Expression'],
+  extends: 'Expression',
   fields: (t) => ({
     statements: t.array(t.node('Statement')),
   }),

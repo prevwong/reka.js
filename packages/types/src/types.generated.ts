@@ -1,10 +1,20 @@
 import { Schema, Type } from './schema';
 
+type ExpressionParameters = {};
+
+export abstract class Expression extends Type {
+  constructor(type: string, value: ExpressionParameters) {
+    super(type, value);
+  }
+}
+
+Schema.register('Expression', Expression);
+
 type LiteralParameters = {
   value: string | number | boolean;
 };
 
-export class Literal extends Type {
+export class Literal extends Expression {
   declare value: string | number | boolean;
   constructor(value: LiteralParameters) {
     super('Literal', value);
@@ -20,7 +30,7 @@ type IdentifierParameters = {
   name: string;
 };
 
-export class Identifier extends Type {
+export class Identifier extends Expression {
   declare name: string;
   constructor(value: IdentifierParameters) {
     super('Identifier', value);
@@ -37,7 +47,7 @@ type ValParameters = {
   init: Expression;
 };
 
-export class Val extends Type {
+export class Val extends Expression {
   declare name: string;
   declare init: Expression;
   constructor(value: ValParameters) {
@@ -54,7 +64,7 @@ type ArrayExpressionParameters = {
   elements: Expression[];
 };
 
-export class ArrayExpression extends Type {
+export class ArrayExpression extends Expression {
   declare elements: Expression[];
   constructor(value: ArrayExpressionParameters) {
     super('ArrayExpression', value);
@@ -73,7 +83,7 @@ type BinaryExpressionParameters = {
   right: Expression;
 };
 
-export class BinaryExpression extends Type {
+export class BinaryExpression extends Expression {
   declare left: Expression;
   declare operator:
     | '+'
@@ -102,7 +112,7 @@ type ObjectExpressionParameters = {
   properties: Record<string, Expression>;
 };
 
-export class ObjectExpression extends Type {
+export class ObjectExpression extends Expression {
   declare properties: Record<string, Expression>;
   constructor(value: ObjectExpressionParameters) {
     super('ObjectExpression', value);
@@ -298,7 +308,7 @@ type MemberExpressionParameters = {
   property: Identifier;
 };
 
-export class MemberExpression extends Type {
+export class MemberExpression extends Expression {
   declare object: Identifier | MemberExpression;
   declare property: Identifier;
   constructor(value: MemberExpressionParameters) {
@@ -318,7 +328,7 @@ type FuncParameters = {
   body: Block;
 };
 
-export class Func extends Type {
+export class Func extends Expression {
   declare name: string | null;
   declare params: Identifier[];
   declare body: Block;
@@ -408,13 +418,16 @@ type ElementViewParameters = {
   template: Template;
   tag: string;
   children: View[];
-  props: Record<string, string | number | boolean | Function>;
+  props: Record<string, string | number | boolean | Function | undefined>;
 };
 
 export class ElementView extends View {
   declare tag: string;
   declare children: View[];
-  declare props: Record<string, string | number | boolean | Function>;
+  declare props: Record<
+    string,
+    string | number | boolean | Function | undefined
+  >;
   constructor(value: ElementViewParameters) {
     super('ElementView', value);
   }
@@ -555,7 +568,7 @@ type BlockParameters = {
   statements: Statement[];
 };
 
-export class Block extends Type {
+export class Block extends Expression {
   declare statements: Statement[];
   constructor(value: BlockParameters) {
     super('Block', value);
@@ -583,18 +596,9 @@ Schema.register('ExtensionState', ExtensionState);
 export const extensionState = (
   ...args: ConstructorParameters<typeof ExtensionState>
 ) => new ExtensionState(...args);
-export type Expression =
-  | Literal
-  | Identifier
-  | Val
-  | ArrayExpression
-  | BinaryExpression
-  | ObjectExpression
-  | MemberExpression
-  | Func
-  | Block;
 export type Statement = Assignment;
 export type Any =
+  | Expression
   | Literal
   | Identifier
   | Val
@@ -627,6 +631,7 @@ export type Any =
   | Block
   | ExtensionState;
 export type Visitor = {
+  Expression: (node: Expression) => any;
   Literal: (node: Literal) => any;
   Identifier: (node: Identifier) => any;
   Val: (node: Val) => any;

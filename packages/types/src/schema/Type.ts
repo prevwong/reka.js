@@ -29,3 +29,5 @@ export type TypeProperties<T extends Type> = Omit<
   },
   keyof Type
 >;
+
+export type TypeConstructor<T extends Type> = Function & { prototype: T };

@@ -8,12 +8,16 @@ import { State } from './state';
 import { KEYWORDS, Token, TokenType } from './tokens';
 
 export class Lexer {
-  protected declare source: string;
+  protected source: string;
   protected declare state: State;
 
-  parse(source: string) {
+  constructor(source: string) {
+    this.source = source;
     this.state = new State();
-    this.source = source.replace(/\s+$/, '');
+    this.source = this.source.replace(/\s+$/, '');
+  }
+
+  parse() {
     this.next();
   }
 

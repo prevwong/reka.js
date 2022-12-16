@@ -1,4 +1,4 @@
-import { Stringifier } from '@composite/parser';
+import { Parser } from '@composite/parser';
 import Head from 'next/head';
 import * as React from 'react';
 
@@ -9,7 +9,7 @@ import { EditorContextProvider } from '@app/editor';
 import { EditorLayout } from '../components/editor-layout';
 
 if (typeof window !== 'undefined') {
-  (window as any).stringifier = new Stringifier();
+  (window as any).parser = new Parser();
 }
 
 const App = () => {

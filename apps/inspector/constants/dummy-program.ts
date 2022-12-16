@@ -1,9 +1,8 @@
 import { Parser } from '@composite/parser';
 
-const parser = new Parser();
-
-export const DUMMY_PROGRAM = parser.parse(`
-val text = "something else";
+export const DUMMY_PROGRAM = Parser.parse(`
+val globalText = "something else";
+val globalCounter = 0;
 
 component App() {
   val text = "Bye";

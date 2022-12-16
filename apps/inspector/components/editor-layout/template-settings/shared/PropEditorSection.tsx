@@ -1,4 +1,4 @@
-import { Stringifier, Parser } from '@composite/parser';
+import { Parser } from '@composite/parser';
 import * as t from '@composite/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
@@ -6,9 +6,6 @@ import * as React from 'react';
 import { PairInput } from '@app/components/pair-input';
 import { SettingSection } from '@app/components/settings-section';
 import { useEditor } from '@app/editor';
-
-const stringifier = new Stringifier();
-const parser = new Parser();
 
 type PropEditorSectionProps = {
   template: t.Template;
@@ -35,13 +32,16 @@ export const PropEditorSection = observer(
               classList
                 ? Object.keys(classList.properties).map((key) => ({
                     id: key,
-                    value: stringifier.toString(classList.properties[key]),
+                    value: Parser.stringify(classList.properties[key]),
                   }))
                 : []
             }
             onChange={(id, value) => {
               try {
-                const parsedValue = parser.parseExpressionFromSource(value);
+                const parsedValue = Parser.parseExpressionFromSource(
+                  value,
+                  t.Expression
+                );
                 //   console.log("parsedValue", parsedValue);
                 editor.state.change(() => {
                   if (!template.classList) {
@@ -70,7 +70,10 @@ export const PropEditorSection = observer(
             emptyValuesText={'No props set for this template'}
             onChange={(id, value) => {
               try {
-                const parsedValue = parser.parseExpressionFromSource(value);
+                const parsedValue = Parser.parseExpressionFromSource(
+                  value,
+                  t.Expression
+                );
                 //   console.log("parsedValue", parsedValue);
                 editor.state.change(() => {
                   template.props[id] = parsedValue;
@@ -87,7 +90,7 @@ export const PropEditorSection = observer(
             }}
             values={Object.keys(template.props).map((prop) => ({
               id: prop,
-              value: stringifier.toString(template.props[prop]),
+              value: Parser.stringify(template.props[prop]),
             }))}
           />
         </SettingSection>

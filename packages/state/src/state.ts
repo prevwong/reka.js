@@ -112,16 +112,16 @@ export class State {
 
     if (!this.syncGlobals) {
       this.syncGlobals = computed(() => {
-          Object.entries(this.config.globals).forEach(([key, value]) => {
-            this.env.set(key, value);
-          });
+        Object.entries(this.config.globals).forEach(([key, value]) => {
+          this.env.set(key, value);
+        });
 
-          this.root.globals.forEach((global) => {
-            this.env.set(
-              global.name,
-              computeExpression(global.init, this as any, this.env)
-            );
-          });
+        this.root.globals.forEach((global) => {
+          this.env.set(
+            global.name,
+            computeExpression(global.init, this as any, this.env)
+          );
+        });
       });
     }
 

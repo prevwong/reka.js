@@ -1,4 +1,4 @@
-import { Parser, Stringifier } from '@composite/parser';
+import { Parser } from '@composite/parser';
 import * as t from '@composite/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
@@ -6,9 +6,6 @@ import * as React from 'react';
 import { PairInput } from '@app/components/pair-input';
 import { SettingSection } from '@app/components/settings-section';
 import { useEditor } from '@app/editor';
-
-const parser = new Parser();
-const stringifier = new Stringifier();
 
 export const GlobalSettings = observer(() => {
   const editor = useEditor();
@@ -26,7 +23,10 @@ export const GlobalSettings = observer(() => {
         addingNewField={isAddingNewGlobal}
         onCancelAdding={() => setIsAddingNewGlobal(false)}
         onChange={(id, value) => {
-          const parsedValue = parser.parseExpressionFromSource(value);
+          const parsedValue = Parser.parseExpressionFromSource(
+            value,
+            t.Expression
+          );
 
           if (!id || !parsedValue) {
             return;
@@ -54,7 +54,7 @@ export const GlobalSettings = observer(() => {
         }}
         values={editor.state.data.program.globals.map((global) => ({
           id: global.name,
-          value: stringifier.toString(global.init),
+          value: Parser.stringify(global.init),
         }))}
       />
     </SettingSection>

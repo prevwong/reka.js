@@ -4,6 +4,7 @@ import acorn, { parseExpressionAt } from 'acorn';
 import invariant from 'tiny-invariant';
 
 import { Lexer } from './lexer';
+import { Stringifier } from './stringifier';
 import { TokenType } from './tokens';
 
 const parseWithAcorn = (source: string, loc: number) => {
@@ -12,73 +13,102 @@ const parseWithAcorn = (source: string, loc: number) => {
   }) as b.Node & acorn.Node;
 };
 
-export const jsToComposite = (node: b.Node) => {
-  switch (node.type) {
-    case 'BlockStatement': {
-      return t.block({
-        statements: node.body.map((b) => jsToComposite(b)),
-      });
-    }
-    case 'AssignmentExpression': {
-      return t.assignment({
-        left: jsToComposite(node.left),
-        operator: node.operator as any,
-        right: jsToComposite(node.right),
-      });
-    }
-    case 'VariableDeclaration': {
-      return t.val({
-        name: (node.declarations[0].id as b.Identifier).name,
-        init: node.declarations[0].init
-          ? jsToComposite(node.declarations[0].init)
-          : undefined,
-      });
-    }
-    case 'Identifier': {
-      return t.identifier({
-        name: node.name,
-      });
-    }
-    case 'ExpressionStatement': {
-      return jsToComposite(node.expression);
-    }
-    case 'ArrowFunctionExpression': {
-      return t.func({
-        params: node.params.map((p) => jsToComposite(p)),
-        body: jsToComposite(node.body as b.BlockStatement),
-      });
-    }
-    case 'ArrayExpression': {
-      return t.arrayExpression({
-        elements: node.elements.map((p) => p && jsToComposite(p)),
-      });
-    }
-    case 'ObjectExpression': {
-      return t.objectExpression({
-        properties: node.properties.reduce((accum, property: any) => {
-          let key: string;
+const parseExpressionWithAcornToCompositeType = <T extends t.Type = t.Any>(
+  source: string,
+  loc: number,
+  expectedType?: t.TypeConstructor<T>
+) => {
+  // Bootstrapping on acorn's parser for parsing basic expressions
+  const expression = parseWithAcorn(source, loc);
+  const type = jsToComposite(expression as unknown as b.Node, expectedType);
 
-          if (property.key.type === 'Literal') {
-            key = property.key.value;
-          } else {
-            key = property.key.name;
-          }
-
-          return {
-            ...accum,
-            [key]: jsToComposite(property.value),
-          };
-        }, {}),
-      });
-    }
-    default: {
-      return t.Schema.fromJSON(node);
-    }
-  }
+  return { expression, type };
 };
-export class Parser extends Lexer {
-  parse(source: string) {
-    super.parse(source);
+
+export const jsToComposite = <T extends t.Type = t.Any>(
+  node: b.Node,
+  expectedType?: t.TypeConstructor<T>
+) => {
+  const _convert = (node: b.Node) => {
+    switch (node.type) {
+      case 'BlockStatement': {
+        return t.block({
+          statements: node.body.map((b) => _convert(b)),
+        });
+      }
+      case 'AssignmentExpression': {
+        return t.assignment({
+          left: _convert(node.left),
+          operator: node.operator as any,
+          right: _convert(node.right),
+        });
+      }
+      case 'VariableDeclaration': {
+        return t.val({
+          name: (node.declarations[0].id as b.Identifier).name,
+          init: node.declarations[0].init
+            ? _convert(node.declarations[0].init)
+            : undefined,
+        });
+      }
+      case 'Identifier': {
+        return t.identifier({
+          name: node.name,
+        });
+      }
+      case 'ExpressionStatement': {
+        return _convert(node.expression);
+      }
+      case 'ArrowFunctionExpression': {
+        return t.func({
+          params: node.params.map((p) => _convert(p)),
+          body: _convert(node.body as b.BlockStatement),
+        });
+      }
+      case 'ArrayExpression': {
+        return t.arrayExpression({
+          elements: node.elements.map((p) => p && _convert(p)),
+        });
+      }
+      case 'ObjectExpression': {
+        return t.objectExpression({
+          properties: node.properties.reduce((accum, property: any) => {
+            let key: string;
+
+            if (property.key.type === 'Literal') {
+              key = property.key.value;
+            } else {
+              key = property.key.name;
+            }
+
+            return {
+              ...accum,
+              [key]: _convert(property.value),
+            };
+          }, {}),
+        });
+      }
+      default: {
+        return t.Schema.fromJSON(node) as t.Type;
+      }
+    }
+  };
+
+  const type = _convert(node) as t.Any;
+
+  if (expectedType) {
+    invariant(
+      type instanceof expectedType,
+      `Parser return an unexpected type.`
+    );
+  }
+
+  return type as T;
+};
+
+export class _Parser extends Lexer {
+  parse() {
+    this.next();
 
     const globals: t.Val[] = [];
     const components: t.CompositeComponent[] = [];
@@ -100,7 +130,7 @@ export class Parser extends Lexer {
     });
   }
 
-  parseDeclaration() {
+  private parseDeclaration() {
     const declarations: t.Val[] = [];
     while (this.check(TokenType.VAL)) {
       declarations.push(this.parseVariableDecl());
@@ -109,11 +139,11 @@ export class Parser extends Lexer {
     return declarations;
   }
 
-  parseVariableDecl() {
+  private parseVariableDecl() {
     this.consume(TokenType.VAL);
     const name = this.consume(TokenType.IDENTIFIER);
     this.consume(TokenType.EQ);
-    const init = this.parseExpressionAt(this.currentToken.pos - 1);
+    const init = this.parseExpressionAt(this.currentToken.pos - 1) as any;
     this.consume(TokenType.SEMICOLON);
 
     return t.val({
@@ -122,15 +152,7 @@ export class Parser extends Lexer {
     });
   }
 
-  parseIdentifier() {
-    const identifier = this.consume(TokenType.IDENTIFIER).value;
-
-    return t.identifier({
-      name: identifier,
-    });
-  }
-
-  parseComponent() {
+  private parseComponent() {
     this.consume(TokenType.COMPONENT);
 
     const name = this.consume(TokenType.IDENTIFIER);
@@ -167,7 +189,8 @@ export class Parser extends Lexer {
       );
 
       if (b.isAssignmentPattern(param)) {
-        init = jsToComposite(param.right);
+        init = jsToComposite(param.right, t.Expression);
+
         invariant(
           b.isIdentifier(param.left),
           'Invalid component prop assignment'
@@ -199,7 +222,7 @@ export class Parser extends Lexer {
     });
   }
 
-  parseComponentStateDeclaration() {
+  private parseComponentStateDeclaration() {
     const state: t.Val[] = [];
 
     this.consume(TokenType.LBRACE);
@@ -211,12 +234,12 @@ export class Parser extends Lexer {
     return state;
   }
 
-  parseElement() {
+  private parseElement() {
     this.consume(TokenType.ELEMENT_TAG_START);
     return this.parseElementContent();
   }
 
-  parseExpression() {
+  private parseExpression() {
     if (this.check(TokenType.ELEMENT_TAG_START)) {
       return this.parseElement();
     }
@@ -224,7 +247,7 @@ export class Parser extends Lexer {
     return this.parseExpressionAt(this.state.currentToken.pos - 1);
   }
 
-  parseElementEach() {
+  private parseElementEach() {
     let index: t.Identifier | undefined, alias: t.Identifier;
 
     this.consume(TokenType.ELEMENT_EXPR_START);
@@ -324,6 +347,12 @@ export class Parser extends Lexer {
           }
           case TokenType.ELEMENT_EXPR_START: {
             const expr = this.parseElementExpr();
+
+            invariant(
+              expr instanceof t.Literal,
+              `Expected literal value as text value`
+            );
+
             children.push(
               t.tagTemplate({
                 tag: 'text',
@@ -375,32 +404,51 @@ export class Parser extends Lexer {
     });
   }
 
-  parseElementExpr() {
+  private parseElementExpr() {
     this.consume(TokenType.ELEMENT_EXPR_START);
     const expr = this.parseExpressionAt(this.previousToken.pos + 1);
     this.consume(TokenType.ELEMENT_EXPR_END);
     return expr;
   }
 
-  parseExpressionFromSource(source: string) {
-    const tempParser = new Parser();
+  private parseExpressionAt<T extends t.Type = t.Any>(
+    loc: number,
+    expectedType?: t.TypeConstructor<T>
+  ) {
+    const { expression, type } = parseExpressionWithAcornToCompositeType(
+      this.source,
+      loc,
+      expectedType
+    );
 
-    tempParser.parse(`{${source}}`);
-
-    return tempParser.parseExpressionAt(
-      tempParser.state.currentToken.pos + 1
-    ) as t.Expression;
-  }
-
-  parseExpressionAt(loc: number) {
-    // Bootstrapping on acorn's parser for parsing basic expressions
-    const expression = parseWithAcorn(this.source, loc);
-    const compositeType = jsToComposite(expression as unknown as b.Node);
     // Since we're using acorn to parse the expression
     // Move the lexer to the end of the expression
     this.state.current = expression.end;
     this.next();
 
-    return compositeType;
+    return type;
+  }
+}
+
+export class Parser {
+  static parse(source: string) {
+    return new _Parser(source).parse();
+  }
+
+  static parseExpressionFromSource<T extends t.Type = t.Any>(
+    source: string,
+    expectedType?: t.TypeConstructor<T>
+  ) {
+    const { type } = parseExpressionWithAcornToCompositeType(
+      `{${source}}`,
+      1,
+      expectedType
+    );
+
+    return type as T;
+  }
+
+  static stringify(type: t.Any) {
+    return Stringifier.toString(type);
   }
 }

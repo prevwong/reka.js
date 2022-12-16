@@ -13,8 +13,6 @@ import { ToggleGroup, ToggleGroupItem } from '@app/components/toggle-group';
 import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
 
-const parser = new Parser();
-
 type AddTemplateModalProps = {
   isOpen?: boolean;
   onClose?: () => void;
@@ -144,7 +142,10 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
               (accum, prop) => {
                 return {
                   ...accum,
-                  [prop]: parser.parseExpressionFromSource(templateProps[prop]),
+                  [prop]: Parser.parseExpressionFromSource(
+                    templateProps[prop],
+                    t.Expression
+                  ),
                 };
               },
               {}
