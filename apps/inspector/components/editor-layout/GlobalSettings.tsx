@@ -33,13 +33,13 @@ export const GlobalSettings = observer(() => {
           }
 
           const existingGlobalStateName =
-            editor.state.data.program.globals.find(
+            editor.composite.state.program.globals.find(
               (global) => global.name === id
             );
 
-          editor.state.change(() => {
+          editor.composite.change(() => {
             if (!existingGlobalStateName) {
-              editor.state.data.program.globals.push(
+              editor.composite.state.program.globals.push(
                 t.val({
                   name: id,
                   init: parsedValue,
@@ -52,7 +52,7 @@ export const GlobalSettings = observer(() => {
             existingGlobalStateName.init = parsedValue;
           });
         }}
-        values={editor.state.data.program.globals.map((global) => ({
+        values={editor.composite.state.program.globals.map((global) => ({
           id: global.name,
           value: Parser.stringify(global.init),
         }))}

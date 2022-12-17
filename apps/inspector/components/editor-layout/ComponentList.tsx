@@ -69,7 +69,7 @@ const AddComponentModal = (props: AddComponentModalProps) => {
           onClick={() => {
             const safeComponentName = pascalCase(componentName);
 
-            const existingComponent = editor.state.allComponents.find(
+            const existingComponent = editor.composite.allComponents.find(
               (component) => component.name === safeComponentName
             );
 
@@ -77,8 +77,8 @@ const AddComponentModal = (props: AddComponentModalProps) => {
               return;
             }
 
-            editor.state.change(() => {
-              editor.state.data.program.components.push(
+            editor.composite.change(() => {
+              editor.composite.state.program.components.push(
                 t.compositeComponent({
                   name: safeComponentName,
                   state: [],

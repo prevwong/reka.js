@@ -2,7 +2,7 @@ import * as t from '@composite/types';
 import { computed, IComputedValue, makeObservable, observable } from 'mobx';
 
 import { Scope } from './scope';
-import { State } from './state';
+import { Composite } from './state';
 
 type CachedTemplateResolver = {
   computed: IComputedValue<void>;
@@ -28,7 +28,7 @@ export class Resolver {
   declare cachedGlobalsComputation: IComputedValue<void>;
   declare cachedComponentsComputation: IComputedValue<void>;
 
-  constructor(readonly state: State) {
+  constructor(readonly composite: Composite) {
     this.scope = new Scope('root');
     this.identifiersToVariableDistance = new Map();
 
@@ -191,7 +191,7 @@ export class Resolver {
   }
 
   resolveProgram() {
-    const program = this.state.root;
+    const program = this.composite.root;
 
     if (!this.cachedGlobalsComputation) {
       this.cachedGlobalsComputation = computed(() => {

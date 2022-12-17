@@ -67,7 +67,7 @@ export const ComponentEditorView = observer(() => {
       }
 
       return {
-        frames: query.state
+        frames: query.composite
           .getExtension(UserFrameExtension)
           .state.frames.filter(
             (frame) => frame.name === componentEditor.component.name
@@ -151,7 +151,7 @@ export const ComponentEditorView = observer(() => {
               size={5}
               value={componentEditor.activeFrame?.user.width ?? 'auto'}
               onCommit={(value) => {
-                editor.state.change(() => {
+                editor.composite.change(() => {
                   const frame = frames.find(
                     (frame) => componentEditor.activeFrame?.user.id === frame.id
                   );
@@ -172,7 +172,7 @@ export const ComponentEditorView = observer(() => {
               size={5}
               value={componentEditor.activeFrame?.user.height ?? 'auto'}
               onCommit={(value) => {
-                editor.state.change(() => {
+                editor.composite.change(() => {
                   const frame = frames.find(
                     (frame) => componentEditor.activeFrame?.user.id === frame.id
                   );
@@ -262,7 +262,7 @@ export const ComponentEditorView = observer(() => {
               transparent
               variant="danger"
               onClick={() => {
-                editor.state.change(() => {
+                editor.composite.change(() => {
                   const userFrame = componentEditor.activeFrame?.user;
 
                   if (!userFrame) {
@@ -270,7 +270,8 @@ export const ComponentEditorView = observer(() => {
                   }
 
                   const userFrames =
-                    editor.state.getExtension(UserFrameExtension).state.frames;
+                    editor.composite.getExtension(UserFrameExtension).state
+                      .frames;
 
                   userFrames.splice(userFrames.indexOf(userFrame), 1);
                 });

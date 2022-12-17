@@ -58,12 +58,12 @@ const ConditionalTemplateSetting = observer(
                 return;
               }
 
-              editor.state.change(() => {
+              editor.composite.change(() => {
                 props.template.if = parsedValue;
               });
             }}
             onCancel={() => {
-              editor.state.change(() => {
+              editor.composite.change(() => {
                 props.template.if = null;
               });
 
@@ -103,7 +103,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
       return;
     }
 
-    editor.state.change(() => {
+    editor.composite.change(() => {
       props.template.each = t.elementEach({
         iterator: t.identifier({
           name: iterator,
@@ -128,7 +128,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
             setAliasValue('');
             setIndexValue('');
 
-            editor.state.change(() => {
+            editor.composite.change(() => {
               props.template.each = null;
             });
           }}
@@ -206,7 +206,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
                     return;
                   }
 
-                  editor.state.change(() => {
+                  editor.composite.change(() => {
                     if (!props.template.each) {
                       return;
                     }

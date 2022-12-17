@@ -1,4 +1,4 @@
-import { Composite } from '@composite/react';
+import { CompositeProvider } from '@composite/react';
 import * as React from 'react';
 
 import { Editor } from './Editor';
@@ -17,7 +17,7 @@ export const EditorContextProvider = ({
   React.useEffect(() => {
     const editor = new Editor();
 
-    (window as any).state = editor.state;
+    (window as any).state = editor.composite;
 
     setEditor(editor);
 
@@ -33,7 +33,7 @@ export const EditorContextProvider = ({
 
   return (
     <EditorContext.Provider value={editor}>
-      <Composite state={editor.state}>{children}</Composite>
+      <CompositeProvider state={editor.composite}>{children}</CompositeProvider>
     </EditorContext.Provider>
   );
 };

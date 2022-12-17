@@ -1,2 +1,2 @@
-export * from './Composite';
+export * from './CompositeProvider';
 export * from './hooks';

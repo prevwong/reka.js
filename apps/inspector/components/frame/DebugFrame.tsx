@@ -61,10 +61,10 @@ export const DebugFrame = observer((props: DebugFrameProps) => {
   const editor = useEditor();
 
   React.useEffect(() => {
-    let frame = editor.state.getFrameById(props.frame.id);
+    let frame = editor.composite.getFrameById(props.frame.id);
 
     if (!frame) {
-      frame = editor.state.createFrame({
+      frame = editor.composite.createFrame({
         id: props.frame.id,
         component: {
           name: props.frame.name,
@@ -74,7 +74,7 @@ export const DebugFrame = observer((props: DebugFrameProps) => {
     }
 
     setFrame(frame);
-  }, [props.frame, editor.state]);
+  }, [props.frame, editor.composite]);
 
   if (!frame) {
     return null;

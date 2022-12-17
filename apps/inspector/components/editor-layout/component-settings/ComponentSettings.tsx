@@ -82,7 +82,7 @@ export const ComponentSettings = observer(() => {
                 return;
               }
 
-              editor.state.change(() => {
+              editor.composite.change(() => {
                 existingPropWithSameName.init = parsedValue;
               });
 
@@ -102,7 +102,7 @@ export const ComponentSettings = observer(() => {
               return;
             }
 
-            editor.state.change(() => {
+            editor.composite.change(() => {
               component.props.push(
                 t.componentProp({
                   name: id,
@@ -145,7 +145,7 @@ export const ComponentSettings = observer(() => {
                 return;
               }
 
-              editor.state.change(() => {
+              editor.composite.change(() => {
                 existingStateWithSameName.init = parsedValue;
               });
 
@@ -165,7 +165,7 @@ export const ComponentSettings = observer(() => {
               return;
             }
 
-            editor.state.change(() => {
+            editor.composite.change(() => {
               component.state.push(
                 t.val({
                   name: id,

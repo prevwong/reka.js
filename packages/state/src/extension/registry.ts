@@ -3,7 +3,7 @@ import invariant from 'tiny-invariant';
 import { ExtensionDefinition } from './definition';
 import { Extension } from './extension';
 
-import { State } from '../state';
+import { Composite } from '../state';
 
 export class ExtensionRegistry {
   private definitionToExtension: WeakMap<ExtensionDefinition, Extension> =
@@ -11,7 +11,10 @@ export class ExtensionRegistry {
   private keyToExtension: Map<string, Extension> = new Map();
   extensions: Extension[] = [];
 
-  constructor(readonly composite: State, definitions: ExtensionDefinition[]) {
+  constructor(
+    readonly composite: Composite,
+    definitions: ExtensionDefinition[]
+  ) {
     definitions.forEach((definition) => {
       const extension = new Extension(this.composite, definition);
       this.definitionToExtension.set(definition, extension);

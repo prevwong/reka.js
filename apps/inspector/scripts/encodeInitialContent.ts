@@ -1,5 +1,5 @@
 import { jsToYType } from '@composite/collaborative';
-import { State } from '@composite/state';
+import { Composite } from '@composite/state';
 import * as t from '@composite/types';
 
 import * as Y from 'yjs';
@@ -13,18 +13,18 @@ const doc = new Y.Doc();
 
 const type = doc.getMap(Y_ROOT_DOCUMENT);
 
-const state = new State({
+const composite = new Composite({
   ...createSharedStateGlobals(),
 });
 
-state.load(
+composite.load(
   t.state({
     program: DUMMY_PROGRAM,
     extensions: {},
   })
 );
 
-const flattenState = t.flattenType(state.data);
+const flattenState = t.flattenType(composite.state);
 
 const { converted } = jsToYType(flattenState);
 

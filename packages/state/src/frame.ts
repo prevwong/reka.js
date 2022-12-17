@@ -1,6 +1,6 @@
 import { makeObservable, observable, action } from 'mobx';
 
-import { State } from './state';
+import { Composite } from './state';
 import { ViewEvaluator } from './evaluator';
 
 type FrameComponentConfig = {
@@ -20,7 +20,7 @@ export class Frame {
 
   private evaluator: ViewEvaluator;
 
-  constructor(opts: FrameOpts, state: State) {
+  constructor(opts: FrameOpts, composite: Composite) {
     this.id = opts.id;
     this.component = opts.component;
 
@@ -28,7 +28,7 @@ export class Frame {
       this,
       this.component.name,
       this.component.props || {},
-      state
+      composite
     );
 
     this.sync = true;

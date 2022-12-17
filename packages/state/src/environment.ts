@@ -1,12 +1,12 @@
 import * as t from '@composite/types';
 import { action, makeObservable, observable } from 'mobx';
 
-import { State } from './state';
+import { Composite } from './state';
 
 export class Environment {
   bindings: Map<string, any>;
 
-  constructor(readonly state: State, readonly parent?: Environment) {
+  constructor(readonly composite: Composite, readonly parent?: Environment) {
     this.bindings = new Map();
 
     makeObservable(this, {
@@ -51,7 +51,7 @@ export class Environment {
     }
 
     if (!this.parent) {
-      return this.state.config.globals[name] || undefined;
+      return this.composite.config.globals[name] || undefined;
     }
 
     return this.parent.getByName(name);
@@ -59,10 +59,10 @@ export class Environment {
 
   getByIdentifier(identifier: t.Identifier) {
     const distance =
-      this.state.resolver.identifiersToVariableDistance.get(identifier);
+      this.composite.resolver.identifiersToVariableDistance.get(identifier);
 
     if (distance === undefined || distance === -1) {
-      return this.state.config.globals[identifier.name] || undefined;
+      return this.composite.config.globals[identifier.name] || undefined;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -82,10 +82,10 @@ export class Environment {
   }
 
   inherit() {
-    return new Environment(this.state, this);
+    return new Environment(this.composite, this);
   }
 
   clone() {
-    return new Environment(this.state, this.parent);
+    return new Environment(this.composite, this.parent);
   }
 }

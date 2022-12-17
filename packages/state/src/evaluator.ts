@@ -12,7 +12,7 @@ import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { Frame } from './frame';
 import { Observer } from './observer';
-import { State } from './state';
+import { Composite } from './state';
 import { createKey, isPrimitive, valueToHash } from './utils';
 
 export type TemplateEvaluateContext = {
@@ -62,7 +62,7 @@ export class ViewEvaluator {
     readonly frame: Frame,
     readonly componentName: string,
     readonly componentProps: Record<string, any>,
-    readonly state: State
+    readonly composite: Composite
   ) {
     this._root = observable.box();
 
@@ -410,7 +410,7 @@ export class ViewEvaluator {
     let componentEvaluator = this.tplKeyToComponentEvaluator.get(key);
 
     if (!componentEvaluator) {
-      const componentEnv = this.state.env.inherit();
+      const componentEnv = this.composite.env.inherit();
 
       componentEvaluator = new ComponentViewEvaluator(
         this,
@@ -426,7 +426,7 @@ export class ViewEvaluator {
   }
 
   computeExpr(expr: t.Any, env: Environment) {
-    return computeExpression(expr, this.state, env);
+    return computeExpression(expr, this.composite, env);
   }
 
   computeTree() {
@@ -435,7 +435,7 @@ export class ViewEvaluator {
       // We need to render the root view with a Fragment
       const view = this.computeTemplate(this.rootTemplate, {
         path: ['frame'],
-        env: this.state.env,
+        env: this.composite.env,
         classList: [],
       })[0];
 

@@ -1,7 +1,7 @@
 import * as t from '@composite/types';
 
 import { ExtensionDefinition } from './extension';
-import { State } from './state';
+import { Composite } from './state';
 
 class TemplateQuery {
   query: Query;
@@ -119,18 +119,18 @@ class PlaceholderComponentQuery extends ComponentQuery<t.Component> {
 }
 
 export class Query {
-  state: State;
+  composite: Composite;
 
-  constructor(state: State) {
-    this.state = state;
+  constructor(composite: Composite) {
+    this.composite = composite;
   }
 
   get program() {
-    return this.state.data.program;
+    return this.composite.state.program;
   }
 
   getTemplateById(id: string) {
-    const template = this.state.getNodeFromId(id);
+    const template = this.composite.getNodeFromId(id);
 
     if (!template || !(template instanceof t.Template)) {
       return;
@@ -140,7 +140,7 @@ export class Query {
   }
 
   getComponentById(id: string) {
-    const component = this.state.allComponents.find(
+    const component = this.composite.allComponents.find(
       (component) => component.id === id
     );
 
@@ -156,6 +156,6 @@ export class Query {
   }
 
   getExtension<E extends ExtensionDefinition<any>>(extension: E) {
-    return this.state.getExtension(extension);
+    return this.composite.getExtension(extension);
   }
 }

@@ -87,7 +87,7 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
                 onChange={(value) => {
                   setTemplateComponentName(value);
                 }}
-                items={editor.state.allComponents.map((component) => ({
+                items={editor.composite.allComponents.map((component) => ({
                   value: component.name,
                   title: component.name,
                 }))}
@@ -172,7 +172,7 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
             if (templateType === 'component') {
               if (
                 !templateComponentName ||
-                !editor.state.allComponents.find(
+                !editor.composite.allComponents.find(
                   (component) => component.name === templateComponentName
                 )
               ) {

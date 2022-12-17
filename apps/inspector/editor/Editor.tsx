@@ -1,4 +1,4 @@
-import { Frame, State } from '@composite/state';
+import { Frame, Composite } from '@composite/state';
 import * as t from '@composite/types';
 import {
   action,
@@ -51,7 +51,7 @@ export class Editor {
 
   declare provider: WebrtcProvider;
 
-  state: State;
+  composite: Composite;
 
   constructor() {
     this.activeFrame = null;
@@ -88,7 +88,7 @@ export class Editor {
       setActiveComponentEditor: action,
     });
 
-    this.state = new State({
+    this.composite = new Composite({
       components: [
         t.externalComponent({
           name: 'Header',
@@ -108,12 +108,12 @@ export class Editor {
       }),
     });
 
-    this.state.load(
+    this.composite.load(
       t.unflattenType(getCollaborativeYjsCompositeState().toJSON() as any)
     );
 
-    if (this.state.root.components.length > 0) {
-      this.setActiveComponentEditor(this.state.root.components[0]);
+    if (this.composite.root.components.length > 0) {
+      this.setActiveComponentEditor(this.composite.root.components[0]);
     }
 
     if (typeof window === 'undefined') {
@@ -137,7 +137,7 @@ export class Editor {
       return;
     }
 
-    this.state.dispose();
+    this.composite.dispose();
     this.provider.disconnect();
     this.provider.destroy();
   }

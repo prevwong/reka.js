@@ -1,14 +1,14 @@
-import { State } from '@composite/state';
+import { Composite } from '@composite/state';
 import * as t from '@composite/types';
 import * as Y from 'yjs';
 
-export const yTypeToJS = (state: State, types: any, yType: any) => {
+export const yTypeToJS = (composite: Composite, types: any, yType: any) => {
   const convert = (value: any) => {
     // console.log("converting", value);
     if (value instanceof Y.Map) {
       if (value.get('$$typeId')) {
         // throw new Error(value.get("$$typeId"));
-        let x = state.getNodeFromId(value.get('$$typeId'));
+        let x = composite.getNodeFromId(value.get('$$typeId'));
 
         if (!x && types.get(value.get('$$typeId'))) {
           const rootId = value.get('$$typeId');

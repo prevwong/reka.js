@@ -2,16 +2,16 @@ import * as t from '@composite/types';
 import { action } from 'mobx';
 
 import { Environment } from './environment';
-import { State } from './state';
+import { Composite } from './state';
 
 export const computeExpression = (
   expr: t.Any,
-  state: State,
+  composite: Composite,
   env: Environment
 ) => {
   if (expr instanceof t.BinaryExpression) {
-    const left = computeExpression(expr.left, state, env);
-    const right = computeExpression(expr.right, state, env);
+    const left = computeExpression(expr.left, composite, env);
+    const right = computeExpression(expr.right, composite, env);
 
     switch (expr.operator) {
       case '+': {
@@ -33,21 +33,21 @@ export const computeExpression = (
   }
 
   if (expr instanceof t.ArrayExpression) {
-    return expr.elements.map((el) => computeExpression(el, state, env));
+    return expr.elements.map((el) => computeExpression(el, composite, env));
   }
 
   if (expr instanceof t.ObjectExpression) {
     return Object.keys(expr.properties).reduce(
       (accum, key) => ({
         ...accum,
-        [key]: computeExpression(expr.properties[key], state, env),
+        [key]: computeExpression(expr.properties[key], composite, env),
       }),
       {}
     );
   }
 
   if (expr instanceof t.MemberExpression) {
-    const obj = computeExpression(expr.object, state, env);
+    const obj = computeExpression(expr.object, composite, env);
     return obj[expr.property.name];
   }
 
@@ -56,7 +56,7 @@ export const computeExpression = (
   }
 
   if (expr instanceof t.Val) {
-    env.set(expr.name, computeExpression(expr.init, state, env));
+    env.set(expr.name, computeExpression(expr.init, composite, env));
     return;
   }
 
@@ -65,7 +65,7 @@ export const computeExpression = (
   }
 
   if (expr instanceof t.Assignment) {
-    const right = computeExpression(expr.right, state, env);
+    const right = computeExpression(expr.right, composite, env);
 
     switch (expr.operator) {
       case '=': {
@@ -90,7 +90,7 @@ export const computeExpression = (
 
   if (expr instanceof t.Block) {
     expr.statements.forEach((statement) => {
-      computeExpression(statement, state, env);
+      computeExpression(statement, composite, env);
     });
 
     return;
@@ -106,8 +106,8 @@ export const computeExpression = (
 
       let returnValue;
 
-      state.change(() => {
-        returnValue = computeExpression(expr.body, state, blockEnv);
+      composite.change(() => {
+        returnValue = computeExpression(expr.body, composite, blockEnv);
       });
 
       return returnValue;

@@ -60,13 +60,13 @@ const AddTemplateButton = (props: AddTemplateButtonProps) => {
         onAdd={(template) => {
           setOption(null);
 
-          editor.state.change(() => {
+          editor.composite.change(() => {
             if (option === 'child') {
               props.target.children.push(template);
               return;
             }
 
-            const parent = editor.state.getParent(props.target, t.Template);
+            const parent = editor.composite.getParent(props.target, t.Template);
 
             if (!parent) {
               return;
@@ -210,7 +210,7 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
                 transparent
                 onClick={(e) => {
                   e.stopPropagation();
-                  editor.state.change(() => {
+                  editor.composite.change(() => {
                     const parent = template.parent;
 
                     if (!parent) {

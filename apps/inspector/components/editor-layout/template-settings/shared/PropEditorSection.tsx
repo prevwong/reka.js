@@ -43,7 +43,7 @@ export const PropEditorSection = observer(
                   t.Expression
                 );
                 //   console.log("parsedValue", parsedValue);
-                editor.state.change(() => {
+                editor.composite.change(() => {
                   if (!template.classList) {
                     template.classList = t.objectExpression({
                       properties: {},
@@ -75,7 +75,7 @@ export const PropEditorSection = observer(
                   t.Expression
                 );
                 //   console.log("parsedValue", parsedValue);
-                editor.state.change(() => {
+                editor.composite.change(() => {
                   template.props[id] = parsedValue;
                 });
               } catch (err) {
@@ -84,7 +84,7 @@ export const PropEditorSection = observer(
               }
             }}
             onRemove={(id) => {
-              editor.state.change(() => {
+              editor.composite.change(() => {
                 delete template.props[id];
               });
             }}

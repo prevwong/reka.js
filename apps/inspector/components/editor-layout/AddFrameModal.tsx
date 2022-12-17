@@ -47,7 +47,7 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
   const editor = useEditor();
 
   const existingFrame = props.frameId
-    ? editor.state
+    ? editor.composite
         .getExtension(UserFrameExtension)
         .state.frames.find((frame) => frame.id === props.frameId)
     : null;
@@ -129,9 +129,9 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
             padding: '$2 $4',
           }}
           onClick={() => {
-            editor.state.change(() => {
+            editor.composite.change(() => {
               if (!existingFrame) {
-                editor.state
+                editor.composite
                   .getExtension(UserFrameExtension)
                   .state.frames.push({
                     id: frameName,

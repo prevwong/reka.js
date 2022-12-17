@@ -2,16 +2,16 @@ import * as t from '@composite/types';
 
 import { ExtensionDefinition, ExtensionStateDefinition } from './definition';
 
-import { State, StateSubscriberOpts } from '../state';
+import { Composite, StateSubscriberOpts } from '../state';
 
 export class Extension<S extends ExtensionStateDefinition | any = undefined> {
   private _state: t.ExtensionState;
 
   constructor(
-    readonly composite: State,
+    readonly composite: Composite,
     readonly definition: ExtensionDefinition<S>
   ) {
-    const existingState = composite.data.extensions[definition.key];
+    const existingState = composite.state.extensions[definition.key];
 
     if (existingState) {
       existingState['_d'] = true;
@@ -24,7 +24,7 @@ export class Extension<S extends ExtensionStateDefinition | any = undefined> {
         });
 
     if (definition.state) {
-      this.composite.data.extensions[definition.key] = this._state;
+      this.composite.state.extensions[definition.key] = this._state;
     }
   }
 

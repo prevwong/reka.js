@@ -1,4 +1,4 @@
-import { State } from '@composite/state';
+import { Composite } from '@composite/state';
 import * as t from '@composite/types';
 import * as Y from 'yjs';
 
@@ -14,7 +14,7 @@ export class YjsCompositeSyncProvider {
 
   private yDoc: Y.Doc;
 
-  constructor(readonly state: State, readonly type: Y.Map<any>) {
+  constructor(readonly composite: Composite, readonly type: Y.Map<any>) {
     if (!type.doc) {
       throw new Error();
     }
@@ -22,7 +22,7 @@ export class YjsCompositeSyncProvider {
     this.yDoc = type.doc;
 
     this.yDocChangeListener = (events, tr) => {
-      if (!this.state) {
+      if (!this.composite) {
         return;
       }
 
@@ -70,7 +70,7 @@ export class YjsCompositeSyncProvider {
           return traverse(value[curr], paths);
         };
 
-        return traverse(this.state.getNodeFromId(paths[1]), paths.slice(2));
+        return traverse(this.composite.getNodeFromId(paths[1]), paths.slice(2));
       }
 
       return null;
@@ -82,7 +82,7 @@ export class YjsCompositeSyncProvider {
       return;
     }
 
-    this.state.change(() => {
+    this.composite.change(() => {
       // console.log("synching to state", event);
       const obj = toJsObject([...event.path.slice(1)]);
 
@@ -94,7 +94,7 @@ export class YjsCompositeSyncProvider {
       if (event instanceof Y.YMapEvent) {
         event.keysChanged.forEach((key) => {
           obj[key] = yTypeToJS(
-            this.state,
+            this.composite,
             yDocRoot.get('types'),
             (event.target as Y.Map<any>).get(key)
           );
@@ -118,7 +118,7 @@ export class YjsCompositeSyncProvider {
           if (delta.insert) {
             const m = (delta.insert as any[]).map((item) => {
               const converted = yTypeToJS(
-                this.state,
+                this.composite,
                 yDocRoot.get('types'),
                 item
               );
@@ -282,25 +282,27 @@ export class YjsCompositeSyncProvider {
 
   init() {
     // Listen to Composite state changes
-    this.compositeChangeUnsubscriber = this.state.listenToChanges((change) => {
-      if (this.isSynchingToMobx) {
-        return;
+    this.compositeChangeUnsubscriber = this.composite.listenToChanges(
+      (change) => {
+        if (this.isSynchingToMobx) {
+          return;
+        }
+
+        this.mobxChangesToSync.push(change);
+
+        if (this.isBatchingMobxChanges) {
+          return;
+        }
+
+        this.isBatchingMobxChanges = true;
+
+        Promise.resolve().then(() => {
+          this.syncMobxChangesToYDoc(this.mobxChangesToSync);
+          this.mobxChangesToSync = [];
+          this.isBatchingMobxChanges = false;
+        });
       }
-
-      this.mobxChangesToSync.push(change);
-
-      if (this.isBatchingMobxChanges) {
-        return;
-      }
-
-      this.isBatchingMobxChanges = true;
-
-      Promise.resolve().then(() => {
-        this.syncMobxChangesToYDoc(this.mobxChangesToSync);
-        this.mobxChangesToSync = [];
-        this.isBatchingMobxChanges = false;
-      });
-    });
+    );
 
     // Listen to Y.js doc changes
     this.type.observeDeep(this.yDocChangeListener);

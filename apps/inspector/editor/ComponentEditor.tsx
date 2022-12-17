@@ -45,7 +45,7 @@ export class ComponentEditor {
     });
 
     const userFrameExtension =
-      this.editor.state.getExtension(UserFrameExtension);
+      this.editor.composite.getExtension(UserFrameExtension);
 
     this.disposeActiveFrameRemoval = userFrameExtension.subscribe(
       (state) => ({
@@ -77,7 +77,7 @@ export class ComponentEditor {
   }
 
   setInitialActiveFrame() {
-    const firstUserFrame = this.editor.state
+    const firstUserFrame = this.editor.composite
       .getExtension(UserFrameExtension)
       .state.frames.filter((frame) => frame.name === this.component.name)[0];
 
@@ -98,7 +98,7 @@ export class ComponentEditor {
       return;
     }
 
-    const userFrame = this.editor.state
+    const userFrame = this.editor.composite
       .getExtension(UserFrameExtension)
       .state.frames.find((frame) => frame.id === frameId);
 
@@ -107,7 +107,8 @@ export class ComponentEditor {
     }
 
     const stateFrame =
-      this.editor.state.frames.find((frame) => frame.id === frameId) || null;
+      this.editor.composite.frames.find((frame) => frame.id === frameId) ||
+      null;
 
     invariant(stateFrame, 'State frame not found');
 

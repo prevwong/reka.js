@@ -87,7 +87,7 @@ export const EditorPanel = observer(() => {
             py: '$2',
             px: '$0',
           }}
-          root={editor.state.root}
+          root={editor.composite.root}
         />
         <CodeEditor
           css={{

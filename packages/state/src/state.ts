@@ -31,12 +31,12 @@ export type StateSubscriber<C> = {
   opts: StateSubscriberOpts;
 };
 
-export class State {
+export class Composite {
   frames: Frame[];
 
   declare env: Environment;
   declare resolver: Resolver;
-  declare data: t.State;
+  declare state: t.State;
   declare query: Query;
 
   private declare observer: Observer<t.State>;
@@ -68,7 +68,7 @@ export class State {
   }
 
   get root() {
-    return this.data.program;
+    return this.state.program;
   }
 
   get allComponents() {
@@ -76,7 +76,7 @@ export class State {
   }
 
   load(state: t.State) {
-    this.data = t.state(state);
+    this.state = t.state(state);
     this.query = new Query(this);
     this.env = new Environment(this);
     this.resolver = new Resolver(this);
@@ -84,7 +84,7 @@ export class State {
 
     makeObservable(this, {
       config: computed,
-      data: observable,
+      state: observable,
       allComponents: computed,
     });
 
@@ -93,7 +93,7 @@ export class State {
       this.opts.extensions ?? []
     );
 
-    this.observer = new Observer(this.data, {
+    this.observer = new Observer(this.state, {
       hooks: {
         onDispose: (payload) => {
           if (payload.type instanceof t.Identifier) {
@@ -283,6 +283,6 @@ export class State {
   }
 
   toJSON() {
-    return this.data;
+    return this.state;
   }
 }

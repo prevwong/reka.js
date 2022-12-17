@@ -92,7 +92,7 @@ const TemplateHeading = (props: TemplateHeadingProps) => {
           const template = props.template;
 
           if (template instanceof t.TagTemplate) {
-            editor.state.change(() => {
+            editor.composite.change(() => {
               template.tag = newTitleValue;
             });
           }
