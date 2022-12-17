@@ -1,13 +1,14 @@
 import * as t from '@composite/types';
 import {
-  computed,
   IComputedValue,
   IObservableValue,
   observable,
   runInAction,
 } from 'mobx';
+import invariant from 'tiny-invariant';
 
 import { ComponentViewEvaluator } from './component';
+import { Computation } from './computation';
 import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { Frame } from './frame';
@@ -23,16 +24,16 @@ export type TemplateEvaluateContext = {
 
 export type TemplateViewComputationCache = {
   template: t.Template;
-  computed: IComputedValue<t.View[]>;
+  computation: Computation<t.View[]>;
 };
 
 export type TemplateEachComputationCache = {
   hash: string;
-  computed: IComputedValue<t.View[]>;
+  computation: Computation<t.View[]>;
   iteration: Map<
     string,
     {
-      computed: IComputedValue<t.View>;
+      computation: Computation<t.View>;
     }
   >;
 };
@@ -169,12 +170,12 @@ export class ViewEvaluator {
         existingTplComputationCache &&
         existingTplComputationCache.template === template
       ) {
-        return existingTplComputationCache.computed.get();
+        return existingTplComputationCache.computation.get();
       }
 
       const prevEachExpr = template.each;
 
-      const computation = computed(
+      const computation = new Computation(
         () => {
           /**
            * If the each expr for the template has changed, return the existing view
@@ -235,7 +236,7 @@ export class ViewEvaluator {
       );
 
       this.tplKeyToViewComputationCache.set(key, {
-        computed: computation,
+        computation: computation,
         template,
       });
 
@@ -265,14 +266,14 @@ export class ViewEvaluator {
       existingEachComputationCache &&
       existingEachComputationCache.hash === iteratorHash
     ) {
-      return existingEachComputationCache.computed.get();
+      return existingEachComputationCache.computation.get();
     }
 
     const iteration = new Map();
 
     const tplEnv = ctx.env.inherit();
 
-    const eachComputation = computed(() => {
+    const eachComputation = new Computation(() => {
       const iterator = tplEnv.getByIdentifier(eachExpr.iterator);
 
       const views: t.View[] = [];
@@ -295,7 +296,7 @@ export class ViewEvaluator {
           const inheritedEnv = tplEnv.clone();
 
           iteratorCache = {
-            computed: computed(() => {
+            computed: new Computation(() => {
               inheritedEnv.set(eachExpr.alias.name, value);
 
               if (eachExpr.index) {
@@ -333,7 +334,7 @@ export class ViewEvaluator {
 
     this.tplToEachComputationCache.set(template, {
       hash: iteratorHash,
-      computed: eachComputation,
+      computation: eachComputation,
       iteration: new Map(),
     });
 
@@ -468,6 +469,11 @@ export class ViewEvaluator {
   dispose() {
     this.rootTemplateObserver.dispose();
     this.rootObserver.dispose();
+
+    // Computation here has keepAlive set to true, we should dispose to prevent memory leaks
+    this.tplKeyToViewComputationCache.forEach((cache) => {
+      cache.computation.dispose();
+    });
 
     this.tplToView = new Map();
     this.tplToEachComputationCache = new WeakMap();

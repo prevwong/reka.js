@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "mobx": "^6.3.13",
+    "mobx-utils": "^6.0.5",
     "tiny-invariant": "^1.2.0"
   }
 }

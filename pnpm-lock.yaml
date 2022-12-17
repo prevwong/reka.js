@@ -214,9 +214,11 @@ importers:
     specifiers:
       '@composite/types': workspace:*
       mobx: ^6.3.13
+      mobx-utils: ^6.0.5
       tiny-invariant: ^1.2.0
     dependencies:
       mobx: 6.6.1
+      mobx-utils: 6.0.5_mobx@6.6.1
       tiny-invariant: 1.2.0
     devDependencies:
       '@composite/types': link:../types
@@ -4149,6 +4151,14 @@ packages:
       mobx: 6.6.1
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
+    dev: false
+
+  /mobx-utils/6.0.5_mobx@6.6.1:
+    resolution: {integrity: sha512-QOduwicYedD4mwYZRl8+c3BalljFDcubg+PUGqBkn8tOuBoj2q7GhjXBP6JXM9J+Zh+2mePK8IoToeLfqr3Z/w==}
+    peerDependencies:
+      mobx: ^6.0.0
+    dependencies:
+      mobx: 6.6.1
     dev: false
 
   /mobx/6.6.1:
