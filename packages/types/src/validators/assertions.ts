@@ -34,5 +34,5 @@ export const string = type('string');
 export const number = type('number');
 export const boolean = type('boolean');
 export const nullish = type('null');
-export const undefined = type('undefined');
+export const undefinedValue = type('undefined');
 export const func = type('Function');

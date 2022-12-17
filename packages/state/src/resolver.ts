@@ -1,6 +1,5 @@
 import * as t from '@composite/types';
 import {
-  action,
   computed,
   IComputedValue,
   makeObservable,

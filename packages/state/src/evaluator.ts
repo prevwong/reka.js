@@ -1,11 +1,5 @@
 import * as t from '@composite/types';
-import {
-  IComputedValue,
-  IObservableValue,
-  observable,
-  runInAction,
-} from 'mobx';
-import invariant from 'tiny-invariant';
+import { IObservableValue, observable, runInAction } from 'mobx';
 
 import { ComponentViewEvaluator } from './component';
 import { Computation } from './computation';

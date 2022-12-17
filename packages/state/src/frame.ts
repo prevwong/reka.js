@@ -1,8 +1,8 @@
 import * as t from '@composite/types';
 import { makeObservable, observable, action } from 'mobx';
 
-import { Composite } from './state';
 import { ViewEvaluator } from './evaluator';
+import { Composite } from './state';
 
 type FrameComponentConfig = {
   name: string;

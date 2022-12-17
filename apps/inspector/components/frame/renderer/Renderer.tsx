@@ -1,11 +1,11 @@
-import * as t from '@composite/types';
 import { observer } from '@composite/react';
+import * as t from '@composite/types';
 import * as React from 'react';
 
 import { useEditor } from '@app/editor';
 
-import { View } from './view';
 import { useConnectDOM } from './useConnecttDom';
+import { View } from './view';
 
 import { ComponentContext } from '../ComponentContext';
 

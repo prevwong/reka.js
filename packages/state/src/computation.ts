@@ -5,7 +5,7 @@ type ComputationOpts = {
   keepAlive?: boolean;
 };
 
-export class Computation<T extends any = any> {
+export class Computation<T> {
   private computation: IComputedValue<T>;
   private disposer?: IDisposer;
 

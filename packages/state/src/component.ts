@@ -2,8 +2,8 @@ import * as t from '@composite/types';
 import { computed, IComputedValue, runInAction, untracked } from 'mobx';
 
 import { Environment } from './environment';
-import { createKey } from './utils';
 import { TemplateEvaluateContext, ViewEvaluator } from './evaluator';
+import { createKey } from './utils';
 
 type ComponentViewTreeComputationCache = {
   component: t.Component;

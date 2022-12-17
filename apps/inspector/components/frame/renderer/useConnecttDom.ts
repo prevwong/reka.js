@@ -1,9 +1,11 @@
 import * as t from '@composite/types';
+import * as React from 'react';
+
 import { useEditor } from '@app/editor';
 
-import * as React from 'react';
-import { ComponentContext } from '../ComponentContext';
 import { useView } from './view';
+
+import { ComponentContext } from '../ComponentContext';
 
 export const useConnectDOM = () => {
   const editor = useEditor();

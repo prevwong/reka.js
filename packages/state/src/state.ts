@@ -1,7 +1,7 @@
 import * as t from '@composite/types';
 import { computed, makeObservable, observable, reaction } from 'mobx';
-import { Computation } from './computation';
 
+import { Computation } from './computation';
 import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { ExtensionDefinition, ExtensionRegistry } from './extension';

@@ -193,7 +193,9 @@ Schema.define('ElementView', {
     // template: t.node("Template"),
     tag: t.string,
     children: t.array(t.node('View')),
-    props: t.map(t.union(t.string, t.number, t.boolean, t.func, t.undefined)),
+    props: t.map(
+      t.union(t.string, t.number, t.boolean, t.func, t.undefinedValue)
+    ),
   }),
 });
 
