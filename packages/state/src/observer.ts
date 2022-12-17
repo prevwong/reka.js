@@ -1,4 +1,5 @@
-import { Schema, Type } from '@composite/types';
+import * as t from '@composite/types';
+import { TypeConstructor } from '@composite/types';
 import {
   IArraySplice,
   IObjectDidChange,
@@ -15,29 +16,33 @@ import invariant from 'tiny-invariant';
 
 import { isObjectLiteral } from './utils';
 
+type ValuesWithReference = Array<any> | Record<string, any> | t.Type;
+
 type Parent = {
-  value: any;
+  value: ValuesWithReference;
   key: string | number;
 };
 
 type Path = {
-  parent: Type | Array<any> | Record<string, any>;
+  parent: t.Type | Array<any> | Record<string, any>;
   key: string | number;
 };
 
 type OnAddPayload = {
-  type: Type;
+  type: t.Type;
   path: Path[];
 };
 
 type OnDiposePayload = {
-  type: Type;
+  type: t.Type;
   path: Path[];
 };
 
-type OnChangePayload = (IObjectDidChange | IArraySplice) & {
+type OnChangePayload = Omit<IObjectDidChange | IArraySplice, 'path'> & {
   path: Path[];
 };
+
+type TypeDisposer = () => void;
 
 export type ObserverHooks = {
   onAdd: (payload: OnAddPayload) => void;
@@ -49,37 +54,29 @@ export type ObserverOptions = {
   hooks?: Partial<ObserverHooks>;
 };
 
-export type Subscriber = {
-  deep: boolean;
-  onChange: (change?: any) => void;
-};
-
-export type SubscriberConfig = {
-  type: Type;
-  deep: boolean;
-};
-
 export type ChangeOpts = {
   batch: boolean;
 };
 
-export class Observer<T extends Type = Type> {
-  root: T;
-  valueToParentMap: WeakMap<any, any>;
-  subscribers: any[] = [];
-  idToType: Map<string, Type>;
-  opts: ObserverOptions;
+export type ChangeListenerSubscriber = (payload: OnChangePayload) => void;
 
-  private typeDisposers: WeakMap<Type, any>;
-  private markedForDisposal: Set<Type> = new Set();
+export class Observer<T extends t.Type = t.Type> {
+  root: T;
+
   private declare rootDisposer: () => void;
 
+  private valueToParentMap: WeakMap<ValuesWithReference, Parent>;
+  private changeListenerSubscribers: ChangeListenerSubscriber[] = [];
+  private idToType: Map<string, t.Type>;
+  private opts: ObserverOptions;
+  private typeToDisposer: WeakMap<t.Type, TypeDisposer>;
+  private markedForDisposal: Set<t.Type> = new Set();
   private isDisposing: boolean = false;
   private isMutation: boolean = false;
 
   constructor(type: T, opts?: Partial<ObserverOptions>) {
     this.valueToParentMap = new WeakMap();
-    this.typeDisposers = new WeakMap();
+    this.typeToDisposer = new WeakMap();
     this.idToType = new Map();
     this.root = type;
     this.opts = opts ?? {};
@@ -89,21 +86,6 @@ export class Observer<T extends Type = Type> {
     makeObservable(this, {
       root: observable,
     });
-  }
-
-  setRoot(type: T) {
-    if (this.rootDisposer) {
-      this.rootDisposer();
-    }
-
-    const rootDisposer = this.setupType(type);
-
-    invariant(
-      rootDisposer !== undefined,
-      `Failed to set up observer --- Root type did not return a valid disposer`
-    );
-
-    this.rootDisposer = rootDisposer;
   }
 
   private whileDisposing(cb: () => void) {
@@ -120,74 +102,76 @@ export class Observer<T extends Type = Type> {
   private disposeTypes() {
     this.whileDisposing(() => {
       for (const type of this.markedForDisposal) {
-        this.typeDisposers.get(type)();
+        const typeDispoesr = this.typeToDisposer.get(type);
+
+        if (!typeDispoesr) {
+          continue;
+        }
+
+        typeDispoesr();
       }
 
       this.markedForDisposal.clear();
     });
   }
 
-  dispose() {
-    this.whileDisposing(() => {
+  private setRoot(type: T) {
+    if (this.rootDisposer) {
       this.rootDisposer();
-    });
+    }
 
-    this.valueToParentMap = new WeakMap();
-    this.idToType = new Map();
-    this.typeDisposers = new Map();
-    this.markedForDisposal.clear();
+    const rootDisposer = this.setupType(type);
+
+    invariant(
+      rootDisposer !== undefined,
+      `Failed to set up observer --- Root type did not return a valid disposer`
+    );
+
+    this.rootDisposer = rootDisposer;
   }
 
-  replace(type: T) {
-    this.dispose();
+  getTypeFromId<T extends t.Type = t.Any>(
+    id: string,
+    expectedType?: TypeConstructor<T>
+  ) {
+    const type = this.idToType.get(id) as T;
 
-    runInAction(() => {
-      this.root = type;
-    });
+    if (expectedType) {
+      invariant(type instanceof expectedType, 'Unexpected type');
+    }
 
-    this.setRoot(type);
-
-    this.notify({
-      type: 'replace',
-    });
+    return type;
   }
 
-  subscribe(subscriber: any) {
-    this.subscribers.push(subscriber);
+  listenToChanges(changeListenerSubscriber: ChangeListenerSubscriber) {
+    this.changeListenerSubscribers.push(changeListenerSubscriber);
 
     return () => {
-      this.subscribers.splice(this.subscribers.indexOf(subscriber), 1);
+      this.changeListenerSubscribers.splice(
+        this.changeListenerSubscribers.indexOf(changeListenerSubscriber),
+        1
+      );
     };
   }
 
-  setupChild(value: any, parent: Parent) {
-    try {
-      if (value instanceof Type) {
-        return this.setupType(value, parent);
-      }
-
-      if (isObservableArray(value)) {
-        return this.setupArray(value, parent);
-      }
-
-      if (isObjectLiteral(value)) {
-        return this.setupMap(value, parent);
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      return () => {};
-    } catch (err) {
-      console.warn(
-        `Cannot set value. Validation failed`,
-        err,
-        value,
-        isObjectLiteral(value),
-        parent
-      );
+  private setupChild(value: any, parent: Parent) {
+    if (value instanceof t.Type) {
+      return this.setupType(value, parent);
     }
+
+    if (isObservableArray(value)) {
+      return this.setupArray(value, parent);
+    }
+
+    if (isObjectLiteral(value)) {
+      return this.setupMap(value, parent);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    return () => {};
   }
 
-  setupType(value: Type, parent?: Parent) {
+  private setupType(value: t.Type, parent?: Parent) {
     if (parent) {
       this.valueToParentMap.set(value, parent);
     }
@@ -205,7 +189,7 @@ export class Observer<T extends Type = Type> {
 
     let currId = value.id;
 
-    const schema = Schema.get(value.type);
+    const schema = t.Schema.get(value.type);
 
     if (!isObservable(value)) {
       makeObservable(
@@ -263,8 +247,8 @@ export class Observer<T extends Type = Type> {
       return e;
     });
 
-    if (!this.typeDisposers.get(value)) {
-      this.typeDisposers.set(value, () => {
+    if (!this.typeToDisposer.get(value)) {
+      this.typeToDisposer.set(value, () => {
         if (this.opts.hooks?.onDispose) {
           this.opts.hooks.onDispose({
             type: value,
@@ -275,18 +259,20 @@ export class Observer<T extends Type = Type> {
         disposeTypeObserver();
         fieldDisposers.forEach((disposeChildField) => disposeChildField?.());
 
-        this.typeDisposers.delete(value);
+        this.typeToDisposer.delete(value);
         this.markedForDisposal.delete(value);
       });
     }
 
     return () => {
-      if (!this.typeDisposers.get(value)) {
+      const typeDisposer = this.typeToDisposer.get(value);
+
+      if (!typeDisposer) {
         return;
       }
 
       if (this.isDisposing) {
-        this.typeDisposers.get(value)();
+        typeDisposer();
 
         return;
       }
@@ -295,7 +281,7 @@ export class Observer<T extends Type = Type> {
     };
   }
 
-  setupArray(value: IObservableArray<any>, parent: Parent) {
+  private setupArray(value: IObservableArray<any>, parent: Parent) {
     this.valueToParentMap.set(value, parent);
 
     const disposers = new Map();
@@ -356,8 +342,14 @@ export class Observer<T extends Type = Type> {
 
       if (e.added.length > 0) {
         for (let i = e.index + e.added.length; i < value.length; i++) {
+          const existingParentForValue = this.valueToParentMap.get(value[i]);
+          invariant(
+            existingParentForValue,
+            'Parent map not found for array element'
+          );
+
           this.valueToParentMap.set(value[i], {
-            ...this.valueToParentMap.get(value[i]),
+            ...existingParentForValue,
             key: i,
           });
         }
@@ -370,8 +362,14 @@ export class Observer<T extends Type = Type> {
       if (e.removedCount > 0) {
         // Update the "key" index for existing child values
         for (let i = e.index; i < value.length; i++) {
+          const existingParentForValue = this.valueToParentMap.get(value[i]);
+          invariant(
+            existingParentForValue,
+            'Parent map not found for array element'
+          );
+
           this.valueToParentMap.set(value[i], {
-            ...this.valueToParentMap.get(value[i]),
+            ...existingParentForValue,
             key: i,
           });
         }
@@ -388,7 +386,7 @@ export class Observer<T extends Type = Type> {
     };
   }
 
-  setupMap(value: IObservable, parent: Parent) {
+  private setupMap(value: IObservable, parent: Parent) {
     this.valueToParentMap.set(value, parent);
     const childFieldObservers = new Map();
 
@@ -438,7 +436,7 @@ export class Observer<T extends Type = Type> {
     };
   }
 
-  handleOnChange(value: any, payload: any) {
+  private handleOnChange(value: any, payload: Omit<OnChangePayload, 'path'>) {
     const change = {
       ...payload,
       path: this.getPath(value),
@@ -453,11 +451,11 @@ export class Observer<T extends Type = Type> {
     return change;
   }
 
-  private notify(change: any) {
-    this.subscribers.forEach((subscriber) => subscriber(change));
+  private notify(change: OnChangePayload) {
+    this.changeListenerSubscribers.forEach((subscriber) => subscriber(change));
   }
 
-  private getPath(value: Type | Array<any> | Object) {
+  private getPath(value: t.Type | Array<any> | Object) {
     if (value === this.root) {
       return [];
     }
@@ -475,16 +473,19 @@ export class Observer<T extends Type = Type> {
     ];
   }
 
-  getParent(type: Type) {
+  getParentMap(type: t.Type) {
     return this.valueToParentMap.get(type);
   }
 
-  getParentNode(node: Type) {
+  getParent<T extends t.Type = t.Any>(
+    node: t.Type,
+    expectedParentType?: t.TypeConstructor<T>
+  ) {
     if (node === this.root) {
       return null;
     }
 
-    const path: any[] = [];
+    const path: Parent[] = [];
 
     let parentMap;
     let current = node;
@@ -494,15 +495,23 @@ export class Observer<T extends Type = Type> {
       invariant(!!parentMap, 'Parent-child map not found');
       path.unshift(parentMap);
       current = parentMap.value;
-    } while (!(parentMap.value instanceof Type));
+    } while (!(parentMap.value instanceof t.Type));
 
-    console.log(100, path);
+    const parent = path.shift();
 
-    const { value: parentNode, key } = path.shift();
+    invariant(parent, 'Parent map not found');
+    invariant(parent.value instanceof t.Type, 'Parent node not found');
+
+    if (expectedParentType) {
+      invariant(
+        parent.value instanceof expectedParentType,
+        'Unexpected parent type'
+      );
+    }
 
     return {
-      node: parentNode,
-      key,
+      node: parent.value as T,
+      key: parent.key,
       path,
     };
   }
@@ -533,5 +542,16 @@ export class Observer<T extends Type = Type> {
     this.whileDisposing(() => {
       _change();
     });
+  }
+
+  dispose() {
+    this.whileDisposing(() => {
+      this.rootDisposer();
+    });
+
+    this.valueToParentMap = new WeakMap();
+    this.idToType = new Map();
+    this.typeToDisposer = new Map();
+    this.markedForDisposal.clear();
   }
 }

@@ -11,7 +11,7 @@ import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { ExtensionDefinition, ExtensionRegistry } from './extension';
 import { Frame, FrameOpts } from './frame';
-import { Observer } from './observer';
+import { ChangeListenerSubscriber, Observer } from './observer';
 import { Query } from './query';
 import { Resolver } from './resolver';
 
@@ -25,7 +25,7 @@ export type StateSubscriberOpts = {
   fireImmediately?: boolean;
 };
 
-type StateSubscriber<C> = {
+export type StateSubscriber<C> = {
   collect: (query: Query) => C;
   onCollect: (collected: C, prevCollected: C) => void;
   opts: StateSubscriberOpts;
@@ -51,6 +51,28 @@ export class State {
 
   constructor(private readonly opts: StateOpts) {
     this.frames = [];
+  }
+
+  get config() {
+    const config = {
+      globals: this.opts.globals || {},
+      components: this.opts.components || [],
+    };
+
+    this.extensionRegistry.extensions.forEach((extension) => {
+      Object.assign(config.globals, extension.definition.globals);
+      config.components.push(...extension.definition.components);
+    });
+
+    return config;
+  }
+
+  get root() {
+    return this.data.program;
+  }
+
+  get allComponents() {
+    return [...(this.config.components ?? []), ...this.root.components];
   }
 
   load(state: t.State) {
@@ -83,28 +105,6 @@ export class State {
 
     this.extensionRegistry.init();
     this.sync();
-  }
-
-  get config() {
-    const config = {
-      globals: this.opts.globals || {},
-      components: this.opts.components || [],
-    };
-
-    this.extensionRegistry.extensions.forEach((extension) => {
-      Object.assign(config.globals, extension.definition.globals);
-      config.components.push(...extension.definition.components);
-    });
-
-    return config;
-  }
-
-  get root() {
-    return this.data.program;
-  }
-
-  get allComponents() {
-    return [...(this.config.components ?? []), ...this.root.components];
   }
 
   sync() {
@@ -219,20 +219,26 @@ export class State {
     return this.extensionRegistry.getExtensionFromDefinition(definition);
   }
 
-  getTypeFromId(id: string) {
-    return this.observer.idToType.get(id);
+  getNodeFromId<T extends t.Type = t.Any>(
+    id: string,
+    expectedType?: t.TypeConstructor<T>
+  ) {
+    return this.observer.getTypeFromId(id, expectedType);
   }
 
   getParentType(type: t.Type) {
-    return this.observer.getParent(type);
+    return this.observer.getParentMap(type);
   }
 
-  getParentNode(node: t.Type) {
-    return this.observer.getParentNode(node);
+  getParent<T extends t.Type = t.Any>(
+    node: t.Type,
+    expectedParentType?: t.TypeConstructor<T>
+  ) {
+    return this.observer.getParent(node, expectedParentType);
   }
 
-  listenToChanges(...args: Parameters<Observer<any>['subscribe']>) {
-    return this.observer.subscribe(...args);
+  listenToChanges(changeListenerSubscriber: ChangeListenerSubscriber) {
+    return this.observer.listenToChanges(changeListenerSubscriber);
   }
 
   subscribe<C>(

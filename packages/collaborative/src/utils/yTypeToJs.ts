@@ -8,7 +8,7 @@ export const yTypeToJS = (state: State, types: any, yType: any) => {
     if (value instanceof Y.Map) {
       if (value.get('$$typeId')) {
         // throw new Error(value.get("$$typeId"));
-        let x = state.getTypeFromId(value.get('$$typeId'));
+        let x = state.getNodeFromId(value.get('$$typeId'));
 
         if (!x && types.get(value.get('$$typeId'))) {
           const rootId = value.get('$$typeId');

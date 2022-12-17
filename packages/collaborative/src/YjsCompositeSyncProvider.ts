@@ -70,7 +70,7 @@ export class YjsCompositeSyncProvider {
           return traverse(value[curr], paths);
         };
 
-        return traverse(this.state.getTypeFromId(paths[1]), paths.slice(2));
+        return traverse(this.state.getNodeFromId(paths[1]), paths.slice(2));
       }
 
       return null;

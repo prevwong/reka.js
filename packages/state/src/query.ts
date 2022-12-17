@@ -16,27 +16,8 @@ class TemplateQuery {
     return this.template;
   }
 
+  // TODO: remove
   getParent(): TemplateQuery | null {
-    const parentType = this.query.state.getParentType(this.template);
-
-    if (!parentType) {
-      return null;
-    }
-
-    const grandParentType = this.query.state.getParentType(parentType.value);
-
-    if (!grandParentType) {
-      return null;
-    }
-
-    if (
-      Array.isArray(parentType.value) &&
-      grandParentType.value instanceof t.Template &&
-      grandParentType.key === 'children'
-    ) {
-      return new TemplateQuery(this.query, grandParentType.value);
-    }
-
     return null;
   }
 
@@ -149,7 +130,7 @@ export class Query {
   }
 
   getTemplateById(id: string) {
-    const template = this.state.getTypeFromId(id);
+    const template = this.state.getNodeFromId(id);
 
     if (!template || !(template instanceof t.Template)) {
       return;

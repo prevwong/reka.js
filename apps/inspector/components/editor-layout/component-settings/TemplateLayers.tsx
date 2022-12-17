@@ -66,24 +66,24 @@ const AddTemplateButton = (props: AddTemplateButtonProps) => {
               return;
             }
 
-            const parent = editor.state.getParentType(props.target);
+            const parent = editor.state.getParent(props.target, t.Template);
 
-            if (!parent || !Array.isArray(parent.value)) {
+            if (!parent) {
               return;
             }
 
-            const indexInParent = parent.value.indexOf(props.target);
+            const indexInParent = parent.node.children.indexOf(props.target);
 
             if (indexInParent === -1) {
               return;
             }
 
             if (option === 'after') {
-              parent.value.splice(indexInParent + 1, 0, template);
+              parent.node.children.splice(indexInParent + 1, 0, template);
               return;
             }
 
-            parent.value.splice(indexInParent, 0, template);
+            parent.node.children.splice(indexInParent, 0, template);
           });
         }}
       />
@@ -126,7 +126,8 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
       collectedTemplateValues = {
         id: template.id,
         name: getTemplateName(template.data),
-        parent: template.getParent(),
+        // TODO:
+        parent: null,
         grandparent: template.getParent()?.getParent(),
         children: template.children.map((child) => child.id),
         index: template.index,
@@ -216,9 +217,10 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
                       return;
                     }
 
-                    editor.state.change(() => {
-                      parent.children.splice(template.index, 1);
-                    });
+                    // TODO:
+                    // editor.state.change(() => {
+                    //   parent.children.splice(template.index, 1);
+                    // });
                   });
                 }}
               >
