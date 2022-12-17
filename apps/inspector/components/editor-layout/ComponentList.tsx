@@ -120,8 +120,8 @@ export const ComponentList = (props: ComponentListProps) => {
   const [showAddComponentModal, setShowAddCompnonentModal] =
     React.useState(false);
 
-  const { components } = useCollector((query) => ({
-    components: query.program.components,
+  const { components } = useCollector((composite) => ({
+    components: composite.state.program.components,
   }));
 
   return (

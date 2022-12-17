@@ -12,7 +12,6 @@ import { computeExpression } from './expression';
 import { ExtensionDefinition, ExtensionRegistry } from './extension';
 import { Frame, FrameOpts } from './frame';
 import { ChangeListenerSubscriber, Observer } from './observer';
-import { Query } from './query';
 import { Resolver } from './resolver';
 
 export type StateOpts = {
@@ -26,7 +25,7 @@ export type StateSubscriberOpts = {
 };
 
 export type StateSubscriber<C> = {
-  collect: (query: Query) => C;
+  collect: (composite: Composite) => C;
   onCollect: (collected: C, prevCollected: C) => void;
   opts: StateSubscriberOpts;
 };
@@ -37,7 +36,6 @@ export class Composite {
   declare env: Environment;
   declare resolver: Resolver;
   declare state: t.State;
-  declare query: Query;
 
   private declare observer: Observer<t.State>;
   private declare extensionRegistry: ExtensionRegistry;
@@ -77,7 +75,6 @@ export class Composite {
 
   load(state: t.State) {
     this.state = t.state(state);
-    this.query = new Query(this);
     this.env = new Environment(this);
     this.resolver = new Resolver(this);
     this.frames = [];
@@ -242,7 +239,7 @@ export class Composite {
   }
 
   subscribe<C>(
-    collect: (query: Query) => C,
+    collect: (composite: Composite) => C,
     onCollect: (collected: C, prevCollected: C) => void,
     opts?: StateSubscriberOpts
   ) {
@@ -258,7 +255,7 @@ export class Composite {
     this.subscribers.add(subscriber);
 
     const disposeReaction = reaction(
-      () => subscriber.collect(this.query),
+      () => subscriber.collect(this),
       (collected, prevCollected) => {
         subscriber.onCollect(collected, prevCollected);
       },

@@ -121,18 +121,15 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
 
   const editor = useEditor();
 
-  const { template } = useCollector((query) => {
+  const { template } = useCollector((composite) => {
     let collectedTemplateValues;
 
-    const template = query.composite.getNodeFromId(
-      props.templateId,
-      t.Template
-    );
+    const template = composite.getNodeFromId(props.templateId, t.Template);
 
     if (template) {
       let parentNode: t.Template | null = null;
 
-      const parent = query.composite.getParent(template);
+      const parent = composite.getParent(template);
 
       if (parent && parent.node instanceof t.Template) {
         parentNode = parent.node;
@@ -259,8 +256,8 @@ type TemplateLayersProps = {
 };
 
 export const TemplateLayers = (props: TemplateLayersProps) => {
-  const { component } = useCollector((query) => ({
-    component: query.getComponentById(props.componentId),
+  const { component } = useCollector((composite) => ({
+    component: composite.getNodeFromId(props.componentId, t.CompositeComponent),
   }));
 
   if (!component) {

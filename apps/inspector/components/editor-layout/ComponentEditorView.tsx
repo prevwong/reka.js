@@ -59,7 +59,7 @@ export const ComponentEditorView = observer(() => {
   const componentEditor = editor.activeComponentEditor;
 
   const { frames } = useCollector(
-    (query) => {
+    (composite) => {
       if (!componentEditor) {
         return {
           frames: [],
@@ -67,7 +67,7 @@ export const ComponentEditorView = observer(() => {
       }
 
       return {
-        frames: query.composite
+        frames: composite
           .getExtension(UserFrameExtension)
           .state.frames.filter(
             (frame) => frame.name === componentEditor.component.name
