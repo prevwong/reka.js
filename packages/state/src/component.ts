@@ -60,7 +60,7 @@ export class ComponentViewEvaluator {
           props: Object.keys(this.template.props).reduce(
             (accum, key) => ({
               ...accum,
-              [key]: this.tree.evaluateExpr(
+              [key]: this.tree.computeExpr(
                 this.template.props[key],
                 this.ctx.env
               ),
@@ -98,7 +98,7 @@ export class ComponentViewEvaluator {
               this.env.set('$$children', slot);
 
               component.props.forEach((prop) => {
-                let propValue = this.tree.evaluateExpr(
+                let propValue = this.tree.computeExpr(
                   this.template.props[prop.name] || prop.init,
                   this.ctx.env
                 );
@@ -122,7 +122,7 @@ export class ComponentViewEvaluator {
               component.state.forEach((val) => {
                 this.env.set(
                   val.name,
-                  this.tree.evaluateExpr(val.init, this.env)
+                  this.tree.computeExpr(val.init, this.env)
                 );
               });
             });
