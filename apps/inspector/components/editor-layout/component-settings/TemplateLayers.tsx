@@ -66,9 +66,13 @@ const AddTemplateButton = (props: AddTemplateButtonProps) => {
               return;
             }
 
-            const parent = editor.composite.getParent(props.target, t.Template);
+            const parent = editor.composite.getParent(props.target);
 
             if (!parent) {
+              return;
+            }
+
+            if (!(parent.node instanceof t.Template)) {
               return;
             }
 
@@ -120,18 +124,25 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
   const { template } = useCollector((query) => {
     let collectedTemplateValues;
 
-    const template = query.getTemplateById(props.templateId);
+    const template = query.composite.getNodeFromId(
+      props.templateId,
+      t.Template
+    );
 
     if (template) {
+      let parentNode: t.Template | null = null;
+
+      const parent = query.composite.getParent(template);
+
+      if (parent && parent.node instanceof t.Template) {
+        parentNode = parent.node;
+      }
+
       collectedTemplateValues = {
         id: template.id,
-        name: getTemplateName(template.data),
-        // TODO:
-        parent: null,
-        grandparent: template.getParent()?.getParent(),
-        children: template.children.map((child) => child.id),
-        index: template.index,
-        data: template.data,
+        name: getTemplateName(template),
+        parent: parentNode,
+        data: template,
       };
     }
 
@@ -217,10 +228,12 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
                       return;
                     }
 
-                    // TODO:
-                    // editor.state.change(() => {
-                    //   parent.children.splice(template.index, 1);
-                    // });
+                    editor.composite.change(() => {
+                      parent.children.splice(
+                        parent.children.indexOf(template.data),
+                        1
+                      );
+                    });
                   });
                 }}
               >
@@ -230,8 +243,12 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
           </Box>
         </Box>
       </Box>
-      {template.children.map((child) => (
-        <RenderTemplateNode key={child} templateId={child} depth={depth + 1} />
+      {template.data.children.map((child) => (
+        <RenderTemplateNode
+          key={child.id}
+          templateId={child.id}
+          depth={depth + 1}
+        />
       ))}
     </Box>
   );
