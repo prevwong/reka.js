@@ -1,12 +1,13 @@
 import * as t from '@composite/types';
-import { observer } from 'mobx-react-lite';
+import { observer } from '@composite/react';
 import * as React from 'react';
 
 import { useEditor } from '@app/editor';
 
-import { ComponentContext } from './ComponentContext';
 import { View } from './view';
-import { ViewContext } from './view/ViewContext';
+import { useConnectDOM } from './useConnecttDom';
+
+import { ComponentContext } from '../ComponentContext';
 
 type RenderErrorViewProps = {
   view: t.ErrorSystemView;
@@ -22,47 +23,6 @@ export const RenderErrorView = observer((props: RenderErrorViewProps) => {
 
 type RenderElementViewProps = {
   view: t.ElementView;
-};
-
-const useConnectDOM = () => {
-  const editor = useEditor();
-
-  const component = React.useContext(ComponentContext);
-  const { view, parent: parentView } = React.useContext(ViewContext);
-
-  const connect = React.useCallback(
-    (dom: HTMLElement) => {
-      if (!editor.activeComponentEditor) {
-        return;
-      }
-
-      let template = view.template;
-
-      const isNonFrameRoot = () => {
-        if (
-          editor.activeComponentEditor?.activeFrame?.state.component.name ===
-          component.name
-        ) {
-          return false;
-        }
-
-        if (parentView && parentView instanceof t.CompositeComponentView) {
-          return parentView.render.indexOf(view) > -1;
-        }
-      };
-
-      if (isNonFrameRoot()) {
-        template = parentView?.template as any;
-      }
-
-      return editor.activeComponentEditor.connectTplDOM(dom, template);
-    },
-    [editor, component.name, parentView, view]
-  );
-
-  return {
-    connect,
-  };
 };
 
 export const RenderElementView = observer((props: RenderElementViewProps) => {

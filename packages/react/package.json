@@ -12,18 +12,19 @@
   "author": "Prev Wong",
   "license": "ISC",
   "peerDependencies": {
-    "react": "^16.8.0 || ^17 || ^18",
     "@composite/state": "workspace:*",
-    "@composite/types": "workspace:*"
+    "@composite/types": "workspace:*",
+    "react": "^16.8.0 || ^17 || ^18"
   },
   "dependencies": {
-    "mobx": "^6.3.13"
+    "mobx": "^6.3.13",
+    "mobx-react-lite": "^3.3.0"
   },
   "devDependencies": {
-    "react": "^17.0.2",
     "@composite/state": "workspace:*",
     "@composite/types": "workspace:*",
     "@types/react": "^17.0.33",
-    "@types/react-dom": "^17.0.10"
+    "@types/react-dom": "^17.0.10",
+    "react": "^17.0.2"
   }
 }

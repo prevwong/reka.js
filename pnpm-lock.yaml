@@ -198,9 +198,11 @@ importers:
       '@types/react': ^17.0.33
       '@types/react-dom': ^17.0.10
       mobx: ^6.3.13
+      mobx-react-lite: ^3.3.0
       react: ^17.0.2
     dependencies:
       mobx: 6.6.1
+      mobx-react-lite: 3.4.0_mobx@6.6.1+react@17.0.2
     devDependencies:
       '@composite/state': link:../state
       '@composite/types': link:../types
@@ -4113,6 +4115,23 @@ packages:
   /minimist/1.2.6:
     resolution: {integrity: sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==}
     dev: true
+
+  /mobx-react-lite/3.4.0_mobx@6.6.1+react@17.0.2:
+    resolution: {integrity: sha512-bRuZp3C0itgLKHu/VNxi66DN/XVkQG7xtoBVWxpvC5FhAqbOCP21+nPhULjnzEqd7xBMybp6KwytdUpZKEgpIQ==}
+    peerDependencies:
+      mobx: ^6.1.0
+      react: ^16.8.0 || ^17 || ^18
+      react-dom: '*'
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      mobx: 6.6.1
+      react: 17.0.2
+    dev: false
 
   /mobx-react-lite/3.4.0_vuaia3cr2ucdrk3q4mauc2kfvi:
     resolution: {integrity: sha512-bRuZp3C0itgLKHu/VNxi66DN/XVkQG7xtoBVWxpvC5FhAqbOCP21+nPhULjnzEqd7xBMybp6KwytdUpZKEgpIQ==}

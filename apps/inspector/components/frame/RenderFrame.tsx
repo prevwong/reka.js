@@ -8,7 +8,7 @@ import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
 
 import { FrameContext } from './FrameContext';
-import { Renderer } from './Renderer';
+import { Renderer } from './renderer';
 
 import { Box } from '../box';
 import { Text } from '../text';

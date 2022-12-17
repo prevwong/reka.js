@@ -6,8 +6,8 @@ import { useEditor } from '@app/editor';
 
 import { ViewContext } from './ViewContext';
 
-import { ComponentContext } from '../ComponentContext';
-import { FrameContext } from '../FrameContext';
+import { ComponentContext } from '../../ComponentContext';
+import { FrameContext } from '../../FrameContext';
 
 export const useView = () => {
   const frame = React.useContext(FrameContext);
@@ -100,6 +100,8 @@ export const useView = () => {
   ];
 
   return {
+    view,
+    parent: parentView,
     connect,
     className: classes.filter(Boolean).join(' '),
   };
