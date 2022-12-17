@@ -80,6 +80,13 @@ export class ViewEvaluator {
     return this._root.get();
   }
 
+  getViewFromId<T extends t.Type = t.Any>(
+    id: string,
+    expectedType?: t.TypeConstructor<T>
+  ) {
+    return this.rootObserver.getTypeFromId(id, expectedType);
+  }
+
   private diff(key: string, newView: t.View) {
     const existingView = this.tplKeyToView.get(key);
 

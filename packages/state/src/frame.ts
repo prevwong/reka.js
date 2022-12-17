@@ -1,3 +1,4 @@
+import * as t from '@composite/types';
 import { makeObservable, observable, action } from 'mobx';
 
 import { Composite } from './state';
@@ -42,6 +43,13 @@ export class Frame {
 
   get root() {
     return this.evaluator.root;
+  }
+
+  getViewFromId<T extends t.Type = t.Any>(
+    id: string,
+    expectedType?: t.TypeConstructor<T>
+  ) {
+    return this.evaluator.getViewFromId(id, expectedType);
   }
 
   enableSync() {
