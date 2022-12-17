@@ -15,6 +15,16 @@ class _Stringifier {
           node.right
         )}`;
       },
+      ObjectExpression: (node) => {
+        return `{ ${Object.keys(node.properties).reduce<string[]>(
+          (accum, key) => {
+            accum.push(`${key}:${this.stringify(node.properties[key])}`);
+
+            return accum;
+          },
+          []
+        )} }`;
+      },
       Identifier: (node) => node.name,
       Val: (node) => {
         return `val ${node.name} = ${this.stringify(node.init)};`;
