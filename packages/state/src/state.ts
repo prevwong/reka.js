@@ -111,48 +111,63 @@ export class State {
     this.resolver.resolveProgram();
 
     if (!this.syncGlobals) {
-      this.syncGlobals = computed(() => {
-        Object.entries(this.config.globals).forEach(([key, value]) => {
-          this.env.set(key, value);
-        });
+      this.syncGlobals = computed(
+        () => {
+          Object.entries(this.config.globals).forEach(([key, value]) => {
+            this.env.set(key, value);
+          });
 
-        this.root.globals.forEach((global) => {
-          this.env.set(
-            global.name,
-            computeExpression(global.init, this as any, this.env)
-          );
-        });
-      });
+          this.root.globals.forEach((global) => {
+            this.env.set(
+              global.name,
+              computeExpression(global.init, this as any, this.env)
+            );
+          });
+        },
+        {
+          keepAlive: true,
+        }
+      );
     }
 
     if (!this.syncComponents) {
-      this.syncComponents = computed(() => {
-        this.allComponents.forEach((component) => {
-          this.env.set(component.name, component);
-        });
-      });
+      this.syncComponents = computed(
+        () => {
+          this.allComponents.forEach((component) => {
+            this.env.set(component.name, component);
+          });
+        },
+        {
+          keepAlive: true,
+        }
+      );
     }
 
     if (!this.syncCleanupEnv) {
-      this.syncCleanupEnv = computed(() => {
-        const globalVarNames = [
-          ...Object.keys(this.config.globals),
-          ...this.root.globals.map((global) => global.name),
-        ];
-        const componentNames = this.allComponents.map(
-          (component) => component.name
-        );
+      this.syncCleanupEnv = computed(
+        () => {
+          const globalVarNames = [
+            ...Object.keys(this.config.globals),
+            ...this.root.globals.map((global) => global.name),
+          ];
+          const componentNames = this.allComponents.map(
+            (component) => component.name
+          );
 
-        const envBindingNames = [...globalVarNames, ...componentNames];
+          const envBindingNames = [...globalVarNames, ...componentNames];
 
-        for (const key of this.env.bindings.keys()) {
-          if (envBindingNames.indexOf(key) > -1) {
-            continue;
+          for (const key of this.env.bindings.keys()) {
+            if (envBindingNames.indexOf(key) > -1) {
+              continue;
+            }
+
+            this.env.delete(key);
           }
-
-          this.env.delete(key);
+        },
+        {
+          keepAlive: true,
         }
-      });
+      );
     }
 
     this.syncGlobals.get();
