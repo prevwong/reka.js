@@ -19,15 +19,20 @@ import { Box } from '../box';
 import { Link } from '../link';
 import { Tree } from '../tree';
 
-const diffAST = (oldAST: t.Program, newAST: t.Program) => {
-  const oldComponents = oldAST.components;
-  const newComponents = newAST.components;
+const _diffASTArrayTypes = <T extends t.Type>(
+  program: t.Program,
+  newProgram: t.Program,
+  getTarget: (program: t.Program) => T[],
+  isEqual: (a: T, b: T) => boolean
+) => {
+  const currentComponents = getTarget(program);
+  const newComponents = getTarget(newProgram);
 
-  const componentsToInsert: [t.CompositeComponent, number][] = [];
+  const componentsToInsert: [T, number][] = [];
 
   newComponents.forEach((newComponent, i) => {
-    const existingComponent = oldComponents.find(
-      (oldComponent) => oldComponent.name === newComponent.name
+    const existingComponent = currentComponents.find((oldComponent) =>
+      isEqual(oldComponent, newComponent)
     );
 
     if (!existingComponent) {
@@ -39,19 +44,37 @@ const diffAST = (oldAST: t.Program, newAST: t.Program) => {
   });
 
   componentsToInsert.forEach(([component, index], i) => {
-    oldComponents.splice(index + i, 0, component);
+    currentComponents.splice(index + i, 0, component);
   });
 
-  oldComponents
+  currentComponents
     .filter(
       (oldComponent) =>
-        !newComponents.find(
-          (newComponent) => newComponent.name === oldComponent.name
+        !newComponents.find((newComponent) =>
+          isEqual(oldComponent, newComponent)
         )
     )
     .forEach((component) => {
-      oldComponents.splice(oldComponents.indexOf(component), 1);
+      currentComponents.splice(currentComponents.indexOf(component), 1);
     });
+};
+
+const diffAST = (program: t.Program, newProgram: t.Program) => {
+  // Diff Globals
+  _diffASTArrayTypes(
+    program,
+    newProgram,
+    (program) => program.globals,
+    (a, b) => a.name === b.name
+  );
+
+  // Diff components
+  _diffASTArrayTypes(
+    program,
+    newProgram,
+    (program) => program.components,
+    (a, b) => a.name === b.name
+  );
 };
 
 const StyledCodeEditorContainer = styled('div', {
