@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "types": "./src/index.ts",
   "scripts": {
-    "generate-lezer-parser": "mkdir -p src/parser && lezer-generator src/composite.grammar -o src/parser/index.js",
+    "generate-lezer-parser": "mkdir -p src/parser && lezer-generator src/composite.grammar -o src/parser/index.js && pnpm -w run lint:fix",
     "generate-lezer-parser:watch": "nodemon --watch src/composite.grammar -x pnpm run generate-lezer-parser",
     "rollup:watch": "rollup -w -c rollup.config.js",
     "rollup:build": "rollup -c rollup.config.js",

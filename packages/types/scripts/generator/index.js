@@ -76,5 +76,7 @@ code += `}`;
 
 code = prettier.format(code, {
   parser: 'babel-ts',
+  singleQuote: true,
 });
+
 fs.writeFileSync('./src/types.generated.ts', code);
