@@ -1,5 +1,12 @@
 import * as t from '@composite/types';
-import { computed, IComputedValue, makeObservable, observable } from 'mobx';
+import {
+  action,
+  computed,
+  IComputedValue,
+  makeObservable,
+  observable,
+  runInAction,
+} from 'mobx';
 
 import { Scope } from './scope';
 import { Composite } from './state';
@@ -15,10 +22,9 @@ type CachedComponentResolver = {
 };
 
 export class Resolver {
-  private scope: Scope;
-
   identifiersToVariableDistance: Map<t.Identifier, number>;
 
+  private scope: Scope;
   private cachedComponentResolver: WeakMap<
     t.Component,
     CachedComponentResolver
@@ -40,12 +46,25 @@ export class Resolver {
     });
   }
 
+  getDistance(identifier: t.Identifier) {
+    return this.identifiersToVariableDistance.get(identifier);
+  }
+
+  removeDistance(identifier: t.Identifier) {
+    runInAction(() => {
+      this.identifiersToVariableDistance.delete(identifier);
+    });
+  }
+
+  private setDistance(identifier: t.Identifier, distance: number) {
+    runInAction(() => {
+      this.identifiersToVariableDistance.set(identifier, distance);
+    });
+  }
+
   resolveExpr(expr: t.Any, scope: Scope) {
     if (expr instanceof t.Identifier) {
-      this.identifiersToVariableDistance.set(
-        expr,
-        scope.getDistance(expr.name)
-      );
+      this.setDistance(expr, scope.getDistance(expr.name));
     }
 
     // TODO: assignment should be handled as binary expr
@@ -133,14 +152,14 @@ export class Resolver {
         key,
         computed: computed(() => {
           if (template instanceof t.ComponentTemplate) {
-            this.identifiersToVariableDistance.set(
+            this.setDistance(
               template.component,
               templateScope.getDistance(template.component.name)
             );
           }
 
           if (template.each) {
-            this.identifiersToVariableDistance.set(
+            this.setDistance(
               template.each.iterator,
               templateScope.getDistance(template.each.iterator.name)
             );
@@ -162,7 +181,6 @@ export class Resolver {
 
           if (template.if) {
             this.resolveExpr(template.if, templateScope);
-            // this.identifiersToVariableDistance.set(template.if, templateScope.getDistance(template.if))
           }
 
           if (template.classList) {

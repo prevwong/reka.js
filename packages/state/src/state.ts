@@ -94,7 +94,7 @@ export class Composite {
       hooks: {
         onDispose: (payload) => {
           if (payload.type instanceof t.Identifier) {
-            this.resolver.identifiersToVariableDistance.delete(payload.type);
+            this.resolver.removeDistance(payload.type);
           }
         },
       },

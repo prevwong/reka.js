@@ -58,8 +58,7 @@ export class Environment {
   }
 
   getByIdentifier(identifier: t.Identifier) {
-    const distance =
-      this.composite.resolver.identifiersToVariableDistance.get(identifier);
+    const distance = this.composite.resolver.getDistance(identifier);
 
     if (distance === undefined || distance === -1) {
       return this.composite.config.globals[identifier.name] || undefined;
