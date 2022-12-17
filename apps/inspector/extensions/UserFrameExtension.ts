@@ -96,7 +96,7 @@ export const UserFrameExtensionFactory = () =>
               return;
             }
 
-            stateFrame.updateProps(props);
+            stateFrame.setProps(props);
           });
         }
       );

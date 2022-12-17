@@ -37,7 +37,7 @@ export type TemplateEachComputationCache = {
   >;
 };
 
-export class ViewTree {
+export class ViewEvaluator {
   private declare rootObserver: Observer;
   private _root: IObservableValue<t.View | undefined>;
   private rootTemplate: t.ComponentTemplate;
@@ -75,10 +75,12 @@ export class ViewTree {
     this.rootTemplateObserver = new Observer(this.rootTemplate);
   }
 
+  get root() {
+    return this._root.get();
+  }
+
   private diff(key: string, newView: t.View) {
     const existingView = this.tplKeyToView.get(key);
-
-    // console.log("diff", key, newView, existingView);
 
     if (!existingView) {
       this.tplKeyToView.set(key, newView);
@@ -183,7 +185,7 @@ export class ViewTree {
           }
 
           if (template.if) {
-            const bool = this.evaluateExpr(template.if, ctx.env);
+            const bool = this.computeExpr(template.if, ctx.env);
 
             if (!bool) {
               return [];
@@ -195,7 +197,7 @@ export class ViewTree {
           if (classList) {
             ctx.classList = Object.keys(classList.properties).reduce(
               (accum, key) => {
-                const bool = this.evaluateExpr(
+                const bool = this.computeExpr(
                   classList.properties[key],
                   ctx.env
                 );
@@ -360,7 +362,7 @@ export class ViewTree {
 
     try {
       const props = Object.keys(template.props).reduce((accum, key) => {
-        const value = this.evaluateExpr(template.props[key], ctx.env);
+        const value = this.computeExpr(template.props[key], ctx.env);
 
         return {
           ...accum,
@@ -423,12 +425,8 @@ export class ViewTree {
     return componentEvaluator.compute();
   }
 
-  evaluateExpr(expr: t.Any, env: Environment) {
+  computeExpr(expr: t.Any, env: Environment) {
     return computeExpression(expr, this.state, env);
-  }
-
-  get root() {
-    return this._root.get();
   }
 
   computeTree() {
@@ -480,8 +478,10 @@ export class ViewTree {
     this.tplKeyToView = new Map();
   }
 
-  updateProps(props: Record<string, any>) {
-    this.rootTemplate.props = props;
+  setProps(props: Record<string, any>) {
+    runInAction(() => {
+      this.rootTemplate.props = props;
+    });
 
     this.computeTree();
   }

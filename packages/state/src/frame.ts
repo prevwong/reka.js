@@ -1,29 +1,30 @@
 import { makeObservable, observable, action } from 'mobx';
 
 import { State } from './state';
-import { ViewTree } from './view';
+import { ViewEvaluator } from './evaluator';
 
 type FrameComponentConfig = {
   name: string;
   props?: Record<string, any>;
 };
+
 export type FrameOpts = {
-  component: FrameComponentConfig;
   id?: string;
+  component: FrameComponentConfig;
 };
 
 export class Frame {
   id?: string;
-  tree: ViewTree;
   sync: boolean;
-
   component: FrameComponentConfig;
+
+  private evaluator: ViewEvaluator;
 
   constructor(opts: FrameOpts, state: State) {
     this.id = opts.id;
     this.component = opts.component;
 
-    this.tree = new ViewTree(
+    this.evaluator = new ViewEvaluator(
       this,
       this.component.name,
       this.component.props || {},
@@ -40,7 +41,7 @@ export class Frame {
   }
 
   get root() {
-    return this.tree.root;
+    return this.evaluator.root;
   }
 
   enableSync() {
@@ -52,19 +53,15 @@ export class Frame {
     this.sync = false;
   }
 
-  async render() {
+  render() {
     if (!this.sync) {
       return;
     }
 
-    return this.tree.computeTree();
+    return this.evaluator.computeTree();
   }
 
-  hardRerender() {
-    this.tree.dispose();
-  }
-
-  updateProps(props: Record<string, any>) {
-    this.tree.updateProps(props);
+  setProps(props: Record<string, any>) {
+    this.evaluator.setProps(props);
   }
 }

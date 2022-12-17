@@ -3,7 +3,7 @@ import { computed, IComputedValue, runInAction, untracked } from 'mobx';
 
 import { Environment } from './environment';
 import { createKey } from './utils';
-import { TemplateEvaluateContext, ViewTree } from './view';
+import { TemplateEvaluateContext, ViewEvaluator } from './evaluator';
 
 type ComponentViewTreeComputationCache = {
   component: t.Component;
@@ -22,7 +22,7 @@ export class ComponentViewEvaluator {
   private declare compositeComponentPropsComputation: IComputedValue<void> | null;
   private declare compositeComponentStateComputation: IComputedValue<void> | null;
 
-  private readonly tree: ViewTree;
+  private readonly tree: ViewEvaluator;
   private readonly ctx: TemplateEvaluateContext;
   private readonly template: t.ComponentTemplate;
 
@@ -31,7 +31,7 @@ export class ComponentViewEvaluator {
   readonly key: string;
 
   constructor(
-    tree: ViewTree,
+    tree: ViewEvaluator,
     ctx: TemplateEvaluateContext,
     template: t.ComponentTemplate,
     env: Environment,
