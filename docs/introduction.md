@@ -2,7 +2,7 @@
 
 Composite is a Javascript library for building UI components on the browser. 
 
-It's primarily built to eventually serve as the state management system to power Craft.js-based page builders.
+> It's primarily built to eventually serve as the state management system to power Craft.js-based page builders.
 
 ## Motivation
 

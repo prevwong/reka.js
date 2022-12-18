@@ -1,5 +1,4 @@
 import { useCollector } from '@composite/react';
-import { AnimatePresence } from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -149,7 +148,7 @@ export const ComponentEditorView = observer(() => {
       return;
     }
 
-    const width = containerDOM.getBoundingClientRect().width;
+    // const width = containerDOM.getBoundingClientRect().width;
     // TODO: scale
     // setFrameScale((width - 400) / width);
   }, [showViewTree]);

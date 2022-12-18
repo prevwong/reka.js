@@ -1,18 +1,16 @@
-import { Frame as CompositeFrame } from '@composite/state';
 import * as t from '@composite/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import IFrame from 'react-frame-component';
 
 import { useEditor } from '@app/editor';
-import { styled } from '@app/styles';
+import { ActiveFrame } from '@app/editor/ComponentEditor';
 
 import { FrameContext } from './FrameContext';
 import { Renderer } from './renderer';
 
 import { Box } from '../box';
 import { Text } from '../text';
-import { ActiveFrame } from '@app/editor/ComponentEditor';
 
 type RenderFrameProps = {
   frame: ActiveFrame;

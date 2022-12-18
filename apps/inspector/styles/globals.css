@@ -153,6 +153,12 @@ button {
   background: transparent;
 }
 
+pre,
+code {
+  font-family: JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, Liberation Mono, Courier New, monospace;
+}
+
 .cm-editor {
   height: 100%;
 }

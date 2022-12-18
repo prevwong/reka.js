@@ -21,6 +21,7 @@ const StyledScreen = styled('div', {
   flexDirection: 'row',
   overflow: 'hidden',
   background: '#fff',
+  height: '100%',
   position: 'relative',
 });
 
