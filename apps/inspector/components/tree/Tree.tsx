@@ -21,7 +21,6 @@ const TreeVisualizationContainer = styled('div', {
   ul: {
     margin: 0,
     paddingLeft: '10px',
-    overflow: 'auto',
   },
   '> ul': {
     cursor: 'default',
@@ -35,8 +34,7 @@ const TreeVisualizationContainer = styled('div', {
     margin: 0,
     listStyle: 'none',
     padding: '2px 4px',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
+
     transition: '0.2s ease-in-out',
     '&.change': {
       background: '#ccc',

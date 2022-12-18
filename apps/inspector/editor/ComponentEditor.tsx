@@ -10,7 +10,7 @@ import {
 
 import { Editor } from './Editor';
 
-type ActiveFrame = {
+export type ActiveFrame = {
   state: Frame;
   user: UserFrame;
   tplElements: WeakMap<t.Template, Set<HTMLElement>>;

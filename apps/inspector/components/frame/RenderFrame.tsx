@@ -12,43 +12,12 @@ import { Renderer } from './renderer';
 
 import { Box } from '../box';
 import { Text } from '../text';
+import { ActiveFrame } from '@app/editor/ComponentEditor';
 
 type RenderFrameProps = {
-  frame: CompositeFrame;
-  width?: string;
-  height?: string;
+  frame: ActiveFrame;
+  scale: number;
 };
-
-const StyledFrameContainer = styled('div', {
-  width: '100%',
-  height: '100%',
-  padding: 0,
-  overflow: 'hidden',
-  display: 'flex',
-  alignItems: 'center',
-  backgroundColor: '$grayA5',
-  '> iframe': {
-    display: 'block',
-    margin: '0 auto',
-    width: '100%',
-    height: '100%',
-    boxShadow: 'none',
-    border: '1px solid transparent',
-    borderRadius: 0,
-    background: '#fff',
-  },
-  variants: {
-    isNotFullWidth: {
-      true: {
-        padding: '$4',
-        '> iframe': {
-          borderColor: 'rgb(0 0 0 / 7%)',
-          borderRadius: '$1',
-        },
-      },
-    },
-  },
-});
 
 type SelectionBorderProps = {
   dom: HTMLElement;
@@ -276,31 +245,26 @@ const RenderSelectionBorders = observer(() => {
 export const RenderFrame = observer((props: RenderFrameProps) => {
   const editor = useEditor();
 
-  const isFullWidth = props.width === '100%' && props.height === '100%';
-  const isUnset = !props.width && !props.height;
-
-  const isNotFullWidth = !isFullWidth && !isUnset;
-
   return (
-    <StyledFrameContainer isNotFullWidth={isNotFullWidth}>
+    <React.Fragment>
       <IFrame
         initialContent='<!DOCTYPE html><html><head><link href="/tailwind.css" rel="stylesheet" /><link href="/frame.css" rel="stylesheet" /></head><body><div id="root"></div></body></html>'
         mountTarget="#root"
-        style={{
-          maxWidth: props.width,
-          maxHeight: props.height,
-        }}
         ref={(dom: any) => {
           editor.registerIframe(dom);
         }}
+        style={{ transform: `scale(${props.scale})` }}
       >
-        <FrameContext.Provider value={props.frame}>
-          {props.frame.root && (
-            <Renderer key={props.frame.root.id} view={props.frame.root} />
+        <FrameContext.Provider value={props.frame.state}>
+          {props.frame.state.root && (
+            <Renderer
+              key={props.frame.state.root.id}
+              view={props.frame.state.root}
+            />
           )}
         </FrameContext.Provider>
       </IFrame>
       <RenderSelectionBorders />
-    </StyledFrameContainer>
+    </React.Fragment>
   );
 });

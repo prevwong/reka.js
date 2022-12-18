@@ -1,5 +1,5 @@
 import { useCollector } from '@composite/react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -17,20 +17,47 @@ import { Text } from '../text';
 import { EnterTextField } from '../text-field';
 import { Tree } from '../tree';
 
-const StyledViewContainer = styled(motion.div, {
-  position: 'absolute',
+const StyledFrameContainer = styled('div', {
+  width: '100%',
+  height: '100%',
+  overflow: 'hidden',
+  display: 'flex',
+  alignItems: 'center',
+  backgroundColor: '$grayA5',
+  '> iframe': {
+    display: 'block',
+    margin: '0 auto',
+    width: '100%',
+    height: '100%',
+    boxShadow: 'none',
+    border: '1px solid transparent',
+    borderRadius: 0,
+    background: '#fff',
+  },
+  variants: {
+    isNotFullWidth: {
+      true: {
+        padding: '$4',
+        '> iframe': {
+          borderColor: 'rgb(0 0 0 / 7%)',
+          borderRadius: '$1',
+        },
+      },
+    },
+  },
+});
+
+const StyledViewContainer = styled('div', {
+  position: 'relative',
   background: 'rgba(255,255,255,0.9)',
-  bottom: '10px',
-  right: '$4',
-  width: '40%',
-  height: '80%',
-  px: '$4',
-  py: '$4',
-  backdropFilter: 'blur(10px)',
-  borderRadius: '$2',
-  overflow: 'scroll',
-  boxShadow: 'rgb(0 0 0 / 9%) 0px 3px 12px',
-  zIndex: '$4',
+  width: '350px',
+  '> div': {
+    px: '$2',
+    py: '$4',
+    overflow: 'auto',
+    width: '100%',
+    height: '100%',
+  },
 });
 
 const NoFrameSelectedMessage = () => {
@@ -49,6 +76,18 @@ const NoFrameSelectedMessage = () => {
   );
 };
 
+const isNotFullWidth = (
+  width: number | string | undefined,
+  height: number | string | undefined
+) => {
+  const isFullWidth = width === '100%' && height === '100%';
+  const isUnset = !width && !height;
+
+  const isNotFullWidth = !isFullWidth && !isUnset;
+
+  return isNotFullWidth;
+};
+
 export const ComponentEditorView = observer(() => {
   const editor = useEditor();
 
@@ -57,6 +96,9 @@ export const ComponentEditorView = observer(() => {
   const [isEditingFrame, setIsEditingFrame] = React.useState(false);
 
   const componentEditor = editor.activeComponentEditor;
+
+  const containerDOMRef = React.useRef<HTMLDivElement | null>(null);
+  const frameContainerDOMRef = React.useRef<HTMLDivElement | null>(null);
 
   const { frames } = useCollector(
     (composite) => {
@@ -93,8 +135,34 @@ export const ComponentEditorView = observer(() => {
     );
   }
 
+  const [frameScale, setFrameScale] = React.useState(1);
+
+  const computeFrameScale = React.useCallback(() => {
+    if (!showViewTree) {
+      setFrameScale(1);
+      return;
+    }
+
+    const { current: containerDOM } = containerDOMRef;
+
+    if (!containerDOM) {
+      return;
+    }
+
+    const width = containerDOM.getBoundingClientRect().width;
+    // TODO: scale
+    // setFrameScale((width - 400) / width);
+  }, [showViewTree]);
+
+  React.useEffect(() => {
+    computeFrameScale();
+  }, [computeFrameScale]);
+
   return (
-    <Box css={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <Box
+      css={{ display: 'flex', flexDirection: 'column', height: '100%' }}
+      ref={containerDOMRef}
+    >
       <Box
         css={{
           display: 'flex',
@@ -188,42 +256,43 @@ export const ComponentEditorView = observer(() => {
           </Box>
         </Box>
       </Box>
-      <Box css={{ position: 'relative', flex: 1, height: '100%' }}>
+      <Box
+        css={{
+          position: 'relative',
+          flex: 1,
+          height: '100%',
+          display: 'flex',
+          minHeight: 0,
+        }}
+      >
         {!componentEditor.activeFrame ? (
           <NoFrameSelectedMessage />
         ) : (
           <React.Fragment>
-            <RenderFrame
-              frame={componentEditor.activeFrame.state}
-              width={componentEditor.activeFrame.user.width}
-              height={componentEditor.activeFrame.user.height}
-            />
-            <AnimatePresence>
-              {componentEditor.activeFrame.state.root && showViewTree && (
-                <StyledViewContainer
-                  initial="enter"
-                  animate="show"
-                  exit="exit"
-                  variants={{
-                    enter: {
-                      opacity: 0,
-                      bottom: 0,
-                    },
-                    show: {
-                      opacity: 1,
-                      bottom: 10,
-                    },
-                    exit: {
-                      opacity: 0,
-                      bottom: 0,
-                    },
-                  }}
-                  transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
-                >
-                  <Tree root={componentEditor.activeFrame.state.root} />
-                </StyledViewContainer>
+            <StyledFrameContainer
+              ref={frameContainerDOMRef}
+              isNotFullWidth={isNotFullWidth(
+                componentEditor.activeFrame.user.width,
+                componentEditor.activeFrame.user.height
               )}
-            </AnimatePresence>
+              css={{
+                '> iframe': {
+                  maxWidth: componentEditor.activeFrame.user.width,
+                  maxHeight: componentEditor.activeFrame.user.height,
+                },
+              }}
+            >
+              <RenderFrame
+                frame={componentEditor.activeFrame}
+                scale={frameScale}
+              />
+            </StyledFrameContainer>
+
+            {componentEditor.activeFrame.state.root && showViewTree && (
+              <StyledViewContainer>
+                <Tree root={componentEditor.activeFrame.state.root} />
+              </StyledViewContainer>
+            )}
           </React.Fragment>
         )}
       </Box>
@@ -289,7 +358,7 @@ export const ComponentEditorView = observer(() => {
             }}
           >
             <Button onClick={() => setShowViewTree(!showViewTree)}>
-              Inspect View
+              Toggle View
             </Button>
           </Box>
         </Box>
