@@ -172,6 +172,7 @@ importers:
       eslint: ^8.23.0
       eslint-config-next: 12.2.5
       framer-motion: ^6.2.8
+      gray-matter: ^4.0.3
       lodash: ^4.17.21
       mdx-bundler: ^9.0.1
       mobx: ^6.6.1
@@ -220,6 +221,7 @@ importers:
       classnames: 2.3.2
       esbuild: 0.15.7
       framer-motion: 6.5.1_sfoxds7t5ydpegc3knd667wn6m
+      gray-matter: 4.0.3
       lodash: 4.17.21
       mdx-bundler: 9.0.1_esbuild@0.15.7
       mobx: 6.6.1
