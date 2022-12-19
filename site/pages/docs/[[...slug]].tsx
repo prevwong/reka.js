@@ -163,11 +163,12 @@ export async function getStaticProps({ params }: Params) {
 
   const contentArr = post.content.split('\n');
 
-  if (contentArr[0] === '# Composite' && params.slug[0] === 'introduction') {
-    contentArr.shift();
-  }
+  let title: string | undefined = post.title;
 
-  let title = post.title;
+  if (!title && contentArr[0].startsWith('# ')) {
+    const titleMarkdown = contentArr.shift();
+    title = titleMarkdown?.substring(2);
+  }
 
   if (params.slug[0] === 'introduction') {
     title = 'Introduction';
