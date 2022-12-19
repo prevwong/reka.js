@@ -1,15 +1,12 @@
-import { bundleMDX } from 'mdx-bundler';
-import { getMDXComponent } from 'mdx-bundler/client';
 import Link from 'next/link';
 import * as React from 'react';
-import rehypeRaw from 'rehype-raw';
-import remarkShikiTwoslash from 'remark-shiki-twoslash';
 
 import { Box } from '@app/components/box';
 import { Text } from '@app/components/text';
 import { DOCS_SIDEBAR } from '@app/constants/docs-sidebar';
 import { styled } from '@app/styles';
 import { getAllDocs, getDocBySlug } from '@app/utils/docs';
+import markdownToHtml from '@app/utils/markdown';
 
 const DocNav = styled('nav', {
   width: '15rem',
@@ -98,11 +95,6 @@ const DocPostSidebar = styled('div', {
 });
 
 const Docs = (props: any) => {
-  const Component = React.useMemo(
-    () => getMDXComponent(props.code),
-    [props.code]
-  );
-
   return (
     <Box css={{ py: '$5', display: 'flex', gap: '$3' }}>
       <DocNav>
@@ -142,9 +134,8 @@ const Docs = (props: any) => {
         <Box
           className="prose prose-md prose-headings:font-medium prose-h1:mt-8 mb-8 prose-code:bg-"
           css={{ maxWidth: '100%' }}
-        >
-          <Component />
-        </Box>
+          dangerouslySetInnerHTML={{ __html: props.doc.content }}
+        ></Box>
       </DocPostContent>
       <DocPostSidebar></DocPostSidebar>
     </Box>
@@ -182,30 +173,15 @@ export async function getStaticProps({ params }: Params) {
     title = 'Introduction';
   }
 
-  const result = await bundleMDX({
-    source: contentArr.join('\n'),
-    mdxOptions: (options) => {
-      options.remarkPlugins = [
-        ...(options.remarkPlugins ?? []),
-        [remarkShikiTwoslash, { theme: 'github-dark' }],
-      ];
-
-      options.rehypePlugins = [...(options.rehypePlugins ?? []), [rehypeRaw]];
-
-      return options;
-    },
-  });
-
-  const { code, frontmatter } = result;
+  const content = await markdownToHtml(contentArr.join('\n') || '');
 
   return {
     props: {
       slug,
-      code,
-      frontmatter,
       doc: {
         ...post,
         title,
+        content,
       },
     },
   };
