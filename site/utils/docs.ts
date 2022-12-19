@@ -3,6 +3,8 @@ import { join } from 'path';
 
 import matter from 'gray-matter';
 
+import { DOCS_SIDEBAR } from '@app/constants/docs-sidebar';
+
 const postsDirectory = join(process.cwd(), '../docs');
 
 export function getDocSlugs() {
@@ -39,10 +41,14 @@ export function getDocBySlug(slug: string, fields: string[] = []) {
 }
 
 export function getAllDocs(fields: string[] = []) {
-  const slugs = getDocSlugs();
-  const posts = slugs
-    .map((slug) => getDocBySlug(slug, fields))
-    // sort posts by date in descending order
-    .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
-  return posts;
+  const slugs = [
+    ...DOCS_SIDEBAR.main.map((link) => link.href),
+    ...DOCS_SIDEBAR.categories.flatMap((category) =>
+      category.children.map((child) => child.href)
+    ),
+  ].filter((link) => link != '#');
+
+  const docs = slugs.map((slug) => getDocBySlug(slug, fields));
+
+  return docs;
 }

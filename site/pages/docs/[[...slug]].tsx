@@ -118,7 +118,9 @@ const Docs = (props: any) => {
                 {category.children.map((child, i) => {
                   return (
                     <Link key={i} href={child.href} passHref legacyBehavior>
-                      <DocLink>{child.title}</DocLink>
+                      <DocLink active={props.slug === child.href}>
+                        {child.title}
+                      </DocLink>
                     </Link>
                   );
                 })}
@@ -194,7 +196,7 @@ export async function getStaticPaths() {
   const paths = docs.map((doc) => {
     return {
       params: {
-        slug: [doc.slug],
+        slug: doc.slug.split('/'),
       },
     };
   });

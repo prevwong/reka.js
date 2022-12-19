@@ -20,8 +20,8 @@ export const DOCS_SIDEBAR: DocSidebar = {
       href: 'introduction',
     },
     {
-      title: 'Basic Setup',
-      href: 'setup',
+      title: 'Motivation',
+      href: 'motivation',
     },
   ],
   categories: [
@@ -30,19 +30,32 @@ export const DOCS_SIDEBAR: DocSidebar = {
       children: [
         {
           title: 'State',
-          href: '#',
-        },
-        {
-          title: 'Frame',
-          href: '#',
+          href: 'concepts/state',
         },
         {
           title: 'Components',
+          href: 'concepts/components',
+        },
+        {
+          title: 'Frame',
+          href: 'concepts/frame',
+        },
+      ],
+    },
+    {
+      title: 'Guides',
+      children: [
+        {
+          title: 'Basic setup',
+          href: 'guides/setup',
+        },
+        {
+          title: 'Realtime Collaboration',
           href: '#',
         },
         {
           title: 'Extensions',
-          href: '#',
+          href: 'guides/extensions',
         },
       ],
     },
