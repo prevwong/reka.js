@@ -246,7 +246,7 @@ export const RenderFrame = observer((props: RenderFrameProps) => {
   return (
     <React.Fragment>
       <IFrame
-        initialContent='<!DOCTYPE html><html><head><link href="/tailwind.css" rel="stylesheet" /><link href="/frame.css" rel="stylesheet" /></head><body><div id="root"></div></body></html>'
+        initialContent='<!DOCTYPE html><html><head><link href="/frame.css" rel="stylesheet" /><link href="/frame.css" rel="stylesheet" /></head><body><div id="root"></div></body></html>'
         mountTarget="#root"
         ref={(dom: any) => {
           editor.registerIframe(dom);

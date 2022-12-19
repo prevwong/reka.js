@@ -3,15 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "tailwind:watch": "tailwindcss -i ./styles/tailwind.css -o ./public/tailwind.css --watch",
-    "tailwind:build": "tailwindcss -i ./styles/tailwind.css -o ./public/tailwind.css",
-    "next:dev": "next dev",
-    "next:build": "next build",
-    "dev": "run-p tailwind:watch next:dev",
-    "build": "run-s tailwind:build next:build",
+    "build:frame-styles": "tailwindcss -c tailwind-frame.config.js -i ./styles/frame.css -o ./public/frame.css",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "encode-dummy-program": "tsx ./scripts/encodeInitialContent.ts"
+    "encode-dummy-program": "tsx ./scripts/encodeInitialContent.ts",
+    "postinstall": "run-s build:frame-styles"
   },
   "dependencies": {
     "@codemirror/basic-setup": "^0.19.1",
@@ -66,8 +64,10 @@
     "@types/randomcolor": "^0.5.6",
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",
+    "autoprefixer": "^10.4.13",
     "eslint": "^8.23.0",
     "eslint-config-next": "12.2.5",
+    "postcss": "^8.4.20",
     "tailwindcss": "^3.2.1",
     "typescript": "4.8.2"
   }

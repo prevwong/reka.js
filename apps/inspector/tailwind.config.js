@@ -8,11 +8,5 @@ module.exports = {
   theme: {
     extend: {},
   },
-  safelist: [
-    {
-      pattern: /.*/,
-      variants: ['hover'],
-    },
-  ],
   plugins: [require('@tailwindcss/typography')],
 };

@@ -24,12 +24,17 @@ export const Layout = (props: LayoutProps) => {
             ? `${props.meta.title} - ${SITE_TITLE}`
             : SITE_TITLE}
         </title>
-        <link href="/tailwind.css" rel="stylesheet" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <Box css={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-        <Header />
-        <Box css={{ marginTop: '50px', height: '100%' }}>{props.children}</Box>
+      <Header />
+      <Box
+        css={{
+          position: 'relative',
+          top: '50px',
+          height: 'calc(100vh - 50px)',
+        }}
+      >
+        {props.children}
       </Box>
     </React.Fragment>
   );

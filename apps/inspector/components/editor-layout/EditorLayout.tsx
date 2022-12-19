@@ -23,6 +23,7 @@ const StyledScreen = styled('div', {
   background: '#fff',
   height: '100%',
   position: 'relative',
+  flex: 1,
 });
 
 const LEFT_SIDEBAR_WIDTH = 250;
