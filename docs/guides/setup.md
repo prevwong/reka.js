@@ -8,17 +8,18 @@ npm install @composite/types @composite/state
 
 ## Define a new State
 
-The first step is to create a new `Composite` instance. The `Composite` class requires a `State` data type which is used to contain components that has been created by the end-user. 
+First, we need a new `Composite` instance which requires a `State` data type - to contain a list of components and global variables created by the end-user.
 
-Let's create an initial `State` with a simple App component:
-
+For now, we will create an initial `State` type with a simple App component:
 
 ```tsx
 import { Composite } from '@composite/state';
 import * as t from '@composite/types';
 
-const composite = new Composite({
-    state: t.State({
+const composite = new Composite();
+
+composite.load(
+    t.State({
         program: t.Program({
             components: [
                 t.CompositeComponent({
@@ -44,10 +45,10 @@ const composite = new Composite({
             ]
         })
     })
-})
+)
 ```
 
-In the above example, we've created a `State` that is equivalent to the following the React component:
+The above example is equivalent to the following the React component:
 
 ```tsx
 const App = () => {
@@ -76,12 +77,12 @@ const frame = composite.createFrame({
 
 The `Frame` instance computes a `View` which is essentially the resulting render output of a component's instance. 
 
-You can retrieve the computed `View` by accessing `frame.root`:
+We can retrieve the computed `View` by accessing `root` property of a `Frame`:
 
 ```tsx
 const view = frame.root;
 
-// view:
+// view =
 {
     type: "CompositeComponentView",
     component: '...',
@@ -108,12 +109,14 @@ const view = frame.root;
 
 Now that we have a working `Composite` instance with a valid `State`, let's try to make some changes to it. 
 
+Changes made to the `State` must be wrapped with the `.change()` method.
+
 For example, let's add a new `<button>` element:
 
 ```tsx
-composite.change(() => {
-    const appComponent = composite.state.components[0];
+const appComponent = composite.state.components[0];
 
+composite.change(() => {
     appComponent.template.children.push(t.tagTemplate({
         tag: 'button',
         props: {},
@@ -127,20 +130,29 @@ composite.change(() => {
             })
         ]
     }));
-})
+});
+
+console.log(appComponent.template.children[1]);
+
+// console:
+{ type: "TagTemplate", tag: "button", props: {}, children: [...] }
 ```
 
 ### Views are automatically updated
 
-We created a `Frame` instance from before, what happens to its `View` when we performed the above mutation? Well, its `View` is automatically updated to reflect the changes made in the `State`: 
+We created a `Frame` instance from before, but what happens to its `View` when we performed the above mutation? 
+
+Well, its `View` is automatically updated to reflect the changes made in the `State`: 
 
 ```tsx
 // from previous example
 const frame = composite.createFrame(...)
+
 composite.change(() => {...});
 
-console.log(frame.root);
+console.log(appComponent.template.children[1]);
 
+console.log(frame.root);
 // console:
 {
     type: "CompositeComponentView",
@@ -158,7 +170,9 @@ console.log(frame.root);
                 },
                 children: []
             },
-             {
+            // View has been updated to contain the following child View
+            // as a result of the mutation to add a new <button> TagTemplate in the State
+            {
                 type: 'ElementTagView',
                 tag: 'button',
                 props: {},
@@ -202,7 +216,6 @@ composite.change(() => {
 composite.change(() => {
     appComponent.template.tag = 'div';
 })
-
 // 2) console: appComponent => div
 ```
 
@@ -216,8 +229,17 @@ const frame = composite.createFrame(...);
 
 const appComponent = composite.state.components[0];
 
-
 composite.subscribe(() => {
-    console.log('frame root tag', )
+    console.log('frame root tag =>', frame.root.tag);
 })
+
+composite.change(() => {
+    appComponent.template.tag = 'section';
+})
+// 1) console: frame root tag => section
+
+composite.change(() => {
+    appComponent.template.tag = 'div';
+})
+// 2) console: frame root tag => div
 ```

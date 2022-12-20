@@ -51,7 +51,7 @@ export const DOCS_SIDEBAR: DocSidebar = {
         },
         {
           title: 'Realtime Collaboration',
-          href: '#',
+          href: 'guides/realtime',
         },
         {
           title: 'Extensions',
