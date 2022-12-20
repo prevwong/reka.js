@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -47,9 +48,54 @@ const AppToolbar = () => {
   );
 };
 
-export const Header = observer(() => {
-  const router = useRouter();
+type HeaderToolbarProps<T extends Record<string, React.ReactElement>> = {
+  toolbars: T;
+  renderToolbar: (path: string) => keyof T | null;
+};
 
+const HeaderToolbars = <T extends Record<string, React.ReactElement>>(
+  props: HeaderToolbarProps<T>
+) => {
+  const router = useRouter();
+  const c = props.renderToolbar(router.asPath);
+  return (
+    <React.Fragment>
+      {Object.keys(props.toolbars).map((key) => {
+        return (
+          <AnimatePresence initial={false}>
+            {c === key && (
+              <motion.div
+                key={key}
+                animate="enter"
+                initial="exit"
+                exit="exit"
+                style={{ position: 'relative' }}
+                variants={{
+                  enter: {
+                    right: '0px',
+                    opacity: 1,
+                  },
+                  exit: {
+                    right: '-10px',
+                    opacity: 0,
+                  },
+                }}
+                transition={{
+                  ease: [0.19, 1, 0.22, 1],
+                  duration: 0.4,
+                }}
+              >
+                {props.toolbars[key]}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        );
+      })}
+    </React.Fragment>
+  );
+};
+
+export const Header = observer(() => {
   return (
     <React.Fragment>
       <Box
@@ -64,6 +110,7 @@ export const Header = observer(() => {
           top: 0,
           zIndex: '$1',
           width: '100%',
+          overflow: 'hidden',
         }}
       >
         <Box css={{ display: 'flex', ai: 'center' }}>
@@ -85,7 +132,19 @@ export const Header = observer(() => {
               <Link href="/docs/introduction">Documentation</Link>
             </Menu>
           </Box>
-          <Box>{router.pathname === '/' && <AppToolbar />}</Box>
+
+          <HeaderToolbars
+            toolbars={{
+              app: <AppToolbar />,
+            }}
+            renderToolbar={(path) => {
+              if (path === '/') {
+                return 'app';
+              }
+
+              return null;
+            }}
+          />
         </Box>
       </Box>
     </React.Fragment>
