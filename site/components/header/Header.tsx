@@ -62,10 +62,9 @@ const HeaderToolbars = <T extends Record<string, React.ReactElement>>(
     <React.Fragment>
       {Object.keys(props.toolbars).map((key) => {
         return (
-          <AnimatePresence initial={false}>
+          <AnimatePresence key={key} initial={false}>
             {c === key && (
               <motion.div
-                key={key}
                 animate="enter"
                 initial="exit"
                 exit="exit"
