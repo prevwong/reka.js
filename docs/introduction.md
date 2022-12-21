@@ -12,7 +12,7 @@ It's primarily built to eventually serve as the new state management system to p
 
 ## Features
 
-### AST-based State
+### AST-based State :zap:
 
 Composite's State is an AST which enables end-users to build complex UI components with features that developers are familiar with from UI frameworks such as React:
 
@@ -68,7 +68,7 @@ const App = () => {
 
 This essentially means that you could build page editors where your end-users are able to design entire UI components with stateful values and templating capabilities (ie: conditionally rendering elements, expressions as props, rendering elements from a list etc)
 
-### Portable
+### Portable :car:
 
 Composite computes a component instance from its State by outputing a simple JSON structure called the `View`: 
 
@@ -96,7 +96,7 @@ Whenever there's a change made to the State (eg: adding a new child to a parent 
 
 The `View` is a simple serialisable JSON structure So regardless of what UI framework you're working with to build your page builder, whether it's React, Vue or Svelte - building a renderer for Composite simply means taking this JSOn structure and rendering it in your preferred UI framework.
 
-### Extensible State
+### Extensible State :hammer:
 
 Of course, page builders often times may require additional data to be stored as part of the `State`. For example, you want your end users to be able to leave a comment on a template element; you can store these comments directly as part of the `State`: 
 
@@ -131,7 +131,7 @@ composite.change(() => {
 })
 ```
 
-### Realtime Collaboration
+### Realtime Collaboration :tada:
 
 Oh, you need multiplayer in your page editor too? No problem, Composite provides an external package that allows realtime collaboration via a fully-featured CRDT backed by Yjs
 
