@@ -6,31 +6,16 @@ import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { ExtensionDefinition, ExtensionRegistry } from './extension';
 import { Frame, FrameOpts } from './frame';
+import { StateOpts, StateSubscriber, StateSubscriberOpts } from './interfaces';
 import { ChangeListenerSubscriber, Observer } from './observer';
 import { Resolver } from './resolver';
 
-type StateOpts = {
-  components?: t.Component[];
-  globals?: Record<string, any>;
-  extensions?: ExtensionDefinition<any>[];
-};
-
-type StateSubscriberOpts = {
-  fireImmediately?: boolean;
-};
-
-type StateSubscriber<C> = {
-  collect: (composite: Composite) => C;
-  onCollect: (collected: C, prevCollected: C) => void;
-  opts: StateSubscriberOpts;
-};
-
 export class Composite {
   frames: Frame[];
-  declare state: t.State;
 
-  private declare env: Environment;
-  private declare resolver: Resolver;
+  declare state: t.State;
+  declare env: Environment;
+  declare resolver: Resolver;
 
   private declare observer: Observer<t.State>;
   private declare extensionRegistry: ExtensionRegistry;
