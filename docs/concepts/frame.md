@@ -35,7 +35,7 @@ For example, let's say we created a `Frame` for the Button component above with 
 
 The `View` is essentially the resulting static output of a component. The `View` of a `Frame` is recomputed when the component’s definition in the state is updated or when a side effect (ie: mutating a global variable) is performed. 
 
-### Applying changes on State changes
+## Applying changes on State changes
 
 Apart from generating the `View` of a component from the state, a `Frame` is also responsible for keeping the `View` updated to any changes made to the state.
 
