@@ -9,17 +9,17 @@ import { Frame, FrameOpts } from './frame';
 import { ChangeListenerSubscriber, Observer } from './observer';
 import { Resolver } from './resolver';
 
-export type StateOpts = {
+type StateOpts = {
   components?: t.Component[];
   globals?: Record<string, any>;
   extensions?: ExtensionDefinition<any>[];
 };
 
-export type StateSubscriberOpts = {
+type StateSubscriberOpts = {
   fireImmediately?: boolean;
 };
 
-export type StateSubscriber<C> = {
+type StateSubscriber<C> = {
   collect: (composite: Composite) => C;
   onCollect: (collected: C, prevCollected: C) => void;
   opts: StateSubscriberOpts;
@@ -27,10 +27,10 @@ export type StateSubscriber<C> = {
 
 export class Composite {
   frames: Frame[];
-
-  declare env: Environment;
-  declare resolver: Resolver;
   declare state: t.State;
+
+  private declare env: Environment;
+  private declare resolver: Resolver;
 
   private declare observer: Observer<t.State>;
   private declare extensionRegistry: ExtensionRegistry;

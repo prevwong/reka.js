@@ -1,11 +1,10 @@
 // @ts-nocheck
+import kebabCase from 'lodash/kebabCase';
 import rehypeStringify from 'rehype-stringify';
 import { remark } from 'remark';
+import emoji from 'remark-emoji';
 import remarkRehype from 'remark-rehype';
 import remarkShikiTwoslash from 'remark-shiki-twoslash';
-import emoji from 'remark-emoji';
-
-import kebabCase from 'lodash/kebabCase';
 
 type Section = {
   text: string;
