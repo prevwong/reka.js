@@ -47,6 +47,7 @@
     "react-frame-component": "^5.2.3",
     "rehype-stringify": "^9.0.3",
     "remark": "^14.0.2",
+    "remark-emoji": "^3.0.2",
     "remark-rehype": "^10.1.0",
     "remark-shiki-twoslash": "^3.1.0",
     "shiki": "^0.11.1",

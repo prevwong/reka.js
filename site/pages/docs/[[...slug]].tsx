@@ -14,7 +14,7 @@ const DocNav = styled('nav', {
   flexDirection: 'column',
   px: '$4',
   overflow: 'auto',
-  height: '100vh',
+  height: 'calc(100vh - 50px)',
   position: 'sticky',
   top: '5rem',
 });
@@ -43,8 +43,8 @@ const DocLink = styled('a', {
     },
     active: {
       true: {
-        backgroundColor: '$primary1',
-        color: '$primary',
+        backgroundColor: '$primary1!important',
+        color: '$primary!important',
         fontWeight: 400,
       },
     },
@@ -52,10 +52,13 @@ const DocLink = styled('a', {
 });
 
 const DocPostContent = styled('div', {
+  py: '$5',
   px: '$8',
   flex: 1,
   margin: '0 auto',
   maxWidth: '1000px',
+  display: 'flex',
+  gap: '$4',
   'code:not(pre code)': {
     backgroundColor: '$secondary',
     padding: '5px',
@@ -90,13 +93,9 @@ const DocPostContentHeader = styled('div', {
   },
 });
 
-const DocPostSidebar = styled('div', {
-  width: '15rem',
-});
-
 const Docs = (props: any) => {
   return (
-    <Box css={{ py: '$5', display: 'flex', gap: '$3' }}>
+    <Box css={{ display: 'flex', gap: '$3' }}>
       <DocNav>
         <Box>
           {DOCS_SIDEBAR.main.map((link, i) => (
@@ -130,16 +129,22 @@ const Docs = (props: any) => {
         </Box>
       </DocNav>
       <DocPostContent>
-        <DocPostContentHeader>
-          <h1>{props.doc.title}</h1>
-        </DocPostContentHeader>
-        <Box
-          className="prose prose-md prose-headings:font-medium prose-h1:mt-8 mb-8 prose-code:bg-"
-          css={{ maxWidth: '100%' }}
-          dangerouslySetInnerHTML={{ __html: props.doc.content }}
-        ></Box>
+        <Box css={{ width: '100%' }}>
+          <DocPostContentHeader>
+            <h1>{props.doc.title}</h1>
+          </DocPostContentHeader>
+          <Box
+            className="prose prose-md prose-headings:font-medium prose-h1:mt-8 mb-8 prose-code:bg-"
+            css={{
+              maxWidth: '100%',
+              '> h2 > a': {
+                textDecoration: 'none',
+              },
+            }}
+            dangerouslySetInnerHTML={{ __html: props.doc.content }}
+          ></Box>
+        </Box>
       </DocPostContent>
-      <DocPostSidebar></DocPostSidebar>
     </Box>
   );
 };
@@ -176,7 +181,7 @@ export async function getStaticProps({ params }: Params) {
     title = 'Introduction';
   }
 
-  const content = await markdownToHtml(contentArr.join('\n') || '');
+  const [content, sections] = await markdownToHtml(contentArr.join('\n') || '');
 
   return {
     props: {
@@ -185,6 +190,7 @@ export async function getStaticProps({ params }: Params) {
         ...post,
         title,
         content,
+        sections,
       },
     },
   };

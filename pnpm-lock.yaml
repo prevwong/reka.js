@@ -19,6 +19,7 @@ importers:
       eslint-plugin-prettier: ^4.2.1
       eslint-plugin-react: ^7.31.11
       eslint-plugin-react-hooks: ^4.6.0
+      getdocs-ts: ^0.1.5
       nodemon: ^2.0.19
       npm-run-all: ^4.1.5
       prettier: ^2.7.1
@@ -43,6 +44,7 @@ importers:
       eslint-plugin-prettier: 4.2.1_tgumt6uwl2md3n6uqnggd6wvce
       eslint-plugin-react: 7.31.11_eslint@8.23.0
       eslint-plugin-react-hooks: 4.6.0_eslint@8.23.0
+      getdocs-ts: 0.1.5
       nodemon: 2.0.19
       npm-run-all: 4.1.5
       prettier: 2.7.1
@@ -185,6 +187,7 @@ importers:
       react-frame-component: ^5.2.3
       rehype-stringify: ^9.0.3
       remark: ^14.0.2
+      remark-emoji: ^3.0.2
       remark-rehype: ^10.1.0
       remark-shiki-twoslash: ^3.1.0
       shiki: ^0.11.1
@@ -232,6 +235,7 @@ importers:
       react-frame-component: 5.2.3_sfoxds7t5ydpegc3knd667wn6m
       rehype-stringify: 9.0.3
       remark: 14.0.2
+      remark-emoji: 3.0.2
       remark-rehype: 10.1.0
       remark-shiki-twoslash: 3.1.0
       shiki: 0.11.1
@@ -2782,6 +2786,10 @@ packages:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
     dev: true
 
+  /emoticon/4.0.1:
+    resolution: {integrity: sha512-dqx7eA9YaqyvYtUhJwT4rC1HIp82j5ybS1/vQ42ur+jBe17dJMwZE4+gvL1XadSFfxaPFFGt3Xsw+Y8akThDlw==}
+    dev: false
+
   /err-code/3.0.1:
     resolution: {integrity: sha512-GiaH0KJUewYok+eeY05IIgjtAe4Yltygk9Wqp1V5yVWLdhf0hYZchRjNIT9bb0mSwRcIusT3cx7PJUf3zEIfUA==}
     dev: false
@@ -3864,6 +3872,13 @@ packages:
     resolution: {integrity: sha512-X8u8fREiYOE6S8hLbq99PeykTDoLVnxvF4DjWKJmz9xy2nNRdUcV8ZN9tniJFeKyTU3qnC9lL8n4Chd6LmVKHg==}
     dev: false
 
+  /getdocs-ts/0.1.5:
+    resolution: {integrity: sha512-Mr3EdAeeaZA9rw3zAGhFmrWusfWiNBPm1xzp1QoKVsWZPIKV7hVMp3UcNHiKTKgGYEfpUta0N0NbG1eC3vv7Hg==}
+    hasBin: true
+    dependencies:
+      typescript: 4.8.2
+    dev: true
+
   /glob-parent/5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
     engines: {node: '>= 6'}
@@ -4782,6 +4797,12 @@ packages:
       tslib: 2.4.0
     dev: false
 
+  /node-emoji/1.11.0:
+    resolution: {integrity: sha512-wo2DpQkQp7Sjm2A0cq+sN7EHKO6Sl0ctXeBdFZrL9T9+UywORbufTcTZxom8YqpLQt/FqNMUkOpkZrJVYSKD3A==}
+    dependencies:
+      lodash: 4.17.21
+    dev: false
+
   /node-releases/2.0.7:
     resolution: {integrity: sha512-EJ3rzxL9pTWPjk5arA0s0dgXpnyiAbJDE6wHT62g7VsgrgQgmmZ+Ru++M1BFofncWja+Pnn3rEr3fieRySAdKQ==}
 
@@ -5332,6 +5353,15 @@ packages:
       '@types/hast': 2.3.4
       hast-util-to-html: 8.0.3
       unified: 10.1.2
+    dev: false
+
+  /remark-emoji/3.0.2:
+    resolution: {integrity: sha512-hEgxEv2sBtvhT3tNG/tQeeFY3EbslftaOoG14dDZndLo25fWJ6Fbg4ukFbIotOWWrfXyASjXjyHT+6n366k3mg==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dependencies:
+      emoticon: 4.0.1
+      node-emoji: 1.11.0
+      unist-util-visit: 4.1.1
     dev: false
 
   /remark-parse/10.0.1:
