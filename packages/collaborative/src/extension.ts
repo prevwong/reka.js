@@ -6,7 +6,7 @@ import { YjsCompositeSyncProvider } from './YjsCompositeSyncProvider';
 
 const CompositeToYSyncProviders = new WeakMap();
 
-export const CollabExtensionFactory = (type: Y.Map<any>) =>
+export const createCollabExtension = (type: Y.Map<any>) =>
   createExtension({
     key: 'collaboration',
     init: (ext) => {

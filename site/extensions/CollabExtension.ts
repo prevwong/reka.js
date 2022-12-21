@@ -1,7 +1,5 @@
-import { CollabExtensionFactory } from '@composite/collaborative';
+import { createCollabExtension } from '@composite/collaborative';
 
 import { getCollaborativeYjsType } from '@app/utils';
 
-export const CollabExtension = CollabExtensionFactory(
-  getCollaborativeYjsType()
-);
+export const CollabExtension = createCollabExtension(getCollaborativeYjsType());
