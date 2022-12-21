@@ -10,13 +10,15 @@ import markdownToHtml from '@app/utils/markdown';
 
 const DocNav = styled('nav', {
   width: '15rem',
-  display: 'flex',
-  flexDirection: 'column',
-  px: '$4',
-  overflow: 'auto',
-  height: 'calc(100vh - 50px)',
-  position: 'sticky',
-  top: '5rem',
+  '> div': {
+    display: 'flex',
+    flexDirection: 'column',
+    px: '$4',
+    overflow: 'auto',
+    height: 'calc(100vh - 50px)',
+    position: 'sticky',
+    top: '5rem',
+  },
 });
 
 const DocLink = styled('a', {
@@ -52,13 +54,18 @@ const DocLink = styled('a', {
 });
 
 const DocPostContent = styled('div', {
-  py: '$5',
-  px: '$8',
   flex: 1,
-  margin: '0 auto',
-  maxWidth: '1000px',
-  display: 'flex',
-  gap: '$4',
+  overflowX: 'hidden',
+  '> div': {
+    py: '$5',
+    px: '$8',
+    margin: '0 auto',
+    maxWidth: '100%',
+    '@media screen and (min-width: 1000px)': {
+      maxWidth: '1000px',
+    },
+  },
+
   'code:not(pre code)': {
     backgroundColor: '$secondary',
     padding: '5px',
