@@ -2,16 +2,14 @@
 
 The dreaded task of synching changes made to your page builder. Luckily, Composite provides an external `@composite/collaboration` package that does all the hard work for us.
 
-This package is powered by `Yjs` - a library for building [CRDTs](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type), so it's recommended that you get familiar with some of its concepts. 
-
-
+This package is powered by `Yjs` - a library for building [CRDTs](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type), it's recommended that you get familiar with some of its concepts. 
 
 
 ## CRDTs
 
 CRDT data structures are one of the ways to achieve realtime collaboration. In Composite, the `State` data structure by itself is **not** a CRDT and has no realtime collaborative capabilities; this is by design so that we can keep the core of Composite more portable and we don't assume that everyone needs multiplayer features in their page builders. (even if it's very cool)
 
-The `@composite/collaboration` package provides as a Composite `Extension` where the core `State` data structure is mirrored by a Yjs CRDT. 
+The `@composite/collaboration` package provides a Composite `Extension` where the core `State` data structure is mirrored by a Yjs CRDT. 
 
 Whenever there's a change that happens in the core `State` structure:
 - Those changes are propagated to the mirrored CRDT, and all clients across the network will receive these changes in their own respective CRDTs
