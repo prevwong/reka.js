@@ -13,7 +13,7 @@ export const GlobalSettings = observer(() => {
 
   return (
     <SettingSection
-      collapsedOnInitial={false}
+      collapsedOnInitial={true}
       title="Global Variables"
       onAdd={() => {
         setIsAddingNewGlobal(true);

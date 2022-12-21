@@ -1,7 +1,9 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import * as React from 'react';
 
 import { Box } from '../box';
+import { Footer } from '../footer';
 import { Header } from '../header';
 
 type MetaProps = {
@@ -16,6 +18,8 @@ type LayoutProps = {
 const SITE_TITLE = 'Composite';
 
 export const Layout = (props: LayoutProps) => {
+  const router = useRouter();
+
   return (
     <React.Fragment>
       <Head>
@@ -35,6 +39,7 @@ export const Layout = (props: LayoutProps) => {
         }}
       >
         {props.children}
+        {router.pathname !== '/' && <Footer />}
       </Box>
     </React.Fragment>
   );

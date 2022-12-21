@@ -107,7 +107,7 @@ export const Header = observer(() => {
           borderBottom: '1px solid $grayA5',
           position: 'fixed',
           top: 0,
-          zIndex: '$1',
+          zIndex: '$4',
           width: '100%',
           overflow: 'hidden',
         }}
