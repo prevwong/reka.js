@@ -41,14 +41,17 @@ export function getDocBySlug(slug: string, fields: string[] = []) {
 }
 
 export function getAllDocs(fields: string[] = []) {
-  const slugs = [
-    ...DOCS_SIDEBAR.main.map((link) => link.href),
-    ...DOCS_SIDEBAR.categories.flatMap((category) =>
-      category.children.map((child) => child.href)
-    ),
-  ].filter((link) => link != '#');
+  const links = [
+    ...DOCS_SIDEBAR.main,
+    ...DOCS_SIDEBAR.categories.flatMap((c) => c.children),
+  ];
 
-  const docs = slugs.map((slug) => getDocBySlug(slug, fields));
+  const docs = links
+    .filter((link) => link.href !== '#')
+    .map((link) => ({
+      ...link,
+      fields: getDocBySlug(link.href, fields),
+    }));
 
   return docs;
 }

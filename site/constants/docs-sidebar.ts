@@ -68,7 +68,7 @@ export const DOCS_SIDEBAR: DocSidebar = {
         },
         {
           title: '@composite/parser',
-          href: '#',
+          href: 'api/parser',
         },
         {
           title: '@composite/collaboration',

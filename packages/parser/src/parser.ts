@@ -25,7 +25,7 @@ const parseExpressionWithAcornToCompositeType = <T extends t.Type = t.Any>(
   return { expression, type };
 };
 
-export const jsToComposite = <T extends t.Type = t.Any>(
+const jsToComposite = <T extends t.Type = t.Any>(
   node: b.Node,
   expectedType?: t.TypeConstructor<T>
 ) => {
@@ -106,7 +106,7 @@ export const jsToComposite = <T extends t.Type = t.Any>(
   return type as T;
 };
 
-export class _Parser extends Lexer {
+class _Parser extends Lexer {
   parse() {
     this.next();
 
@@ -430,11 +430,16 @@ export class _Parser extends Lexer {
   }
 }
 
+/**
+ * A singleton that exposes parsing utilities
+ */
 export class Parser {
+  /// Parse source into a Composite Program AST node
   static parse(source: string) {
     return new _Parser(source).parse();
   }
 
+  /// Parse an expression string into a Expression AST node
   static parseExpressionFromSource<T extends t.Type = t.Any>(
     source: string,
     expectedType?: t.TypeConstructor<T>
@@ -448,6 +453,7 @@ export class Parser {
     return type as T;
   }
 
+  /// Stringify an AST Node into code
   static stringify(type: t.Any) {
     return Stringifier.toString(type);
   }

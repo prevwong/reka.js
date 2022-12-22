@@ -175,29 +175,19 @@ export async function getStaticProps({ params }: Params) {
     'coverImage',
   ]);
 
-  const contentArr = post.content.split('\n');
-
-  let title: string | undefined = post.title;
-
-  if (!title && contentArr[0].startsWith('# ')) {
-    const titleMarkdown = contentArr.shift();
-    title = titleMarkdown?.substring(2);
-  }
-
-  if (params.slug[0] === 'introduction') {
-    title = 'Introduction';
-  }
-
-  const [content, sections] = await markdownToHtml(contentArr.join('\n') || '');
+  const { title, result, sections, types } = await markdownToHtml(
+    post.content || ''
+  );
 
   return {
     props: {
       slug,
       doc: {
         ...post,
-        title,
-        content,
+        title: slug === 'introduction' ? 'Introduction' : title || '',
+        content: result,
         sections,
+        types,
       },
     },
   };
@@ -209,7 +199,7 @@ export async function getStaticPaths() {
   const paths = docs.map((doc) => {
     return {
       params: {
-        slug: doc.slug.split('/'),
+        slug: doc.fields.slug.split('/'),
       },
     };
   });

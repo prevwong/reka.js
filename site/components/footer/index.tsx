@@ -1,6 +1,8 @@
-import { styled } from '@app/styles';
 import Link from 'next/link';
 import * as React from 'react';
+
+import { styled } from '@app/styles';
+
 import { Box } from '../box';
 import { Text } from '../text';
 
