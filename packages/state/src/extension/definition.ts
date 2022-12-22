@@ -53,3 +53,6 @@ export const createExtension = <S extends ExtensionStateDefinition>(
 ) => {
   return new ExtensionDefinition<S>(config);
 };
+
+export type StateFromExtensionDefinition<E extends ExtensionDefinition> =
+  Extension<E['state']>;

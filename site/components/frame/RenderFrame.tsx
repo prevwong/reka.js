@@ -254,10 +254,10 @@ export const RenderFrame = observer((props: RenderFrameProps) => {
         style={{ transform: `scale(${props.scale})` }}
       >
         <FrameContext.Provider value={props.frame.state}>
-          {props.frame.state.root && (
+          {props.frame.state.view && (
             <Renderer
-              key={props.frame.state.root.id}
-              view={props.frame.state.root}
+              key={props.frame.state.view.id}
+              view={props.frame.state.view}
             />
           )}
         </FrameContext.Provider>

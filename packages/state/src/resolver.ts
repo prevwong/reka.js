@@ -208,7 +208,7 @@ export class Resolver {
   }
 
   resolveProgram() {
-    const program = this.composite.root;
+    const program = this.composite.program;
 
     if (!this.cachedGlobalsComputation) {
       this.cachedGlobalsComputation = computed(() => {

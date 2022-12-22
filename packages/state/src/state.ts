@@ -11,10 +11,20 @@ import { ChangeListenerSubscriber, Observer } from './observer';
 import { Resolver } from './resolver';
 
 export class Composite {
+  /**
+   * Stores all existing Frames
+   */
   frames: Frame[];
 
+  /**
+   * The primary State data structure. Changes to the State will cause all Frames to recompute their output View
+   */
   declare state: t.State;
+
+  /// @internal
   declare env: Environment;
+
+  /// @internal
   declare resolver: Resolver;
 
   private declare observer: Observer<t.State>;
@@ -31,6 +41,9 @@ export class Composite {
     this.frames = [];
   }
 
+  /**
+   * Configuration options that the instance was created with
+   */
   get config() {
     const config = {
       globals: this.opts.globals || {},
@@ -45,14 +58,23 @@ export class Composite {
     return config;
   }
 
-  get root() {
+  /**
+   * Get the Program AST node from State. Shorthand for state.program
+   */
+  get program() {
     return this.state.program;
   }
 
-  get allComponents() {
-    return [...(this.config.components ?? []), ...this.root.components];
+  /**
+   * All components that exists in the instance. Includes CompositeComponents in the Program AST and ExternalComponents that was passed to the instance in the constructor.
+   */
+  get components() {
+    return [...(this.config.components ?? []), ...this.program.components];
   }
 
+  /**
+   * Load a new State data type
+   */
   load(state: t.State) {
     this.state = t.state(state);
     this.env = new Environment(this);
@@ -62,7 +84,7 @@ export class Composite {
     makeObservable(this, {
       config: computed,
       state: observable,
-      allComponents: computed,
+      components: computed,
     });
 
     this.extensionRegistry = new ExtensionRegistry(
@@ -84,6 +106,9 @@ export class Composite {
     this.sync();
   }
 
+  /**
+   * Sync changes made to the State to all active Frames. You usually do not need to call this manually
+   */
   sync() {
     this.resolver.resolveProgram();
 
@@ -94,7 +119,7 @@ export class Composite {
             this.env.set(key, value);
           });
 
-          this.root.globals.forEach((global) => {
+          this.program.globals.forEach((global) => {
             this.env.set(
               global.name,
               computeExpression(global.init, this as any, this.env)
@@ -110,7 +135,7 @@ export class Composite {
     if (!this.syncComponents) {
       this.syncComponents = new Computation(
         () => {
-          this.allComponents.forEach((component) => {
+          this.components.forEach((component) => {
             this.env.set(component.name, component);
           });
         },
@@ -125,9 +150,9 @@ export class Composite {
         () => {
           const globalVarNames = [
             ...Object.keys(this.config.globals),
-            ...this.root.globals.map((global) => global.name),
+            ...this.program.globals.map((global) => global.name),
           ];
-          const componentNames = this.allComponents.map(
+          const componentNames = this.components.map(
             (component) => component.name
           );
 
@@ -152,10 +177,13 @@ export class Composite {
     this.syncCleanupEnv.get();
 
     this.frames.forEach((frame) => {
-      frame.render();
+      frame.compute();
     });
   }
 
+  /**
+   * Perform a mutation to the State
+   */
   change(mutator: () => void) {
     this.observer.change(() => {
       mutator();
@@ -164,6 +192,9 @@ export class Composite {
     this.sync();
   }
 
+  /**
+   * Create a new Frame instance
+   */
   createFrame(opts: FrameOpts) {
     const frame = new Frame(opts, this);
 
@@ -173,11 +204,14 @@ export class Composite {
 
     this.frames.push(frame);
 
-    frame.render();
+    frame.compute();
 
     return frame;
   }
 
+  /**
+   * Remove an existing Frame instance
+   */
   removeFrame(frame: Frame) {
     this.frames.splice(this.frames.indexOf(frame), 1);
 
@@ -188,14 +222,23 @@ export class Composite {
     this.idToFrame.delete(frame.id);
   }
 
+  /**
+   * Get a Frame instance by its id (if it has an id specified to it)
+   */
   getFrameById(id: string) {
     return this.idToFrame.get(id);
   }
 
+  /**
+   * Get an Extension's state from its definition
+   */
   getExtension<E extends ExtensionDefinition<any>>(definition: E) {
     return this.extensionRegistry.getExtensionFromDefinition(definition);
   }
 
+  /**
+   * Get an AST node by its id from the State
+   */
   getNodeFromId<T extends t.Type = t.Any>(
     id: string,
     expectedType?: t.TypeConstructor<T>
@@ -203,10 +246,9 @@ export class Composite {
     return this.observer.getTypeFromId(id, expectedType);
   }
 
-  getParentType(type: t.Type) {
-    return this.observer.getParentMap(type);
-  }
-
+  /**
+   * Get a parent Node of an AST node
+   */
   getParent<T extends t.Type = t.Any>(
     node: t.Type,
     expectedParentType?: t.TypeConstructor<T>
@@ -214,10 +256,16 @@ export class Composite {
     return this.observer.getParent(node, expectedParentType);
   }
 
+  /**
+   * Listen for changes and mutations made to the State
+   */
   listenToChanges(changeListenerSubscriber: ChangeListenerSubscriber) {
     return this.observer.listenToChanges(changeListenerSubscriber);
   }
 
+  /**
+   * Subscribe to State changes for collected values
+   */
   subscribe<C>(
     collect: (composite: Composite) => C,
     onCollect: (collected: C, prevCollected: C) => void,
@@ -254,6 +302,9 @@ export class Composite {
     return dispose;
   }
 
+  /**
+   * Dispose instance, stops all future re-computations
+   */
   dispose() {
     if (this.syncGlobals) {
       this.syncGlobals.dispose();

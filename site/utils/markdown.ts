@@ -26,7 +26,7 @@ type Section = {
 const generateMarkdownForTypeParam = (typeParam: any) => {
   return [
     u('html', `<span class="text-indigo-600">${typeParam.name}</span>`),
-    ...(typeParam.implements.length > 0
+    ...(typeParam.implements?.length > 0
       ? [
           u('text', { value: ' extends ' }),
           u('inlineCode', { value: typeParam.implements[0].type }),
@@ -47,6 +47,31 @@ const generateMarkDownForTypeParams = (typeParams: any[]) => {
   return [];
 };
 
+const generateMarkDownForType = (type, typeArgs) => {
+  if (type === 'union') {
+    return typeArgs.map((arg) => arg.type).join(' | ');
+  }
+
+  return `${type}${
+    typeArgs ? `<${typeArgs.map((arg) => arg.type).join(',')}>` : ''
+  }`;
+};
+
+const generateMarkDownForProperty = (property) => {
+  const id = property.id.split('.');
+
+  return [
+    u('heading', { depth: 4 }, [
+      u('text', { value: id[id.length - 1] }),
+      u('text', { value: ': ' }),
+      u(
+        'inlineCode',
+        generateMarkDownForType(property.type, property.typeArgs)
+      ),
+    ]),
+  ];
+};
+
 const generateTypedocMarkdown = (path: string, examples: any[]) => {
   const [packageName, typeName] = path.split('/');
 
@@ -54,16 +79,18 @@ const generateTypedocMarkdown = (path: string, examples: any[]) => {
 
   const type = types[typeName];
 
-  let example;
+  let example = examples['.'];
   let description;
 
   const children = [];
 
-  if (type.kind === 'class' && examples['.']) {
-    example = examples['.'];
-
-    Object.keys(type.properties).forEach((propertyName) => {
-      const property = type.properties[propertyName];
+  if (type.kind === 'class') {
+    const properties = {
+      ...(type.properties || {}),
+      ...(type.instanceProperties || {}),
+    };
+    Object.keys(properties).forEach((propertyName) => {
+      const property = properties[propertyName];
 
       let listChildren: any[] = [];
 
@@ -82,9 +109,10 @@ const generateTypedocMarkdown = (path: string, examples: any[]) => {
                   u(
                     'inlineCode',
                     {
-                      value: `${param.type}${
-                        param.typeArgs ? `<${param.typeArgs[0].type}>` : ''
-                      }`,
+                      value: generateMarkDownForType(
+                        param.type,
+                        param.typeArgs
+                      ),
                     },
                     []
                   ),
@@ -99,21 +127,40 @@ const generateTypedocMarkdown = (path: string, examples: any[]) => {
               }),
               u('text', { value: ')' }),
               u('text', { value: ': ' }),
-              u('inlineCode', { value: signature.returns.type }),
+              u('inlineCode', {
+                value: signature.returns?.type
+                  ? generateMarkDownForType(
+                      signature.returns.type,
+                      signature.returns.typeArgs
+                    )
+                  : 'void',
+              }),
             ]),
           ];
         });
 
-        listChildren.push(
-          u('paragraph', [u('text', { value: property.description })])
-        );
+        if (property.description) {
+          listChildren.push(
+            u('paragraph', [u('text', { value: property.description })])
+          );
+        }
 
         if (examples[propertyName]) {
           listChildren.push(...examples[propertyName]);
         }
+      } else if (property.kind === 'property') {
+        listChildren.push(...generateMarkDownForProperty(property));
+
+        if (property.description) {
+          listChildren.push(
+            u('paragraph', [u('text', { value: property.description })])
+          );
+        }
       }
 
-      children.push(u('listItem', listChildren));
+      if (listChildren.length > 0) {
+        children.push(u('listItem', listChildren));
+      }
     });
   }
 

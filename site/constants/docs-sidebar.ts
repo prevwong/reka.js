@@ -64,6 +64,10 @@ export const DOCS_SIDEBAR: DocSidebar = {
       children: [
         {
           title: '@composite/core',
+          href: 'api/core',
+        },
+        {
+          title: '@composite/types',
           href: '#',
         },
         {

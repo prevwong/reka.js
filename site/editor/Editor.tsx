@@ -112,8 +112,8 @@ export class Editor {
       t.unflattenType(getCollaborativeYjsCompositeState().toJSON() as any)
     );
 
-    if (this.composite.root.components.length > 0) {
-      this.setActiveComponentEditor(this.composite.root.components[0]);
+    if (this.composite.program.components.length > 0) {
+      this.setActiveComponentEditor(this.composite.program.components[0]);
     }
 
     if (typeof window === 'undefined') {

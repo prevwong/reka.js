@@ -127,10 +127,10 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
   const domRef = React.useRef<HTMLDivElement | null>(null);
 
   const currentStateRef = React.useRef(
-    t.Schema.fromJSON(editor.composite.root)
+    t.Schema.fromJSON(editor.composite.program)
   );
   const currentCodeStringRef = React.useRef<string>(
-    Parser.stringify(editor.composite.root)
+    Parser.stringify(editor.composite.program)
   );
 
   const isSynchingFromCodeMirror = React.useRef(false);
@@ -149,7 +149,7 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
         const newAST = Parser.parse(code);
         editor.composite.change(() => {
           diffAST(currentStateRef.current, newAST);
-          diffAST(editor.composite.root, currentStateRef.current);
+          diffAST(editor.composite.program, currentStateRef.current);
         });
         setStatus({
           type: 'success',
@@ -233,14 +233,14 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
 
       Promise.resolve().then(() => {
         const oldCode = currentCodeStringRef.current;
-        const newCode = Parser.stringify(editor.composite.root);
+        const newCode = Parser.stringify(editor.composite.program);
 
         if (newCode === oldCode) {
           isSynchingFromExternal.current = false;
           return;
         }
 
-        currentStateRef.current = t.Schema.fromJSON(editor.composite.root);
+        currentStateRef.current = t.Schema.fromJSON(editor.composite.program);
 
         const transaction = codemirrorView.state.update({
           changes: {
@@ -262,7 +262,7 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
       return;
     }
 
-    const disposeObserver = observe(editor.composite.root, () => {
+    const disposeObserver = observe(editor.composite.program, () => {
       onExternalChange();
     });
 
@@ -270,7 +270,7 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
       codemirrorView.destroy();
       disposeObserver();
     };
-  }, [codemirrorView, onExternalChange, editor.composite.root]);
+  }, [codemirrorView, onExternalChange, editor.composite.program]);
 
   // If the AST changes (ie: from undo/redo or from multiplayer),
   // Then, sync those changes to the CodeMirror editor
@@ -350,7 +350,7 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
               display: currentTab === 'ast' ? 'block' : 'none',
             }}
           >
-            <Tree root={editor.composite.root} />
+            <Tree root={editor.composite.program} />
           </Box>
         </Box>
       </Box>

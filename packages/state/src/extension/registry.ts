@@ -1,6 +1,9 @@
 import invariant from 'tiny-invariant';
 
-import { ExtensionDefinition } from './definition';
+import {
+  ExtensionDefinition,
+  StateFromExtensionDefinition,
+} from './definition';
 import { Extension } from './extension';
 
 import { Composite } from '../state';
@@ -33,7 +36,7 @@ export class ExtensionRegistry {
 
   getExtensionFromDefinition<E extends ExtensionDefinition<any>>(
     definition: E
-  ): Extension<E['state']> {
+  ): StateFromExtensionDefinition<E> {
     const extension = this.definitionToExtension.get(definition);
     invariant(extension, `Extension "${definition.key}" not found`);
     return extension;

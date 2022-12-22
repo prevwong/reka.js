@@ -33,8 +33,8 @@ export type TemplateEachComputationCache = {
 };
 
 export class ViewEvaluator {
-  private declare rootObserver: Observer;
-  private _root: IObservableValue<t.View | undefined>;
+  private declare viewObserver: Observer;
+  private _view: IObservableValue<t.View | undefined>;
   private rootTemplate: t.ComponentTemplate;
   private rootTemplateObserver: Observer;
 
@@ -59,7 +59,7 @@ export class ViewEvaluator {
     readonly componentProps: Record<string, any>,
     readonly composite: Composite
   ) {
-    this._root = observable.box();
+    this._view = observable.box();
 
     this.rootTemplate = t.componentTemplate({
       component: t.identifier({ name: this.componentName }),
@@ -70,15 +70,15 @@ export class ViewEvaluator {
     this.rootTemplateObserver = new Observer(this.rootTemplate);
   }
 
-  get root() {
-    return this._root.get();
+  get view() {
+    return this._view.get();
   }
 
   getViewFromId<T extends t.Type = t.Any>(
     id: string,
     expectedType?: t.TypeConstructor<T>
   ) {
-    return this.rootObserver.getTypeFromId(id, expectedType);
+    return this.viewObserver.getTypeFromId(id, expectedType);
   }
 
   private diff(key: string, newView: t.View) {
@@ -129,14 +129,14 @@ export class ViewEvaluator {
     });
   }
 
-  private setRoot(root: t.View) {
-    if (this.rootObserver) {
-      this.rootObserver.dispose();
+  private setView(view: t.View) {
+    if (this.viewObserver) {
+      this.viewObserver.dispose();
     }
 
-    this._root.set(root);
+    this._view.set(view);
 
-    this.rootObserver = new Observer(root, {
+    this.viewObserver = new Observer(view, {
       hooks: {
         onDispose: (payload) => {
           const disposedType = payload.type;
@@ -441,8 +441,8 @@ export class ViewEvaluator {
         classList: [],
       })[0];
 
-      if (this.root !== view) {
-        this.setRoot(view);
+      if (this.view !== view) {
+        this.setView(view);
       } else {
         this.tplKeyToComponentEvaluator.forEach((componentEvaluator) => {
           componentEvaluator.compute();
@@ -452,12 +452,12 @@ export class ViewEvaluator {
       return view;
     };
 
-    if (!this.rootObserver) {
+    if (!this.viewObserver) {
       _compute();
       return;
     }
 
-    this.rootObserver.change(
+    this.viewObserver.change(
       () => {
         _compute();
       },
@@ -469,7 +469,7 @@ export class ViewEvaluator {
 
   dispose() {
     this.rootTemplateObserver.dispose();
-    this.rootObserver.dispose();
+    this.viewObserver.dispose();
 
     // Computation here has keepAlive set to true, we should dispose to prevent memory leaks
     this.tplKeyToViewComputationCache.forEach((cache) => {

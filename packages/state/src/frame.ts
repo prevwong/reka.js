@@ -14,9 +14,17 @@ export type FrameOpts = {
   component: FrameComponentConfig;
 };
 
+/**
+  Creates a Frame that computes an output View tree for a Component instance.
+  You should not create this instance manually. Instead, use Composite.createFrame(...)
+ */
 export class Frame {
-  id?: string;
+  /// An optional id to easily identify the Frame instance
+  id: string | undefined;
+
+  /// Frame only computes (and recomputes) its View when sync is set to true
   sync: boolean;
+
   component: FrameComponentConfig;
 
   private evaluator: ViewEvaluator;
@@ -41,27 +49,32 @@ export class Frame {
     });
   }
 
-  get root() {
-    return this.evaluator.root;
+  /// Get the output View for the Frame
+  get view() {
+    return this.evaluator.view;
   }
 
-  getViewFromId<T extends t.Type = t.Any>(
+  /// Get a View node by its id
+  getViewFromId<T extends t.View = t.View>(
     id: string,
     expectedType?: t.TypeConstructor<T>
   ) {
     return this.evaluator.getViewFromId(id, expectedType);
   }
 
+  /// Enable synching. Changes made to the State that affects the Frame's component will cause its View to be recomputed
   enableSync() {
     this.sync = true;
-    this.render();
+    this.compute();
   }
 
+  /// Disable synching. Changes made to the State will not cause View to be recomputed
   disableSync() {
     this.sync = false;
   }
 
-  render() {
+  /// Compute a View tree
+  compute() {
     if (!this.sync) {
       return;
     }
@@ -69,6 +82,7 @@ export class Frame {
     return this.evaluator.computeTree();
   }
 
+  /// Update the props of the Component associated with the Frame
   setProps(props: Record<string, any>) {
     this.evaluator.setProps(props);
   }

@@ -287,9 +287,9 @@ export const ComponentEditorView = observer(() => {
               />
             </StyledFrameContainer>
 
-            {componentEditor.activeFrame.state.root && showViewTree && (
+            {componentEditor.activeFrame.state.view && showViewTree && (
               <StyledViewContainer>
-                <Tree root={componentEditor.activeFrame.state.root} />
+                <Tree root={componentEditor.activeFrame.state.view} />
               </StyledViewContainer>
             )}
           </React.Fragment>

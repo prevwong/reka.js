@@ -9,7 +9,7 @@ export class Extension<S extends ExtensionStateDefinition | any = undefined> {
   private _state: t.ExtensionState;
 
   constructor(
-    readonly composite: Composite,
+    private readonly composite: Composite,
     readonly definition: ExtensionDefinition<S>
   ) {
     const existingState = composite.state.extensions[definition.key];

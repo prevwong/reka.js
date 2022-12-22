@@ -111,7 +111,7 @@ export const DebugFrame = observer((props: DebugFrameProps) => {
       </TabList>
       <TabContent value="tree">
         <Tree
-          root={frame.root}
+          root={frame.view}
           // @ts-ignore
           shouldCollapseOnInitial={(type, key) => {
             if (
