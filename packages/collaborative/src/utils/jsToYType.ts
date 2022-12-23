@@ -22,7 +22,7 @@ export const jsToYType = (value: any) => {
       const map = new Y.Map();
 
       if (value instanceof t.Type) {
-        const f = t.flattenType(value);
+        const f = t.flatten(value);
 
         typesToInsert = {
           ...typesToInsert,

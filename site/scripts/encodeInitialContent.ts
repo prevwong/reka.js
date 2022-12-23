@@ -24,7 +24,7 @@ composite.load(
   })
 );
 
-const flattenState = t.flattenType(composite.state);
+const flattenState = t.flatten(composite.state);
 
 const { converted } = jsToYType(flattenState);
 

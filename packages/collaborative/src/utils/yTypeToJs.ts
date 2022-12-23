@@ -15,7 +15,7 @@ export const yTypeToJS = (composite: Composite, types: any, yType: any) => {
 
           // TODO: create a more specialize unflattenType method that works with YTypes
           // Because we don't want to do types.toJSON() which could be a little expensive
-          x = t.unflattenType({
+          x = t.unflatten({
             types: types.toJSON(),
             root: {
               $$typeId: rootId,

@@ -157,7 +157,7 @@ const composite = new Composite({
     extensions: [CollabExtension]
 }); 
 // The initial State Document, this should come from the Yjs type
-composite.load(t.unflattenType(type.getMap('document')))
+composite.load(t.unflatten(type.getMap('document')))
 
 // 4. Bind connector
 const provider = new WebrtcProvider(

@@ -3,7 +3,7 @@ import invariant from 'tiny-invariant';
 
 class _Stringifier {
   stringify(node: t.Any) {
-    return t.switchTypes(node, {
+    return t.match(node, {
       Literal: (node) => {
         if (typeof node.value === 'string') {
           return `"${node.value}"`;

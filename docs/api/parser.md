@@ -2,7 +2,7 @@
 
 ## API Reference
 
-!start-typedoc parser/Parser
+!start-typedoc parser/index.ts Parser
 
 !start-example
 

@@ -218,7 +218,7 @@ export class YjsCompositeSyncProvider {
             if (change.type === 'update') {
               const newValue = jsToYType(change.newValue);
 
-              const typesToRemove = t.collectNestedTypes(change.oldValue);
+              const typesToRemove = t.collect(change.oldValue);
 
               yType.delete(change.index);
               yType.insert(change.index, [newValue.converted]);
@@ -235,7 +235,7 @@ export class YjsCompositeSyncProvider {
 
             if (change.removedCount > 0) {
               change.removed.forEach((r) => {
-                const typesToRemove = t.collectNestedTypes(r).map((x) => x.id);
+                const typesToRemove = t.collect(r).map((x) => x.id);
 
                 removed = [...removed, ...typesToRemove];
               });

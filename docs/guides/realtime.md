@@ -2,12 +2,12 @@
 
 The dreaded task of synching changes made to your page builder. Luckily, Composite provides an external `@composite/collaboration` package that does all the hard work for us.
 
-This package is powered by `Yjs` - a library for building [CRDTs](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type), it's recommended that you get familiar with some of its concepts. 
+> This package is powered by `Yjs` - a library for building [CRDTs](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type), it's recommended that you get familiar with some of its concepts. 
 
 
-## CRDTs
+## Conflict-free Replicated Data Types (CRDT) 
 
-CRDT data structures are one of the ways to achieve realtime collaboration. In Composite, the `State` data structure by itself is **not** a CRDT and has no realtime collaborative capabilities; this is by design so that we can keep the core of Composite more portable and we don't assume that everyone needs multiplayer features in their page builders. (even if it's very cool)
+CRDT data structures are one of the ways to achieve realtime collaboration. In Composite, the `State` data structure by itself is **not** a CRDT and has no realtime collaborative capabilities; this is by design so we can keep the core of Composite more portable and we don't assume that everyone needs multiplayer features in their page builders. (even if it's very cool)
 
 The `@composite/collaboration` package provides a Composite `Extension` where the core `State` data structure is mirrored by a Yjs CRDT. 
 
@@ -18,7 +18,7 @@ Whenever there's a change that happens in the core `State` structure:
 
 ### State Representation
 
-It's also important to note that the way `State` is represented in the CRDT is different. `State` is represented as a flatten data structure in its Yjs CRDT form:
+It's also important to note that the way `State` is represented in the CRDT is different. `State` itself is a nested tree while it is represented as a flat tree in its Yjs CRDT form:
 
 ```tsx
 // State representation in Composite
@@ -102,7 +102,7 @@ const composite = new Composite({
     extensions: [CollabExtension]
 }); 
 // The initial State Document, this should come from the Yjs type
-composite.load(t.unflattenType(type.getMap('document')))
+composite.load(t.unflatten(type.getMap('document')))
 
 // 4. Bind connector
 const provider = new WebrtcProvider(
@@ -195,7 +195,7 @@ const composite = new Composite({
     extensions: [CollabExtension]
 }); 
 // The initial State Document, this should come from the Yjs type
-composite.load(t.unflattenType(type.getMap('document')))
+composite.load(t.unflatten(type.getMap('document')))
 
 // 4. Bind connector
 const provider = new WebrtcProvider(

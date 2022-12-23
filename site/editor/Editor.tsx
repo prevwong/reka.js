@@ -109,7 +109,7 @@ export class Editor {
     });
 
     this.composite.load(
-      t.unflattenType(getCollaborativeYjsCompositeState().toJSON() as any)
+      t.unflatten(getCollaborativeYjsCompositeState().toJSON() as any)
     );
 
     if (this.composite.program.components.length > 0) {

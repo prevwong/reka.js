@@ -1,6 +1,27 @@
 import { Schema } from './schema';
 
+Schema.define('State', {
+  fields: (t) => ({
+    program: t.node('Program'),
+    extensions: t.map(t.node('ExtensionState')),
+  }),
+});
+
+Schema.define('ASTNode', {
+  abstract: true,
+});
+
+Schema.define('Program', {
+  extends: 'ASTNode',
+  scope: true,
+  fields: (t) => ({
+    globals: t.array(t.node('Val')),
+    components: t.array(t.node('CompositeComponent')),
+  }),
+});
+
 Schema.define('Expression', {
+  extends: 'ASTNode',
   abstract: true,
 });
 
@@ -67,7 +88,42 @@ Schema.define('ObjectExpression', {
   }),
 });
 
+Schema.define('Block', {
+  extends: 'Expression',
+  fields: (t) => ({
+    statements: t.array(t.node('Statement')),
+  }),
+});
+
+Schema.define('Func', {
+  extends: 'Expression',
+  fields: (t) => ({
+    name: t.defaultValue(t.union(t.string, t.nullish), null),
+    params: t.array(t.node('Identifier')),
+    body: t.node('Block'),
+  }),
+});
+
+Schema.define('Assignment', {
+  extends: 'Expression',
+  alias: ['Statement'],
+  fields: (t) => ({
+    left: t.node('Identifier'),
+    operator: t.enumeration('=', '+=', '-='),
+    right: t.node('Expression'),
+  }),
+});
+
+Schema.define('MemberExpression', {
+  extends: 'Expression',
+  fields: (t) => ({
+    object: t.union(t.node('Identifier'), t.node('MemberExpression')),
+    property: t.node('Identifier'),
+  }),
+});
+
 Schema.define('ComponentProp', {
+  extends: 'ASTNode',
   fields: (t) => ({
     name: t.string,
     init: t.defaultValue(t.union(t.node('Expression'), t.nullish), null),
@@ -75,6 +131,7 @@ Schema.define('ComponentProp', {
 });
 
 Schema.define('Component', {
+  extends: 'ASTNode',
   abstract: true,
   fields: (t) => ({
     name: t.string,
@@ -97,15 +154,8 @@ Schema.define('ExternalComponent', {
   }),
 });
 
-Schema.define('ElementEach', {
-  fields: (t) => ({
-    alias: t.node('Identifier'),
-    index: t.defaultValue(t.union(t.node('Identifier'), t.nullish), null),
-    iterator: t.node('Identifier'),
-  }),
-});
-
 Schema.define('Template', {
+  extends: 'ASTNode',
   abstract: true,
   fields: (t) => ({
     props: t.map(t.node('Expression')),
@@ -138,44 +188,12 @@ Schema.define('SlotTemplate', {
   fields: () => ({}),
 });
 
-Schema.define('MemberExpression', {
-  extends: 'Expression',
+Schema.define('ElementEach', {
+  extends: 'ASTNode',
   fields: (t) => ({
-    object: t.union(t.node('Identifier'), t.node('MemberExpression')),
-    property: t.node('Identifier'),
-  }),
-});
-
-Schema.define('Func', {
-  extends: 'Expression',
-  fields: (t) => ({
-    name: t.defaultValue(t.union(t.string, t.nullish), null),
-    params: t.array(t.node('Identifier')),
-    body: t.node('Block'),
-  }),
-});
-
-Schema.define('Assignment', {
-  alias: ['Statement'],
-  fields: (t) => ({
-    left: t.node('Identifier'),
-    operator: t.enumeration('=', '+=', '-='),
-    right: t.node('Expression'),
-  }),
-});
-
-Schema.define('State', {
-  fields: (t) => ({
-    program: t.node('Program'),
-    extensions: t.map(t.node('ExtensionState')),
-  }),
-});
-
-Schema.define('Program', {
-  scope: true,
-  fields: (t) => ({
-    globals: t.array(t.node('Val')),
-    components: t.array(t.node('CompositeComponent')),
+    alias: t.node('Identifier'),
+    index: t.defaultValue(t.union(t.node('Identifier'), t.nullish), null),
+    iterator: t.node('Identifier'),
   }),
 });
 
@@ -245,13 +263,6 @@ Schema.define('ErrorSystemView', {
   extends: 'SystemView',
   fields: (t) => ({
     error: t.string,
-  }),
-});
-
-Schema.define('Block', {
-  extends: 'Expression',
-  fields: (t) => ({
-    statements: t.array(t.node('Statement')),
   }),
 });
 

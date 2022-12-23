@@ -1,10 +1,14 @@
 import path from 'path';
 
-import { gather, Item } from 'getdocs-ts';
+// Using fork of marijnh/getdocs-ts because there's a bug with Substitution types
+// TODO: use upstream package once fix has been merged
+import { gather, Item } from '@prevwong/getdocs-ts';
 
 const CACHED_PACKAGE_TYPES: Record<string, Record<string, Item>> = {};
 
-export const getTypesFromPackage = (packageName: string) => {
+export const getTypesFromPackage = (packagePath: string, filePath?: string) => {
+  const [packageName, pathInSrc] = packagePath.split('/');
+
   if (CACHED_PACKAGE_TYPES[packageName]) {
     return CACHED_PACKAGE_TYPES;
   }
@@ -13,10 +17,11 @@ export const getTypesFromPackage = (packageName: string) => {
     process.cwd(),
     '../packages',
     packageName,
-    'src/index.ts'
+    `src/${pathInSrc}`
   );
 
   return gather({
     filename,
+    basedir: path.join(process.cwd(), '../packages', packageName),
   });
 };

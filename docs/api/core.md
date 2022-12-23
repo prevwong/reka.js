@@ -4,7 +4,7 @@ The core package of Composite.
 
 ## API
 
-!start-typedoc state/Composite
+!start-typedoc state/index.ts Composite
 
 !start-example
 
@@ -33,11 +33,11 @@ const composite = new Composite({
 
 !end-typedoc
 
-!start-typedoc state/Frame
+!start-typedoc state/index.ts Frame
 
 !end-typedoc
 
-!start-typedoc state/Extension
+!start-typedoc state/index.ts Extension
 
 !end-typedoc
 

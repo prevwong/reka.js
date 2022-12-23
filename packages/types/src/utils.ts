@@ -1,8 +1,10 @@
-/* eslint-disable @typescript-eslint/ban-types */
-import { Schema, Type, TypeProperties } from './schema';
-import * as t from './types.generated';
+import { Schema } from './schema';
+import * as t from './types.docs';
 
-export const switchTypes = (node: t.Any, visitor: Partial<t.Visitor>) => {
+/**
+ * Match a callback to a Type
+ */
+export const match = (node: t.Any, visitor: Partial<t.Visitor>): void => {
   let currentType = node.type;
 
   // eslint-disable-next-line no-constant-condition
@@ -22,12 +24,8 @@ export const switchTypes = (node: t.Any, visitor: Partial<t.Visitor>) => {
   }
 };
 
-export const isLiteralObject = (t: any) => {
-  return !!t && 'object' === typeof t && t.constructor === Object;
-};
-
-type TypeOpt<T extends Type = any> = Partial<{
-  exclude: Array<keyof TypeProperties<T>>;
+type TypeOpt<T extends t.Type = any> = Partial<{
+  exclude: Array<keyof t.TypeProperties<T>>;
   diff: (a: T, b: T) => any;
 }>;
 
@@ -35,14 +33,21 @@ type MergeTypeOpts = {
   function?: (a: Function, b: Function) => any;
   types?: Partial<{
     [K in keyof t.Visitor]: t.Visitor[K] extends (type: infer V) => any
-      ? V extends Type
+      ? V extends t.Type
         ? TypeOpt<V>
         : never
       : never;
   }>;
 };
 
-export const mergeType = <T extends Type>(a: T, b: T, opts?: MergeTypeOpts) => {
+const isObjectLiteral = (t: any) => {
+  return !!t && 'object' === typeof t && t.constructor === Object;
+};
+
+/**
+ * Compare 2 Types and merge differences
+ */
+export const merge = <T extends t.Type>(a: T, b: T, opts: MergeTypeOpts) => {
   const getOpt = (type: string): Required<TypeOpt> => {
     const schema = Schema.get(type);
 
@@ -113,7 +118,7 @@ export const mergeType = <T extends Type>(a: T, b: T, opts?: MergeTypeOpts) => {
       return a;
     }
 
-    if (a instanceof Type && b instanceof Type) {
+    if (a instanceof t.Type && b instanceof t.Type) {
       if (a.type !== b.type) {
         return b;
       }
@@ -151,7 +156,7 @@ export const mergeType = <T extends Type>(a: T, b: T, opts?: MergeTypeOpts) => {
       return a;
     }
 
-    if (isLiteralObject(a) && isLiteralObject(b)) {
+    if (isObjectLiteral(a) && isObjectLiteral(b)) {
       for (const key in b) {
         if (a[key]) {
           // if (typeof a[key] === "function" && typeof b[key] === "function") {
@@ -190,8 +195,20 @@ export const mergeType = <T extends Type>(a: T, b: T, opts?: MergeTypeOpts) => {
   return mergeValue(a, b);
 };
 
-export const flattenType = <T extends Type>(root: T) => {
-  const types: Record<string, any> = {};
+type FlatType = {
+  $$typeId: string;
+};
+
+type FlattenedType = {
+  root: string;
+  types: Record<string, FlatType>;
+};
+
+/**
+ * Flatten a Type and its children
+ */
+export const flatten = (root: t.Type) => {
+  const types: Record<string, FlatType> = {};
 
   const convert = (value: any) => {
     if (!value) {
@@ -210,7 +227,7 @@ export const flattenType = <T extends Type>(root: T) => {
         };
       }, {});
 
-      if (value instanceof Type) {
+      if (value instanceof t.Type) {
         types[value.id] = obj;
         return {
           $$typeId: value.id,
@@ -231,7 +248,12 @@ export const flattenType = <T extends Type>(root: T) => {
   };
 };
 
-export const unflattenType = ({ root, types }) => {
+/**
+ * Restore a flattend Type
+ */
+export const unflatten = (flattenedType: FlattenedType) => {
+  const { root, types } = flattenedType;
+
   const convert = (value) => {
     if (!value) {
       return value;
@@ -274,8 +296,11 @@ export const unflattenType = ({ root, types }) => {
   return convert(root);
 };
 
-export const collectNestedTypes = (type: any) => {
-  const types: any[] = [];
+/**
+ * Collect all child Types within a given Type
+ */
+export const collect = (type: t.Type) => {
+  const types: t.Type[] = [];
 
   const collect = (value: any) => {
     if (!value) {
@@ -288,7 +313,7 @@ export const collectNestedTypes = (type: any) => {
     }
 
     if (typeof value === 'object') {
-      if (value instanceof Type) {
+      if (value instanceof t.Type) {
         types.push(value);
       }
 

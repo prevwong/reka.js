@@ -1,8 +1,8 @@
 // @ts-nocheck
-import fs from 'fs';
 import { join } from 'path';
 
 import { includeMarkdown } from '@hashicorp/remark-plugins';
+import camelCase from 'lodash/camelCase';
 import capitalize from 'lodash/capitalize';
 import kebabCase from 'lodash/kebabCase';
 import rehypeStringify from 'rehype-stringify';
@@ -12,9 +12,8 @@ import remarkRehype from 'remark-rehype';
 import remarkShikiTwoslash from 'remark-shiki-twoslash';
 import { u } from 'unist-builder';
 import { findAfter } from 'unist-util-find-after';
-import { findAllAfter } from 'unist-util-find-all-after';
 import between from 'unist-util-find-all-between';
-import { select, selectAll } from 'unist-util-select';
+import { select } from 'unist-util-select';
 
 import { getTypesFromPackage } from './typedoc';
 
@@ -72,23 +71,107 @@ const generateMarkDownForProperty = (property) => {
   ];
 };
 
-const generateTypedocMarkdown = (path: string, examples: any[]) => {
-  const [packageName, typeName] = path.split('/');
+const generateMarkDownForFunctionSignature = (fnName, signature) => {
+  return [
+    u('text', { value: `${fnName}` }),
+    ...generateMarkDownForTypeParams(signature.typeParams || []),
+    u('text', { value: '(' }),
+    ...signature.params.flatMap((param, i) => {
+      return [
+        u('text', {
+          value: `${param.name}${param.optional ? '?' : ''}: `,
+        }),
+        u(
+          'inlineCode',
+          {
+            value: generateMarkDownForType(param.type, param.typeArgs),
+          },
+          []
+        ),
+        ...(signature.params.length - 1 !== i
+          ? [
+              u('text', {
+                value: ', ',
+              }),
+            ]
+          : []),
+      ];
+    }),
+    u('text', { value: ')' }),
+    u('text', { value: ': ' }),
+    u('inlineCode', {
+      value: signature.returns?.type
+        ? generateMarkDownForType(
+            signature.returns.type,
+            signature.returns.typeArgs
+          )
+        : 'void',
+    }),
+  ];
+};
 
-  const types = getTypesFromPackage(packageName);
+const getOptsFromStr = (str: string) => {
+  const defaultOpts = {
+    showParent: false,
+  };
 
+  str = str?.trim() || '';
+
+  if (!str) {
+    return defaultOpts;
+  }
+
+  const matches = str.match(/(?<={).*(?=})/);
+
+  if (!matches) {
+    return defaultOpts;
+  }
+
+  const opts = matches[0].split(',').reduce((accum, opt) => {
+    return {
+      [camelCase(opt)]: true,
+    };
+  }, {});
+
+  return {
+    ...defaultOpts,
+    ...opts,
+  };
+};
+
+const generateTypeBadge = (type: string) => {
+  const typeToColor = {
+    class: 'bg-indigo-600',
+    function: 'bg-violet-600',
+  };
+
+  return u('html', {
+    value: `<span class="${
+      typeToColor[type] ?? ''
+    } text-xs text-white px-4 py-2 rounded-3xl">${capitalize(
+      capitalize(type)
+    )}</span>`,
+  });
+};
+
+const _generateTypedocMarkdown = (
+  opts: any,
+  types: any,
+  typeName: string,
+  examples: any[]
+) => {
   const type = types[typeName];
+  const example = examples['.'];
 
-  let example = examples['.'];
-  let description;
+  if (type.type === 'class') {
+    let description;
+    const children = [];
 
-  const children = [];
-
-  if (type.kind === 'class') {
     const properties = {
       ...(type.properties || {}),
       ...(type.instanceProperties || {}),
     };
+
     Object.keys(properties).forEach((propertyName) => {
       const property = properties[propertyName];
 
@@ -97,45 +180,11 @@ const generateTypedocMarkdown = (path: string, examples: any[]) => {
       if (property.kind === 'method') {
         listChildren = property.signatures.flatMap((signature) => {
           return [
-            u('heading', { depth: 4 }, [
-              u('text', { value: `${propertyName}` }),
-              ...generateMarkDownForTypeParams(signature.typeParams || []),
-              u('text', { value: '(' }),
-              ...signature.params.flatMap((param, i) => {
-                return [
-                  u('text', {
-                    value: `${param.name}${param.optional ? '?' : ''}: `,
-                  }),
-                  u(
-                    'inlineCode',
-                    {
-                      value: generateMarkDownForType(
-                        param.type,
-                        param.typeArgs
-                      ),
-                    },
-                    []
-                  ),
-                  ...(signature.params.length - 1 !== i
-                    ? [
-                        u('text', {
-                          value: ', ',
-                        }),
-                      ]
-                    : []),
-                ];
-              }),
-              u('text', { value: ')' }),
-              u('text', { value: ': ' }),
-              u('inlineCode', {
-                value: signature.returns?.type
-                  ? generateMarkDownForType(
-                      signature.returns.type,
-                      signature.returns.typeArgs
-                    )
-                  : 'void',
-              }),
-            ]),
+            u(
+              'heading',
+              { depth: 4 },
+              generateMarkDownForFunctionSignature(propertyName, signature)
+            ),
           ];
         });
 
@@ -162,29 +211,84 @@ const generateTypedocMarkdown = (path: string, examples: any[]) => {
         children.push(u('listItem', listChildren));
       }
     });
+
+    if (type.description) {
+      description = u('paragraph', [u('text', { value: type.description })]);
+    }
+
+    return [
+      u('heading', { depth: 3 }, [
+        u('text', { value: type.id }),
+        ...(opts.showParent && type.extends && type.extends.type !== 'Object'
+          ? [
+              u('html', {
+                value: `<span><span class="text-xs text-gray-600 mx-2">extends</span><span class="text-blue-600 text-sm">${type.extends.type}</span></span>`,
+              }),
+            ]
+          : []),
+      ]),
+      generateTypeBadge('class'),
+      ...(description ? [description] : []),
+      ...(example || []),
+      ...(children.length === 0
+        ? []
+        : [
+            u('list', {
+              children,
+            }),
+          ]),
+    ];
+  } else if (type.type === 'Function') {
+    return [
+      ...type.signatures.flatMap((signature) => {
+        return [
+          u(
+            'heading',
+            { depth: 4 },
+            generateMarkDownForFunctionSignature(type.id, signature)
+          ),
+          generateTypeBadge('function'),
+          ...(type.description
+            ? [u('paragraph', [u('text', { value: type.description })])]
+            : []),
+          ...(examples[type.id] ?? []),
+        ];
+      }),
+    ];
   }
 
-  if (type.description) {
-    description = u('paragraph', [u('text', { value: type.description })]);
+  return [];
+};
+
+const generateTypedocMarkdown = (typedocArgs: string, examples: any[]) => {
+  const [packagePath, typeName, optsStr] = typedocArgs.split(' ');
+
+  const opts = getOptsFromStr(optsStr);
+  const types = getTypesFromPackage(packagePath);
+
+  if (typeName === 'classes') {
+    return Object.keys(types)
+      .filter((type) => types[type].type === 'class')
+      .flatMap((type) => {
+        return _generateTypedocMarkdown(opts, types, type, examples);
+      });
   }
 
-  return [
-    u('heading', { depth: 3 }, [u('text', { value: type.id })]),
-    u('html', {
-      value: `<span class="bg-indigo-600 text-xs text-white px-4 py-2 rounded-3xl">${capitalize(
-        type.kind
-      )}</span>`,
-    }),
-    ...(description ? [description] : []),
-    ...(example || []),
-    ...(children.length === 0
-      ? []
-      : [
-          u('list', {
-            children,
-          }),
-        ]),
-  ];
+  if (typeName === 'functions') {
+    return Object.keys(types)
+      .filter((type) => types[type].type === 'Function')
+      .flatMap((type) => {
+        return _generateTypedocMarkdown(opts, types, type, examples);
+      });
+  }
+
+  if (typeName === '*') {
+    return Object.keys(types).flatMap((type) =>
+      _generateTypedocMarkdown(opts, types, type, examples)
+    );
+  }
+
+  return _generateTypedocMarkdown(opts, types, typeName, examples);
 };
 
 export default async function markdownToHtml(markdown: string) {
@@ -263,7 +367,7 @@ export default async function markdownToHtml(markdown: string) {
             });
             const endTypeDocIndex = tree.children.indexOf(endTypeDoc);
 
-            const typeName = childText.value.replace('!start-typedoc ', '');
+            const typedocArgs = childText.value.replace('!start-typedoc ', '');
 
             const examples = {};
 
@@ -298,7 +402,10 @@ export default async function markdownToHtml(markdown: string) {
               }
             }
 
-            const generatedNode = generateTypedocMarkdown(typeName, examples);
+            const generatedNode = generateTypedocMarkdown(
+              typedocArgs,
+              examples
+            );
 
             tree.children = [
               ...tree.children.slice(0, i),

@@ -1,13 +1,14 @@
 require('../../src/types.definition');
 
+const path = require('path');
 const fs = require('fs');
 const prettier = require('prettier');
 const formatBuilderName = require('./formatBuilderName');
 const stringifyField = require('./stringifyField');
 const { Schema } = require('../../src/schema');
 
-let code = `
-import { Schema, Type } from './schema';\n
+let typesCode = `
+import { Schema, Type } from '../schema';\n
 `;
 
 const aliases = {};
@@ -23,7 +24,7 @@ for (const type in Schema.getRegistry()) {
       aliases[alias].push(type);
     });
   }
-  code += `
+  typesCode += `
 
   type ${type}Parameters = {
     ${schema.fields
@@ -52,31 +53,58 @@ for (const type in Schema.getRegistry()) {
 
   Schema.register("${type}", ${type});
 
-  ${
-    schema.abstract
-      ? ''
-      : `export const ${formatBuilderName(
-          type
-        )} = (...args: ConstructorParameters<typeof ${type}>) => new ${type}(...args);`
-  }
   `;
 }
 
 for (const alias in aliases) {
-  code += `export type ${alias} = ${aliases[alias].join(' | ')};\n`;
+  typesCode += `export type ${alias} = ${aliases[alias].join(' | ')};\n`;
 }
 
-code += `export type Any = ${Object.keys(Schema.getRegistry()).join('|')};`;
+typesCode += `export type Any = ${Object.keys(Schema.getRegistry()).join(
+  '|'
+)};`;
 
-code += `export type Visitor = {`;
+typesCode += `export type Visitor = {`;
 for (const type in Schema.getRegistry()) {
-  code += `${type}: (node: ${type}) => any;`;
+  typesCode += `${type}: (node: ${type}) => any;`;
 }
-code += `}`;
+typesCode += `}`;
 
-code = prettier.format(code, {
+typesCode = prettier.format(typesCode, {
   parser: 'babel-ts',
   singleQuote: true,
 });
 
-fs.writeFileSync('./src/types.generated.ts', code);
+let builderCode = `
+import * as t from './types.generated';
+`;
+
+for (const type in Schema.getRegistry()) {
+  const schema = Schema.get(type);
+
+  if (schema.abstract) {
+    continue;
+  }
+
+  builderCode += `export const ${formatBuilderName(
+    type
+  )} = (...args: ConstructorParameters<typeof t.${type}>) => new t.${type}(...args);`;
+}
+
+builderCode = prettier.format(builderCode, {
+  parser: 'babel-ts',
+  singleQuote: true,
+});
+
+const writeCodeToFile = (filepath, code) => {
+  const dir = path.dirname(filepath);
+
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+
+  fs.writeFileSync(filepath, code);
+};
+
+writeCodeToFile('./src/generated/types.generated.ts', typesCode);
+writeCodeToFile('./src/generated/builder.generated.ts', builderCode);

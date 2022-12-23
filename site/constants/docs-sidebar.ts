@@ -68,7 +68,7 @@ export const DOCS_SIDEBAR: DocSidebar = {
         },
         {
           title: '@composite/types',
-          href: '#',
+          href: 'api/types',
         },
         {
           title: '@composite/parser',

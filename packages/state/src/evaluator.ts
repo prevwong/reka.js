@@ -90,7 +90,7 @@ export class ViewEvaluator {
     }
 
     return runInAction(() => {
-      const mergedView = t.mergeType(existingView, newView, {
+      const mergedView = t.merge(existingView, newView, {
         function: (a, b) => {
           if (a['viewFn'] && b['viewFn']) {
             return a;

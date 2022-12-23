@@ -40,7 +40,7 @@ const _diffASTArrayTypes = <T extends t.Type>(
       return;
     }
 
-    t.mergeType(existingComponent, newComponent);
+    t.merge(existingComponent, newComponent);
   });
 
   componentsToInsert.forEach(([component, index], i) => {
