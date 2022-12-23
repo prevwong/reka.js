@@ -76,7 +76,7 @@ export const DOCS_SIDEBAR: DocSidebar = {
         },
         {
           title: '@composite/collaboration',
-          href: '#',
+          href: 'api/collaboration',
         },
         {
           title: '@composite/react',
