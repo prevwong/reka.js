@@ -63,7 +63,7 @@
     "unist-util-select": "^4.0.1",
     "y-webrtc": "^10.2.3",
     "yjs": "^13.5.41",
-    "@prevwong/getdocs-ts": "0.1.5"
+    "@prevwong/getdocs-ts": "git+https://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:x-oauth-basic@github.com/prevwong/getdocs-ts.git"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.8",
