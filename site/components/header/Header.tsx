@@ -109,6 +109,7 @@ export const Header = observer(() => {
           top: 0,
           zIndex: '$4',
           width: '100%',
+          height: '50px',
           overflow: 'hidden',
         }}
       >

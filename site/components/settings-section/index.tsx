@@ -11,6 +11,8 @@ const StyledSettingSectionHeader = styled(motion.div, {
   alignItems: 'center',
   cursor: 'pointer',
   background: '#fff',
+  mt: '2px',
+  mb: '1px',
 
   '> header': {
     flex: 1,
@@ -28,7 +30,6 @@ const StyledSettingSection = styled('div', {
   display: 'flex',
   px: '$4',
   py: '$4',
-  mt: '$2',
   flexDirection: 'column',
   borderBottom: '1px solid $grayA5',
   '&:last-child': {
