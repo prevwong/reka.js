@@ -6,7 +6,7 @@ import { gather, Item } from '@prevwong/getdocs-ts';
 
 const CACHED_PACKAGE_TYPES: Record<string, Record<string, Item>> = {};
 
-export const getTypesFromPackage = (packagePath: string, filePath?: string) => {
+export const getTypesFromPackage = (packagePath: string) => {
   const [packageName, pathInSrc] = packagePath.split('/');
 
   if (CACHED_PACKAGE_TYPES[packageName]) {

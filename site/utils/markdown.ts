@@ -357,8 +357,6 @@ export default async function markdownToHtml(markdown: string) {
           const childText = select('text', child);
 
           if (childText.value.startsWith('!start-typedoc')) {
-            const startTypeDoc = child;
-
             const endTypeDoc = findAfter(tree, i, (node) => {
               return (
                 node.type === 'paragraph' &&

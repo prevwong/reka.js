@@ -200,7 +200,7 @@ type FlatType = {
 };
 
 type FlattenedType = {
-  root: string;
+  root: FlatType;
   types: Record<string, FlatType>;
 };
 
