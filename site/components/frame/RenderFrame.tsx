@@ -1,4 +1,5 @@
 import * as t from '@composite/types';
+import { ChatBubbleIcon } from '@radix-ui/react-icons';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import IFrame from 'react-frame-component';
@@ -10,6 +11,7 @@ import { FrameContext } from './FrameContext';
 import { Renderer } from './renderer';
 
 import { Box } from '../box';
+import { IconButton } from '../button';
 import { Text } from '../text';
 
 type RenderFrameProps = {
@@ -155,23 +157,39 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
       <Box
         css={{
           position: 'relative',
-          top: '-22px',
+          top: '-100%',
           background: props.type === 'selected' ? '$indigo9' : '$purple9',
           color: '#fff',
           px: '$3',
           py: '$2',
           fontSize: '$1',
-          height: '22px',
+
           left: '-1px',
           display: 'inline-block',
           pointerEvents: 'all',
         }}
       >
         <Box css={{ display: 'flex', alignItems: 'center' }}>
-          <Text size={3}>{templateName}</Text>
-          <Text css={{ ml: '$2', opacity: 0.7 }} size={1}>
-            {templateType}
-          </Text>
+          <Box css={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+            <Text size={2}>{templateName}</Text>
+            <Text css={{ ml: '$2', opacity: 0.7 }} size={1}>
+              {'<'}
+              {templateType}
+              {'>'}
+            </Text>
+          </Box>
+
+          <Box css={{ pl: '$3' }}>
+            <IconButton
+              transparent
+              css={{ color: '#fff' }}
+              onClick={() => {
+                editor.activeComponentEditor?.showComments(props.template);
+              }}
+            >
+              <ChatBubbleIcon />
+            </IconButton>
+          </Box>
         </Box>
       </Box>
     </Box>

@@ -6,6 +6,7 @@ import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
 
 import { Tooltip } from '../tooltip';
+import { UserAvatar } from '../user-avatar';
 
 const StyledCollaboratorsContainers = styled('div', {
   ml: '$2',
@@ -58,23 +59,11 @@ const StyledUserIcon = styled(motion.span, {
   },
 });
 
-const getInitials = (name: string) => {
-  const [first, last] = name.split(' ');
-  return first[0] + last[0];
-};
-
-const CollabUser = React.forwardRef<any, any>(
-  ({ active, user, disconnected }, ref) => {
+const CollabUser = React.forwardRef<HTMLSpanElement, any>(
+  ({ active, user }, ref) => {
     return (
       <Tooltip content={`${user.name}${active ? ' (You)' : ''}`}>
-        <StyledUserIcon
-          active={active}
-          css={{ backgroundColor: user.color }}
-          disconnected={disconnected}
-          ref={ref}
-        >
-          <b>{getInitials(user.name)}</b>
-        </StyledUserIcon>
+        <UserAvatar ref={ref} userId={user.id} />
       </Tooltip>
     );
   }
@@ -97,7 +86,6 @@ export const Collaborators = observer(() => {
             key={i}
             user={user}
             active={false}
-            disconnected={editor.connected === false}
             animate={{
               transform: 'scale(1)',
             }}

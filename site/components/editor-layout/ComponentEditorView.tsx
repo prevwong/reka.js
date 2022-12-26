@@ -7,6 +7,7 @@ import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
 import { styled } from '@app/styles';
 
 import { AddFrameModal } from './AddFrameModal';
+import { TemplateComments } from './TemplateComments';
 
 import { Box } from '../box';
 import { Button } from '../button';
@@ -118,22 +119,6 @@ export const ComponentEditorView = observer(() => {
     [componentEditor]
   );
 
-  if (!componentEditor) {
-    return (
-      <Box
-        css={{
-          height: '100%',
-          textAlign: 'center',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Text css={{ color: '$grayA9' }}>No component selected</Text>
-      </Box>
-    );
-  }
-
   const [frameScale, setFrameScale] = React.useState(1);
 
   const computeFrameScale = React.useCallback(() => {
@@ -157,6 +142,21 @@ export const ComponentEditorView = observer(() => {
     computeFrameScale();
   }, [computeFrameScale]);
 
+  if (!componentEditor) {
+    return (
+      <Box
+        css={{
+          height: '100%',
+          textAlign: 'center',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Text css={{ color: '$grayA9' }}>No component selected</Text>
+      </Box>
+    );
+  }
   return (
     <Box
       css={{ display: 'flex', flexDirection: 'column', height: '100%' }}
@@ -360,6 +360,9 @@ export const ComponentEditorView = observer(() => {
               Toggle View
             </Button>
           </Box>
+          {componentEditor.activeFrame.templateToShowComments && (
+            <TemplateComments activeFrame={componentEditor.activeFrame} />
+          )}
         </Box>
       )}
 

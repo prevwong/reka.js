@@ -14,6 +14,7 @@ export type ActiveFrame = {
   state: Frame;
   user: UserFrame;
   tplElements: WeakMap<t.Template, Set<HTMLElement>>;
+  templateToShowComments: t.Template | null;
 };
 
 type TplEvent = {
@@ -42,6 +43,8 @@ export class ComponentEditor {
       setActiveFrame: action,
       activeFrame: observable,
       frameToIframe: observable,
+      showComments: action,
+      hideComments: action,
     });
 
     const userFrameExtension =
@@ -116,6 +119,7 @@ export class ComponentEditor {
       state: stateFrame,
       user: userFrame,
       tplElements: new WeakMap(),
+      templateToShowComments: null,
     };
   }
 
@@ -146,5 +150,21 @@ export class ComponentEditor {
 
       set.delete(dom);
     };
+  }
+
+  showComments(tpl: t.Template) {
+    if (!this.activeFrame) {
+      return;
+    }
+
+    this.activeFrame.templateToShowComments = tpl;
+  }
+
+  hideComments() {
+    if (!this.activeFrame) {
+      return;
+    }
+
+    this.activeFrame.templateToShowComments = null;
   }
 }

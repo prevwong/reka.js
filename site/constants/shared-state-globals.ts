@@ -1,5 +1,6 @@
 import { StateOpts } from '@composite/state';
 
+import { CommentExtension } from '@app/extensions/CommentExtension';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
 
 export const createSharedStateGlobals = (
@@ -19,5 +20,9 @@ export const createSharedStateGlobals = (
     ],
     ...(config.globals || {}),
   },
-  extensions: [UserFrameExtension, ...(config.extensions || [])],
+  extensions: [
+    ...(config.extensions || []),
+    UserFrameExtension,
+    CommentExtension,
+  ],
 });

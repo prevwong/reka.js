@@ -184,6 +184,10 @@ export class Editor {
     return [this.user, ...this.peers];
   }
 
+  getUserById(id: string) {
+    return this.allUsers.find((user) => user.id === id);
+  }
+
   setActiveFrame(frame: Frame | null) {
     this.activeFrame = frame;
   }
