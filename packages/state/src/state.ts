@@ -1,5 +1,5 @@
 import * as t from '@composite/types';
-import { computed, makeObservable, observable, reaction, toJS } from 'mobx';
+import { computed, makeObservable, reaction } from 'mobx';
 
 import { Computation } from './computation';
 import { Environment } from './environment';

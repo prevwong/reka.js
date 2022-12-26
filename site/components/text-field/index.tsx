@@ -113,7 +113,6 @@ export const EnterTextField = ({
       {...props}
       value={value}
       onChange={(e) => {
-        console.log('change', e.target.value);
         setValue(e.target.value);
       }}
       onKeyUp={(e) => {
@@ -124,7 +123,7 @@ export const EnterTextField = ({
         commit();
       }}
       onBlur={() => {
-        commit();
+        // commit();
       }}
     />
   );

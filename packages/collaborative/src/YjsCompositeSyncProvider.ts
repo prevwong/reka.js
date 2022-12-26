@@ -100,7 +100,7 @@ export class YjsCompositeSyncProvider {
       }
 
       event.keysChanged.forEach((key) => {
-          obj[key] = yTypeToJS(
+        obj[key] = yTypeToJS(
           this.composite,
           yDocRoot.get('types'),
           (event.target as Y.Map<any>).get(key)

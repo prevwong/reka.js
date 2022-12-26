@@ -1,11 +1,9 @@
 import * as t from '@composite/types';
-import { computed, IComputedValue, makeObservable } from 'mobx';
 
 import { ExtensionDefinition, ExtensionStateDefinition } from './definition';
 
 import { StateSubscriberOpts } from '../interfaces';
 import { Composite } from '../state';
-import { Computation } from '../computation';
 
 export class Extension<S extends ExtensionStateDefinition | any = undefined> {
   composite: Composite;

@@ -1,5 +1,4 @@
 import { observer, useCollector } from '@composite/react';
-import * as t from '@composite/types';
 import * as React from 'react';
 
 import { useEditor } from '@app/editor';
@@ -9,7 +8,7 @@ import { styled } from '@app/styles';
 
 import { Box } from '../box';
 import { Text } from '../text';
-import { EnterTextField, TextField } from '../text-field';
+import { EnterTextField } from '../text-field';
 import { UserAvatar } from '../user-avatar';
 
 type TemplateCommentsProps = {
