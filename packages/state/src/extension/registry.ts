@@ -27,7 +27,9 @@ export class ExtensionRegistry {
   }
 
   init() {
-    this.extensions.map((extension) => extension.init());
+    this.composite.change(() => {
+      this.extensions.map((extension) => extension.init());
+    });
   }
 
   dispose() {

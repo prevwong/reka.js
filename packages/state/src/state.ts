@@ -1,5 +1,5 @@
 import * as t from '@composite/types';
-import { computed, makeObservable, observable, reaction } from 'mobx';
+import { computed, makeObservable, observable, reaction, toJS } from 'mobx';
 
 import { Computation } from './computation';
 import { Environment } from './environment';
@@ -83,14 +83,8 @@ export class Composite {
 
     makeObservable(this, {
       config: computed,
-      state: observable,
       components: computed,
     });
-
-    this.extensionRegistry = new ExtensionRegistry(
-      this,
-      this.opts.extensions ?? []
-    );
 
     this.observer = new Observer(this.state, {
       hooks: {
@@ -101,6 +95,11 @@ export class Composite {
         },
       },
     });
+
+    this.extensionRegistry = new ExtensionRegistry(
+      this,
+      this.opts.extensions ?? []
+    );
 
     this.extensionRegistry.init();
     this.sync();
@@ -185,9 +184,7 @@ export class Composite {
    * Perform a mutation to the State
    */
   change(mutator: () => void) {
-    this.observer.change(() => {
-      mutator();
-    });
+    this.observer.change(mutator);
 
     this.sync();
   }

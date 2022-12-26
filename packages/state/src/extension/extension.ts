@@ -1,35 +1,30 @@
 import * as t from '@composite/types';
+import { computed, IComputedValue, makeObservable } from 'mobx';
 
 import { ExtensionDefinition, ExtensionStateDefinition } from './definition';
 
 import { StateSubscriberOpts } from '../interfaces';
 import { Composite } from '../state';
+import { Computation } from '../computation';
 
 export class Extension<S extends ExtensionStateDefinition | any = undefined> {
-  private _state: t.ExtensionState;
+  composite: Composite;
+  definition: ExtensionDefinition<S>;
 
-  constructor(
-    readonly composite: Composite,
-    readonly definition: ExtensionDefinition<S>
-  ) {
-    const existingState = composite.state.extensions[definition.key];
-
-    if (existingState) {
-      existingState['_d'] = true;
-    }
-
-    this._state = existingState
-      ? t.extensionState(existingState)
-      : t.extensionState({
-          value: definition.state || null,
-        });
-
-    if (definition.state) {
-      this.composite.state.extensions[definition.key] = this._state;
-    }
+  constructor(composite: Composite, definition: ExtensionDefinition<S>) {
+    this.composite = composite;
+    this.definition = definition;
   }
 
   init() {
+    const existingState = this.composite.state.extensions[this.definition.key];
+
+    if (this.definition.state && !existingState) {
+      this.composite.state.extensions[this.definition.key] = t.extensionState({
+        value: this.definition.state || null,
+      });
+    }
+
     return this.definition.init(this);
   }
 
@@ -38,7 +33,7 @@ export class Extension<S extends ExtensionStateDefinition | any = undefined> {
   }
 
   get state() {
-    return this._state.value as S;
+    return this.composite.state.extensions[this.definition.key].value as S;
   }
 
   subscribe<C extends Record<string, any>>(
@@ -47,7 +42,7 @@ export class Extension<S extends ExtensionStateDefinition | any = undefined> {
     opts?: StateSubscriberOpts
   ) {
     return this.composite.subscribe(
-      (composite) => collector(composite.getExtension(this.definition).state),
+      () => collector(this.state),
       subscriber,
       opts
     );
