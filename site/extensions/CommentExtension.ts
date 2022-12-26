@@ -29,7 +29,9 @@ export const CommentExtension = createExtension<CommentState>({
         return;
       }
 
-      delete extension.state.templateToComments[disposedType.id];
+      extension.composite.change(() => {
+        delete extension.state.templateToComments[disposedType.id];
+      });
     });
   },
 });

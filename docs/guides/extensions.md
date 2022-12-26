@@ -12,19 +12,19 @@ One way to go about this is store these comments directly as part of the `State`
 import { createExtension } from '@composite/state';
 
 type Comment = {
-    templateId: string;
+    userId: string;
     content: string;
 };
 
 type CommentState = {
-    comments: Comment[];
+    templateIdToComments: Record<string, Comment[]>;
 };
 
 const CommentExtension = createExtension<CommentState>({
     key: 'comments', 
     state: {
         // initial state
-        comments: []
+        comments: {}
     },
     init: extension => {
         // do whatever your extension may have to do here
@@ -58,7 +58,14 @@ For example, let's leave a comment on a root `template` of one our components in
 const rootTemplate = composite.state.components[0].template;
 
 composite.change(() => {
-    composite.getExtensionState(CommentExtension).comments.push(
+    let templateComments = composite.getExtensionState(CommentExtension).comments[rootTemplate.id];
+
+    if ( !templateComments ) {
+        templateComments = {};
+        composite.getExtensionState(CommentExtension).comments[rootTemplate.id] = templateComments;
+    }
+
+    templateComments.push(
         templateId: rootTemplate.id,
         content: "Yo, this should be a <div>, not a <section>",
     );
@@ -84,24 +91,18 @@ const CommentExtension = createExtension<CommentState>({
     },
     init: extension => {
         extension.composite.listenToChanges((payload) => {
-            if ( payload.type !== "disposed" ) {
+            if ( payload.event !== "dispose" ) {
                 return;
             }
 
-            const deletedValue = payload.value;
+            const disposedType = payload.value;
 
-            if ( deletedValue instanceof t.Template ) {
-                const deletedTemplateId = deletedValue.id;
+            if ( disposedType instanceof t.Template ) {
+                const deletedTemplateId = disposedType.id;
 
                 // remove any comments associated with the deleted Template
                 extension.composite.change(() => {
-                    extension.state.comments.forEach(comment => {
-                        if ( comment.templateId !== deletedTemplateId ) {
-                            return;
-                        }
-
-                        extension.state.comments.splice(extension.state.comments.indexOf(comment), 1)
-                    })
+                   delete extension.state.templateToComments[deletedTemplateId.id];
                 })
             }
         });
