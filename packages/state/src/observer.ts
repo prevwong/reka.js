@@ -42,7 +42,7 @@ type OnChangePayload = Omit<IObjectDidChange | IArraySplice, 'path'> & {
   path: Path[];
 };
 
-type TypeDisposer = () => void;
+type ValueDisposer = () => void;
 
 export type ObserverHooks = {
   onAdd: (payload: OnAddPayload) => void;
@@ -58,7 +58,16 @@ export type ChangeOpts = {
   batch: boolean;
 };
 
-export type ChangeListenerSubscriber = (payload: OnChangePayload) => void;
+type ChangeListenerOnAddPayload = { event: 'add' } & OnAddPayload;
+type ChangeListenerOnDisposePaylaod = { event: 'dispose' } & OnDiposePayload;
+type ChangeListenerOnChangePayload = { event: 'change' } & OnChangePayload;
+
+type ChangeListenerPayload =
+  | ChangeListenerOnAddPayload
+  | ChangeListenerOnDisposePaylaod
+  | ChangeListenerOnChangePayload;
+
+export type ChangeListenerSubscriber = (payload: ChangeListenerPayload) => void;
 
 export class Observer<T extends t.Type = t.Type> {
   root: T;
@@ -69,10 +78,13 @@ export class Observer<T extends t.Type = t.Type> {
   private changeListenerSubscribers: ChangeListenerSubscriber[] = [];
   private idToType: Map<string, t.Type>;
   private opts: ObserverOptions;
-  private typeToDisposer: WeakMap<t.Type, TypeDisposer>;
+  private typeToDisposer: WeakMap<t.Type, ValueDisposer>;
   private markedForDisposal: Set<t.Type> = new Set();
   private isDisposing: boolean = false;
   private isMutation: boolean = false;
+
+  private uncomittedValues: Set<Record<string, any> | Array<any> | t.Type> =
+    new Set();
 
   constructor(type: T, opts?: Partial<ObserverOptions>) {
     this.valueToParentMap = new WeakMap();
@@ -154,7 +166,7 @@ export class Observer<T extends t.Type = t.Type> {
     };
   }
 
-  private setupChild(value: any, parent: Parent) {
+  private _setupChild(value: any, parent: Parent) {
     if (value instanceof t.Type) {
       return this.setupType(value, parent);
     }
@@ -171,6 +183,18 @@ export class Observer<T extends t.Type = t.Type> {
     return () => {};
   }
 
+  private setupChild(value: any, parent: Parent) {
+    if (
+      this.isMutation &&
+      typeof value !== 'function' &&
+      value instanceof Object
+    ) {
+      this.uncomittedValues.add(value);
+    }
+
+    return this._setupChild(value, parent);
+  }
+
   private setupType(value: t.Type, parent?: Parent) {
     if (parent) {
       this.valueToParentMap.set(value, parent);
@@ -178,11 +202,8 @@ export class Observer<T extends t.Type = t.Type> {
 
     this.markedForDisposal.delete(value);
 
-    if (!this.idToType.get(value.id) && this.opts.hooks?.onAdd) {
-      this.opts.hooks.onAdd({
-        type: value,
-        path: this.getPath(value),
-      });
+    if (!this.idToType.get(value.id)) {
+      this.handleOnAddType(value);
     }
 
     this.idToType.set(value.id, value);
@@ -249,13 +270,7 @@ export class Observer<T extends t.Type = t.Type> {
 
     if (!this.typeToDisposer.get(value)) {
       this.typeToDisposer.set(value, () => {
-        if (this.opts.hooks?.onDispose) {
-          this.opts.hooks.onDispose({
-            type: value,
-            path: this.getPath(value),
-          });
-        }
-
+        this.handleOnDisposeType(value);
         disposeTypeObserver();
         fieldDisposers.forEach((disposeChildField) => disposeChildField?.());
 
@@ -436,6 +451,40 @@ export class Observer<T extends t.Type = t.Type> {
     };
   }
 
+  private handleOnAddType(type: t.Type) {
+    const path = this.getPath(type);
+
+    if (this.opts.hooks?.onAdd) {
+      this.opts.hooks.onAdd({
+        type,
+        path,
+      });
+    }
+
+    this.notify({
+      event: 'add',
+      type,
+      path,
+    });
+  }
+
+  private handleOnDisposeType(type: t.Type) {
+    const path = this.getPath(type);
+
+    if (this.opts.hooks?.onDispose) {
+      this.opts.hooks.onDispose({
+        type,
+        path,
+      });
+    }
+
+    this.notify({
+      event: 'dispose',
+      type,
+      path,
+    });
+  }
+
   private handleOnChange(value: any, payload: Omit<OnChangePayload, 'path'>) {
     const change = {
       ...payload,
@@ -446,12 +495,41 @@ export class Observer<T extends t.Type = t.Type> {
       this.opts.hooks.onChange(change);
     }
 
-    this.notify(change);
+    this.notify({
+      event: 'change',
+      ...change,
+    });
 
     return change;
   }
 
-  private notify(change: OnChangePayload) {
+  private notify(change: ChangeListenerPayload) {
+    if (!this.isMutation) {
+      return;
+    }
+
+    const path =
+      change.path.length > 0 ? change.path[change.path.length - 1] : null;
+
+    /**
+     * Only notify if parent has already been committed
+     *
+     * This is to prevent situations where a parent and its children are added in the same mutation.
+     * For example:
+     *
+     * observer.change(() => {
+     *   // parent element added here
+     *   root.someKey = [];
+     *
+     *   // its child values are also added within the same mutation
+     *   // in which case, we can ignore notifying the listeners of this second mutation
+     *   root.someKey.push({})
+     * })
+     */
+    if (path && this.uncomittedValues.has(path.parent[path.key])) {
+      return;
+    }
+
     this.changeListenerSubscribers.forEach((subscriber) => subscriber(change));
   }
 
@@ -532,6 +610,7 @@ export class Observer<T extends t.Type = t.Type> {
       this.isMutation = false;
 
       this.disposeTypes();
+      this.uncomittedValues.clear();
     };
 
     if (opts.batch) {

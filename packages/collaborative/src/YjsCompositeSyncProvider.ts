@@ -284,6 +284,10 @@ export class YjsCompositeSyncProvider {
     // Listen to Composite state changes
     this.compositeChangeUnsubscriber = this.composite.listenToChanges(
       (change) => {
+        if (change.event !== 'change') {
+          return;
+        }
+
         if (this.isSynchingToMobx) {
           return;
         }
