@@ -2,15 +2,15 @@ import { Composite } from '@composite/state';
 import * as t from '@composite/types';
 import * as Y from 'yjs';
 
-export const yTypeToJS = (composite: Composite, types: any, yType: any) => {
+export const yTypeToJS = (_composite: Composite, types: any, yType: any) => {
   const convert = (value: any) => {
     // console.log("converting", value);
     if (value instanceof Y.Map) {
       if (value.get('$$typeId')) {
         // throw new Error(value.get("$$typeId"));
-        let x = composite.getNodeFromId(value.get('$$typeId'));
+        let x;
 
-        if (!x && types.get(value.get('$$typeId'))) {
+        if (types.get(value.get('$$typeId'))) {
           const rootId = value.get('$$typeId');
 
           // TODO: create a more specialize unflattenType method that works with YTypes

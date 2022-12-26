@@ -21,6 +21,9 @@ export class YjsCompositeSyncProvider {
 
     this.yDoc = type.doc;
 
+    if (typeof window !== 'undefined') {
+      (window as any).crdt = this;
+    }
     this.yDocChangeListener = (events, tr) => {
       if (!this.composite) {
         return;
@@ -44,7 +47,9 @@ export class YjsCompositeSyncProvider {
   private withMobxSync(cb: () => void) {
     const prev = this.isSynchingToMobx;
     this.isSynchingToMobx = true;
-    cb();
+    this.composite.change(() => {
+      cb();
+    });
     this.isSynchingToMobx = prev;
   }
 
@@ -82,59 +87,57 @@ export class YjsCompositeSyncProvider {
       return;
     }
 
-    this.composite.change(() => {
-      // console.log("synching to state", event);
-      const obj = toJsObject([...event.path.slice(1)]);
+    const obj = toJsObject([...event.path.slice(1)]);
 
-      if (!obj) {
+    if (!obj) {
+      return;
+    }
+
+    // TODO: this is currently not handling deletions
+    if (event instanceof Y.YMapEvent) {
+      if (event.keys.size === 0) {
         return;
       }
 
-      // TODO: this is currently not handling deletions
-      if (event instanceof Y.YMapEvent) {
-        event.keysChanged.forEach((key) => {
+      event.keysChanged.forEach((key) => {
           obj[key] = yTypeToJS(
-            this.composite,
-            yDocRoot.get('types'),
-            (event.target as Y.Map<any>).get(key)
-          );
-        });
-      } else if (event instanceof Y.YArrayEvent) {
-        // console.log("yjs  arr sevent", event);
-        for (let i = 0, j = 0; i < event.delta.length; i++) {
-          const delta = event.delta[i];
+          this.composite,
+          yDocRoot.get('types'),
+          (event.target as Y.Map<any>).get(key)
+        );
+      });
+    } else if (event instanceof Y.YArrayEvent) {
+      for (let i = 0, j = 0; i < event.delta.length; i++) {
+        const delta = event.delta[i];
 
-          if (delta.retain !== undefined) {
-            j += delta.retain;
-            continue;
-          }
+        if (delta.retain !== undefined) {
+          j += delta.retain;
+          continue;
+        }
 
-          if (delta.delete) {
-            obj.splice(j, delta.delete);
-            j = j - delta.delete + 1;
-            continue;
-          }
+        if (delta.delete) {
+          obj.splice(j, delta.delete);
+          j = j - delta.delete + 1;
+          continue;
+        }
 
-          if (delta.insert) {
-            const m = (delta.insert as any[]).map((item) => {
-              const converted = yTypeToJS(
-                this.composite,
-                yDocRoot.get('types'),
-                item
-              );
+        if (delta.insert) {
+          const m = (delta.insert as any[]).map((item) => {
+            const converted = yTypeToJS(
+              this.composite,
+              yDocRoot.get('types'),
+              item
+            );
 
-              // console.log("item", item, converted);
+            return converted;
+          });
 
-              return converted;
-            });
-
-            obj.splice(j, 0, ...m);
-            j += Array.isArray(delta.insert) ? delta.insert.length : 1;
-            continue;
-          }
+          obj.splice(j, 0, ...m);
+          j += Array.isArray(delta.insert) ? delta.insert.length : 1;
+          continue;
         }
       }
-    });
+    }
   }
 
   syncMobxChangesToYDoc(changes) {
