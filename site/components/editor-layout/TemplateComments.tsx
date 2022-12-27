@@ -1,5 +1,6 @@
 import { observer, useCollector } from '@composite/react';
 import * as React from 'react';
+import { formatDistance } from 'date-fns';
 
 import { useEditor } from '@app/editor';
 import { ActiveFrame } from '@app/editor/ComponentEditor';
@@ -32,52 +33,63 @@ const StyledCommentItem = styled('div', {
   gap: '$3',
 });
 
-export const TemplateComments = observer((props: TemplateCommentsProps) => {
+type InternalTemplateCommentsProps = {
+  iframeDOM: HTMLIFrameElement;
+  templateDOM: HTMLElement;
+  templateId: string;
+};
+
+const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
   const editor = useEditor();
-  const iframe = editor.iframe;
   const containerRef = React.useRef<HTMLDivElement | null>(null);
 
-  const template = props.activeFrame.templateToShowComments;
+  const domRect = props.templateDOM.getBoundingClientRect();
+  const iframeRect = props.iframeDOM.getBoundingClientRect();
 
-  const { id, comments } = useCollector((composite) => {
-    let comments: Comment[] = [];
-    let id;
-
-    if (props.activeFrame.templateToShowComments) {
-      // const extension = composite.getExtension(CommentExtension)['_state'];
-
-      const _c =
-        composite.getExtension(CommentExtension).state.templateToComments[
-          props.activeFrame.templateToShowComments.id
-        ] ?? [];
-
-      console.log('recompute', composite.getExtension(CommentExtension).state);
-      // id = extension.id;
-      comments = _c.map((c: any) => c) ?? [];
-    }
+  const { comments } = useCollector((composite) => {
+    let comments: Comment[] =
+      composite.getExtension(CommentExtension).state.templateToComments[
+        props.templateId
+      ] ?? [];
 
     return {
-      id,
       comments,
     };
   });
 
-  console.log('comments', id, comments);
+  React.useEffect(() => {
+    const { current: containerDOM } = containerRef;
 
-  if (!template || !iframe) {
-    return null;
-  }
+    if (!containerDOM) {
+      return;
+    }
 
-  const doms = props.activeFrame.tplElements.get(template);
+    const hideComments = () => {
+      editor.activeComponentEditor?.hideComments();
+    };
 
-  if (!doms) {
-    return null;
-  }
+    const onClickOutside = (e: any) => {
+      if (!e.target) {
+        return;
+      }
 
-  const [dom] = doms;
+      if (containerDOM.contains(e.target as HTMLElement)) {
+        return;
+      }
+      hideComments();
+    };
 
-  const domRect = dom.getBoundingClientRect();
-  const iframeRect = iframe.getBoundingClientRect();
+    props.iframeDOM.contentDocument?.addEventListener('click', hideComments);
+    document.addEventListener('mouseup', onClickOutside);
+
+    return () => {
+      document.removeEventListener('mouseup', onClickOutside);
+      props.iframeDOM.contentDocument?.removeEventListener(
+        'click',
+        onClickOutside
+      );
+    };
+  }, [editor, props.iframeDOM]);
 
   return (
     <StyledContainer
@@ -94,26 +106,39 @@ export const TemplateComments = observer((props: TemplateCommentsProps) => {
           </Text>
         ) : (
           <React.Fragment>
-            {comments.map((comment, i) => {
-              return (
-                <StyledCommentItem key={i}>
-                  <UserAvatar userId={comment.userId} />
-                  <Box
-                    css={{ flex: 1, display: 'flex', flexDirection: 'column' }}
-                  >
-                    <Text
-                      size={2}
-                      css={{ mb: '$2', fontWeight: 500, color: '$slate11' }}
+            {comments
+              .sort((a, b) => (a.date < b.date ? 1 : -1))
+              .map((comment, i) => {
+                return (
+                  <StyledCommentItem key={i}>
+                    <Box css={{ mt: '$1' }}>
+                      <UserAvatar user={comment.user} />
+                    </Box>
+                    <Box
+                      css={{
+                        flex: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                      }}
                     >
-                      {editor.getUserById(comment.userId)?.name ?? 'Unknown'}
-                    </Text>
-                    <Text size={1} css={{ color: '$slate11' }}>
-                      {comment.content}
-                    </Text>
-                  </Box>
-                </StyledCommentItem>
-              );
-            })}
+                      <Text
+                        size={2}
+                        css={{ mb: '$2', fontWeight: 500, color: '$slate11' }}
+                      >
+                        {comment.user.name}
+                      </Text>
+                      <Text size={1} css={{ mb: '$2', color: '$slate11' }}>
+                        {comment.content}
+                      </Text>
+                      <Text size={1} css={{ color: '$slate10' }}>
+                        {formatDistance(comment.date, Date.now(), {
+                          addSuffix: true,
+                        })}
+                      </Text>
+                    </Box>
+                  </StyledCommentItem>
+                );
+              })}
           </React.Fragment>
         )}
       </Box>
@@ -131,18 +156,50 @@ export const TemplateComments = observer((props: TemplateCommentsProps) => {
                 editor.composite.getExtension(CommentExtension).state
                   .templateToComments;
 
-              if (!comments[template.id]) {
-                comments[template.id] = [];
+              if (!comments[props.templateId]) {
+                comments[props.templateId] = [];
               }
 
-              comments[template.id].push({
+              comments[props.templateId].push({
                 content,
-                userId: editor.user.id,
+                user: editor.user,
+                date: Date.now(),
               });
             });
           }}
         />
       </Box>
     </StyledContainer>
+  );
+};
+
+export const TemplateComments = observer((props: TemplateCommentsProps) => {
+  const editor = useEditor();
+  const iframe = editor.iframe;
+
+  const template = props.activeFrame.templateToShowComments;
+
+  if (!template || !iframe) {
+    return null;
+  }
+
+  const doms = props.activeFrame.tplElements.get(template);
+
+  if (!doms) {
+    return null;
+  }
+
+  const [dom] = doms;
+
+  if (!dom) {
+    return null;
+  }
+
+  return (
+    <InternalTemplateComments
+      templateId={template.id}
+      templateDOM={dom}
+      iframeDOM={iframe}
+    />
   );
 });

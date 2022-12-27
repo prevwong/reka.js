@@ -172,6 +172,7 @@ importers:
       '@types/react-dom': ^17.0.10
       autoprefixer: ^10.4.13
       classnames: ^2.3.1
+      date-fns: ^2.29.3
       esbuild: ^0.15.7
       eslint: ^8.23.0
       eslint-config-next: 12.2.5
@@ -218,7 +219,7 @@ importers:
       '@composite/state': link:../packages/state
       '@composite/types': link:../packages/types
       '@hashicorp/remark-plugins': 4.1.1
-      '@prevwong/getdocs-ts': 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+x-oauth-basic@github.com/prevwong/getdocs-ts/2d912fe897b2bd1fbff95d3d77179de82f9efb32
+      '@prevwong/getdocs-ts': github.com/prevwong/getdocs-ts/2d912fe897b2bd1fbff95d3d77179de82f9efb32
       '@radix-ui/colors': 0.1.8
       '@radix-ui/react-dialog': 1.0.2_j6sw2p2tdbh6crpcmkxtmmhma4
       '@radix-ui/react-dropdown-menu': 1.0.0_j6sw2p2tdbh6crpcmkxtmmhma4
@@ -230,6 +231,7 @@ importers:
       '@radix-ui/react-tooltip': 0.1.7_sfoxds7t5ydpegc3knd667wn6m
       '@stitches/react': 1.2.8_react@17.0.2
       classnames: 2.3.2
+      date-fns: 2.29.3
       esbuild: 0.15.7
       framer-motion: 6.5.1_sfoxds7t5ydpegc3knd667wn6m
       gray-matter: 4.0.3
@@ -2789,6 +2791,11 @@ packages:
   /damerau-levenshtein/1.0.8:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
     dev: true
+
+  /date-fns/2.29.3:
+    resolution: {integrity: sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==}
+    engines: {node: '>=0.11'}
+    dev: false
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -6743,8 +6750,8 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
 
-  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+x-oauth-basic@github.com/prevwong/getdocs-ts/2d912fe897b2bd1fbff95d3d77179de82f9efb32:
-    resolution: {commit: 2d912fe897b2bd1fbff95d3d77179de82f9efb32, repo: https://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:x-oauth-basic@github.com/prevwong/getdocs-ts.git, type: git}
+  github.com/prevwong/getdocs-ts/2d912fe897b2bd1fbff95d3d77179de82f9efb32:
+    resolution: {commit: 2d912fe897b2bd1fbff95d3d77179de82f9efb32, repo: git+ssh://git@github.com/prevwong/getdocs-ts.git, type: git}
     name: '@prevwong/getdocs-ts'
     version: 0.1.5
     hasBin: true

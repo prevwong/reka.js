@@ -1,4 +1,3 @@
-import { useCollector } from '@composite/react';
 import * as t from '@composite/types';
 import { PlusIcon, TrashIcon } from '@radix-ui/react-icons';
 import { observer } from 'mobx-react-lite';
@@ -121,32 +120,7 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
 
   const editor = useEditor();
 
-  const { template } = useCollector((composite) => {
-    let collectedTemplateValues;
-
-    const template = composite.getNodeFromId(props.templateId, t.Template);
-
-    if (template) {
-      let parentNode: t.Template | null = null;
-
-      const parent = composite.getParent(template);
-
-      if (parent && parent.node instanceof t.Template) {
-        parentNode = parent.node;
-      }
-
-      collectedTemplateValues = {
-        id: template.id,
-        name: getTemplateName(template),
-        parent: parentNode,
-        data: template,
-      };
-    }
-
-    return {
-      template: collectedTemplateValues,
-    };
-  });
+  const template = editor.composite.getNodeFromId(props.templateId, t.Template);
 
   if (!template) {
     return null;
@@ -180,7 +154,7 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
               return;
             }
 
-            editor.activeComponentEditor.setTplEvent('selected', template.data);
+            editor.activeComponentEditor.setTplEvent('selected', template);
           }}
           onMouseOver={(e) => {
             e.stopPropagation();
@@ -188,7 +162,7 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
               return;
             }
 
-            editor.activeComponentEditor.setTplEvent('hovered', template.data);
+            editor.activeComponentEditor.setTplEvent('hovered', template);
           }}
           onMouseOut={() => {
             if (!editor.activeComponentEditor) {
@@ -206,11 +180,11 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
           }}
         >
           <Text size="1" css={{ flex: 1 }}>
-            {template.name}
+            {getTemplateName(template)}
           </Text>
           <Box>
             <Tooltip content="Add new template">
-              <AddTemplateButton target={template.data} />
+              <AddTemplateButton target={template} />
             </Tooltip>
 
             <Tooltip content="Remove template">
@@ -219,15 +193,18 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   editor.composite.change(() => {
-                    const parent = template.parent;
+                    const parent = editor.composite.getParent(
+                      template,
+                      t.Template
+                    );
 
-                    if (!parent) {
+                    if (!parent || !(parent instanceof t.Template)) {
                       return;
                     }
 
                     editor.composite.change(() => {
                       parent.children.splice(
-                        parent.children.indexOf(template.data),
+                        parent.children.indexOf(template),
                         1
                       );
                     });
@@ -240,7 +217,7 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
           </Box>
         </Box>
       </Box>
-      {template.data.children.map((child) => (
+      {template.children.map((child) => (
         <RenderTemplateNode
           key={child.id}
           templateId={child.id}
@@ -256,9 +233,12 @@ type TemplateLayersProps = {
 };
 
 export const TemplateLayers = (props: TemplateLayersProps) => {
-  const { component } = useCollector((composite) => ({
-    component: composite.getNodeFromId(props.componentId, t.CompositeComponent),
-  }));
+  const editor = useEditor();
+
+  const component = editor.composite.getNodeFromId(
+    props.componentId,
+    t.CompositeComponent
+  );
 
   if (!component) {
     return null;

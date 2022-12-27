@@ -1,4 +1,3 @@
-import { useCollector } from '@composite/react';
 import * as t from '@composite/types';
 import {
   ComponentBooleanIcon,
@@ -120,9 +119,9 @@ export const ComponentList = (props: ComponentListProps) => {
   const [showAddComponentModal, setShowAddCompnonentModal] =
     React.useState(false);
 
-  const { components } = useCollector((composite) => ({
-    components: composite.state.program.components,
-  }));
+  const editor = useEditor();
+
+  const components = editor.composite.state.program.components;
 
   return (
     <React.Fragment>

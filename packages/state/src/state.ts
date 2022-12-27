@@ -1,14 +1,15 @@
 import * as t from '@composite/types';
-import { computed, makeObservable, reaction } from 'mobx';
+import { computed, makeObservable, observable, reaction } from 'mobx';
 
 import { Computation } from './computation';
 import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { ExtensionDefinition, ExtensionRegistry } from './extension';
 import { Frame, FrameOpts } from './frame';
-import { StateOpts, StateSubscriber, StateSubscriberOpts } from './interfaces';
+import { StateOpts, StateSubscriberOpts } from './interfaces';
 import { ChangeListenerSubscriber, Observer } from './observer';
 import { Resolver } from './resolver';
+import { toJS } from './utils';
 
 export class Composite {
   /**
@@ -34,11 +35,15 @@ export class Composite {
   private syncComponents: Computation<void> | null = null;
   private syncCleanupEnv: Computation<void> | null = null;
   private idToFrame: Map<string, Frame> = new Map();
-  private subscribers: Set<StateSubscriber<any>> = new Set();
-  private subscriberDisposers: WeakMap<any, any> = new WeakMap();
 
   constructor(private readonly opts: StateOpts) {
     this.frames = [];
+
+    makeObservable(this, {
+      frames: observable,
+      config: computed,
+      components: computed,
+    });
   }
 
   /**
@@ -80,11 +85,6 @@ export class Composite {
     this.env = new Environment(this);
     this.resolver = new Resolver(this);
     this.frames = [];
-
-    makeObservable(this, {
-      config: computed,
-      components: computed,
-    });
 
     this.observer = new Observer(this.state, {
       hooks: {
@@ -268,35 +268,17 @@ export class Composite {
     onCollect: (collected: C, prevCollected: C) => void,
     opts?: StateSubscriberOpts
   ) {
-    const subscriber: StateSubscriber<any> = {
-      collect,
-      onCollect,
-      opts: {
-        fireImmediately: false,
-        ...(opts ?? {}),
-      },
-    };
-
-    this.subscribers.add(subscriber);
-
-    const disposeReaction = reaction(
-      () => subscriber.collect(this),
-      (collected, prevCollected) => {
-        subscriber.onCollect(collected, prevCollected);
-      },
+    const dispose = reaction(
+      () => toJS(collect(this)),
+      (collected, prevCollected) => onCollect(collected, prevCollected),
       {
-        fireImmediately: subscriber.opts.fireImmediately,
+        fireImmediately: opts?.fireImmediately,
       }
     );
 
-    const dispose = () => {
-      disposeReaction();
-      this.subscribers.delete(subscriber);
+    return () => {
+      dispose();
     };
-
-    this.subscriberDisposers.set(subscriber, dispose);
-
-    return dispose;
   }
 
   /**

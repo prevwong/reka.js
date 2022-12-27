@@ -1,4 +1,3 @@
-import { useCollector } from '@composite/react';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -100,24 +99,13 @@ export const ComponentEditorView = observer(() => {
   const containerDOMRef = React.useRef<HTMLDivElement | null>(null);
   const frameContainerDOMRef = React.useRef<HTMLDivElement | null>(null);
 
-  const { frames } = useCollector(
-    (composite) => {
-      if (!componentEditor) {
-        return {
-          frames: [],
-        };
-      }
-
-      return {
-        frames: composite
-          .getExtension(UserFrameExtension)
-          .state.frames.filter(
-            (frame) => frame.name === componentEditor.component.name
-          ),
-      };
-    },
-    [componentEditor]
-  );
+  const frames = componentEditor
+    ? editor.composite
+        .getExtension(UserFrameExtension)
+        .state.frames.filter(
+          (frame) => frame.name === componentEditor.component.name
+        )
+    : [];
 
   const [frameScale, setFrameScale] = React.useState(1);
 
