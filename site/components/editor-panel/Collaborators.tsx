@@ -18,7 +18,7 @@ const CollabUser = React.forwardRef<HTMLSpanElement, any>(
   ({ active, user }, ref) => {
     return (
       <Tooltip content={`${user.name}${active ? ' (You)' : ''}`}>
-        <UserAvatar ref={ref} userId={user.id} />
+        <UserAvatar ref={ref} user={user} />
       </Tooltip>
     );
   }

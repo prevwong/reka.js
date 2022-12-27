@@ -1,9 +1,12 @@
 import { createExtension } from '@composite/state';
 import * as t from '@composite/types';
 
+import { User } from '@app/editor/Editor';
+
 export type Comment = {
-  userId: string;
+  user: User;
   content: string;
+  date: number;
 };
 
 type TemplateId = string;

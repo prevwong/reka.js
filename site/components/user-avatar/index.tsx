@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import * as React from 'react';
 
 import { useEditor } from '@app/editor';
+import { User } from '@app/editor/Editor';
 import { styled } from '@app/styles';
 
 const StyledUserIcon = styled(motion.span, {
@@ -50,26 +51,20 @@ const getInitials = (name: string) => {
 };
 
 type UserAvatarProps = {
-  userId: string;
+  user: User;
 };
 
 export const UserAvatar = React.forwardRef<HTMLSpanElement, UserAvatarProps>(
   (props, ref) => {
     const editor = useEditor();
 
-    const user = editor.getUserById(props.userId);
-
-    if (!user) {
-      return null;
-    }
-
     return (
       <StyledUserIcon
-        active={user.id === editor.user.id}
-        css={{ backgroundColor: user.color }}
+        active={props.user.id === editor.user.id}
+        css={{ backgroundColor: props.user.color }}
         ref={ref}
       >
-        <b>{getInitials(user.name)}</b>
+        <b>{getInitials(props.user.name)}</b>
       </StyledUserIcon>
     );
   }
