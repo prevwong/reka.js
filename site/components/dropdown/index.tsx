@@ -6,7 +6,8 @@ import { styled } from '@app/styles';
 
 const StyledContent = styled(DropdownMenuPrimitive.Content, {
   minWidth: '140px',
-  backgroundColor: 'white',
+  backgroundColor: 'rgba(255,255,255,0.6)',
+  backdropFilter: 'blur(10px)',
   borderRadius: '$1',
   border: '1px solid $grayA2',
   boxShadow: '0px 3px 22px -8px rgb(0 0 0 / 50%)',

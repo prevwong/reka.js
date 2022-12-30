@@ -4,26 +4,27 @@ import * as React from 'react';
 import { styled } from '@app/styles';
 
 const StyledSwitch = styled(SwitchPrimitive.Root, {
-  width: '42px',
+  width: '38px',
   height: '20px',
   borderRadius: '100px',
   position: 'relative',
   backgroundColor: '$blackA6',
+  cursor: 'pointer',
   '&[data-state="checked"]': {
-    background: '$blackA9',
+    background: '$primary',
   },
 });
 
 const StyledThumb = styled(SwitchPrimitive.Thumb, {
-  width: '16px',
-  height: '16px',
+  width: '14px',
+  height: '14px',
   display: 'block',
   borderRadius: '$round',
   transform: 'translateX(2px)',
   transition: 'transform 100ms',
-  background: '$whiteA6',
+  background: '$whiteA12',
   '&[data-state="checked"]': {
-    transform: 'translateX(24px)',
+    transform: 'translateX(22px)',
     background: '$whiteA12',
   },
 });

@@ -15,6 +15,9 @@ import { Select } from '../select';
 import { Text } from '../text';
 import { EnterTextField } from '../text-field';
 import { Tree } from '../tree';
+import { Switch } from '../switch';
+import { InfoCircledIcon } from '@radix-ui/react-icons';
+import { Tooltip } from '../tooltip';
 
 const StyledFrameContainer = styled('div', {
   width: '100%',
@@ -263,6 +266,10 @@ export const ComponentEditorView = observer(() => {
                 componentEditor.activeFrame.user.height
               )}
               css={{
+                filter: `grayscale(${
+                  componentEditor.activeFrame.state.sync ? 0 : 1
+                })`,
+                transition: '0.2s ease-in',
                 '> iframe': {
                   maxWidth: componentEditor.activeFrame.user.width,
                   maxHeight: componentEditor.activeFrame.user.height,
@@ -298,10 +305,57 @@ export const ComponentEditorView = observer(() => {
         >
           <Box
             css={{
-              ml: '-$3',
               display: 'flex',
               alignItems: 'center',
               flex: 1,
+            }}
+          >
+            <Box css={{ display: 'flex', alignItems: 'center', gap: '$3' }}>
+              <Tooltip
+                content={
+                  componentEditor.activeFrame.state.sync
+                    ? "The Frame's View tree will be updated when there's a change made to State"
+                    : 'Frame will not recompute its View tree'
+                }
+              >
+                <Text
+                  size={1}
+                  css={{
+                    display: 'flex',
+                    gap: '$2',
+                    fontSize: '10px',
+                    color: '$slate10',
+                    alignItems: 'center',
+                  }}
+                >
+                  {componentEditor.activeFrame?.state.sync
+                    ? 'Synching'
+                    : 'Not synching'}
+                  <Box>
+                    <InfoCircledIcon width={12} height={12} />
+                  </Box>
+                </Text>
+              </Tooltip>
+              <Switch
+                onChange={() => {
+                  if (componentEditor.activeFrame?.state.sync) {
+                    componentEditor.activeFrame?.state.disableSync();
+                    return;
+                  }
+
+                  componentEditor.activeFrame?.state.enableSync();
+                }}
+                checked={componentEditor.activeFrame.state.sync}
+              />
+            </Box>
+          </Box>
+          <Box
+            css={{
+              display: 'flex',
+              alignItems: 'center',
+              alignSelf: 'flex-end',
+              justifySelf: 'flex-end',
+              gap: '$2',
             }}
           >
             <Button
@@ -335,15 +389,6 @@ export const ComponentEditorView = observer(() => {
             >
               Remove Frame
             </Button>
-          </Box>
-          <Box
-            css={{
-              display: 'flex',
-              alignItems: 'center',
-              alignSelf: 'flex-end',
-              justifySelf: 'flex-end',
-            }}
-          >
             <Button onClick={() => setShowViewTree(!showViewTree)}>
               Toggle View
             </Button>

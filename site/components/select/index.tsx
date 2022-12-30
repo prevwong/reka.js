@@ -26,12 +26,12 @@ const StyledContent = styled(SelectPrimitive.Content, {
   backgroundColor: 'white',
   borderRadius: 6,
   boxShadow:
-    '0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)',
+    '0px 10px 38px -10px rgba(22, 23, 24, 1), 0px 10px 20px -15px rgba(22, 23, 24, 0.6)',
   zIndex: '$4',
 });
 
 const StyledViewport = styled(SelectPrimitive.Viewport, {
-  padding: 5,
+  padding: 4,
 });
 
 const StyledItem = styled(SelectPrimitive.Item, {
