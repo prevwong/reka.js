@@ -153,7 +153,7 @@ importers:
       '@composite/state': workspace:*
       '@composite/types': workspace:*
       '@hashicorp/remark-plugins': ^4.1.1
-      '@prevwong/getdocs-ts': git+https://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:x-oauth-basic@github.com/prevwong/getdocs-ts.git
+      '@prevwong/getdocs-ts': git+https://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:x-oauth-basic@github.com/prevwong/getdocs-ts.git
       '@radix-ui/colors': ^0.1.8
       '@radix-ui/react-dialog': ^1.0.0
       '@radix-ui/react-dropdown-menu': ^1.0.0
@@ -184,6 +184,7 @@ importers:
       next: 12.2.5
       pascal-case: ^3.1.2
       postcss: ^8.4.20
+      prop-types: ^15.8.1
       randomcolor: ^0.6.2
       react: ^17.0.2
       react-dom: ^17.0.2
@@ -219,7 +220,7 @@ importers:
       '@composite/state': link:../packages/state
       '@composite/types': link:../packages/types
       '@hashicorp/remark-plugins': 4.1.1
-      '@prevwong/getdocs-ts': github.com/prevwong/getdocs-ts/2d912fe897b2bd1fbff95d3d77179de82f9efb32
+      '@prevwong/getdocs-ts': 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+x-oauth-basic@github.com/prevwong/getdocs-ts/2d912fe897b2bd1fbff95d3d77179de82f9efb32
       '@radix-ui/colors': 0.1.8
       '@radix-ui/react-dialog': 1.0.2_j6sw2p2tdbh6crpcmkxtmmhma4
       '@radix-ui/react-dropdown-menu': 1.0.0_j6sw2p2tdbh6crpcmkxtmmhma4
@@ -240,10 +241,11 @@ importers:
       mobx-react-lite: 3.4.0_vuaia3cr2ucdrk3q4mauc2kfvi
       next: 12.2.5_sfoxds7t5ydpegc3knd667wn6m
       pascal-case: 3.1.2
+      prop-types: 15.8.1
       randomcolor: 0.6.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
-      react-frame-component: 5.2.3_sfoxds7t5ydpegc3knd667wn6m
+      react-frame-component: 5.2.3_oxfzelaz5ynxsop2v2nu2h2m64
       rehype-stringify: 9.0.3
       remark: 14.0.2
       remark-emoji: 3.0.2
@@ -5383,7 +5385,6 @@ packages:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       react-is: 16.13.1
-    dev: true
 
   /property-information/6.2.0:
     resolution: {integrity: sha512-kma4U7AFCTwpqq5twzC1YVIDXSqg6qQK6JN0smOw8fgRy1OkMi0CYSzFmsy6dnqSenamAtj0CyXMUJ1Mf6oROg==}
@@ -5427,20 +5428,20 @@ packages:
       scheduler: 0.20.2
     dev: false
 
-  /react-frame-component/5.2.3_sfoxds7t5ydpegc3knd667wn6m:
+  /react-frame-component/5.2.3_oxfzelaz5ynxsop2v2nu2h2m64:
     resolution: {integrity: sha512-r+h0o3r/uqOLNT724z4CRVkxQouKJvoi3OPfjqWACD30Y87rtEmeJrNZf1WYPGknn1Y8200HAjx7hY/dPUGgmA==}
     peerDependencies:
       prop-types: ^15.5.9
       react: '>= 16.3'
       react-dom: '>= 16.3'
     dependencies:
+      prop-types: 15.8.1
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     dev: false
 
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
-    dev: true
 
   /react-remove-scroll-bar/2.3.4_t4v2ig6j532zggk4vxuuplsqcq:
     resolution: {integrity: sha512-63C4YQBUt0m6ALadE9XV56hV8BgJWDmmTPY758iIJjfQKt2nYwoUrPk0LXRXcB/yIj82T1/Ixfdpdk68LwIB0A==}
@@ -6750,8 +6751,8 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
 
-  github.com/prevwong/getdocs-ts/2d912fe897b2bd1fbff95d3d77179de82f9efb32:
-    resolution: {commit: 2d912fe897b2bd1fbff95d3d77179de82f9efb32, repo: git+ssh://git@github.com/prevwong/getdocs-ts.git, type: git}
+  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+x-oauth-basic@github.com/prevwong/getdocs-ts/2d912fe897b2bd1fbff95d3d77179de82f9efb32:
+    resolution: {commit: 2d912fe897b2bd1fbff95d3d77179de82f9efb32, repo: https://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:x-oauth-basic@github.com/prevwong/getdocs-ts.git, type: git}
     name: '@prevwong/getdocs-ts'
     version: 0.1.5
     hasBin: true
