@@ -41,6 +41,8 @@ export class Composite {
   private syncCleanupEnv: IComputedValue<void> | null = null;
   private idToFrame: Map<string, Frame> = new Map();
 
+  private init = false;
+
   constructor(private readonly opts: StateOpts) {
     this.frames = [];
 
@@ -86,6 +88,7 @@ export class Composite {
    * Load a new State data type
    */
   load(state: t.State) {
+    this.init = true;
     this.state = t.state(state);
     this.env = new Environment(this);
     this.resolver = new Resolver(this);
@@ -108,12 +111,11 @@ export class Composite {
 
     this.extensionRegistry.init();
     this.sync();
+
+    this.init = false;
   }
 
-  /**
-   * Sync changes made to the State to all active Frames. You usually do not need to call this manually
-   */
-  sync() {
+  private syncHead() {
     this.resolver.resolveProgram();
 
     if (!this.syncGlobals) {
@@ -179,6 +181,13 @@ export class Composite {
     this.syncGlobals.get();
     this.syncComponents.get();
     this.syncCleanupEnv.get();
+  }
+
+  /**
+   * Sync changes made to the State to all active Frames. You usually do not need to call this manually
+   */
+  sync() {
+    this.syncHead();
 
     this.frames.forEach((frame) => {
       frame.compute();
@@ -206,7 +215,9 @@ export class Composite {
 
     this.frames.push(frame);
 
-    frame.compute();
+    if (!this.init) {
+      frame.compute();
+    }
 
     return frame;
   }
