@@ -142,6 +142,14 @@ export class ViewEvaluator {
     this._view.set(view);
 
     this.viewObserver = new Observer(view, {
+      batch: false,
+      shouldIgnoreObservable: (type, key) => {
+        if (type instanceof t.View && key === 'template') {
+          return true;
+        }
+
+        return false;
+      },
       hooks: {
         onDispose: (payload) => {
           const disposedType = payload.type;
@@ -452,18 +460,13 @@ export class ViewEvaluator {
       return;
     }
 
-    this.viewObserver.change(
-      () => {
-        _compute();
+    this.viewObserver.change(() => {
+      _compute();
 
-        this.tplKeyToComponentEvaluator.forEach((componentEvaluator) => {
-          componentEvaluator.compute();
-        });
-      },
-      {
-        batch: false,
-      }
-    );
+      this.tplKeyToComponentEvaluator.forEach((componentEvaluator) => {
+        componentEvaluator.compute();
+      });
+    });
   }
 
   dispose() {

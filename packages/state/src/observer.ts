@@ -30,12 +30,10 @@ type Path = {
 
 type OnAddPayload = {
   type: t.Type;
-  path: Path[];
 };
 
 type OnDiposePayload = {
   type: t.Type;
-  path: Path[];
 };
 
 type OnChangePayload = Omit<IObjectDidChange | IArraySplice, 'path'> & {
@@ -51,7 +49,9 @@ export type ObserverHooks = {
 };
 
 export type ObserverOptions = {
-  hooks?: Partial<ObserverHooks>;
+  batch: boolean;
+  shouldIgnoreObservable: (type: t.Type, key: string) => boolean;
+  hooks: Partial<ObserverHooks>;
 };
 
 export type ChangeOpts = {
@@ -91,7 +91,16 @@ export class Observer<T extends t.Type = t.Type> {
     this.typeToDisposer = new WeakMap();
     this.idToType = new Map();
     this.root = type;
-    this.opts = opts ?? {};
+    this.opts = {
+      shouldIgnoreObservable: () => false,
+      hooks: {
+        onAdd: () => {},
+        onChange: () => {},
+        onDispose: () => {},
+      },
+      batch: true,
+      ...(opts || {}),
+    };
 
     this.setRoot(type);
 
@@ -216,7 +225,17 @@ export class Observer<T extends t.Type = t.Type> {
       makeObservable(
         value,
         Object.fromEntries(
-          schema.fields.map((field) => [field.name, observable])
+          schema.fields
+            .filter((field) => {
+              if (!this.opts.shouldIgnoreObservable) {
+                return true;
+              }
+
+              return (
+                this.opts.shouldIgnoreObservable(value, field.name) === false
+              );
+            })
+            .map((field) => [field.name, observable])
         )
       );
     }
@@ -226,6 +245,10 @@ export class Observer<T extends t.Type = t.Type> {
     for (const field of schema.fields) {
       if (fieldDisposers.get(field.name)) {
         return;
+      }
+
+      if (this.opts.shouldIgnoreObservable?.(value, field.name) === true) {
+        continue;
       }
 
       fieldDisposers.set(
@@ -452,36 +475,28 @@ export class Observer<T extends t.Type = t.Type> {
   }
 
   private handleOnAddType(type: t.Type) {
-    const path = this.getPath(type);
-
     if (this.opts.hooks?.onAdd) {
       this.opts.hooks.onAdd({
         type,
-        path,
       });
     }
 
     this.notify({
       event: 'add',
       type,
-      path,
     });
   }
 
   private handleOnDisposeType(type: t.Type) {
-    const path = this.getPath(type);
-
     if (this.opts.hooks?.onDispose) {
       this.opts.hooks.onDispose({
         type,
-        path,
       });
     }
 
     this.notify({
       event: 'dispose',
       type,
-      path,
     });
   }
 
@@ -490,23 +505,6 @@ export class Observer<T extends t.Type = t.Type> {
       ...payload,
       path: this.getPath(value),
     };
-
-    if (this.opts.hooks?.onChange) {
-      this.opts.hooks.onChange(change);
-    }
-
-    this.notify({
-      event: 'change',
-      ...change,
-    });
-
-    return change;
-  }
-
-  private notify(change: ChangeListenerPayload) {
-    if (!this.isMutation) {
-      return;
-    }
 
     const path =
       change.path.length > 0 ? change.path[change.path.length - 1] : null;
@@ -527,6 +525,23 @@ export class Observer<T extends t.Type = t.Type> {
      * })
      */
     if (path && this.uncomittedValues.has(path.parent[path.key])) {
+      return;
+    }
+
+    if (this.opts.hooks?.onChange) {
+      this.opts.hooks.onChange(change);
+    }
+
+    this.notify({
+      event: 'change',
+      ...change,
+    });
+
+    return change;
+  }
+
+  private notify(change: ChangeListenerPayload) {
+    if (!this.isMutation) {
       return;
     }
 
@@ -594,7 +609,7 @@ export class Observer<T extends t.Type = t.Type> {
     };
   }
 
-  change(mutation: () => void, opts: ChangeOpts = { batch: true }) {
+  change(mutation: () => void) {
     const _change = () => {
       if (this.isMutation) {
         mutation();
@@ -613,7 +628,7 @@ export class Observer<T extends t.Type = t.Type> {
       this.uncomittedValues.clear();
     };
 
-    if (opts.batch) {
+    if (this.opts.batch) {
       _change();
       return;
     }
