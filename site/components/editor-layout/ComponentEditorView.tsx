@@ -1,3 +1,4 @@
+import { InfoCircledIcon } from '@radix-ui/react-icons';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -12,12 +13,11 @@ import { Box } from '../box';
 import { Button } from '../button';
 import { RenderFrame } from '../frame/RenderFrame';
 import { Select } from '../select';
+import { Switch } from '../switch';
 import { Text } from '../text';
 import { EnterTextField } from '../text-field';
-import { Tree } from '../tree';
-import { Switch } from '../switch';
-import { InfoCircledIcon } from '@radix-ui/react-icons';
 import { Tooltip } from '../tooltip';
+import { Tree } from '../tree';
 
 const StyledFrameContainer = styled('div', {
   width: '100%',
