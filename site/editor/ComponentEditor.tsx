@@ -3,13 +3,13 @@ import * as t from '@composite/types';
 import { makeObservable, action, observable } from 'mobx';
 import invariant from 'tiny-invariant';
 
+import { CommentExtension } from '@app/extensions/CommentExtension';
 import {
   UserFrame,
   UserFrameExtension,
 } from '@app/extensions/UserFrameExtension';
 
 import { Editor } from './Editor';
-import { CommentExtension } from '@app/extensions/CommentExtension';
 
 export type ActiveFrame = {
   state: Frame;

@@ -91,6 +91,8 @@ export class Observer<T extends t.Type = t.Type> {
     this.typeToDisposer = new WeakMap();
     this.idToType = new Map();
     this.root = type;
+
+    /* eslint-disable @typescript-eslint/no-empty-function */
     this.opts = {
       shouldIgnoreObservable: () => false,
       hooks: {
@@ -101,6 +103,7 @@ export class Observer<T extends t.Type = t.Type> {
       batch: true,
       ...(opts || {}),
     };
+    /* eslint-enable @typescript-eslint/no-empty-function */
 
     this.setRoot(type);
 

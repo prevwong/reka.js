@@ -1,6 +1,6 @@
 import { observer, useCollector } from '@composite/react';
-import * as React from 'react';
 import { formatDistance } from 'date-fns';
+import * as React from 'react';
 
 import { useEditor } from '@app/editor';
 import { ActiveFrame } from '@app/editor/ComponentEditor';
@@ -43,11 +43,8 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
   const editor = useEditor();
   const containerRef = React.useRef<HTMLDivElement | null>(null);
 
-  const domRect = props.templateDOM.getBoundingClientRect();
-  const iframeRect = props.iframeDOM.getBoundingClientRect();
-
   const { comments } = useCollector((composite) => {
-    let comments: Comment[] =
+    const comments: Comment[] =
       composite.getExtension(CommentExtension).state.templateToComments[
         props.templateId
       ] ?? [];
@@ -67,8 +64,8 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
     const domRect = props.templateDOM.getBoundingClientRect();
     const iframeRect = props.iframeDOM.getBoundingClientRect();
 
-    let top = iframeRect.top + domRect.top + 10;
-    let left = iframeRect.left + domRect.left + domRect.width + 10;
+    const top = iframeRect.top + domRect.top + 10;
+    const left = iframeRect.left + domRect.left + domRect.width + 10;
 
     containerDOM.style.top = `${top}px`;
     containerDOM.style.left = `${left}px`;
