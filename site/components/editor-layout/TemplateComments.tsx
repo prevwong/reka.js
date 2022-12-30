@@ -57,6 +57,43 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
     };
   });
 
+  const setPos = React.useCallback(() => {
+    const { current: containerDOM } = containerRef;
+
+    if (!containerDOM) {
+      return;
+    }
+
+    const domRect = props.templateDOM.getBoundingClientRect();
+    const iframeRect = props.iframeDOM.getBoundingClientRect();
+
+    let top = iframeRect.top + domRect.top + 10;
+    let left = iframeRect.left + domRect.left + domRect.width + 10;
+
+    containerDOM.style.top = `${top}px`;
+    containerDOM.style.left = `${left}px`;
+  }, [props.templateDOM, props.iframeDOM]);
+
+  React.useEffect(() => {
+    setPos();
+
+    let animationReq: number | null;
+
+    const animationLoop = () => {
+      setPos();
+
+      animationReq = window.requestAnimationFrame(() => {
+        animationLoop();
+      });
+    };
+
+    animationReq = window.requestAnimationFrame(() => animationLoop());
+
+    return () => {
+      animationReq !== null && window.cancelAnimationFrame(animationReq);
+    };
+  }, [setPos]);
+
   React.useEffect(() => {
     const { current: containerDOM } = containerRef;
 
@@ -92,13 +129,7 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
   }, [editor, props.iframeDOM]);
 
   return (
-    <StyledContainer
-      ref={containerRef}
-      style={{
-        top: iframeRect.top + domRect.top,
-        left: iframeRect.left + domRect.left,
-      }}
-    >
+    <StyledContainer ref={containerRef}>
       <Box css={{ maxHeight: '200px', overflow: 'auto', px: '$4', py: '$4' }}>
         {comments.length === 0 ? (
           <Text size={1} css={{ color: '$gray10' }}>

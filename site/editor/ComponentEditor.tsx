@@ -9,6 +9,7 @@ import {
 } from '@app/extensions/UserFrameExtension';
 
 import { Editor } from './Editor';
+import { CommentExtension } from '@app/extensions/CommentExtension';
 
 export type ActiveFrame = {
   state: Frame;
@@ -166,5 +167,12 @@ export class ComponentEditor {
     }
 
     this.activeFrame.templateToShowComments = null;
+  }
+
+  getCommentCount(tpl: t.Template) {
+    return (
+      this.editor.composite.getExtension(CommentExtension).state
+        .templateToComments[tpl.id]?.length ?? 0
+    );
   }
 }

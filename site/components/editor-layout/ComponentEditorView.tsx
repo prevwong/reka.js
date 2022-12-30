@@ -159,7 +159,7 @@ export const ComponentEditorView = observer(() => {
           width: '100%',
           alignItems: 'center',
           position: 'relative',
-          zIndex: '$1',
+          zIndex: '$4',
           background: '#fff',
         }}
       >

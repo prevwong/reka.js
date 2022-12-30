@@ -1,5 +1,5 @@
 import * as t from '@composite/types';
-import { PlusIcon, TrashIcon } from '@radix-ui/react-icons';
+import { ChatBubbleIcon, PlusIcon, TrashIcon } from '@radix-ui/react-icons';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -126,8 +126,14 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
     return null;
   }
 
+  const activeComponentEditor = editor.activeComponentEditor;
+
+  if (!activeComponentEditor) {
+    return null;
+  }
+
   const isSelected =
-    editor.activeComponentEditor?.tplEvent.selected?.id === props.templateId;
+    activeComponentEditor.tplEvent.selected?.id === props.templateId;
 
   return (
     <Box>
@@ -150,38 +156,44 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
           }}
           onMouseDown={(e) => {
             e.stopPropagation();
-            if (!editor.activeComponentEditor) {
-              return;
-            }
 
-            editor.activeComponentEditor.setTplEvent('selected', template);
+            activeComponentEditor.setTplEvent('selected', template);
           }}
           onMouseOver={(e) => {
             e.stopPropagation();
-            if (!editor.activeComponentEditor) {
-              return;
-            }
 
-            editor.activeComponentEditor.setTplEvent('hovered', template);
+            activeComponentEditor.setTplEvent('hovered', template);
           }}
           onMouseOut={() => {
-            if (!editor.activeComponentEditor) {
-              return;
-            }
-
             if (
-              editor.activeComponentEditor.tplEvent.hovered?.id !==
-              props.templateId
+              activeComponentEditor.tplEvent.hovered?.id !== props.templateId
             ) {
               return;
             }
 
-            editor.activeComponentEditor.setTplEvent('hovered', null);
+            activeComponentEditor.setTplEvent('hovered', null);
           }}
         >
-          <Text size="1" css={{ flex: 1 }}>
-            {getTemplateName(template)}
-          </Text>
+          <Box
+            css={{ flex: 1, display: 'flex', gap: '$2', alignItems: 'center' }}
+          >
+            <Text size="1">{getTemplateName(template)}</Text>
+            {activeComponentEditor.getCommentCount(template) > 0 && (
+              <Tooltip content="View comments">
+                <IconButton
+                  transparent
+                  onClick={() => {
+                    activeComponentEditor.showComments(template);
+                  }}
+                >
+                  <ChatBubbleIcon />
+                  <Text size="1" css={{ ml: '$2' }}>
+                    {activeComponentEditor.getCommentCount(template)}
+                  </Text>
+                </IconButton>
+              </Tooltip>
+            )}
+          </Box>
           <Box>
             <Tooltip content="Add new template">
               <AddTemplateButton target={template} />

@@ -28,6 +28,8 @@ type SelectionBorderProps = {
 const SelectionBorder = observer((props: SelectionBorderProps) => {
   const editor = useEditor();
 
+  const activeComponentEditor = editor.activeComponentEditor;
+
   const containerDomRef = React.useRef<HTMLDivElement | null>(null);
 
   const iframe = editor.iframe;
@@ -54,6 +56,7 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
       const left = iframe.offsetLeft + domRect.left;
       const top = iframe.offsetTop + domRect.top;
 
+      containerDom.style.opacity = '1';
       containerDom.style.left = Math.max(iframe.offsetLeft, left) + 'px';
       containerDom.style.top =
         Math.min(
@@ -86,7 +89,7 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
       );
     };
 
-    setPos();
+    let animationReq: null | number = null;
 
     const animationLoop = () => {
       setPos();
@@ -96,7 +99,13 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
       });
     };
 
-    animationLoop();
+    animationReq = window.requestAnimationFrame(() => animationLoop());
+
+    return () => {
+      if (animationReq !== null) {
+        window.cancelAnimationFrame(animationReq);
+      }
+    };
   }, [iframe, props.dom, props.template]);
 
   const templateName = React.useMemo(() => {
@@ -131,6 +140,10 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
     return 'Unknown';
   }, [props.template]);
 
+  if (!activeComponentEditor) {
+    return null;
+  }
+
   return (
     <Box
       css={{
@@ -138,6 +151,7 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
         zIndex: '2',
         border: '1px solid $indigoA9',
         pointerEvents: 'none',
+        opacity: 0,
         '&.overflow': {
           borderColor: 'transparent',
           '&.overflow-top': {
@@ -157,13 +171,13 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
       <Box
         css={{
           position: 'relative',
-          top: '-100%',
+          top: '-30px',
           background: props.type === 'selected' ? '$indigo9' : '$purple9',
           color: '#fff',
           px: '$3',
           py: '$2',
           fontSize: '$1',
-
+          height: '30px',
           left: '-1px',
           display: 'inline-block',
           pointerEvents: 'all',
@@ -179,15 +193,27 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
             </Text>
           </Box>
 
-          <Box css={{ pl: '$3' }}>
+          <Box css={{ pl: '$3', display: 'flex', alignItems: 'center' }}>
             <IconButton
               transparent
-              css={{ color: '#fff' }}
+              css={{
+                color: '#fff',
+                '&:hover': {
+                  background: '$slateA5',
+                },
+              }}
               onClick={() => {
-                editor.activeComponentEditor?.showComments(props.template);
+                activeComponentEditor.showComments(props.template);
               }}
             >
               <ChatBubbleIcon />
+              {activeComponentEditor.getCommentCount(props.template) > 0 && (
+                <Box css={{ ml: '$3', fontSize: '9px' }}>
+                  {editor.activeComponentEditor?.getCommentCount(
+                    props.template
+                  )}
+                </Box>
+              )}
             </IconButton>
           </Box>
         </Box>
