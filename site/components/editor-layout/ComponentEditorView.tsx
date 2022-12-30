@@ -355,9 +355,11 @@ export const ComponentEditorView = observer(() => {
       )}
 
       <AddFrameModal
+        key={`${componentEditor.component.id}${
+          isEditingFrame ? `-${componentEditor.activeFrame?.user.id}` : ''
+        }`}
         component={componentEditor.component}
         isOpen={showAddFrameModal}
-        key={isEditingFrame ? componentEditor.activeFrame?.user.id : undefined}
         frameId={
           isEditingFrame ? componentEditor.activeFrame?.user.id : undefined
         }
