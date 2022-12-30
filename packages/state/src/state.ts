@@ -1,7 +1,12 @@
 import * as t from '@composite/types';
-import { computed, makeObservable, observable, reaction } from 'mobx';
+import {
+  computed,
+  IComputedValue,
+  makeObservable,
+  observable,
+  reaction,
+} from 'mobx';
 
-import { Computation } from './computation';
 import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { ExtensionDefinition, ExtensionRegistry } from './extension';
@@ -31,9 +36,9 @@ export class Composite {
   private declare observer: Observer<t.State>;
   private declare extensionRegistry: ExtensionRegistry;
 
-  private syncGlobals: Computation<void> | null = null;
-  private syncComponents: Computation<void> | null = null;
-  private syncCleanupEnv: Computation<void> | null = null;
+  private syncGlobals: IComputedValue<void> | null = null;
+  private syncComponents: IComputedValue<void> | null = null;
+  private syncCleanupEnv: IComputedValue<void> | null = null;
   private idToFrame: Map<string, Frame> = new Map();
 
   constructor(private readonly opts: StateOpts) {
@@ -112,7 +117,7 @@ export class Composite {
     this.resolver.resolveProgram();
 
     if (!this.syncGlobals) {
-      this.syncGlobals = new Computation(
+      this.syncGlobals = computed(
         () => {
           Object.entries(this.config.globals).forEach(([key, value]) => {
             this.env.set(key, value);
@@ -132,7 +137,7 @@ export class Composite {
     }
 
     if (!this.syncComponents) {
-      this.syncComponents = new Computation(
+      this.syncComponents = computed(
         () => {
           this.components.forEach((component) => {
             this.env.set(component.name, component);
@@ -145,7 +150,7 @@ export class Composite {
     }
 
     if (!this.syncCleanupEnv) {
-      this.syncCleanupEnv = new Computation(
+      this.syncCleanupEnv = computed(
         () => {
           const globalVarNames = [
             ...Object.keys(this.config.globals),
@@ -285,18 +290,6 @@ export class Composite {
    * Dispose instance, stops all future re-computations
    */
   dispose() {
-    if (this.syncGlobals) {
-      this.syncGlobals.dispose();
-    }
-
-    if (this.syncComponents) {
-      this.syncComponents.dispose();
-    }
-
-    if (this.syncCleanupEnv) {
-      this.syncCleanupEnv.dispose();
-    }
-
     this.observer.dispose();
     this.extensionRegistry.dispose();
   }

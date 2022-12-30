@@ -1,8 +1,13 @@
 import * as t from '@composite/types';
-import { IObservableValue, observable, runInAction } from 'mobx';
+import {
+  computed,
+  IComputedValue,
+  IObservableValue,
+  observable,
+  runInAction,
+} from 'mobx';
 
 import { ComponentViewEvaluator } from './component';
-import { Computation } from './computation';
 import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { Frame } from './frame';
@@ -18,16 +23,16 @@ export type TemplateEvaluateContext = {
 
 export type TemplateViewComputationCache = {
   template: t.Template;
-  computation: Computation<t.View[]>;
+  computation: IComputedValue<t.View[]>;
 };
 
 export type TemplateEachComputationCache = {
   hash: string;
-  computation: Computation<t.View[]>;
+  computation: IComputedValue<t.View[]>;
   iteration: Map<
     string,
     {
-      computation: Computation<t.View>;
+      computation: IComputedValue<t.View>;
     }
   >;
 };
@@ -176,7 +181,7 @@ export class ViewEvaluator {
 
       const prevEachExpr = template.each;
 
-      const computation = new Computation(
+      const computation = computed(
         () => {
           /**
            * If the each expr for the template has changed, return the existing view
@@ -274,7 +279,7 @@ export class ViewEvaluator {
 
     const tplEnv = ctx.env.inherit();
 
-    const eachComputation = new Computation(() => {
+    const eachComputation = computed(() => {
       const iterator = tplEnv.getByIdentifier(eachExpr.iterator);
 
       const views: t.View[] = [];
@@ -297,7 +302,7 @@ export class ViewEvaluator {
           const inheritedEnv = tplEnv.clone();
 
           iteratorCache = {
-            computed: new Computation(() => {
+            computed: computed(() => {
               inheritedEnv.set(eachExpr.alias.name, value);
 
               if (eachExpr.index) {
@@ -433,33 +438,27 @@ export class ViewEvaluator {
 
   computeTree() {
     const _compute = () => {
-      // TODO: if root element has @each, this only renders the first @each iteration
-      // We need to render the root view with a Fragment
       const view = this.computeTemplate(this.rootTemplate, {
         path: ['frame'],
         env: this.composite.env,
         classList: [],
       })[0];
 
-      if (this.view !== view) {
-        this.setView(view);
-      } else {
-        this.tplKeyToComponentEvaluator.forEach((componentEvaluator) => {
-          componentEvaluator.compute();
-        });
-      }
-
       return view;
     };
 
     if (!this.viewObserver) {
-      _compute();
+      this.setView(_compute());
       return;
     }
 
     this.viewObserver.change(
       () => {
         _compute();
+
+        this.tplKeyToComponentEvaluator.forEach((componentEvaluator) => {
+          componentEvaluator.compute();
+        });
       },
       {
         batch: false,
@@ -470,11 +469,6 @@ export class ViewEvaluator {
   dispose() {
     this.rootTemplateObserver.dispose();
     this.viewObserver.dispose();
-
-    // Computation here has keepAlive set to true, we should dispose to prevent memory leaks
-    this.tplKeyToViewComputationCache.forEach((cache) => {
-      cache.computation.dispose();
-    });
 
     this.tplToView = new Map();
     this.tplToEachComputationCache = new WeakMap();
