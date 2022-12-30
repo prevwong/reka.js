@@ -319,15 +319,9 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
               alignItems: 'center',
               gap: '10px',
               px: '$4',
+              py: '$2',
             }}
           >
-            <Link
-              css={{ fontSize: '$1', display: 'flex', alignItems: 'center' }}
-              href="https://github.com/prevwong/composite/blob/main/docs/spec.ebnf"
-              target="_blank"
-            >
-              View BNF spec <ExternalLinkIcon />
-            </Link>
             <ParserStatusBadge status={status} />
           </Box>
         </Box>

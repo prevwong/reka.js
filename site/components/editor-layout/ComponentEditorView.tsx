@@ -311,6 +311,17 @@ export const ComponentEditorView = observer(() => {
             }}
           >
             <Box css={{ display: 'flex', alignItems: 'center', gap: '$3' }}>
+              <Switch
+                onChange={() => {
+                  if (componentEditor.activeFrame?.state.sync) {
+                    componentEditor.activeFrame?.state.disableSync();
+                    return;
+                  }
+
+                  componentEditor.activeFrame?.state.enableSync();
+                }}
+                checked={componentEditor.activeFrame.state.sync}
+              />
               <Tooltip
                 content={
                   componentEditor.activeFrame.state.sync
@@ -336,17 +347,6 @@ export const ComponentEditorView = observer(() => {
                   </Box>
                 </Text>
               </Tooltip>
-              <Switch
-                onChange={() => {
-                  if (componentEditor.activeFrame?.state.sync) {
-                    componentEditor.activeFrame?.state.disableSync();
-                    return;
-                  }
-
-                  componentEditor.activeFrame?.state.enableSync();
-                }}
-                checked={componentEditor.activeFrame.state.sync}
-              />
             </Box>
           </Box>
           <Box

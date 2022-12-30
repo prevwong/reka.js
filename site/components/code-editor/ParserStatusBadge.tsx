@@ -70,7 +70,7 @@ export const ParserStatusBadge = (props: ParserStatusBadgeProps) => {
         return {
           icon: <CheckIcon style={{ width: '15px', height: '15px' }} />,
           message: 'OK',
-          content: 'All good',
+          content: 'Parsed without errors',
         };
       case 'parsing':
         return {

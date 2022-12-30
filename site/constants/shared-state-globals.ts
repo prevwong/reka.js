@@ -10,12 +10,14 @@ export const createSharedStateGlobals = (
     myString: 'Hello from External Variable',
     posts: [
       {
-        name: "I'm now a monk",
-        description: 'Life changing quote goes here',
+        name: 'Interesting Post',
+        description:
+          'Ut enim ad minim veniam, quis nostrud exercitation ullamco',
       },
       {
         name: 'Hello World',
-        description: 'Inspirational quote goes here',
+        image: '/images/pawel-olek-1.png',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
       },
     ],
     ...(config.globals || {}),

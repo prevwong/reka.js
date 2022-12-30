@@ -8,7 +8,7 @@ export const isPrimitiveValue = (value: any) => {
 
 export const generateRandomName = () =>
   uniqueNamesGenerator({
-    dictionaries: [animals, colors],
+    dictionaries: [colors, animals],
     separator: ' ',
     style: 'capital',
   });

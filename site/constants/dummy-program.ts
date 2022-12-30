@@ -22,7 +22,7 @@ component App() {
      <text value={"Posts"} />
     </h2>
     <div className={"mt-2 grid grid-cols-2 gap-4"}>
-     <Card @each={post in posts} name={post.name} description={post.description} />
+     <Card @each={post in posts} name={post.name} description={post.description} image={post.image} />
     </div>
    </div>
   </div>
@@ -39,10 +39,10 @@ component Button(className,text,icon) {
   </button>
 )
 
-component Card(name, description) {
+component Card(name, description, image="/images/placeholder.jpeg") {
 } => (
   <div>
-   <img src={"/images/placeholder.jpeg"} />
+   <img src={image} />
    <div className={"mt-2"}>
     <h2 className={"text-lg"}>
      <text value={name} />
