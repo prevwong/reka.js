@@ -98,10 +98,24 @@ export class ComponentViewEvaluator {
               this.env.set('$$children', slot);
 
               component.props.forEach((prop) => {
-                let propValue = this.tree.computeExpr(
-                  this.template.props[prop.name] || prop.init,
-                  this.ctx.env
-                );
+                const getPropValue = () => {
+                  let propValue: any;
+
+                  if (this.template.props[prop.name]) {
+                    propValue = this.tree.computeExpr(
+                      this.template.props[prop.name],
+                      this.ctx.env
+                    );
+                  }
+
+                  if (!propValue && prop.init) {
+                    propValue = this.tree.computeExpr(prop.init, this.ctx.env);
+                  }
+
+                  return propValue;
+                };
+
+                let propValue = getPropValue();
 
                 if (
                   prop.name === 'className' &&
