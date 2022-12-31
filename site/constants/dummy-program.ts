@@ -15,23 +15,23 @@ component App() {
     <p className={"opacity-80 font-light"}>
      <text value={"It's a really cool app"} />
     </p>
-    <Button className={"mt-3"} text={"Click me"} />
+    <Button className={"mt-3"} text={"Click me"}  />
    </div>
    <div className={"py-4 px-4"}>
     <h2 className={"text-3xl"}>
      <text value={"Posts"} />
     </h2>
     <div className={"mt-2 grid grid-cols-2 gap-4"}>
-     <Card @each={post in posts} name={post.name} description={post.description} image={post.image} />
+     <Card name={post.name} description={post.description} image={post.image} @each={post in posts} />
     </div>
    </div>
   </div>
 )
 
-component Button(className,text,icon) {
+component Button(className,text,icon,onClick=() => {}) {
   val counter = 1;
 } => (
-  <button className={"flex items-center gap-2 px-4 py-2 text-xs cursor-pointer rounded-full bg-black hover:bg-neutral-500 text-white "+className}>
+  <button className={"flex items-center gap-2 px-4 py-2 text-xs cursor-pointer rounded-full bg-black hover:bg-neutral-500 text-white "+className} onClick={onClick}>
    <span>
     <text value={text} />
    </span>
@@ -39,7 +39,7 @@ component Button(className,text,icon) {
   </button>
 )
 
-component Card(name, description, image="/images/placeholder.jpeg") {
+component Card(name,description,image="/images/placeholder.jpeg") {
 } => (
   <div>
    <img src={image} />
@@ -54,4 +54,5 @@ component Card(name, description, image="/images/placeholder.jpeg") {
    </div>
   </div>
 )
+
 `);
