@@ -1,7 +1,7 @@
 import { observer } from '@composite/react';
 import * as t from '@composite/types';
-import * as React from 'react';
 import { toJS } from 'mobx';
+import * as React from 'react';
 
 import { useEditor } from '@app/editor';
 

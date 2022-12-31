@@ -1,7 +1,8 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { styled } from '@app/styles';
-import * as React from 'react';
 import cx from 'classnames';
+import * as React from 'react';
+
+import { styled } from '@app/styles';
 
 import { Box } from '../box';
 import { IconButton } from '../button';

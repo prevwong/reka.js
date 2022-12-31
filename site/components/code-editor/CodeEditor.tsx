@@ -4,7 +4,6 @@ import { EditorView, keymap } from '@codemirror/view';
 import { composite } from '@composite/codemirror';
 import { Parser } from '@composite/parser';
 import * as t from '@composite/types';
-import { ExternalLinkIcon } from '@radix-ui/react-icons';
 import { motion } from 'framer-motion';
 import debounce from 'lodash/debounce';
 import { observe } from 'mobx';
@@ -16,7 +15,6 @@ import { styled } from '@app/styles';
 import { ParserStatus, ParserStatusBadge } from './ParserStatusBadge';
 
 import { Box } from '../box';
-import { Link } from '../link';
 import { Tree } from '../tree';
 
 const _diffASTArrayTypes = <T extends t.Type>(

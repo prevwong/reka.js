@@ -1,12 +1,11 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
-import * as React from 'react';
 import cx from 'classnames';
+import * as React from 'react';
 
 import { styled } from '@app/styles';
 
-import { IconButton } from '../button';
-import { debounce } from 'lodash';
 import { Box } from '../box';
+import { IconButton } from '../button';
 import { Text } from '../text';
 
 const StyledInputField = styled('input', {
@@ -97,7 +96,6 @@ export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
       badge,
       children,
       css,
-      validate,
       onCancel,
       onCommit,
       onChange,
