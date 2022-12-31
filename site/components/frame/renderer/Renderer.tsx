@@ -1,6 +1,7 @@
 import { observer } from '@composite/react';
 import * as t from '@composite/types';
 import * as React from 'react';
+import { toJS } from 'mobx';
 
 import { useEditor } from '@app/editor';
 
@@ -45,6 +46,7 @@ export const RenderElementView = observer((props: RenderElementViewProps) => {
     props.view.tag,
     {
       ...props.view.props,
+      style: props.view.props.style ? toJS(props.view.props.style) : {},
       ref: domRef,
     },
     props.view.children.length > 0

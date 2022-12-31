@@ -376,16 +376,13 @@ type ElementViewParameters = {
   template: Template;
   tag: string;
   children: View[];
-  props: Record<string, string | number | boolean | Function | undefined>;
+  props: Record<string, any>;
 };
 
 export class ElementView extends View {
   declare tag: string;
   declare children: View[];
-  declare props: Record<
-    string,
-    string | number | boolean | Function | undefined
-  >;
+  declare props: Record<string, any>;
   constructor(value: ElementViewParameters) {
     super('ElementView', value);
   }
