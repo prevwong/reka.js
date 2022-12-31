@@ -97,9 +97,13 @@ export class ViewEvaluator {
     return runInAction(() => {
       const mergedView = t.merge(existingView, newView, {
         function: (a, b) => {
-          if (a['viewFn'] && b['viewFn']) {
-            return a;
+          // Compare Func AST node id
+          // If they are not equal, return the newly evaluated function
+          if (a['FuncNodeId'] !== b['FuncNodeId']) {
+            return b;
           }
+
+          return a;
         },
         types: {
           View: {

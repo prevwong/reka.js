@@ -26,6 +26,18 @@ export const computeExpression = (
       case '!=': {
         return left != right;
       }
+      case '>': {
+        return left > right;
+      }
+      case '>=': {
+        return left >= right;
+      }
+      case '<': {
+        return left < right;
+      }
+      case '<=': {
+        return left <= right;
+      }
       default: {
         throw new Error(`Invalid binary operator "${expr.operator}"`);
       }
@@ -113,7 +125,7 @@ export const computeExpression = (
       return returnValue;
     });
 
-    fn['viewFn'] = true;
+    fn['FuncNodeId'] = expr.id;
 
     return fn;
   }
