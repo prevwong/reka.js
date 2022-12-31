@@ -8,11 +8,11 @@ component App() {
   val text = "Bye";
 } => (
   <div className={"w-full h-full"}>
-   <div className={"bg-orange-100 text-neutral-800 w-full h-full flex flex-col items-center justify-center"}>
-    <h2 className={"text-2xl"}>
+   <div style={{ backgroundImage: "linear-gradient(188deg, rgb(255 255 255), rgb(238 251 250), rgb(255 255 255))" }} className={"bg-orange-100 text-neutral-800 w-full h-full flex flex-col items-center justify-center"}>
+    <h2 className={"text-6xl font-extrabold tracking-tighter"}>
      <text value={"Welcome to my app"} />
     </h2>
-    <p className={"opacity-80 font-light"}>
+    <p className={"opacity-80 font-light tracking-tighter text-2xl"}>
      <text value={"It's a really cool app"} />
     </p>
     <Button className={"mt-3"} text={"Click me"}  />
