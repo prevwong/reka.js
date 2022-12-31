@@ -1,9 +1,13 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
 import * as React from 'react';
+import cx from 'classnames';
 
 import { styled } from '@app/styles';
 
 import { IconButton } from '../button';
+import { debounce } from 'lodash';
+import { Box } from '../box';
+import { Text } from '../text';
 
 const StyledInputField = styled('input', {
   background: 'transparent',
@@ -17,6 +21,15 @@ const StyledInputField = styled('input', {
   position: 'relative',
   width: '100%',
   fontSize: '$1',
+
+  [`& ${IconButton}`]: {
+    opacity: 0,
+  },
+  [`&:hover`]: {
+    [`& ${IconButton}`]: {
+      opacity: 1,
+    },
+  },
 });
 
 const StyledBadge = styled('div', {
@@ -32,6 +45,10 @@ const StyledInputFieldContainer = styled('div', {
   display: 'flex',
   alignItems: 'center',
   borderRadius: '$1',
+  '&.error': {
+    borderColor: '$red8',
+  },
+
   variants: {
     transparent: {
       true: {
@@ -67,103 +84,138 @@ type InputFieldProps = React.ComponentProps<typeof StyledInputField> & {
   badge?: string;
   transparent?: boolean;
   children?: React.ReactNode;
+  validate?: (value: any) => boolean;
+  onCancel?: () => void;
+  onCommit?: (value: any) => void;
 };
 
 export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
-  ({ transparent, badge, children, css, ...props }, ref) => {
+  (
+    {
+      className,
+      transparent,
+      badge,
+      children,
+      css,
+      validate,
+      onCancel,
+      onCommit,
+      onChange,
+      value,
+      ...props
+    },
+    ref
+  ) => {
+    const [uncommittedValue, setUncommitedValue] = React.useState(value);
+    const [hasError, setHasError] = React.useState('');
+
+    const onCommitRef = React.useRef(onCommit);
+
+    React.useEffect(() => {
+      const { current: onCommit } = onCommitRef;
+
+      if (!onCommit) {
+        return;
+      }
+
+      setUncommitedValue(value);
+    }, [value, setUncommitedValue]);
+
+    const commitValue = () => {
+      if (!onCommit) {
+        return;
+      }
+
+      try {
+        onCommit(uncommittedValue);
+      } catch (err) {
+        setHasError(String(err));
+      }
+    };
+
+    const cancel = () => {
+      setHasError('');
+      setUncommitedValue('');
+
+      if (!onCancel) {
+        return;
+      }
+    };
+
     return (
       <StyledInputFieldContainer
-        className={'text-field'}
         badge={!!badge}
         transparent={transparent}
         css={css}
+        className={cx('text-field', className, {
+          error: !!hasError,
+        })}
       >
-        <StyledInputField {...props} ref={ref} />
+        <StyledInputField
+          {...props}
+          value={onCommit ? uncommittedValue : value}
+          onChange={(e) => {
+            setHasError('');
+
+            if (!onCommit && onChange) {
+              onChange(e);
+              return;
+            }
+
+            if (!onCommit) {
+              return;
+            }
+
+            setUncommitedValue(e.target.value);
+          }}
+          onKeyUp={(e) => {
+            if (e.key === 'Enter') {
+              commitValue();
+            }
+
+            if (e.key === 'Escape') {
+              cancel();
+            }
+
+            props.onKeyUp?.(e);
+          }}
+          ref={ref}
+        />
         {badge && <StyledBadge>{badge}</StyledBadge>}
         {children}
+        {onCancel && (
+          <IconButton
+            css={{
+              background: 'none',
+              border: 'none',
+              mr: '$2',
+            }}
+            onClick={() => {
+              cancel();
+            }}
+          >
+            <Cross2Icon />
+          </IconButton>
+        )}
+        {hasError && (
+          <Box
+            css={{
+              position: 'absolute',
+              left: 'calc(0% - 1px)',
+              top: 'calc(100% - 2px)',
+              width: 'calc(100% + 2px)',
+              padding: '$2 $4',
+              background: '$red8',
+            }}
+          >
+            <Text size={1} css={{ color: 'white' }}>
+              {hasError}
+            </Text>
+          </Box>
+        )}
       </StyledInputFieldContainer>
     );
   }
 );
 
 TextField.toString = () => '.text-field';
-
-type EnterTextFieldProps = InputFieldProps & {
-  value: any;
-  onCommit: (newValue: any) => void;
-};
-
-export const EnterTextField = ({
-  value: initialValue,
-  onCommit,
-  ...props
-}: EnterTextFieldProps) => {
-  const [value, setValue] = React.useState(initialValue);
-
-  const commit = () => {
-    onCommit(value);
-  };
-
-  React.useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
-
-  return (
-    <TextField
-      {...props}
-      value={value}
-      onChange={(e) => {
-        setValue(e.target.value);
-      }}
-      onKeyUp={(e) => {
-        if (e.key !== 'Enter') {
-          return;
-        }
-
-        commit();
-      }}
-      onBlur={() => {
-        // commit();
-      }}
-    />
-  );
-};
-
-type CancellableInputFieldProps = InputFieldProps & {
-  onCancel: () => void;
-};
-
-export const CancellableInputField = ({
-  onCancel,
-  ...props
-}: CancellableInputFieldProps) => {
-  return (
-    <TextField
-      {...props}
-      css={{
-        ...(props.css || {}),
-        [`& ${IconButton}`]: {
-          opacity: 0,
-        },
-        [`&:hover`]: {
-          [`& ${IconButton}`]: {
-            opacity: 1,
-          },
-        },
-      }}
-    >
-      <IconButton
-        css={{
-          background: 'none',
-          border: 'none',
-          mr: '$2',
-        }}
-        onClick={() => {
-          onCancel();
-        }}
-      >
-        <Cross2Icon />
-      </IconButton>
-    </TextField>
-  );
-};

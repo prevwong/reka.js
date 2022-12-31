@@ -9,7 +9,7 @@ import { styled } from '@app/styles';
 
 import { Box } from '../box';
 import { Text } from '../text';
-import { EnterTextField } from '../text-field';
+import { TextField } from '../text-field';
 import { UserAvatar } from '../user-avatar';
 
 type TemplateCommentsProps = {
@@ -171,7 +171,7 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
         )}
       </Box>
       <Box css={{ px: '$4', pb: '$4' }}>
-        <EnterTextField
+        <TextField
           placeholder="Add a new comment"
           value=""
           onCommit={(content) => {

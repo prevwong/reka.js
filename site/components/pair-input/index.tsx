@@ -1,6 +1,7 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { styled } from '@stitches/react';
+import { styled } from '@app/styles';
 import * as React from 'react';
+import cx from 'classnames';
 
 import { Box } from '../box';
 import { IconButton } from '../button';
@@ -12,8 +13,19 @@ export const StyledPairInputField = styled('div', {
   gridTemplateColumns: '80px 1fr auto',
   position: 'relative',
   gap: '0px',
-  borderBottom: '1px solid $grayA5',
+  border: '1px solid $grayA5',
+  '&.error': {
+    borderColor: '$red8',
+  },
+  '&:first-child': {
+    borderTopRightRadius: '$1',
+    borderTopLeftRadius: '$1',
+  },
   '&:last-child': {
+    borderBottomRightRadius: '$1',
+    borderBottomLeftRadius: '$1',
+  },
+  '&:not(:last-child)': {
     borderBottomColor: 'transparent',
   },
   [`& ${TextField}`]: {
@@ -42,8 +54,8 @@ export const StyledPairInputField = styled('div', {
 });
 
 const StyledPairInputList = styled('div', {
-  border: '1px solid $grayA5',
   borderRadius: '$1',
+  border: 'none',
   variants: {
     hidden: {
       true: {
@@ -75,6 +87,7 @@ type AddNewPairInputFieldProps = {
 };
 
 const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
+  const [hasError, setHasError] = React.useState('');
   const [id, setId] = React.useState('');
   const [value, setValue] = React.useState('');
 
@@ -86,29 +99,38 @@ const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
       return;
     }
 
-    props.onAdd(id, value, () => {
-      setId('');
-      setValue('');
+    try {
+      props.onAdd(id, value, () => {
+        setId('');
+        setValue('');
 
-      const { current: idDom } = idDomRef;
+        const { current: idDom } = idDomRef;
 
-      if (!idDom) {
-        return;
-      }
+        if (!idDom) {
+          return;
+        }
 
-      idDom.focus();
-      idDom.setSelectionRange(0, 0);
-    });
+        idDom.focus();
+        idDom.setSelectionRange(0, 0);
+      });
+    } catch (err) {
+      setHasError(String(err));
+    }
   };
 
   return (
-    <StyledPairInputField>
+    <StyledPairInputField
+      className={cx({
+        error: !!hasError,
+      })}
+    >
       <TextField
         ref={(dom) => {
           idDomRef.current = dom;
         }}
         value={id}
         onChange={(e) => {
+          setHasError('');
           setId(e.target.value);
         }}
         onKeyUp={(e) => {
@@ -128,6 +150,7 @@ const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
         }}
         value={value}
         onChange={(e) => {
+          setHasError('');
           setValue(e.target.value);
         }}
         onKeyUp={(e) => {
@@ -149,6 +172,23 @@ const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
       >
         <Cross2Icon />
       </IconButton>
+
+      {hasError && (
+        <Box
+          css={{
+            position: 'absolute',
+            left: 'calc(0% - 1px)',
+            top: 'calc(100% - 2px)',
+            width: 'calc(100% + 2px)',
+            padding: '$2 $4',
+            backgroundColor: '$red8',
+            color: 'white',
+            zIndex: '$2',
+          }}
+        >
+          <Text size={1}>{hasError}</Text>
+        </Box>
+      )}
     </StyledPairInputField>
   );
 };
@@ -172,6 +212,7 @@ const PairInputField = ({
   onChange,
   valuePlaceholder,
 }: PairInputFieldProps) => {
+  const [hasError, setHasError] = React.useState('');
   const [newId, setNewId] = React.useState(id);
   const [newValue, setNewValue] = React.useState(value);
 
@@ -180,14 +221,24 @@ const PairInputField = ({
       return;
     }
 
-    onChange(newId, newValue);
+    try {
+      onChange(newId, newValue);
+    } catch (err) {
+      setHasError(String(err));
+    }
   };
 
   return (
-    <StyledPairInputField>
+    <StyledPairInputField
+      className={cx({
+        error: !!hasError,
+      })}
+    >
       <TextField
         value={newId}
         onChange={(e) => {
+          setHasError('');
+
           if (disableEditId) {
             return;
           }
@@ -206,6 +257,8 @@ const PairInputField = ({
       <TextField
         value={newValue}
         onChange={(e) => {
+          setHasError('');
+
           if (disableEditValue) {
             return;
           }
@@ -237,6 +290,22 @@ const PairInputField = ({
       >
         <Cross2Icon />
       </IconButton>
+      {hasError && (
+        <Box
+          css={{
+            position: 'absolute',
+            left: 'calc(0% - 1px)',
+            top: 'calc(100% - 2px)',
+            width: 'calc(100% + 2px)',
+            padding: '$2 $4',
+            backgroundColor: '$red8',
+            color: 'white',
+            zIndex: '$2',
+          }}
+        >
+          <Text size={1}>{hasError}</Text>
+        </Box>
+      )}
     </StyledPairInputField>
   );
 };

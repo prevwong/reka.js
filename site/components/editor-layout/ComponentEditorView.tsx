@@ -15,7 +15,7 @@ import { RenderFrame } from '../frame/RenderFrame';
 import { Select } from '../select';
 import { Switch } from '../switch';
 import { Text } from '../text';
-import { EnterTextField } from '../text-field';
+import { TextField } from '../text-field';
 import { Tooltip } from '../tooltip';
 import { Tree } from '../tree';
 
@@ -204,7 +204,7 @@ export const ComponentEditorView = observer(() => {
             Preview size
           </Text>
           <Box css={{ display: 'flex', alignItems: 'center' }}>
-            <EnterTextField
+            <TextField
               placeholder="100%"
               size={5}
               value={componentEditor.activeFrame?.user.width ?? 'auto'}
@@ -225,7 +225,7 @@ export const ComponentEditorView = observer(() => {
             <Text size={1} css={{ mx: '$2', color: '$grayA10' }}>
               x
             </Text>
-            <EnterTextField
+            <TextField
               placeholder="100%"
               size={5}
               value={componentEditor.activeFrame?.user.height ?? 'auto'}

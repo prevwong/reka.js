@@ -7,7 +7,7 @@ import { Box } from '@app/components/box';
 import { Button } from '@app/components/button';
 import { SettingSection } from '@app/components/settings-section';
 import { Text } from '@app/components/text';
-import { CancellableInputField, TextField } from '@app/components/text-field';
+import { TextField } from '@app/components/text-field';
 import { useEditor } from '@app/editor';
 
 type SharedTemplateSettingsProps = {
@@ -33,24 +33,12 @@ const ConditionalTemplateSetting = observer(
     return (
       <SettingSection title={'Conditional'} collapsedOnInitial={false}>
         <Box>
-          <CancellableInputField
+          <TextField
             placeholder="counter > 0"
-            onChange={(e) => {
-              setCondition(e.target.value);
-            }}
             value={condition || ''}
-            onKeyUp={(e) => {
-              if (e.key === 'Escape') {
-                resetCondition();
-                return;
-              }
-
-              if (e.key !== 'Enter') {
-                return;
-              }
-
+            onCommit={(value) => {
               const parsedValue = Parser.parseExpressionFromSource(
-                condition || '',
+                value || '',
                 t.Expression
               );
 
@@ -119,32 +107,20 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
   return (
     <SettingSection title="Loop" collapsedOnInitial={false}>
       <Box css={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-        <CancellableInputField
+        <TextField
           css={{ flex: 1 }}
           placeholder="array"
           value={iterator}
           onCancel={() => {
-            setIteratorValue('');
-            setAliasValue('');
-            setIndexValue('');
+            resetValue();
 
             editor.composite.change(() => {
               props.template.each = null;
             });
           }}
-          onChange={(e) => {
-            setIteratorValue(e.target.value);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              resetValue();
-              return;
-            }
-
-            if (e.key !== 'Enter') {
-              return;
-            }
-
+          onCommit={(value) => {
+            const expr = Parser.parseExpressionFromSource(value, t.Identifier);
+            setIteratorValue(expr.name);
             commitValue();
           }}
         />
@@ -177,26 +153,19 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
             placeholder="item"
             css={{ flex: 1 }}
             value={alias}
-            onChange={(e) => {
-              setAliasValue(e.target.value);
-            }}
-            onKeyUp={(e) => {
-              if (e.key === 'Escape') {
-                resetValue();
-                return;
-              }
-
-              if (e.key !== 'Enter') {
-                return;
-              }
-
+            onCommit={(value) => {
+              const expr = Parser.parseExpressionFromSource(
+                value,
+                t.Identifier
+              );
+              setAliasValue(expr.name);
               commitValue();
             }}
           />
           {isExposingIndex && (
             <React.Fragment>
               <Text css={{ color: '$grayA9', fontSize: '$1' }}>at</Text>
-              <CancellableInputField
+              <TextField
                 placeholder="index"
                 onCancel={() => {
                   setIsExposingIndex(false);
@@ -214,19 +183,12 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
                     props.template.each.index = null;
                   });
                 }}
-                onChange={(e) => {
-                  setIndexValue(e.target.value);
-                }}
-                onKeyUp={(e) => {
-                  if (e.key === 'Escape') {
-                    resetValue();
-                    return;
-                  }
-
-                  if (e.key !== 'Enter') {
-                    return;
-                  }
-
+                onCommit={(value) => {
+                  const expr = Parser.parseExpressionFromSource(
+                    value,
+                    t.Identifier
+                  );
+                  setIndexValue(expr.name);
                   commitValue();
                 }}
               />
