@@ -68,7 +68,9 @@ Schema.define('BinaryExpression', {
       '<',
       '<=',
       '>',
-      '>='
+      '>=',
+      '||',
+      '&&'
     ),
     right: t.node('Expression'),
   }),
@@ -91,7 +93,7 @@ Schema.define('ObjectExpression', {
 Schema.define('Block', {
   extends: 'Expression',
   fields: (t) => ({
-    statements: t.array(t.node('Statement')),
+    statements: t.array(t.node('Expression')),
   }),
 });
 
@@ -101,6 +103,31 @@ Schema.define('Func', {
     name: t.defaultValue(t.union(t.string, t.nullish), null),
     params: t.array(t.node('Identifier')),
     body: t.node('Block'),
+  }),
+});
+
+Schema.define('CallExpression', {
+  extends: 'Expression',
+  fields: (t) => ({
+    identifier: t.node('Identifier'),
+    arguments: t.array(t.node('Expression')),
+  }),
+});
+
+Schema.define('ConditionalExpression', {
+  extends: 'Expression',
+  fields: (t) => ({
+    condition: t.node('Expression'),
+    consequent: t.node('Expression'),
+    alternate: t.node('Expression'),
+  }),
+});
+
+Schema.define('IfStatement', {
+  extends: 'Expression',
+  fields: (t) => ({
+    condition: t.node('Expression'),
+    consequent: t.node('Block'),
   }),
 });
 

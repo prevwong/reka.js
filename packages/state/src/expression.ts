@@ -129,4 +129,30 @@ export const computeExpression = (
 
     return fn;
   }
+
+  if (expr instanceof t.CallExpression) {
+    composite.change(() => {
+      const v = env.getByIdentifier(expr.identifier);
+
+      v(...expr.arguments.map((arg) => computeExpression(arg, composite, env)));
+    });
+  }
+
+  if (expr instanceof t.IfStatement) {
+    const bool = computeExpression(expr.condition, composite, env);
+
+    if (bool) {
+      computeExpression(expr.consequent, composite, env);
+    }
+  }
+
+  if (expr instanceof t.ConditionalExpression) {
+    const bool = computeExpression(expr.condition, composite, env);
+
+    if (bool) {
+      return computeExpression(expr.consequent, composite, env);
+    }
+
+    return computeExpression(expr.alternate, composite, env);
+  }
 };

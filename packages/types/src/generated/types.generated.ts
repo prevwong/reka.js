@@ -106,7 +106,19 @@ Schema.register('ArrayExpression', ArrayExpression);
 
 type BinaryExpressionParameters = {
   left: Expression;
-  operator: '+' | '-' | '*' | '/' | '!=' | '==' | '<' | '<=' | '>' | '>=';
+  operator:
+    | '+'
+    | '-'
+    | '*'
+    | '/'
+    | '!='
+    | '=='
+    | '<'
+    | '<='
+    | '>'
+    | '>='
+    | '||'
+    | '&&';
   right: Expression;
 };
 
@@ -122,7 +134,9 @@ export class BinaryExpression extends Expression {
     | '<'
     | '<='
     | '>'
-    | '>=';
+    | '>='
+    | '||'
+    | '&&';
   declare right: Expression;
   constructor(value: BinaryExpressionParameters) {
     super('BinaryExpression', value);
@@ -145,11 +159,11 @@ export class ObjectExpression extends Expression {
 Schema.register('ObjectExpression', ObjectExpression);
 
 type BlockParameters = {
-  statements: Statement[];
+  statements: Expression[];
 };
 
 export class Block extends Expression {
-  declare statements: Statement[];
+  declare statements: Expression[];
   constructor(value: BlockParameters) {
     super('Block', value);
   }
@@ -173,6 +187,53 @@ export class Func extends Expression {
 }
 
 Schema.register('Func', Func);
+
+type CallExpressionParameters = {
+  identifier: Identifier;
+  arguments: Expression[];
+};
+
+export class CallExpression extends Expression {
+  declare identifier: Identifier;
+  declare arguments: Expression[];
+  constructor(value: CallExpressionParameters) {
+    super('CallExpression', value);
+  }
+}
+
+Schema.register('CallExpression', CallExpression);
+
+type ConditionalExpressionParameters = {
+  condition: Expression;
+  consequent: Expression;
+  alternate: Expression;
+};
+
+export class ConditionalExpression extends Expression {
+  declare condition: Expression;
+  declare consequent: Expression;
+  declare alternate: Expression;
+  constructor(value: ConditionalExpressionParameters) {
+    super('ConditionalExpression', value);
+  }
+}
+
+Schema.register('ConditionalExpression', ConditionalExpression);
+
+type IfStatementParameters = {
+  condition: Expression;
+  consequent: Block;
+};
+
+export class IfStatement extends Expression {
+  declare condition: Expression;
+  declare consequent: Block;
+  constructor(value: IfStatementParameters) {
+    super('IfStatement', value);
+  }
+}
+
+Schema.register('IfStatement', IfStatement);
 
 type AssignmentParameters = {
   left: Identifier;
@@ -523,6 +584,9 @@ export type Any =
   | ObjectExpression
   | Block
   | Func
+  | CallExpression
+  | ConditionalExpression
+  | IfStatement
   | Assignment
   | MemberExpression
   | ComponentProp
@@ -557,6 +621,9 @@ export type Visitor = {
   ObjectExpression: (node: ObjectExpression) => any;
   Block: (node: Block) => any;
   Func: (node: Func) => any;
+  CallExpression: (node: CallExpression) => any;
+  ConditionalExpression: (node: ConditionalExpression) => any;
+  IfStatement: (node: IfStatement) => any;
   Assignment: (node: Assignment) => any;
   MemberExpression: (node: MemberExpression) => any;
   ComponentProp: (node: ComponentProp) => any;

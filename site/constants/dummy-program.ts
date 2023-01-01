@@ -15,7 +15,13 @@ component App() {
     <p className={"opacity-80 font-light tracking-tighter text-2xl"}>
      <text value={"It's a really cool app"} />
     </p>
-    <Button className={"mt-3"} text={"Click me"}  />
+    <Button className={"mt-3"} text={(globalCounter < 2) ? "Click me " + (2 - globalCounter) + " more times" : "Hooray"} onClick={() => {
+      globalCounter = globalCounter + 1;
+
+      if ( globalCounter >= 2  ) {
+        confetti();
+      }
+    }}  />
    </div>
    <div className={"py-4 px-4"}>
     <h2 className={"text-3xl"}>

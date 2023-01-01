@@ -165,12 +165,14 @@ importers:
       '@radix-ui/react-tooltip': ^0.1.7
       '@stitches/react': ^1.2.7
       '@tailwindcss/typography': ^0.5.8
+      '@types/canvas-confetti': ^1.6.0
       '@types/lodash': ^4.14.185
       '@types/node': 18.7.15
       '@types/randomcolor': ^0.5.6
       '@types/react': ^17.0.33
       '@types/react-dom': ^17.0.10
       autoprefixer: ^10.4.13
+      canvas-confetti: ^1.6.0
       classnames: ^2.3.1
       date-fns: ^2.29.3
       esbuild: ^0.15.7
@@ -231,6 +233,7 @@ importers:
       '@radix-ui/react-toggle-group': 1.0.1_sfoxds7t5ydpegc3knd667wn6m
       '@radix-ui/react-tooltip': 0.1.7_sfoxds7t5ydpegc3knd667wn6m
       '@stitches/react': 1.2.8_react@17.0.2
+      canvas-confetti: 1.6.0
       classnames: 2.3.2
       date-fns: 2.29.3
       esbuild: 0.15.7
@@ -265,6 +268,7 @@ importers:
       yjs: 13.5.41
     devDependencies:
       '@tailwindcss/typography': 0.5.8_tailwindcss@3.2.4
+      '@types/canvas-confetti': 1.6.0
       '@types/lodash': 4.14.191
       '@types/node': 18.7.15
       '@types/randomcolor': 0.5.7
@@ -2124,6 +2128,10 @@ packages:
       tailwindcss: 3.2.4_postcss@8.4.20
     dev: true
 
+  /@types/canvas-confetti/1.6.0:
+    resolution: {integrity: sha512-Yq6rIccwcco0TLD5SMUrIM7Fk7Fe/C0jmNRxJJCLtAF6gebDkPuUjK5EHedxecm69Pi/aA+It39Ux4OHmFhjRw==}
+    dev: true
+
   /@types/debug/4.1.7:
     resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
     dependencies:
@@ -2638,6 +2646,10 @@ packages:
 
   /caniuse-lite/1.0.30001439:
     resolution: {integrity: sha512-1MgUzEkoMO6gKfXflStpYgZDlFM7M/ck/bgfVCACO5vnAf0fXoNVHdWtqGU+MYca+4bL9Z5bpOVmR33cWW9G2A==}
+
+  /canvas-confetti/1.6.0:
+    resolution: {integrity: sha512-ej+w/m8Jzpv9Z7W7uJZer14Ke8P2ogsjg4ZMGIuq4iqUOqY2Jq8BNW42iGmNfRwREaaEfFIczLuZZiEVSYNHAA==}
+    dev: false
 
   /ccount/1.1.0:
     resolution: {integrity: sha512-vlNK021QdI7PNeiUh/lKkC/mNHHfV0m/Ad5JoI0TYtlBnJAslM/JIkm/tGC88bkLIwO6OQ5uV6ztS6kVAtCDlg==}

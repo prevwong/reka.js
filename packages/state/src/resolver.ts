@@ -100,6 +100,25 @@ export class Resolver {
 
       this.resolveExpr(expr.body, scope);
     }
+
+    if (expr instanceof t.CallExpression) {
+      this.resolveExpr(expr.identifier, scope);
+
+      expr.arguments.forEach((arg) => {
+        this.resolveExpr(arg, scope);
+      });
+    }
+
+    if (expr instanceof t.IfStatement) {
+      this.resolveExpr(expr.condition, scope);
+      this.resolveExpr(expr.consequent, scope);
+    }
+
+    if (expr instanceof t.ConditionalExpression) {
+      this.resolveExpr(expr.condition, scope);
+      this.resolveExpr(expr.consequent, scope);
+      this.resolveExpr(expr.alternate, scope);
+    }
   }
 
   resolveComponent(component: t.Component, scope: Scope) {

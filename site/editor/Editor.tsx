@@ -1,5 +1,6 @@
 import { Frame, Composite } from '@composite/state';
 import * as t from '@composite/types';
+import confetti from 'canvas-confetti';
 import {
   action,
   makeObservable,
@@ -104,6 +105,9 @@ export class Editor {
         }),
       ],
       ...createSharedStateGlobals({
+        globals: {
+          confetti,
+        },
         extensions: [CollabExtension],
       }),
     });

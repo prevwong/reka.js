@@ -88,6 +88,25 @@ const jsToComposite = <T extends t.Type = t.Any>(
           }, {}),
         });
       }
+      case 'CallExpression': {
+        return t.callExpression({
+          identifier: _convert(node.callee),
+          arguments: node.arguments.map((arg) => _convert(arg)),
+        });
+      }
+      case 'IfStatement': {
+        return t.ifStatement({
+          condition: _convert(node.test),
+          consequent: _convert(node.consequent),
+        });
+      }
+      case 'ConditionalExpression': {
+        return t.conditionalExpression({
+          condition: _convert(node.test),
+          consequent: _convert(node.consequent),
+          alternate: _convert(node.alternate),
+        });
+      }
       default: {
         return t.Schema.fromJSON(node) as t.Type;
       }

@@ -34,6 +34,7 @@
     "@radix-ui/react-toggle-group": "^1.0.0",
     "@radix-ui/react-tooltip": "^0.1.7",
     "@stitches/react": "^1.2.7",
+    "canvas-confetti": "^1.6.0",
     "classnames": "^2.3.1",
     "date-fns": "^2.29.3",
     "esbuild": "^0.15.7",
@@ -69,6 +70,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.8",
+    "@types/canvas-confetti": "^1.6.0",
     "@types/lodash": "^4.14.185",
     "@types/node": "18.7.15",
     "@types/randomcolor": "^0.5.6",

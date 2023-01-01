@@ -23,6 +23,15 @@ export const block = (...args: ConstructorParameters<typeof t.Block>) =>
   new t.Block(...args);
 export const func = (...args: ConstructorParameters<typeof t.Func>) =>
   new t.Func(...args);
+export const callExpression = (
+  ...args: ConstructorParameters<typeof t.CallExpression>
+) => new t.CallExpression(...args);
+export const conditionalExpression = (
+  ...args: ConstructorParameters<typeof t.ConditionalExpression>
+) => new t.ConditionalExpression(...args);
+export const ifStatement = (
+  ...args: ConstructorParameters<typeof t.IfStatement>
+) => new t.IfStatement(...args);
 export const assignment = (
   ...args: ConstructorParameters<typeof t.Assignment>
 ) => new t.Assignment(...args);
