@@ -244,11 +244,12 @@ class _Parser extends Lexer {
   private parseComponentStateDeclaration() {
     const state: t.Val[] = [];
 
-    this.consume(TokenType.LBRACE);
-    while (!this.check(TokenType.RBRACE)) {
-      state.push(this.parseVariableDecl());
+    if (this.match(TokenType.LBRACE)) {
+      while (!this.check(TokenType.RBRACE)) {
+        state.push(this.parseVariableDecl());
+      }
+      this.consume(TokenType.RBRACE);
     }
-    this.consume(TokenType.RBRACE);
 
     return state;
   }
@@ -256,14 +257,6 @@ class _Parser extends Lexer {
   private parseElement() {
     this.consume(TokenType.ELEMENT_TAG_START);
     return this.parseElementContent();
-  }
-
-  private parseExpression() {
-    if (this.check(TokenType.ELEMENT_TAG_START)) {
-      return this.parseElement();
-    }
-
-    return this.parseExpressionAt(this.state.currentToken.pos - 1);
   }
 
   private parseElementEach() {

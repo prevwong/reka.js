@@ -344,10 +344,9 @@ class _Stringifier {
         }
 
         this.writer.write(')');
-        this.writer.write(' {');
-
-        this.writer.withIndent(() => {
-          if (node.state.length > 0) {
+        if (node.state.length > 0) {
+          this.writer.write(' {');
+          this.writer.withIndent(() => {
             node.state.forEach((state, i, arr) => {
               this.stringify(state);
               this.writer.write(';');
@@ -355,11 +354,13 @@ class _Stringifier {
                 this.writer.write('\n');
               }
             });
-          }
-        });
+          });
+          this.writer.write('}');
+        }
 
-        this.writer.write('} => (');
+        this.writer.write(' => ');
 
+        this.writer.write('(');
         this.writer.withIndent(() => {
           this.stringify(node.template);
         });
