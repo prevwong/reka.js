@@ -494,7 +494,7 @@ class _Stringifier {
         node.components.forEach((component, i, arr) => {
           this.stringify(component);
           if (i !== arr.length - 1) {
-            this.writer.write('\n');
+            this.writer.write('\n\n');
           }
         });
       },
