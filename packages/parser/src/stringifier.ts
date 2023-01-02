@@ -65,7 +65,7 @@ class Writer {
     this.result.push('\n');
   }
 
-  write(str: string | Array<string>) {
+  write(str: string | Array<string> | WriterResult) {
     if (Array.isArray(str)) {
       this.result.push(...str);
       mergeConsequtiveStrings(this.result);
@@ -269,7 +269,6 @@ class _Stringifier {
         const _write = () => {
           this.writer.write(left);
           this.writer.write(` ${node.operator} `);
-          console.log('assignment', node.right, right);
           this.writer.write(right);
         };
 
@@ -314,18 +313,36 @@ class _Stringifier {
         this.writer.write(node.name);
 
         if (node.init) {
-          this.writer.write(` = `);
+          this.writer.write(`=`);
           this.stringify(node.init);
         }
       },
       CompositeComponent: (node) => {
         this.writer.write(`component ${node.name}(`);
-        node.props.forEach((prop, i, arr) => {
-          this.stringify(prop);
-          if (i !== arr.length - 1) {
-            this.writer.write(',');
-          }
+
+        const props = node.props.flatMap((prop, i, arr) => {
+          return this.writer.withTemp(() => this.stringify(prop));
         });
+
+        if (props.length > 3) {
+          this.writer.withIndent(() => {
+            props.forEach((prop, i, arr) => {
+              this.writer.write(prop);
+              if (i !== arr.length - 1) {
+                this.writer.write(',');
+                this.writer.write('\n');
+              }
+            });
+          });
+        } else {
+          props.forEach((prop, i, arr) => {
+            this.writer.write(prop);
+            if (i !== arr.length - 1) {
+              this.writer.write(',');
+            }
+          });
+        }
+
         this.writer.write(')');
         this.writer.write(' {');
 
@@ -366,58 +383,81 @@ class _Stringifier {
 
         const propKeys = Object.keys(node.props);
 
-        this.writer.withIndent(
-          () => {
-            propKeys.forEach((prop, i, arr) => {
-              this.writer.write(`${prop}={`);
-              this.stringify(node.props[prop]);
-              this.writer.write('}');
-              if (i !== arr.length - 1) {
-                this.writer.write('\n');
-              }
-            });
+        const props: WriterResult[] = [];
+        const eachDirective = node.each;
+        const ifDirective = node.if;
+        const classlistDirective = node.classList;
 
-            if (node.each) {
-              this.writer.write('\n');
-              this.writer.write(`@each={${node.each.alias.name} in `);
-              if (!node.each.index) {
-                this.writer.write(node.each.iterator.name);
+        if (propKeys.length > 0) {
+          props.push(
+            this.writer.withTemp(() => {
+              propKeys.forEach((prop, i, arr) => {
+                this.writer.write(`${prop}={`);
+                this.stringify(node.props[prop]);
+                this.writer.write('}');
+                if (i !== arr.length - 1) {
+                  this.writer.write('\n');
+                }
+              });
+            })
+          );
+        }
+
+        if (eachDirective) {
+          props.push(
+            this.writer.withTemp(() => {
+              this.writer.write(`@each={${eachDirective.alias.name} in `);
+              if (!eachDirective.index) {
+                this.writer.write(eachDirective.iterator.name);
               } else {
                 this.writer.write(
-                  `(${node.each.iterator.name}, ${node.each.index.name})`
+                  `(${eachDirective.iterator.name}, ${eachDirective.index.name})`
                 );
               }
               this.writer.write(`}`);
-            }
+            })
+          );
+        }
 
-            if (node.if) {
-              this.writer.write('\n');
+        if (ifDirective) {
+          props.push(
+            this.writer.withTemp(() => {
               this.writer.write(`@if={`);
-              this.stringify(node.if);
+              this.stringify(ifDirective);
               this.writer.write('}');
-            }
+            })
+          );
+        }
 
-            if (node.classList) {
-              this.writer.write('\n');
+        if (classlistDirective) {
+          props.push(
+            this.writer.withTemp(() => {
               this.writer.write('@classList={');
-              this.stringify(node.classList);
+              this.stringify(classlistDirective);
               this.writer.write('}');
-            }
-          },
-          {
-            test: () => {
-              if (propKeys.length === 0) {
-                return true;
-              }
+            })
+          );
+        }
 
-              return propKeys.length > 1;
-            },
-            wrap: (cb) => {
-              this.writer.write(' ');
-              cb();
-            },
-          }
+        const flattenedProps = props.reduce(
+          (accum, prop, i, arr) => [
+            ...accum,
+            ...prop,
+            ...(i !== arr.length - 1 ? ['\n'] : []),
+          ],
+          []
         );
+
+        if (flattenedProps.length > 0) {
+          if (flattenedProps.length > 2) {
+            this.writer.withIndent(() => {
+              this.writer.write(flattenedProps);
+            });
+          } else {
+            this.writer.write(' ');
+            this.writer.write(flattenedProps);
+          }
+        }
 
         if (node.children.length > 0) {
           this.writer.write('>');
