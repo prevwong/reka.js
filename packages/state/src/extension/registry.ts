@@ -27,7 +27,7 @@ export class ExtensionRegistry {
 
       runInAction(() => {
         Object.assign(
-          this.composite.externals.values,
+          this.composite.externals.states,
           extension.definition.globals
         );
         this.composite.externals.components.push(

@@ -6,12 +6,18 @@ import {
   observable,
   reaction,
 } from 'mobx';
+import { computedFn } from 'mobx-utils';
 
 import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { ExtensionDefinition, ExtensionRegistry } from './extension';
 import { Frame, FrameOpts } from './frame';
-import { StateExternals, StateOpts, StateSubscriberOpts } from './interfaces';
+import {
+  StateExternalGlobalsFactory,
+  StateExternals,
+  StateOpts,
+  StateSubscriberOpts,
+} from './interfaces';
 import { ChangeListenerSubscriber, Observer } from './observer';
 import { Resolver } from './resolver';
 import { toJS } from './utils';
@@ -49,9 +55,11 @@ export class Composite {
     this.frames = [];
 
     this.externals = {
-      components: [],
-      values: {},
-      ...(opts.externals ?? {}),
+      components: opts.externals?.components ?? [],
+      states: opts.externals?.states ?? {},
+      globals: opts.externals?.globals
+        ? this.setupExternalGlobals(opts.externals?.globals)
+        : {},
     };
 
     makeObservable(this, {
@@ -61,13 +69,24 @@ export class Composite {
     });
   }
 
-  getExternalValue(key: string) {
-    return this.externals.values[key];
+  private setupExternalGlobals(createGlobals: StateExternalGlobalsFactory) {
+    const _globals = createGlobals(this);
+
+    return Object.entries(_globals).reduce((accum, [key, accessor]) => {
+      return {
+        ...accum,
+        [key]: computedFn(accessor),
+      };
+    }, {});
   }
 
-  updateExternalValue(key: string, value: any) {
+  getExternalState(key: string) {
+    return this.externals.states[key];
+  }
+
+  updateExternalState(key: string, value: any) {
     this.change(() => {
-      this.externals.values[key] = value;
+      this.externals.states[key] = value;
     });
   }
 
@@ -122,10 +141,6 @@ export class Composite {
     if (!this.syncGlobals) {
       this.syncGlobals = computed(
         () => {
-          Object.entries(this.externals.values).forEach(([key, value]) => {
-            this.env.set(key, value);
-          });
-
           this.program.globals.forEach((global) => {
             this.env.set(
               global.name,
@@ -156,7 +171,7 @@ export class Composite {
       this.syncCleanupEnv = computed(
         () => {
           const globalVarNames = [
-            ...Object.keys(this.externals.values),
+            ...Object.keys(this.externals.states),
             ...this.program.globals.map((global) => global.name),
           ];
           const componentNames = this.components.map(

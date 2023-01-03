@@ -13,7 +13,7 @@ export const createSharedStateGlobals = (
   ],
   externals: {
     components: [...(config.externals?.components ?? [])],
-    values: {
+    states: {
       myString: 'Hello from External Variable',
       posts: [
         {
@@ -28,7 +28,8 @@ export const createSharedStateGlobals = (
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
         },
       ],
-      ...(config.externals?.values ?? {}),
+      ...(config.externals?.states ?? {}),
     },
+    globals: config.externals?.globals,
   },
 });

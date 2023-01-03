@@ -108,9 +108,18 @@ export class Editor {
               },
             }),
           ],
-          values: {
-            confetti,
+          states: {
             scrollTop: 0,
+          },
+          globals: (self) => {
+            return {
+              confetti: () => {
+                confetti();
+              },
+              getScrollTop: () => {
+                return self.getExternalState('scrollTop');
+              },
+            };
           },
         },
         extensions: [CollabExtension],
@@ -172,7 +181,7 @@ export class Editor {
 
       const scrollY = this.iframe?.contentDocument?.documentElement.scrollTop;
 
-      this.composite.updateExternalValue('scrollTop', scrollY);
+      this.composite.updateExternalState('scrollTop', scrollY);
     };
 
     this.iframe.contentWindow?.addEventListener(

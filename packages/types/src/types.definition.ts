@@ -114,6 +114,14 @@ Schema.define('CallExpression', {
   }),
 });
 
+Schema.define('ExternalGlobal', {
+  extends: 'Expression',
+  fields: (t) => ({
+    name: t.string,
+    params: t.map(t.node('Expression')),
+  }),
+});
+
 Schema.define('ConditionalExpression', {
   extends: 'Expression',
   fields: (t) => ({

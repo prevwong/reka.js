@@ -89,8 +89,31 @@ const jsToComposite = <T extends t.Type = t.Any>(
         });
       }
       case 'CallExpression': {
+        const identifier = _convert(node.callee) as t.Identifier;
+
+        if (identifier.name.startsWith('$')) {
+          let params: Record<string, t.Expression> = {};
+
+          const arg0 = node.arguments[0];
+
+          if (arg0) {
+            const objExpr = _convert(arg0);
+            invariant(
+              objExpr instanceof t.ObjectExpression,
+              'Invalid options argument'
+            );
+
+            params = objExpr.properties;
+          }
+
+          return t.externalGlobal({
+            name: identifier.name.substring(1),
+            params,
+          });
+        }
+
         return t.callExpression({
-          identifier: _convert(node.callee),
+          identifier,
           arguments: node.arguments.map((arg) => _convert(arg)),
         });
       }
@@ -105,6 +128,13 @@ const jsToComposite = <T extends t.Type = t.Any>(
           condition: _convert(node.test),
           consequent: _convert(node.consequent),
           alternate: _convert(node.alternate),
+        });
+      }
+      case 'BinaryExpression': {
+        return t.binaryExpression({
+          left: _convert(node.left),
+          operator: node.operator as any,
+          right: _convert(node.right),
         });
       }
       default: {

@@ -244,6 +244,25 @@ class _Stringifier {
         });
         this.writer.write(')');
       },
+      ExternalGlobal: (node) => {
+        this.writer.write(`$${node.name}`);
+        this.writer.write('(');
+        const paramsKeys = Object.keys(node.params);
+
+        if (paramsKeys.length > 0) {
+          this.writer.write('{ ');
+          paramsKeys.forEach((key, i, arr) => {
+            this.writer.write(`${key}: `);
+            this.stringify(node.params[key]);
+            if (i !== arr.length - 1) {
+              this.writer.write(', ');
+            }
+          });
+          this.writer.write(' }');
+        }
+
+        this.writer.write(')');
+      },
       ConditionalExpression: (node) => {
         this.stringify(node.condition);
         this.writer.write(' ? ');

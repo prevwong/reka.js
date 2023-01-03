@@ -109,6 +109,12 @@ export class Resolver {
       });
     }
 
+    if (expr instanceof t.ExternalGlobal) {
+      Object.values(expr.params).forEach((param) => {
+        this.resolveExpr(param, scope);
+      });
+    }
+
     if (expr instanceof t.IfStatement) {
       this.resolveExpr(expr.condition, scope);
       this.resolveExpr(expr.consequent, scope);

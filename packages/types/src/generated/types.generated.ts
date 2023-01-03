@@ -203,6 +203,21 @@ export class CallExpression extends Expression {
 
 Schema.register('CallExpression', CallExpression);
 
+type ExternalGlobalParameters = {
+  name: string;
+  params: Record<string, Expression>;
+};
+
+export class ExternalGlobal extends Expression {
+  declare name: string;
+  declare params: Record<string, Expression>;
+  constructor(value: ExternalGlobalParameters) {
+    super('ExternalGlobal', value);
+  }
+}
+
+Schema.register('ExternalGlobal', ExternalGlobal);
+
 type ConditionalExpressionParameters = {
   condition: Expression;
   consequent: Expression;
@@ -585,6 +600,7 @@ export type Any =
   | Block
   | Func
   | CallExpression
+  | ExternalGlobal
   | ConditionalExpression
   | IfStatement
   | Assignment
@@ -622,6 +638,7 @@ export type Visitor = {
   Block: (node: Block) => any;
   Func: (node: Func) => any;
   CallExpression: (node: CallExpression) => any;
+  ExternalGlobal: (node: ExternalGlobal) => any;
   ConditionalExpression: (node: ConditionalExpression) => any;
   IfStatement: (node: IfStatement) => any;
   Assignment: (node: Assignment) => any;

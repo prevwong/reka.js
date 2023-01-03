@@ -51,7 +51,7 @@ export class Environment {
     }
 
     if (!this.parent) {
-      return this.composite.externals.values[name] || undefined;
+      return this.composite.externals.states[name] || undefined;
     }
 
     return this.parent.getByName(name);
@@ -61,7 +61,7 @@ export class Environment {
     const distance = this.composite.resolver.getDistance(identifier);
 
     if (distance === undefined || distance === -1) {
-      return this.composite.externals.values[identifier.name];
+      return this.composite.externals.states[identifier.name];
     }
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias

@@ -20,7 +20,7 @@ component App() {
       globalCounter = globalCounter + 1;
 
       if ( globalCounter >= 2  ) {
-        confetti();
+        $confetti();
       }
     }}  />
    </div>
@@ -35,11 +35,11 @@ component App() {
   </div>
 )
 
-component Header() => (
+component Header()  => (
   <div 
     className="flex w-full py-5 px-4 fixed z-10"
     @classList={{
-      'bg-white': scrollTop > 100
+      'bg-white': $getScrollTop() > 100
     }}
   >
     <div className="flex-1">
