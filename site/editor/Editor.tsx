@@ -54,6 +54,8 @@ export class Editor {
 
   composite: Composite;
 
+  private declare iframeScrollTopListener;
+
   constructor() {
     this.activeFrame = null;
 
@@ -92,20 +94,24 @@ export class Editor {
     this.composite = new Composite({
       ...createSharedStateGlobals({
         externals: {
-      components: [
-        t.externalComponent({
-          name: 'Header',
-          render: () => {
-            return <UserHeader />;
+          components: [
+            t.externalComponent({
+              name: 'Header',
+              render: () => {
+                return <UserHeader />;
+              },
+            }),
+            t.externalComponent({
+              name: 'Icon',
+              render: (props: { name: string }) => {
+                return <UserIcon name={props.name} />;
+              },
+            }),
+          ],
+          values: {
+            confetti,
+            scrollTop: 0,
           },
-        }),
-        t.externalComponent({
-          name: 'Icon',
-          render: (props: { name: string }) => {
-            return <UserIcon name={props.name} />;
-          },
-        }),
-      ],
         },
         extensions: [CollabExtension],
       }),
@@ -146,7 +152,33 @@ export class Editor {
   }
 
   registerIframe(iframe: HTMLIFrameElement) {
+    if (!iframe) {
+      return;
+    }
+
+    if (this.iframe && this.iframeScrollTopListener) {
+      this.iframe.contentWindow?.removeEventListener(
+        'scroll',
+        this.iframeScrollTopListener
+      );
+    }
+
     this.iframe = iframe;
+
+    this.iframeScrollTopListener = () => {
+      if (!this.iframe) {
+        return;
+      }
+
+      const scrollY = this.iframe?.contentDocument?.documentElement.scrollTop;
+
+      this.composite.updateExternalValue('scrollTop', scrollY);
+    };
+
+    this.iframe.contentWindow?.addEventListener(
+      'scroll',
+      this.iframeScrollTopListener
+    );
   }
 
   private broadcastLocalUser() {

@@ -8,6 +8,7 @@ component App() {
   val text = "Bye";
 } => (
   <div className={"w-full h-full"}>
+   <Header />
    <div style={{ backgroundImage: "linear-gradient(188deg, rgb(255 255 255), rgb(238 251 250), rgb(255 255 255))" }} className={"bg-orange-100 text-neutral-800 w-full h-full flex flex-col items-center justify-center"}>
     <h2 className={"text-6xl font-extrabold tracking-tighter"}>
      <text value={"Welcome to my app"} />
@@ -31,6 +32,24 @@ component App() {
      <Card name={post.name} description={post.description} image={post.image} @each={post in posts} />
     </div>
    </div>
+  </div>
+)
+
+component Header() => (
+  <div 
+    className="flex w-full py-5 px-4 fixed z-10"
+    @classList={{
+      'bg-white': scrollTop > 100
+    }}
+  >
+    <div className="flex-1">
+      <span>
+        <text value="Craft.js" />
+      </span>
+    </div>
+    <nav className="list-none">
+      <Button text="Contact us" />
+    </nav>
   </div>
 )
 
