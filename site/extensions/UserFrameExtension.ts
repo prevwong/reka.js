@@ -19,6 +19,7 @@ export const UserFrameExtensionFactory = () =>
     state: {
       frames: [
         { id: 'Main App', name: 'App', width: '100%', height: '100%' },
+        { id: 'Top Header', name: 'Header' },
         {
           id: 'Card',
           name: 'Card',
