@@ -102,6 +102,10 @@ const PrimitiveElement = observer(({ name, value }: PrimitiveElementProps) => {
 
 const COLLAPSIBLE_STATE = new WeakMap();
 
+const createSafeObjKey = (str: string) => {
+  return t.ecscapeObjKey(str).replaceAll(/\/|\*/g, '--');
+};
+
 const Element = observer(
   ({
     name,
@@ -270,7 +274,7 @@ const Element = observer(
         const child =
           key === 'self'
             ? dom
-            : dom.querySelector(`.property-${t.ecscapeObjKey(key)}`);
+            : dom.querySelector(`.property-${createSafeObjKey(key)}`);
 
         if (!child) {
           return;
@@ -303,7 +307,9 @@ const Element = observer(
           entry: true,
           toggable: showToggler,
           open: isOpen,
-          [`property-${name}`]: name !== undefined,
+          ...(name
+            ? { [`property-${createSafeObjKey(name)}`]: name !== undefined }
+            : {}),
         })}
       >
         <span>
