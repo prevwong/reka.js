@@ -18,12 +18,13 @@ export const createSharedStateGlobals = (
       posts: [
         {
           name: 'Interesting Post',
+          image: '/images/pawel-olek-1.png',
           description:
             'Ut enim ad minim veniam, quis nostrud exercitation ullamco',
         },
         {
           name: 'Hello World',
-          image: '/images/pawel-olek-1.png',
+          image: '/images/pawel-olek-2.png',
           description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
         },

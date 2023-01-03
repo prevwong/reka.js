@@ -25,6 +25,7 @@ import {
 
 import { ComponentEditor } from './ComponentEditor';
 import { Event } from './Event';
+import { UserAnimation } from '@app/external/UserAnimation';
 
 export type User = {
   id: string;
@@ -95,6 +96,12 @@ export class Editor {
       ...createSharedStateGlobals({
         externals: {
           components: [
+            t.externalComponent({
+              name: 'Animation',
+              render: () => {
+                return <UserAnimation />;
+              },
+            }),
             t.externalComponent({
               name: 'Header',
               render: () => {
