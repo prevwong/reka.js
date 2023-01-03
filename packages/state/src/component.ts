@@ -161,9 +161,8 @@ export class ComponentViewEvaluator {
             ];
           }
 
-          componentViewTree.render.length = render.length;
-
           runInAction(() => {
+            componentViewTree.render.length = render.length;
             for (let i = 0; i < render.length; i++) {
               if (componentViewTree.render[i] === render[i]) {
                 continue;
