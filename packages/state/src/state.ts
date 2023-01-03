@@ -6,7 +6,6 @@ import {
   observable,
   reaction,
 } from 'mobx';
-import { computedFn } from 'mobx-utils';
 
 import { Environment } from './environment';
 import { computeExpression } from './expression';
@@ -75,7 +74,7 @@ export class Composite {
     return Object.entries(_globals).reduce((accum, [key, accessor]) => {
       return {
         ...accum,
-        [key]: computedFn(accessor),
+        [key]: accessor,
       };
     }, {});
   }

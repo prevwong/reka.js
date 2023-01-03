@@ -1,14 +1,8 @@
 import * as t from '@composite/types';
 import { action } from 'mobx';
-import deepEqual from 'fast-deep-equal';
 
 import { Environment } from './environment';
 import { Composite } from './state';
-
-const ExternalGlobalExprOpts: WeakMap<
-  t.ExternalGlobal,
-  Record<string, any>
-> = new WeakMap();
 
 export const computeExpression = (
   expr: t.Any,
@@ -83,25 +77,13 @@ export const computeExpression = (
   }
 
   if (expr instanceof t.ExternalGlobal) {
-    let opts: Record<string, any>;
-
-    const newOpts = Object.keys(expr.params).reduce(
+    const opts = Object.keys(expr.params).reduce(
       (accum, key) => ({
         ...accum,
         [key]: computeExpression(expr.params[key], composite, env),
       }),
       {}
     );
-
-    const existingOpts = ExternalGlobalExprOpts.get(expr);
-
-    if (existingOpts && deepEqual(existingOpts, newOpts)) {
-      opts = existingOpts;
-    } else {
-      opts = newOpts;
-    }
-
-    ExternalGlobalExprOpts.set(expr, opts);
 
     return composite.externals.globals[expr.name](opts);
   }
