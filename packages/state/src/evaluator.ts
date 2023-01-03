@@ -380,6 +380,8 @@ export class ViewEvaluator {
     let view: t.View;
 
     try {
+      // TODO: currently props are re-evaluated any time a change occurs within the template tree
+      // We should maybe cache the props evaluation as well
       const props = Object.keys(template.props).reduce((accum, key) => {
         const value = this.computeExpr(template.props[key], ctx.env);
 
