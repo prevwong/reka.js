@@ -214,7 +214,7 @@ class _Stringifier {
         this.writer.write('{');
         this.writer.withIndent(() => {
           Object.keys(node.properties).forEach((property, i, arr) => {
-            this.writer.write(`${property}: `);
+            this.writer.write(`"${t.ecscapeObjKey(property)}": `);
             this.stringify(node.properties[property]);
 
             if (i !== arr.length - 1) {

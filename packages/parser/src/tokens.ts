@@ -12,6 +12,7 @@ export enum TokenType {
   SEMICOLON = ';',
   SLASH = '/',
   STAR = '*',
+  DOLLAR = '$',
 
   NOT = '!',
   NEQ = '!=',

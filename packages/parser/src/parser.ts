@@ -1,5 +1,6 @@
 import * as b from '@babel/types';
 import * as t from '@composite/types';
+import { ecscapeObjKey } from '@composite/types';
 import acorn, { parseExpressionAt } from 'acorn';
 import invariant from 'tiny-invariant';
 
@@ -83,7 +84,7 @@ const jsToComposite = <T extends t.Type = t.Any>(
 
             return {
               ...accum,
-              [key]: _convert(property.value),
+              [`${ecscapeObjKey(key)}`]: _convert(property.value),
             };
           }, {}),
         });

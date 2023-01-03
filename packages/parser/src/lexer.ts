@@ -168,6 +168,9 @@ export class Lexer {
         }
         break;
       }
+      case '$': {
+        return this.tokenize(TokenType.DOLLAR);
+      }
       case ',': {
         return this.tokenize(TokenType.COMMA);
       }

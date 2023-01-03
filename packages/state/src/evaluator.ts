@@ -220,8 +220,9 @@ export class ViewEvaluator {
                   classList.properties[key],
                   ctx.env
                 );
+
                 if (bool) {
-                  accum.push(key);
+                  accum.push(t.ecscapeObjKey(key));
                 }
 
                 return accum;

@@ -136,11 +136,13 @@ importers:
       nanoid: ^3.2.0
       short-uuid: ^4.2.0
       shortid: ^2.2.16
+      tiny-invariant: ^1.2.0
     dependencies:
       invariant: 2.2.4
       nanoid: 3.3.4
       short-uuid: 4.2.0
       shortid: 2.2.16
+      tiny-invariant: 1.2.0
 
   site:
     specifiers:

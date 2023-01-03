@@ -1,3 +1,5 @@
+import invariant from 'tiny-invariant';
+
 import { Schema } from './schema';
 import * as t from './types.docs';
 
@@ -328,4 +330,12 @@ export const collect = (type: t.Type) => {
   collect(type);
 
   return types;
+};
+
+export const ecscapeObjKey = (key: string) => {
+  const match = key.match(/(?:\")?([\w\s\d\_\-]+)(?:\")?/);
+
+  invariant(match, 'Invalid object key');
+
+  return match[1];
 };

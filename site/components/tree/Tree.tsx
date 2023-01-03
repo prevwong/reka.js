@@ -268,7 +268,9 @@ const Element = observer(
 
       const change = (key: string) => {
         const child =
-          key === 'self' ? dom : dom.querySelector(`.property-${key}`);
+          key === 'self'
+            ? dom
+            : dom.querySelector(`.property-${t.ecscapeObjKey(key)}`);
 
         if (!child) {
           return;
