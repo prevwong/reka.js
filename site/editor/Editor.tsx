@@ -90,6 +90,8 @@ export class Editor {
     });
 
     this.composite = new Composite({
+      ...createSharedStateGlobals({
+        externals: {
       components: [
         t.externalComponent({
           name: 'Header',
@@ -104,9 +106,6 @@ export class Editor {
           },
         }),
       ],
-      ...createSharedStateGlobals({
-        globals: {
-          confetti,
         },
         extensions: [CollabExtension],
       }),

@@ -1,3 +1,4 @@
+import { runInAction } from 'mobx';
 import invariant from 'tiny-invariant';
 
 import {
@@ -23,6 +24,16 @@ export class ExtensionRegistry {
       this.definitionToExtension.set(definition, extension);
       this.keyToExtension.set(definition.key, extension);
       this.extensions.push(extension);
+
+      runInAction(() => {
+        Object.assign(
+          this.composite.externals.values,
+          extension.definition.globals
+        );
+        this.composite.externals.components.push(
+          ...extension.definition.components
+        );
+      });
     });
   }
 

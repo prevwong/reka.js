@@ -3,9 +3,13 @@ import * as t from '@composite/types';
 import { ExtensionDefinition } from './extension';
 import { Composite } from './state';
 
+export type StateExternals = {
+  values: Record<string, any>;
+  components: t.Component[];
+};
+
 export type StateOpts = {
-  components?: t.Component[];
-  globals?: Record<string, any>;
+  externals?: Partial<StateExternals>;
   extensions?: ExtensionDefinition<any>[];
 };
 
