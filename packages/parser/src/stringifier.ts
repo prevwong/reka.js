@@ -320,7 +320,7 @@ class _Stringifier {
       CompositeComponent: (node) => {
         this.writer.write(`component ${node.name}(`);
 
-        const props = node.props.flatMap((prop, i, arr) => {
+        const props = node.props.flatMap((prop) => {
           return this.writer.withTemp(() => this.stringify(prop));
         });
 
