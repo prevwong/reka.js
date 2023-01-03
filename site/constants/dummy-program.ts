@@ -53,8 +53,8 @@ component App() {
     </div>
     <div className="grid grid-cols-2 mt-8 px-8 gap-6">
       <FeatureCard 
-        title="States" 
-        description={"Components designed by users can hold stateful values"} 
+        title="Components" 
+        description={"End-users can design components with stateful values, expressions and templates similar to what is possible with code in UI frameworks like React."} 
       >
         <div className="flex flex-col justify-center">
           <h4 className="mb-2 text-xs text-neutral-600">
