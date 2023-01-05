@@ -318,7 +318,7 @@ class _Stringifier {
               !(statement instanceof t.Block) &&
               !(statement instanceof t.IfStatement)
             ) {
-              this.writer.write(';');
+              this.writer.write('; ');
             }
 
             if (i !== arr.length - 1) {
