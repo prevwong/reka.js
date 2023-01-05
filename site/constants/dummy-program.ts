@@ -13,7 +13,8 @@ component App() {
   <Header/>
   <div
    style={{
-    "backgroundImage": "linear-gradient(188deg, rgb(255 255 255), rgb(238 251 250), rgb(255 255 255))"
+    "backgroundImage": "linear-gradient(188deg, rgb(255 255 255), rgb(238 251 250), rgb(255 255 255))",
+    "backgroundSize": "400% 400%"
    }}
    className={"bg-orange-100 gradient-animation text-neutral-800 w-full h-full flex flex-col justify-center"}
   >
