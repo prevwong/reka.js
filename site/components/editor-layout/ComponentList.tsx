@@ -89,7 +89,7 @@ const AddComponentModal = (props: AddComponentModalProps) => {
                       t.tagTemplate({
                         tag: 'text',
                         props: {
-                          text: t.literal({
+                          value: t.literal({
                             value: safeComponentName,
                           }),
                         },
