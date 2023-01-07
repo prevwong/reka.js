@@ -15,6 +15,7 @@ import { WebrtcProvider } from 'y-webrtc';
 
 import { createSharedStateGlobals } from '@app/constants';
 import { CollabExtension } from '@app/extensions/CollabExtension';
+import { UserAnimation } from '@app/external/UserAnimation';
 import { UserHeader } from '@app/external/UserHeader';
 import { UserIcon } from '@app/external/UserIcon';
 import {
@@ -25,7 +26,6 @@ import {
 
 import { ComponentEditor } from './ComponentEditor';
 import { Event } from './Event';
-import { UserAnimation } from '@app/external/UserAnimation';
 
 export type User = {
   id: string;

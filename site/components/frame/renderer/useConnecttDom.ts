@@ -13,12 +13,7 @@ export const useConnectDOM = () => {
   const { component, parent: parentComponent } =
     React.useContext(ComponentContext);
 
-  const {
-    view,
-    parent: parentView,
-    isSelectable,
-    isNonFrameComponentRoot,
-  } = useView();
+  const { view, parent: parentView } = useView();
 
   const connect = React.useCallback(
     (dom: HTMLElement) => {
@@ -75,15 +70,7 @@ export const useConnectDOM = () => {
         shouldAddListeners()
       );
     },
-    [
-      editor,
-      component.name,
-      parentView,
-      view,
-      isSelectable,
-      isNonFrameComponentRoot,
-      parentComponent,
-    ]
+    [editor, component.name, parentView, view, parentComponent]
   );
 
   return {

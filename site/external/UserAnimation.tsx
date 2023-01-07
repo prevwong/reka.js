@@ -1,7 +1,5 @@
-import * as React from 'react';
 import { motion } from 'framer-motion';
-import { styled } from '@app/styles';
-import { Box } from '@app/components/box';
+import * as React from 'react';
 
 export const UserAnimation = () => {
   return (

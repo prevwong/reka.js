@@ -333,7 +333,7 @@ export const collect = (type: t.Type) => {
 };
 
 export const ecscapeObjKey = (key: string) => {
-  const match = key.match(/(?:\")?(.+)(?:\")?/);
+  const match = key.match(/(?:")?(.+)(?:")?/);
 
   invariant(match, 'Invalid object key');
 

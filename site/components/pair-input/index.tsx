@@ -1,5 +1,4 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
-import cx from 'classnames';
 import * as React from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 
@@ -160,7 +159,7 @@ const TextareaEditor = ({
     return () => {
       window.removeEventListener('mousedown', listener);
     };
-  }, []);
+  }, [onClose]);
 
   return (
     <StyledTextareaContainer error={!!hasError}>
