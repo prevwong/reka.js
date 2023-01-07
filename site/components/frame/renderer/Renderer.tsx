@@ -63,6 +63,7 @@ type RenderComponentViewProps = {
 
 export const RenderComponentView = observer(
   (props: RenderComponentViewProps) => {
+    const parentComponentContext = React.useContext(ComponentContext);
     let render: React.ReactElement[] | null = null;
 
     if (props.view instanceof t.CompositeComponentView) {
@@ -74,7 +75,12 @@ export const RenderComponentView = observer(
     }
 
     return (
-      <ComponentContext.Provider value={props.view.component}>
+      <ComponentContext.Provider
+        value={{
+          parent: parentComponentContext?.component,
+          component: props.view.component,
+        }}
+      >
         {render}
       </ComponentContext.Provider>
     );
@@ -86,12 +92,18 @@ type RenderSlotViewProps = {
 };
 
 export const RenderSlotView = observer((props: RenderSlotViewProps) => {
+  const { parent } = React.useContext(ComponentContext);
+
+  if (!parent) {
+    throw new Error();
+  }
+
   return (
-    <React.Fragment>
+    <ComponentContext.Provider value={{ component: parent }}>
       {props.view.view.map((v) => (
         <Renderer view={v} key={v.id} />
       ))}
-    </React.Fragment>
+    </ComponentContext.Provider>
   );
 });
 

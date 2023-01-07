@@ -11,7 +11,7 @@ import { FrameContext } from '../../FrameContext';
 
 export const useView = () => {
   const frame = React.useContext(FrameContext);
-  const component = React.useContext(ComponentContext);
+  const { component } = React.useContext(ComponentContext);
   const { view, parent: parentView } = React.useContext(ViewContext);
 
   const editor = useEditor();
@@ -104,5 +104,7 @@ export const useView = () => {
     parent: parentView,
     connect,
     className: classes.filter(Boolean).join(' '),
+    isSelectable,
+    isNonFrameComponentRoot,
   };
 };

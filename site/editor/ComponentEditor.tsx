@@ -128,7 +128,11 @@ export class ComponentEditor {
     this.tplEvent[event] = tpl;
   }
 
-  connectTplDOM(dom: HTMLElement, tpl: t.Template) {
+  connectTplDOM(
+    dom: HTMLElement,
+    tpl: t.Template,
+    addListeners: boolean = false
+  ) {
     if (!this.activeFrame) {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       return () => {};
@@ -144,10 +148,39 @@ export class ComponentEditor {
 
     set.add(dom);
 
+    const mouseoverListener = (e: MouseEvent) => {
+      e.stopPropagation();
+      this.setTplEvent('hovered', tpl);
+    };
+
+    const mousedownListener = (e: MouseEvent) => {
+      e.stopPropagation();
+      this.setTplEvent('selected', tpl);
+    };
+
+    const mouseoutListener = (e: MouseEvent) => {
+      e.stopPropagation();
+      if (this.tplEvent.hovered?.id !== tpl.id) {
+        return;
+      }
+
+      this.setTplEvent('hovered', tpl);
+    };
+
+    if (addListeners) {
+      dom.addEventListener('mouseover', mouseoverListener);
+      dom.addEventListener('mousedown', mousedownListener);
+      dom.addEventListener('mouseout', mouseoutListener);
+    }
+
     return () => {
       if (!set) {
         return;
       }
+
+      dom.removeEventListener('mouseover', mouseoverListener);
+      dom.removeEventListener('mousedown', mousedownListener);
+      dom.removeEventListener('mouseout', mouseoutListener);
 
       set.delete(dom);
     };

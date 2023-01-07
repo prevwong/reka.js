@@ -10,22 +10,36 @@ import { ComponentContext } from '../ComponentContext';
 export const useConnectDOM = () => {
   const editor = useEditor();
 
-  const component = React.useContext(ComponentContext);
-  const { view, parent: parentView } = useView();
+  const { component, parent: parentComponent } =
+    React.useContext(ComponentContext);
+
+  const {
+    view,
+    parent: parentView,
+    isSelectable,
+    isNonFrameComponentRoot,
+  } = useView();
 
   const connect = React.useCallback(
     (dom: HTMLElement) => {
-      if (!editor.activeComponentEditor) {
+      const activeComponentEditor = editor.activeComponentEditor;
+
+      if (!activeComponentEditor) {
+        return;
+      }
+
+      const activeFrame = activeComponentEditor.activeFrame;
+
+      if (!activeFrame) {
         return;
       }
 
       let template = view.template;
 
+      const frameComponent = activeFrame.state.component;
+
       const isNonFrameRoot = () => {
-        if (
-          editor.activeComponentEditor?.activeFrame?.state.component.name ===
-          component.name
-        ) {
+        if (frameComponent.name === component.name) {
           return false;
         }
 
@@ -38,9 +52,38 @@ export const useConnectDOM = () => {
         template = parentView?.template as any;
       }
 
-      return editor.activeComponentEditor.connectTplDOM(dom, template);
+      const shouldAddListeners = () => {
+        if (component?.name === frameComponent.name) {
+          return true;
+        }
+
+        if (
+          parentComponent &&
+          parentComponent.name === frameComponent.name &&
+          parentView &&
+          parentView instanceof t.CompositeComponentView
+        ) {
+          return parentView.render.indexOf(view) > -1;
+        }
+
+        return false;
+      };
+
+      return activeComponentEditor.connectTplDOM(
+        dom,
+        template,
+        shouldAddListeners()
+      );
     },
-    [editor, component.name, parentView, view]
+    [
+      editor,
+      component.name,
+      parentView,
+      view,
+      isSelectable,
+      isNonFrameComponentRoot,
+      parentComponent,
+    ]
   );
 
   return {
