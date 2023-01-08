@@ -30,18 +30,13 @@ export const StyledPairInputField = styled('div', {
     borderBottomColor: 'transparent',
   },
   [`& ${TextField}`]: {
-    borderColor: 'transparent',
+    borderRadius: 0,
+    border: 'none',
   },
-  [`& ${TextField}:nth-child(1)`]: {
+  [`> ${TextField}`]: {
     borderRight: '1px solid $grayA5',
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
   },
-  [`& ${TextField}:nth-child(2)`]: {
-    paddingRight: '$3',
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
-  },
+
   mb: '-1px',
   [`& ${IconButton}`]: {
     opacity: 0,
@@ -120,7 +115,7 @@ type PairInputFieldProps = {
 };
 
 type TextareaEditorProps = React.ComponentProps<typeof StyledTextarea> & {
-  onClose: (hasError: boolean) => void;
+  onClose: () => void;
   onCommit: () => void;
 };
 
@@ -133,8 +128,23 @@ const TextareaEditor = ({
   const [hasError, setHasError] = React.useState('');
   const domRef = React.useRef<HTMLTextAreaElement | null>(null);
 
-  const hasErrorRef = React.useRef(!!hasError);
-  hasErrorRef.current = !!hasError;
+  const onCommitRef = React.useRef(onCommit);
+  onCommitRef.current = onCommit;
+
+  const onCloseRef = React.useRef(onClose);
+  onCloseRef.current = onClose;
+
+  const commit = React.useCallback(() => {
+    const { current: onCommit } = onCommitRef;
+    const { current: onClose } = onCloseRef;
+
+    try {
+      onCommit();
+      onClose();
+    } catch (err) {
+      setHasError(String(err));
+    }
+  }, [setHasError]);
 
   React.useEffect(() => {
     const { current: dom } = domRef;
@@ -151,15 +161,17 @@ const TextareaEditor = ({
         return;
       }
 
-      onClose(hasErrorRef.current);
+      commit();
     };
 
-    window.addEventListener('mousedown', listener);
+    const parent = dom.closest('[role="dialog"]') ?? window;
+
+    parent.addEventListener('mousedown', listener);
 
     return () => {
-      window.removeEventListener('mousedown', listener);
+      parent.removeEventListener('mousedown', listener);
     };
-  }, [onClose]);
+  }, [commit]);
 
   return (
     <StyledTextareaContainer error={!!hasError}>
@@ -174,12 +186,7 @@ const TextareaEditor = ({
         onKeyDown={(e) => {
           if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            try {
-              onCommit();
-              onClose(!!hasError);
-            } catch (err) {
-              setHasError(String(err));
-            }
+            commit();
           }
         }}
       />
@@ -319,14 +326,8 @@ const PairInputField = ({
               onCommit={() => {
                 commit();
               }}
-              onClose={(hasError) => {
+              onClose={() => {
                 setShowTextareaEditor(false);
-
-                if (!hasError) {
-                  return;
-                }
-
-                setNewValue(value);
               }}
             />
           )}

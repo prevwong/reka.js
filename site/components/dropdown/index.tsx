@@ -32,7 +32,6 @@ const StyledItem = styled(DropdownMenuPrimitive.Item, {
   alignItems: 'center',
   padding: '$3 $2',
   position: 'relative',
-  userSelect: 'none',
   cursor: 'pointer',
 
   '&[data-disabled]': {
@@ -66,14 +65,10 @@ export const Dropdown = (props: DropdownProps) => {
           {props.items.map((item) => (
             <StyledItem
               key={item.title}
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-              onSelect={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-
-                item.onSelect();
+              onSelect={() => {
+                Promise.resolve().then(() => {
+                  item.onSelect();
+                });
               }}
             >
               {item.title}
