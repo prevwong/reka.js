@@ -8,6 +8,7 @@ import {
   runInAction,
   computed,
 } from 'mobx';
+import { NextRouter } from 'next/router';
 import randomColor from 'randomcolor';
 import * as React from 'react';
 import shortUUID from 'short-uuid';
@@ -26,7 +27,6 @@ import {
 
 import { ComponentEditor } from './ComponentEditor';
 import { Event } from './Event';
-import { NextRouter } from 'next/router';
 
 export type User = {
   id: string;

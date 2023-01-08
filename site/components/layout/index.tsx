@@ -1,13 +1,14 @@
+import { motion } from 'framer-motion';
+import { observer } from 'mobx-react-lite';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as React from 'react';
-import { motion } from 'framer-motion';
+
+import { useEditor } from '@app/editor';
+import { styled } from '@app/styles';
 
 import { Footer } from '../footer';
 import { Header, HEADER_HEIGHT } from '../header';
-import { styled } from '@app/styles';
-import { useEditor } from '@app/editor';
-import { observer } from 'mobx-react-lite';
 
 type MetaProps = {
   title: string;
