@@ -14,6 +14,7 @@ import { Renderer } from './renderer';
 import { Box } from '../box';
 import { IconButton } from '../button';
 import { Text } from '../text';
+import { EditorMode } from '@app/editor/Editor';
 
 type RenderFrameProps = {
   frame: ActiveFrame;
@@ -254,6 +255,10 @@ const RenderSelectionBorders = observer(() => {
   const editor = useEditor();
 
   const activeComponentEditor = editor.activeComponentEditor;
+
+  if (editor.mode === EditorMode.Preview) {
+    return null;
+  }
 
   if (!activeComponentEditor) {
     return null;

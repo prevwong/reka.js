@@ -20,6 +20,7 @@ const StyledUserIcon = styled(motion.span, {
   border: '1px solid transparent',
   position: 'relative',
   overflow: 'hidden',
+  cursor: 'pointer',
   '&:before': {
     content: ' ',
     display: 'block',

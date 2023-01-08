@@ -1,6 +1,7 @@
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import { useEditor } from '@app/editor';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
@@ -18,6 +19,7 @@ import { Text } from '../text';
 import { TextField } from '../text-field';
 import { Tooltip } from '../tooltip';
 import { Tree } from '../tree';
+import { EditorMode } from '@app/editor/Editor';
 
 const StyledFrameContainer = styled('div', {
   width: '100%',
@@ -47,6 +49,35 @@ const StyledFrameContainer = styled('div', {
       },
     },
   },
+});
+
+const TOOLBAR_HEIGHT = 56;
+
+const Toolbar = styled(motion.div, {
+  display: 'flex',
+  px: '$4',
+  py: '$4',
+  borderBottom: '1px solid $grayA5',
+  width: '100%',
+  height: `${TOOLBAR_HEIGHT}px`,
+  alignItems: 'center',
+  position: 'relative',
+  zIndex: '$4',
+  background: '#fff',
+});
+
+const BOTTOM_TOOLBAR_HEIGHT = 40;
+
+const BottomToolbar = styled(motion.div, {
+  display: 'flex',
+  alignItems: 'center',
+  borderTop: '1px solid $grayA5',
+  px: '$4',
+  py: '$3',
+  position: 'relative',
+  zIndex: '$2',
+  background: '#fff',
+  height: `${BOTTOM_TOOLBAR_HEIGHT}px`,
 });
 
 const StyledViewContainer = styled('div', {
@@ -155,21 +186,27 @@ export const ComponentEditorView = observer(() => {
   }
   return (
     <Box
-      css={{ display: 'flex', flexDirection: 'column', height: '100%' }}
+      css={{
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+      }}
       ref={containerDOMRef}
     >
-      <Box
-        css={{
-          display: 'flex',
-          px: '$4',
-          py: '$4',
-          borderBottom: '1px solid $grayA5',
-          width: '100%',
-          alignItems: 'center',
-          position: 'relative',
-          zIndex: '$4',
-          background: '#fff',
+      <Toolbar
+        animate={editor.mode === EditorMode.Preview ? 'exit' : 'enter'}
+        variants={{
+          enter: {
+            marginTop: 0,
+            opacity: 1,
+          },
+          exit: {
+            marginTop: `-${TOOLBAR_HEIGHT}px`,
+            opacity: 0,
+          },
         }}
+        transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
       >
         <Box
           css={{
@@ -250,7 +287,8 @@ export const ComponentEditorView = observer(() => {
             />
           </Box>
         </Box>
-      </Box>
+      </Toolbar>
+
       <Box
         css={{
           position: 'relative',
@@ -296,16 +334,17 @@ export const ComponentEditorView = observer(() => {
         )}
       </Box>
       {componentEditor.activeFrame && (
-        <Box
-          css={{
-            display: 'flex',
-            alignItems: 'center',
-            borderTop: '1px solid $grayA5',
-            px: '$4',
-            py: '$3',
-            position: 'relative',
-            zIndex: '$2',
-            background: '#fff',
+        <BottomToolbar
+          animate={editor.mode === EditorMode.Preview ? 'exit' : 'enter'}
+          variants={{
+            exit: {
+              marginBottom: `-${BOTTOM_TOOLBAR_HEIGHT}px`,
+              opacity: 0,
+            },
+            enter: {
+              marginBottom: 0,
+              opacity: 1,
+            },
           }}
         >
           <Box
@@ -401,7 +440,7 @@ export const ComponentEditorView = observer(() => {
           {componentEditor.activeFrame.templateToShowComments && (
             <TemplateComments activeFrame={componentEditor.activeFrame} />
           )}
-        </Box>
+        </BottomToolbar>
       )}
 
       <AddFrameModal

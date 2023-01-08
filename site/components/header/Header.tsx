@@ -10,8 +10,10 @@ import { useEditor } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 import { styled } from '@app/styles';
 
-import { Button } from '../button';
+import { Button, IconButton } from '../button';
 import { Collaborators } from '../editor-panel/Collaborators';
+import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
+import { Tooltip } from '../tooltip';
 
 const Menu = styled('div', {
   display: 'flex',
@@ -25,28 +27,57 @@ const Menu = styled('div', {
   },
 });
 
-const AppToolbar = () => {
+const AppToolbar = observer(() => {
   const editor = useEditor();
+
+  const isCodeModeRef = React.useRef(editor.mode === EditorMode.Code);
 
   return (
     <Box css={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
       <Collaborators />
-      <Button
-        variant="secondary"
-        css={{ py: '$3', px: '$4' }}
-        onClick={() => {
-          if (editor.mode === EditorMode.Code) {
-            editor.setMode(EditorMode.UI);
-            return;
-          }
-          editor.setMode(EditorMode.Code);
-        }}
-      >
-        {editor.mode === EditorMode.Code ? 'Exit Code Editor' : 'Edit Code'}
-      </Button>
+      <Tooltip content="Toggle code editor">
+        <Button
+          variant="secondary"
+          css={{ py: '$3', px: '$4' }}
+          onClick={() => {
+            if (editor.mode === EditorMode.Code) {
+              editor.setMode(EditorMode.UI);
+              isCodeModeRef.current = false;
+              return;
+            }
+
+            isCodeModeRef.current = true;
+            editor.setMode(EditorMode.Code);
+          }}
+        >
+          {editor.mode === EditorMode.Code ? 'Exit Code Editor' : 'Edit Code'}
+        </Button>
+      </Tooltip>
+
+      <Tooltip content="Preview">
+        <IconButton
+          css={{ py: '$3', px: '$3' }}
+          onClick={() => {
+            if (editor.mode === EditorMode.Preview) {
+              editor.setMode(
+                isCodeModeRef.current ? EditorMode.Code : EditorMode.UI
+              );
+              return;
+            }
+
+            editor.setMode(EditorMode.Preview);
+          }}
+        >
+          {editor.mode === EditorMode.Preview ? (
+            <EyeClosedIcon />
+          ) : (
+            <EyeOpenIcon />
+          )}
+        </IconButton>
+      </Tooltip>
     </Box>
   );
-};
+});
 
 type HeaderToolbarProps<T extends Record<string, React.ReactElement>> = {
   toolbars: T;

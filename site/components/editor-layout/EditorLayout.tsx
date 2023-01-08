@@ -91,6 +91,9 @@ export const EditorLayout = observer(
             code: {
               marginLeft: 0 - LEFT_SIDEBAR_WIDTH,
             },
+            preview: {
+              marginLeft: 0 - LEFT_SIDEBAR_WIDTH,
+            },
             ui: {
               marginLeft: 0,
             },
@@ -135,6 +138,7 @@ export const EditorLayout = observer(
           variants={{
             ui: { width: RIGHT_SIDEBAR_UI_WIDTH },
             code: { width: RIGHT_SIDEBAR_CODE_WIDTH },
+            preview: { width: 0 },
           }}
           transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
         >

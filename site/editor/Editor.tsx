@@ -36,6 +36,7 @@ export type User = {
 export enum EditorMode {
   Code = 'code',
   UI = 'ui',
+  Preview = 'preview',
 }
 
 export class Editor {

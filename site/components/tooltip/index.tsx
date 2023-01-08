@@ -63,7 +63,7 @@ export const Tooltip = ({ children, content }: TooltipProps) => {
       delayDuration={100}
       open={content === '' ? false : undefined}
     >
-      <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
+      <TooltipPrimitive.Trigger>{children}</TooltipPrimitive.Trigger>
       <StyledContent sideOffset={5}>
         {content}
         <StyledArrow />
