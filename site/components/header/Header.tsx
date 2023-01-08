@@ -15,6 +15,23 @@ import { Button, IconButton } from '../button';
 import { Collaborators } from '../editor-panel/Collaborators';
 import { Tooltip } from '../tooltip';
 
+export const HEADER_HEIGHT = 50;
+
+const Container = styled(motion.div, {
+  backgroundColor: 'rgba(255,255,255,0.7)',
+  backdropFilter: 'blur(10px)',
+  color: '$grayA12',
+  px: '$4',
+  py: '$3',
+  borderBottom: '1px solid $grayA5',
+  position: 'fixed',
+  top: 0,
+  zIndex: '$4',
+  width: '100%',
+  height: `${HEADER_HEIGHT}px`,
+  overflow: 'hidden',
+});
+
 const Menu = styled('div', {
   display: 'flex',
   gap: '$4',
@@ -126,58 +143,57 @@ const HeaderToolbars = <T extends Record<string, React.ReactElement>>(
 };
 
 export const Header = observer(() => {
+  const editor = useEditor();
+
   return (
-    <React.Fragment>
-      <Box
-        css={{
-          backgroundColor: 'rgba(255,255,255,0.7)',
-          backdropFilter: 'blur(10px)',
-          color: '$grayA12',
-          px: '$4',
-          py: '$3',
-          borderBottom: '1px solid $grayA5',
-          position: 'fixed',
-          top: 0,
-          zIndex: '$4',
-          width: '100%',
-          height: '50px',
-          overflow: 'hidden',
-        }}
-      >
-        <Box css={{ display: 'flex', ai: 'center' }}>
-          <Box css={{ display: 'flex', flex: 1, ai: 'center' }}>
-            <Box css={{ ml: '$2' }}>
-              <Link href="/">
-                <Image
-                  src="/logo.svg"
-                  width={30}
-                  height={30}
-                  style={{ cursor: 'pointer' }}
-                />
-              </Link>
-            </Box>
-            <Menu>
-              <a href="https://github.com/prevwong/composite" target="__blank">
-                Github
-              </a>
-              <Link href="/docs/introduction">Documentation</Link>
-            </Menu>
+    <Container
+      initial="exit"
+      animate={editor.ready ? 'enter' : 'exit'}
+      variants={{
+        enter: {
+          marginTop: 0,
+          opacity: 1,
+        },
+        exit: {
+          marginTop: `-${HEADER_HEIGHT}px`,
+          opacity: 0,
+        },
+      }}
+      transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+    >
+      <Box css={{ display: 'flex', ai: 'center' }}>
+        <Box css={{ display: 'flex', flex: 1, ai: 'center' }}>
+          <Box css={{ ml: '$2' }}>
+            <Link href="/">
+              <Image
+                src="/logo.svg"
+                width={30}
+                height={30}
+                style={{ cursor: 'pointer' }}
+              />
+            </Link>
           </Box>
-
-          <HeaderToolbars
-            toolbars={{
-              app: <AppToolbar />,
-            }}
-            renderToolbar={(path) => {
-              if (path === '/') {
-                return 'app';
-              }
-
-              return null;
-            }}
-          />
+          <Menu>
+            <a href="https://github.com/prevwong/composite" target="__blank">
+              Github
+            </a>
+            <Link href="/docs/introduction">Documentation</Link>
+          </Menu>
         </Box>
+
+        <HeaderToolbars
+          toolbars={{
+            app: <AppToolbar />,
+          }}
+          renderToolbar={(path) => {
+            if (path === '/') {
+              return 'app';
+            }
+
+            return null;
+          }}
+        />
       </Box>
-    </React.Fragment>
+    </Container>
   );
 });

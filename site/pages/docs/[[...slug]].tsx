@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import * as React from 'react';
 
+import { motion } from 'framer-motion';
+
 import { Box } from '@app/components/box';
 import { Text } from '@app/components/text';
 import { DOCS_SIDEBAR } from '@app/constants/docs-sidebar';
@@ -8,8 +10,9 @@ import { styled } from '@app/styles';
 import { getAllDocs, getDocBySlug } from '@app/utils/docs';
 import markdownToHtml from '@app/utils/markdown';
 
-const DocNav = styled('nav', {
+const DocNav = styled(motion.nav, {
   width: '15rem',
+  position: 'relative',
   '> div': {
     display: 'flex',
     flexDirection: 'column',
@@ -103,7 +106,20 @@ const DocPostContentHeader = styled('div', {
 const Docs = (props: any) => {
   return (
     <Box css={{ display: 'flex', gap: '$3' }}>
-      <DocNav>
+      <DocNav
+        animate="enter"
+        initial="exit"
+        variants={{
+          enter: {
+            opacity: 1,
+            left: 0,
+          },
+          exit: {
+            opacity: 0,
+            left: -200,
+          },
+        }}
+      >
         <Box>
           {DOCS_SIDEBAR.main.map((link, i) => (
             <Link key={i} href={`/docs/${link.href}`} passHref legacyBehavior>

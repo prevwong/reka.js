@@ -4,7 +4,9 @@ import * as t from '@composite/types';
 import * as React from 'react';
 import invariant from 'tiny-invariant';
 
-import { useEditorActiveComponent } from '@app/editor';
+import { useEditor, useEditorActiveComponent } from '@app/editor';
+import { EditorMode } from '@app/editor/Editor';
+import { requestAnimationSequence } from '@app/utils';
 
 type ComponentContextType = {
   component: t.Component;
@@ -206,6 +208,15 @@ const InternalRenderer = observer((props: RendererProps) => {
 
 export const Renderer = observer((props: RendererProps) => {
   const view = props.view;
+
+  const editor = useEditor();
+
+  React.useEffect(() => {
+    requestAnimationSequence([
+      [() => editor.setReady(true), 200],
+      [() => editor.setMode(EditorMode.UI), 400],
+    ]);
+  }, [editor]);
 
   invariant(view instanceof t.CompositeComponentView, 'Unexpected root view');
 

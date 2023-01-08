@@ -1,10 +1,13 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as React from 'react';
+import { motion } from 'framer-motion';
 
-import { Box } from '../box';
 import { Footer } from '../footer';
-import { Header } from '../header';
+import { Header, HEADER_HEIGHT } from '../header';
+import { styled } from '@app/styles';
+import { useEditor } from '@app/editor';
+import { observer } from 'mobx-react-lite';
 
 type MetaProps = {
   title: string;
@@ -17,8 +20,15 @@ type LayoutProps = {
 
 const SITE_TITLE = 'Composite';
 
-export const Layout = (props: LayoutProps) => {
+const Content = styled(motion.div, {
+  position: 'relative',
+  top: '50px',
+  height: 'calc(100vh - 50px)',
+});
+
+export const Layout = observer((props: LayoutProps) => {
   const router = useRouter();
+  const editor = useEditor();
 
   return (
     <React.Fragment>
@@ -31,16 +41,24 @@ export const Layout = (props: LayoutProps) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <Header />
-      <Box
-        css={{
-          position: 'relative',
-          top: '50px',
-          height: 'calc(100vh - 50px)',
+      <Content
+        initial="initial"
+        animate={editor.ready ? 'setup' : 'initial'}
+        variants={{
+          initial: {
+            top: 0,
+            height: '100vh',
+          },
+          setup: {
+            top: HEADER_HEIGHT,
+            height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+          },
         }}
+        transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
       >
         {props.children}
         {router.pathname !== '/' && <Footer />}
-      </Box>
+      </Content>
     </React.Fragment>
   );
-};
+});

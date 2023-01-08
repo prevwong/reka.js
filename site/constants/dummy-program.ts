@@ -18,7 +18,7 @@ component App() {
    }}
    className={"bg-orange-100 gradient-animation text-neutral-800 w-full h-full flex flex-col justify-center"}
   >
-   <div className={"px-8 max-w-4xl m-auto w-full text-center flex flex-col items-center"}>
+   <div className={"px-8 max-w-2xl m-auto w-full text-center flex flex-col items-center"}>
     <h2 className={"text-4xl mb-4 font-semibold tracking-tighter"}>
      <text value={"Build powerful no-code editors"}/>
     </h2>

@@ -85,7 +85,7 @@ export const EditorLayout = observer(
     return (
       <StyledScreen {...props}>
         <StyledLeftSidebarContainer
-          initial={'ui'}
+          initial={false}
           animate={editor.mode}
           variants={{
             code: {

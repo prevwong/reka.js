@@ -1,4 +1,5 @@
 import { CompositeProvider } from '@composite/react';
+import { useRouter } from 'next/router';
 import * as React from 'react';
 
 import { Editor } from './Editor';
@@ -12,10 +13,14 @@ type EditorContextProviderProps = {
 export const EditorContextProvider = ({
   children,
 }: EditorContextProviderProps) => {
+  const router = useRouter();
   const [editor, setEditor] = React.useState<Editor | null>(null);
 
+  const routerRef = React.useRef(router);
+  routerRef.current = router;
+
   React.useEffect(() => {
-    const editor = new Editor();
+    const editor = new Editor(routerRef.current);
 
     (window as any).state = editor.composite;
 

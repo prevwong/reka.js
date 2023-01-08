@@ -195,6 +195,7 @@ export const ComponentEditorView = observer(() => {
       ref={containerDOMRef}
     >
       <Toolbar
+        initial={false}
         animate={editor.mode === EditorMode.Preview ? 'exit' : 'enter'}
         variants={{
           enter: {
@@ -335,6 +336,7 @@ export const ComponentEditorView = observer(() => {
       </Box>
       {componentEditor.activeFrame && (
         <BottomToolbar
+          initial={false}
           animate={editor.mode === EditorMode.Preview ? 'exit' : 'enter'}
           variants={{
             exit: {

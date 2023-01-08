@@ -26,6 +26,7 @@ import {
 
 import { ComponentEditor } from './ComponentEditor';
 import { Event } from './Event';
+import { NextRouter } from 'next/router';
 
 export type User = {
   id: string;
@@ -58,10 +59,18 @@ export class Editor {
 
   private declare iframeScrollTopListener;
 
-  constructor() {
+  ready: boolean;
+
+  constructor(readonly router: NextRouter) {
     this.activeFrame = null;
 
-    this.mode = EditorMode.UI;
+    if (router.pathname === '/') {
+      this.mode = EditorMode.Preview;
+      this.ready = false;
+    } else {
+      this.mode = EditorMode.UI;
+      this.ready = true;
+    }
 
     this.user = {
       id: shortUUID().generate(),
@@ -91,6 +100,8 @@ export class Editor {
       allUsers: computed,
       activeComponentEditor: observable,
       setActiveComponentEditor: action,
+      ready: observable,
+      setReady: action,
     });
 
     this.composite = new Composite({
@@ -157,6 +168,10 @@ export class Editor {
     this.peers = this.getPeers();
     this.broadcastLocalUser();
     this.listenAwareness();
+  }
+
+  setReady(bool: boolean) {
+    this.ready = bool;
   }
 
   dispose() {
