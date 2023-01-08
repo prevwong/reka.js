@@ -1,10 +1,10 @@
-import { useEditorActiveComponent } from '@app/editor';
-import * as t from '@composite/types';
 import { observer } from '@composite/react';
 import { toJS } from '@composite/state';
-
+import * as t from '@composite/types';
 import * as React from 'react';
 import invariant from 'tiny-invariant';
+
+import { useEditorActiveComponent } from '@app/editor';
 
 type ComponentContextType = {
   component: t.Component;
@@ -55,7 +55,7 @@ const RenderElementView = observer((props: RenderElementViewProps) => {
     }
 
     return onConnect(dom, props.view);
-  }, [onConnect]);
+  }, [onConnect, props.view]);
 
   if (props.view.tag === 'text') {
     return <span ref={domRef}>{props.view.props.value as string}</span>;

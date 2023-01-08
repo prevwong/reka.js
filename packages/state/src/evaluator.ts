@@ -1,4 +1,5 @@
 import * as t from '@composite/types';
+import omit from 'lodash/omit';
 import {
   computed,
   IComputedValue,
@@ -6,7 +7,6 @@ import {
   observable,
   runInAction,
 } from 'mobx';
-import omit from 'lodash/omit';
 
 import { ComponentViewEvaluator } from './component';
 import { Environment } from './environment';

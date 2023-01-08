@@ -1,5 +1,6 @@
 import { Parser } from '@composite/parser';
 import * as t from '@composite/types';
+import { capitalize } from 'lodash';
 import * as React from 'react';
 
 import { Box } from '@app/components/box';
@@ -12,7 +13,6 @@ import { TextField } from '@app/components/text-field';
 import { ToggleGroup, ToggleGroupItem } from '@app/components/toggle-group';
 import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
-import { capitalize } from 'lodash';
 
 type AddTemplateModalProps = {
   isOpen?: boolean;

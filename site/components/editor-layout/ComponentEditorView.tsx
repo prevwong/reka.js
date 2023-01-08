@@ -77,7 +77,7 @@ const NoFrameSelectedMessage = () => {
       <Text css={{ color: '$grayA9', lineHeight: '1.5rem' }}>
         No frame selected.
         <br />
-        Click "Add new Frame" to create one.
+        Click &quot;Add new Frame&quot; to create one.
       </Text>
     </Box>
   );
