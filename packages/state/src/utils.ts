@@ -72,3 +72,11 @@ export const toJS = (value: any) => {
 
   throw new Error();
 };
+
+export const defer = (fn: () => void) => {
+  if (typeof queueMicrotask === 'function') {
+    return queueMicrotask(fn);
+  }
+
+  return Promise.resolve().then(fn);
+};

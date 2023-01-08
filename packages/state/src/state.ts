@@ -106,7 +106,7 @@ export class Composite {
   /**
    * Load a new State data type
    */
-  load(state: t.State) {
+  load(state: t.State, syncImmediately: boolean = true) {
     this.init = true;
     this.state = t.state(state);
     this.env = new Environment(this);
@@ -129,7 +129,12 @@ export class Composite {
     );
 
     this.extensionRegistry.init();
-    this.sync();
+
+    if (syncImmediately) {
+      this.sync();
+    } else {
+      this.syncHead();
+    }
 
     this.init = false;
   }
@@ -214,6 +219,11 @@ export class Composite {
    */
   change(mutator: () => void) {
     this.observer.change(mutator);
+
+    // Don't sync yet when we're still setting up (ie: creating the Extensions registry)
+    if (this.init) {
+      return;
+    }
 
     this.sync();
   }

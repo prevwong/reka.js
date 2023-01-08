@@ -146,7 +146,9 @@ export class ViewEvaluator {
       this.viewObserver.dispose();
     }
 
-    this._view.set(view);
+    runInAction(() => {
+      this._view.set(view);
+    });
 
     this.viewObserver = new Observer(view, {
       batch: false,

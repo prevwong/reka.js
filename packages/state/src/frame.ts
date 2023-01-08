@@ -3,6 +3,7 @@ import { makeObservable, observable, action } from 'mobx';
 
 import { ViewEvaluator } from './evaluator';
 import { Composite } from './state';
+import { defer } from './utils';
 
 type FrameComponentConfig = {
   name: string;
@@ -12,6 +13,7 @@ type FrameComponentConfig = {
 export type FrameOpts = {
   id?: string;
   component: FrameComponentConfig;
+  syncImmediately?: boolean;
 };
 
 /**
@@ -29,7 +31,7 @@ export class Frame {
 
   private evaluator: ViewEvaluator;
 
-  constructor(opts: FrameOpts, composite: Composite) {
+  constructor(opts: FrameOpts, readonly composite: Composite) {
     this.id = opts.id;
     this.component = opts.component;
 
@@ -40,7 +42,8 @@ export class Frame {
       composite
     );
 
-    this.sync = true;
+    this.sync =
+      opts.syncImmediately !== undefined ? opts.syncImmediately : true;
 
     makeObservable(this, {
       sync: observable,
@@ -79,7 +82,9 @@ export class Frame {
       return;
     }
 
-    return this.evaluator.computeTree();
+    return defer(() => {
+      return this.evaluator.computeTree();
+    });
   }
 
   /// Update the props of the Component associated with the Frame
