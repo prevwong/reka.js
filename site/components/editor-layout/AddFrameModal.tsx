@@ -35,7 +35,8 @@ const getInitialComponentProps = (
     return component.props.reduce((accum, prop) => {
       return {
         ...accum,
-        [prop.name]: existingProps[prop.name] ?? t.literal({ value: '' }),
+        [prop.name]:
+          existingProps[prop.name] ?? prop.init ?? t.literal({ value: '' }),
       };
     }, {});
   }
@@ -90,21 +91,17 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
             <PairInput
               addingNewField={true}
               onChange={(id, value) => {
-                try {
-                  const parsedValue = Parser.parseExpressionFromSource(
-                    value,
-                    t.Expression
-                  );
+                const parsedValue = Parser.parseExpressionFromSource(
+                  value,
+                  t.Expression
+                );
 
-                  setComponentProps((props) => {
-                    return {
-                      ...props,
-                      [id]: parsedValue,
-                    };
-                  });
-                } catch (err) {
-                  // TODO: err
-                }
+                setComponentProps((props) => {
+                  return {
+                    ...props,
+                    [id]: parsedValue,
+                  };
+                });
               }}
               values={Object.keys(componentProps).reduce((accum, propKey) => {
                 return [

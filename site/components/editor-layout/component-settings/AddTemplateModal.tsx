@@ -12,11 +12,13 @@ import { TextField } from '@app/components/text-field';
 import { ToggleGroup, ToggleGroupItem } from '@app/components/toggle-group';
 import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
+import { capitalize } from 'lodash';
 
 type AddTemplateModalProps = {
   isOpen?: boolean;
   onClose?: () => void;
   onAdd?: (template: t.Template) => void;
+  allowedTplTypes?: Array<'tag' | 'slot' | 'component'>;
 };
 
 const InputItem = styled(Box, {
@@ -27,9 +29,12 @@ const InputItem = styled(Box, {
 });
 
 export const AddTemplateModal = (props: AddTemplateModalProps) => {
+  const allowedTplTypes = props.allowedTplTypes || ['tag', 'component', 'slot'];
+
   const [templateType, setTemplateType] = React.useState<
     'tag' | 'component' | 'slot'
-  >('tag');
+  >(allowedTplTypes[0]);
+
   const [templateTag, setTemplateTag] = React.useState('');
   const [templateComponentName, setTemplateComponentName] = React.useState('');
 
@@ -59,9 +64,11 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
                 setTemplateType(value as any);
               }}
             >
-              <ToggleGroupItem value="tag">Tag</ToggleGroupItem>
-              <ToggleGroupItem value="component">Component</ToggleGroupItem>
-              <ToggleGroupItem value="slot">Slot</ToggleGroupItem>
+              {allowedTplTypes.map((type) => (
+                <ToggleGroupItem key={type} value={type}>
+                  {capitalize(type)}
+                </ToggleGroupItem>
+              ))}
             </ToggleGroup>
           </Box>
         </InputItem>

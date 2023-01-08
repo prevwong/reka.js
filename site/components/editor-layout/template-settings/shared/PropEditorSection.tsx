@@ -37,25 +37,20 @@ export const PropEditorSection = observer(
                 : []
             }
             onChange={(id, value) => {
-              try {
-                const parsedValue = Parser.parseExpressionFromSource(
-                  value,
-                  t.Expression
-                );
-                //   console.log("parsedValue", parsedValue);
-                editor.composite.change(() => {
-                  if (!template.classList) {
-                    template.classList = t.objectExpression({
-                      properties: {},
-                    });
-                  }
+              const parsedValue = Parser.parseExpressionFromSource(
+                value,
+                t.Expression
+              );
+              //   console.log("parsedValue", parsedValue);
+              editor.composite.change(() => {
+                if (!template.classList) {
+                  template.classList = t.objectExpression({
+                    properties: {},
+                  });
+                }
 
-                  template.classList.properties[id] = parsedValue;
-                });
-              } catch (err) {
-                // TODO: handle error
-                console.warn(err);
-              }
+                template.classList.properties[id] = parsedValue;
+              });
             }}
           ></PairInput>
         </SettingSection>
