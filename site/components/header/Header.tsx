@@ -1,3 +1,4 @@
+import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { AnimatePresence, motion } from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import Image from 'next/image';
@@ -12,7 +13,6 @@ import { styled } from '@app/styles';
 
 import { Button, IconButton } from '../button';
 import { Collaborators } from '../editor-panel/Collaborators';
-import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { Tooltip } from '../tooltip';
 
 const Menu = styled('div', {

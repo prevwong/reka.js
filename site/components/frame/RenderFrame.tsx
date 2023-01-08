@@ -7,6 +7,7 @@ import { ThreeDots } from 'react-loader-spinner';
 
 import { useEditor } from '@app/editor';
 import { ActiveFrame } from '@app/editor/ComponentEditor';
+import { EditorMode } from '@app/editor/Editor';
 
 import { FrameContext } from './FrameContext';
 import { Renderer } from './renderer';
@@ -14,7 +15,6 @@ import { Renderer } from './renderer';
 import { Box } from '../box';
 import { IconButton } from '../button';
 import { Text } from '../text';
-import { EditorMode } from '@app/editor/Editor';
 
 type RenderFrameProps = {
   frame: ActiveFrame;

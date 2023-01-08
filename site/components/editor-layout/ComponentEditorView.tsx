@@ -1,9 +1,10 @@
 import { InfoCircledIcon } from '@radix-ui/react-icons';
+import { motion } from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
 
 import { useEditor } from '@app/editor';
+import { EditorMode } from '@app/editor/Editor';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
 import { styled } from '@app/styles';
 
@@ -19,7 +20,6 @@ import { Text } from '../text';
 import { TextField } from '../text-field';
 import { Tooltip } from '../tooltip';
 import { Tree } from '../tree';
-import { EditorMode } from '@app/editor/Editor';
 
 const StyledFrameContainer = styled('div', {
   width: '100%',
