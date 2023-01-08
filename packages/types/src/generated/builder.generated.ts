@@ -62,9 +62,8 @@ export const slotTemplate = (
 export const elementEach = (
   ...args: ConstructorParameters<typeof t.ElementEach>
 ) => new t.ElementEach(...args);
-export const elementView = (
-  ...args: ConstructorParameters<typeof t.ElementView>
-) => new t.ElementView(...args);
+export const tagView = (...args: ConstructorParameters<typeof t.TagView>) =>
+  new t.TagView(...args);
 export const compositeComponentView = (
   ...args: ConstructorParameters<typeof t.CompositeComponentView>
 ) => new t.CompositeComponentView(...args);

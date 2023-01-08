@@ -49,7 +49,7 @@ export class ViewEvaluator {
     t.Template,
     TemplateEachComputationCache
   > = new WeakMap();
-  private viewToParentView: WeakMap<t.View, t.ElementView> = new WeakMap();
+  private viewToParentView: WeakMap<t.View, t.TagView> = new WeakMap();
 
   private tplKeyToViewComputationCache: Map<
     string,
@@ -403,7 +403,7 @@ export class ViewEvaluator {
           .join(' ');
       }
 
-      view = t.elementView({
+      view = t.tagView({
         tag: template.tag,
         children,
         props,

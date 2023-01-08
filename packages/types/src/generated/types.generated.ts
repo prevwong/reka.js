@@ -447,7 +447,7 @@ export abstract class View extends Type {
 
 Schema.register('View', View);
 
-type ElementViewParameters = {
+type TagViewParameters = {
   key: string;
   template: Template;
   tag: string;
@@ -455,16 +455,16 @@ type ElementViewParameters = {
   props: Record<string, any>;
 };
 
-export class ElementView extends View {
+export class TagView extends View {
   declare tag: string;
   declare children: View[];
   declare props: Record<string, any>;
-  constructor(value: ElementViewParameters) {
-    super('ElementView', value);
+  constructor(value: TagViewParameters) {
+    super('TagView', value);
   }
 }
 
-Schema.register('ElementView', ElementView);
+Schema.register('TagView', TagView);
 
 type ComponentViewParameters = {
   key: string;
@@ -615,7 +615,7 @@ export type Any =
   | SlotTemplate
   | ElementEach
   | View
-  | ElementView
+  | TagView
   | ComponentView
   | CompositeComponentView
   | ExternalComponentView
@@ -653,7 +653,7 @@ export type Visitor = {
   SlotTemplate: (node: SlotTemplate) => any;
   ElementEach: (node: ElementEach) => any;
   View: (node: View) => any;
-  ElementView: (node: ElementView) => any;
+  TagView: (node: TagView) => any;
   ComponentView: (node: ComponentView) => any;
   CompositeComponentView: (node: CompositeComponentView) => any;
   ExternalComponentView: (node: ExternalComponentView) => any;

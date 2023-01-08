@@ -87,12 +87,12 @@ const view = frame.root;
     type: "CompositeComponentView",
     component: '...',
     root: {
-        type: 'ElementTagView',
+        type: 'TagView',
         tag: 'div',
         props: {},
          children: [
             {
-                type: 'ElementTagView',
+                type: 'TagView',
                 tag: 'text',
                 props: {
                     value: 'Hello World!',
@@ -158,12 +158,12 @@ console.log(frame.root);
     type: "CompositeComponentView",
     component: '...',
     root: {
-        type: 'ElementTagView',
+        type: 'TagView',
         tag: 'div',
         props: {},
         children: [
             {
-                type: 'ElementTagView',
+                type: 'TagView',
                 tag: 'text',
                 props: {
                     value: 'Hello World!',
@@ -173,12 +173,12 @@ console.log(frame.root);
             // View has been updated to contain the following child View
             // as a result of the mutation to add a new <button> TagTemplate in the State
             {
-                type: 'ElementTagView',
+                type: 'TagView',
                 tag: 'button',
                 props: {},
                 children: [
                     {
-                        type: 'ElementTagView',
+                        type: 'TagView',
                         tag: 'text',
                         props: { value: 'Click me!' },
                         children: []
@@ -203,7 +203,7 @@ const frame = composite.createFrame(...);
 const appComponent = composite.state.components[0];
 
 composite.subscribe(() => {
-    if ( appComponent.template instanceof t.ElementTagView ) {
+    if ( appComponent.template instanceof t.TagView ) {
         console.log('appComponent =>', appComponent.template.tag);
     }
 });

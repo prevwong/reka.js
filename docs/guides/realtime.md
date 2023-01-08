@@ -1,19 +1,19 @@
 # Realtime Collaboration
 
-The dreaded task of synching changes made to your page builder. Luckily, Composite provides an external `@composite/collaboration` package that does all the hard work for us.
+Composite provides an additional `@composite/collaboration` package which enables multiplayer capabilities for your page editor.
 
-> This package is powered by `Yjs` - a library for building [CRDTs](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type), it's recommended that you get familiar with some of its concepts. 
+> This package is powered by `Yjs` - a library for building [CRDTs](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type), it's recommended that you take a look at the official documentation before proceeding.  
 
 
 ## Conflict-free Replicated Data Types (CRDT) 
 
-CRDT data structures are one of the ways to achieve realtime collaboration. In Composite, the `State` data structure by itself is **not** a CRDT and has no realtime collaborative capabilities; this is by design so we can keep the core of Composite more portable and we don't assume that everyone needs multiplayer features in their page builders. (even if it's very cool)
+CRDT data structures are one of the ways to achieve realtime collaboration. In Composite, the `State` data structure by itself is **not** a CRDT and has no realtime collaborative capabilities; this is by design so we can keep the core of Composite more portable and we don't assume that everyone needs multiplayer features in their page builders, which would otherwise be additional bloat if multiplayer is not a requirement.
 
 The `@composite/collaboration` package provides a Composite `Extension` where the core `State` data structure is mirrored by a Yjs CRDT. 
 
 Whenever there's a change that happens in the core `State` structure:
-- Those changes are propagated to the mirrored CRDT, and all clients across the network will receive these changes in their own respective CRDTs
-- When clients across the network receives the changes in their CRDT, those changes are then finally applied back to the core `State` structure that exists on each client.
+- The changes are propagated to the mirrored CRDT, and all clients across the network will receive these changes in their own respective CRDTs without merge conflicts.
+- When clients across the network receives the changes in the mirrored CRDT structure, these changes are then finally applied back to the core `State` structure.
 
 
 ### State Representation

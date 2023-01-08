@@ -240,10 +240,9 @@ Schema.define('View', {
   }),
 });
 
-Schema.define('ElementView', {
+Schema.define('TagView', {
   extends: 'View',
   fields: (t) => ({
-    // template: t.node("Template"),
     tag: t.string,
     children: t.array(t.node('View')),
     props: t.map(t.any),

@@ -12,20 +12,31 @@ The core package of Composite.
 import { Composite } from '@composite/core';
 import * as t from '@composite/types';
 
+import confetti from 'canvas-confetti'
 import { Header } from './path-to-header-component.tsx';
 
 const composite = new Composite({
-    globals: {
-        myGlobalVariable: 0
-    },
-    components: [
-        t.externalComponent({
-            name: 'MyReactHeader',
-            render: (props) => {
-                return <Header {...props} />
-            }
-        })
-    ]
+   extensions: {
+        states: {
+            myGlobalVariable: 0
+        },
+        globals: composite => ({
+            getGlobalVariable: () => {
+                return composite.getExternalState('myGlobalVariable')
+            },
+            confetti: () => {
+                return confetti();
+            },
+        }),
+        components: [
+            t.externalComponent({
+                name: 'MyReactHeader',
+                render: (props) => {
+                    return <Header {...props} />
+                }
+            })
+        ]
+    } 
 });
 ```
 

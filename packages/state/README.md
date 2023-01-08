@@ -8,7 +8,7 @@ A large part of the complexity of building no-code page editors comes from the a
 
 Composite solves this by providing an AST-powered state system to enable end-users to create UI components that are nearly as complex as ones developers could write in code; along with an interpreter to efficiently compute an output that could be rendered on the browser.
 
-It's primarily built to eventually serve as the new state management system to power Craft.js and its page builders.
+It's primarily built to serve as the new state management system to power Craft.js and its page builders.
 
 ## Features
 
@@ -81,12 +81,12 @@ console.log(composite.createFrame('Counter').root);
     type: "CompositeComponentView",
     component: { type: "CompositeComponent", component: "Counter" },
     root: {
-        type: "ElementTagView",
+        type: "TagView",
         tag: "p",
         props: {},
         children: [
-            { type: "ElementTagView", tag: "text", props: { value: "My counter: " }},
-            { type: "ElementTagView", tag: "text", props: { value: 0 }}
+            { type: "TagView", tag: "text", props: { value: "My counter: " }},
+            { type: "TagView", tag: "text", props: { value: 0 }}
         ]
     }
 }

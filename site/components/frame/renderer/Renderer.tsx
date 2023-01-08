@@ -38,11 +38,11 @@ const RenderErrorView = observer((props: RenderErrorViewProps) => {
   );
 });
 
-type RenderElementViewProps = {
-  view: t.ElementView;
+type RenderTagViewProps = {
+  view: t.TagView;
 };
 
-const RenderElementView = observer((props: RenderElementViewProps) => {
+const RenderTagView = observer((props: RenderTagViewProps) => {
   const { onConnect } = React.useContext(SelectorContext);
 
   const domRef = React.useRef<HTMLElement | null>(null);
@@ -185,8 +185,8 @@ type RendererProps = {
 const InternalRenderer = observer((props: RendererProps) => {
   const view = props.view;
 
-  if (view instanceof t.ElementView) {
-    return <RenderElementView view={view} />;
+  if (view instanceof t.TagView) {
+    return <RenderTagView view={view} />;
   }
 
   if (view instanceof t.ComponentView) {

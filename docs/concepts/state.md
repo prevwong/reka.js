@@ -4,8 +4,7 @@ At the core of Composite is its `State` which is a data structure used to store 
 - Components and global variables that the end user has created; this part of the state is called the `Program`
 - Any additional state data stored by an Extension.
 
-For now, we will focus on `Program` - an [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) with a grammer that enables us to define and store end-user components that are nearly as complex as components that developers would typically write in code.
-
+For now, we will focus on `Program` - an [Abstract Syntax Tree (AST)](https://en.wikipedia.org/wiki/Abstract_syntax_tree) with a grammar that enables us to define and store end-user components that are nearly as complex as components that developers would typically write in code.
 
 ## Component
 
