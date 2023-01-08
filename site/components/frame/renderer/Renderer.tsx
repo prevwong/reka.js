@@ -1,20 +1,36 @@
-import { observer } from '@composite/react';
+import { useEditorActiveComponent } from '@app/editor';
 import * as t from '@composite/types';
-import { toJS } from 'mobx';
+import { observer } from '@composite/react';
+import { toJS } from '@composite/state';
+
 import * as React from 'react';
+import invariant from 'tiny-invariant';
 
-import { useEditor } from '@app/editor';
+type ComponentContextType = {
+  component: t.Component;
+  root: t.Component;
+  parentComponent?: t.Component;
+};
 
-import { useConnectDOM } from './useConnecttDom';
-import { View } from './view';
+const ComponentContext = React.createContext<ComponentContextType>(null as any);
 
-import { ComponentContext } from '../ComponentContext';
+type SlotContextType = {
+  parentComponent?: t.Component;
+};
+
+const SlotContext = React.createContext<SlotContextType>(null as any);
+
+type SelectorContextType = {
+  onConnect: (dom: HTMLElement, view: t.View) => (() => void) | undefined;
+};
+
+const SelectorContext = React.createContext<SelectorContextType>(null as any);
 
 type RenderErrorViewProps = {
   view: t.ErrorSystemView;
 };
 
-export const RenderErrorView = observer((props: RenderErrorViewProps) => {
+const RenderErrorView = observer((props: RenderErrorViewProps) => {
   return (
     <div>
       <h4>Error: {props.view.error}</h4>
@@ -26,17 +42,20 @@ type RenderElementViewProps = {
   view: t.ElementView;
 };
 
-export const RenderElementView = observer((props: RenderElementViewProps) => {
-  const { connect } = useConnectDOM();
+const RenderElementView = observer((props: RenderElementViewProps) => {
+  const { onConnect } = React.useContext(SelectorContext);
+
   const domRef = React.useRef<HTMLElement | null>(null);
 
   React.useEffect(() => {
-    if (!domRef.current) {
+    const { current: dom } = domRef;
+
+    if (!dom) {
       return;
     }
 
-    return connect(domRef.current);
-  }, [connect]);
+    return onConnect(dom, props.view);
+  }, [onConnect]);
 
   if (props.view.tag === 'text') {
     return <span ref={domRef}>{props.view.props.value as string}</span>;
@@ -51,9 +70,51 @@ export const RenderElementView = observer((props: RenderElementViewProps) => {
     },
     props.view.children.length > 0
       ? props.view.children.map((child) => (
-          <Renderer view={child} key={child.key} />
+          <InternalRenderer view={child} key={child.key} />
         ))
       : undefined
+  );
+});
+
+type RenderSlotViewProps = {
+  view: t.SlotView;
+};
+
+export const RenderSlotView = observer((props: RenderSlotViewProps) => {
+  const { parentComponent } = React.useContext(ComponentContext);
+
+  const activeComponentEditor = useEditorActiveComponent();
+
+  return (
+    <SlotContext.Provider value={{ parentComponent }}>
+      <SelectorContext.Provider
+        value={{
+          onConnect: (dom, view) => {
+            if (!parentComponent) {
+              if (props.view.view.indexOf(view) > -1) {
+                return activeComponentEditor.connectTplDOM(
+                  dom,
+                  props.view.template,
+                  true
+                );
+              }
+
+              return;
+            }
+
+            return activeComponentEditor.connectTplDOM(
+              dom,
+              view.template,
+              true
+            );
+          },
+        }}
+      >
+        {props.view.view.map((v) => (
+          <InternalRenderer key={v.id} view={v} />
+        ))}
+      </SelectorContext.Provider>
+    </SlotContext.Provider>
   );
 });
 
@@ -61,107 +122,96 @@ type RenderComponentViewProps = {
   view: t.ComponentView;
 };
 
-export const RenderComponentView = observer(
-  (props: RenderComponentViewProps) => {
-    const parentComponentContext = React.useContext(ComponentContext);
-    let render: React.ReactElement[] | null = null;
+const RenderComponentView = observer((props: RenderComponentViewProps) => {
+  const componentContext = React.useContext(ComponentContext);
+  const slotContext = React.useContext(SlotContext);
 
-    if (props.view instanceof t.CompositeComponentView) {
-      render = props.view.render.map((r) => <Renderer view={r} key={r.id} />);
-    }
+  const activeComponentEditor = useEditorActiveComponent();
 
-    if (props.view instanceof t.ExternalComponentView) {
-      render = props.view.component.render(props.view.props);
-    }
+  return (
+    <SelectorContext.Provider
+      value={{
+        onConnect: (dom, view) => {
+          if (props.view instanceof t.CompositeComponentView) {
+            if (!componentContext) {
+              return activeComponentEditor.connectTplDOM(
+                dom,
+                view.template,
+                true
+              );
+            }
 
-    return (
+            if (
+              slotContext?.parentComponent !== componentContext.root &&
+              componentContext.component !== componentContext.root
+            ) {
+              return;
+            }
+
+            if (props.view.render.indexOf(view) > -1) {
+              return activeComponentEditor.connectTplDOM(
+                dom,
+                props.view.template,
+                true
+              );
+            }
+          }
+        },
+      }}
+    >
       <ComponentContext.Provider
         value={{
-          parent: parentComponentContext?.component,
+          root: componentContext?.root ?? props.view.component,
+          parentComponent: componentContext?.component,
           component: props.view.component,
         }}
       >
-        {render}
+        {props.view instanceof t.ExternalComponentView
+          ? props.view.component.render(props.view.props)
+          : props.view instanceof t.CompositeComponentView
+          ? props.view.render.map((r) => (
+              <InternalRenderer view={r} key={r.id} />
+            ))
+          : null}
       </ComponentContext.Provider>
-    );
-  }
-);
-
-type RenderSlotViewProps = {
-  view: t.SlotView;
-};
-
-export const RenderSlotView = observer((props: RenderSlotViewProps) => {
-  const { parent } = React.useContext(ComponentContext);
-
-  if (!parent) {
-    throw new Error();
-  }
-
-  return (
-    <ComponentContext.Provider value={{ component: parent }}>
-      {props.view.view.map((v) => (
-        <Renderer view={v} key={v.id} />
-      ))}
-    </ComponentContext.Provider>
+    </SelectorContext.Provider>
   );
 });
 
 type RendererProps = {
   view: t.View;
-  onComponentRootDOMReady?: (elements: HTMLElement[]) => void;
 };
 
-export const Renderer = (props: RendererProps) => {
-  let render: React.ReactElement | undefined;
+const InternalRenderer = observer((props: RendererProps) => {
+  const view = props.view;
 
-  const editor = useEditor();
-
-  if (props.view instanceof t.ElementView) {
-    render = <RenderElementView view={props.view} />;
+  if (view instanceof t.ElementView) {
+    return <RenderElementView view={view} />;
   }
 
-  if (props.view instanceof t.ComponentView) {
-    render = <RenderComponentView view={props.view} />;
+  if (view instanceof t.ComponentView) {
+    return <RenderComponentView view={view} />;
   }
 
-  if (props.view instanceof t.ErrorSystemView) {
-    render = <RenderErrorView view={props.view} />;
+  if (view instanceof t.ErrorSystemView) {
+    return <RenderErrorView view={view} />;
   }
 
-  if (props.view instanceof t.SlotView) {
-    render = <RenderSlotView view={props.view} />;
+  if (view instanceof t.SlotView) {
+    return <RenderSlotView view={view} />;
   }
 
-  React.useEffect(() => {
-    const view = props.view;
+  return null;
+});
 
-    if (!props.onComponentRootDOMReady) {
-      return;
-    }
+export const Renderer = observer((props: RendererProps) => {
+  const view = props.view;
 
-    if (!(view instanceof t.CompositeComponentView)) {
-      return;
-    }
+  invariant(view instanceof t.CompositeComponentView, 'Unexpected root view');
 
-    const tplElements = editor.activeComponentEditor?.activeFrame?.tplElements;
+  const activeFrameEditor = useEditorActiveComponent();
 
-    const doms = view.render.flatMap((tpl) => [
-      ...(tplElements?.get(tpl.template) ?? []),
-    ]);
+  invariant(activeFrameEditor, 'No active editor');
 
-    props.onComponentRootDOMReady(doms ?? []);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    props.view.template,
-    props.view,
-    props.onComponentRootDOMReady,
-    editor.activeComponentEditor?.activeFrame?.tplElements,
-  ]);
-
-  if (!render) {
-    return null;
-  }
-
-  return <View view={props.view}>{render}</View>;
-};
+  return <InternalRenderer view={view} />;
+});
