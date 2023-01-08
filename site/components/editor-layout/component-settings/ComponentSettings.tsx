@@ -73,10 +73,7 @@ export const ComponentSettings = observer(() => {
                 return;
               }
 
-              const parsedValue = Parser.parseExpressionFromSource(
-                value,
-                t.Expression
-              );
+              const parsedValue = Parser.parseExpression(value, t.Expression);
 
               if (!parsedValue) {
                 return;
@@ -93,10 +90,7 @@ export const ComponentSettings = observer(() => {
               return;
             }
 
-            const parsedValue = Parser.parseExpressionFromSource(
-              value,
-              t.Expression
-            );
+            const parsedValue = Parser.parseExpression(value, t.Expression);
 
             if (!parsedValue) {
               return;
@@ -136,10 +130,7 @@ export const ComponentSettings = observer(() => {
                 return;
               }
 
-              const parsedValue = Parser.parseExpressionFromSource(
-                value,
-                t.Expression
-              );
+              const parsedValue = Parser.parseExpression(value, t.Expression);
 
               if (!parsedValue) {
                 return;
@@ -156,10 +147,7 @@ export const ComponentSettings = observer(() => {
               return;
             }
 
-            const parsedValue = Parser.parseExpressionFromSource(
-              value,
-              t.Expression
-            );
+            const parsedValue = Parser.parseExpression(value, t.Expression);
 
             if (!parsedValue) {
               return;

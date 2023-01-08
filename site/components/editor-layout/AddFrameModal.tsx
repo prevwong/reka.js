@@ -91,10 +91,7 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
             <PairInput
               addingNewField={true}
               onChange={(id, value) => {
-                const parsedValue = Parser.parseExpressionFromSource(
-                  value,
-                  t.Expression
-                );
+                const parsedValue = Parser.parseExpression(value, t.Expression);
 
                 setComponentProps((props) => {
                   return {

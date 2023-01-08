@@ -149,7 +149,7 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
               (accum, prop) => {
                 return {
                   ...accum,
-                  [prop]: Parser.parseExpressionFromSource(
+                  [prop]: Parser.parseExpression(
                     templateProps[prop],
                     t.Expression
                   ),

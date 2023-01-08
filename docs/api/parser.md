@@ -14,13 +14,13 @@ Parser.parse(...);
 ```
 !end-example
 
-!start-example parse
+!start-example parseProgram
 
 ```tsx
 import * as t from '@composite/types';
 import { Parser } from '@composite/parser';
 
-const result = Parser.parse(`
+const result = Parser.parseProgram(`
     val globalVariable = 0;
 
     component Button() {} => (
@@ -43,13 +43,13 @@ console.log(result.globals.length == 1); // true
 
 !end-example
 
-!start-example parseExpressionFromSource
+!start-example parseExpression
 
 ```tsx
 import * as t from '@composite/types';
 import { Parser } from '@composite/parser';
 
-const result = Parser.parseExpressionFromSource("1+2");
+const result = Parser.parseExpression("1+2");
 
 console.log(result instanceof t.BinaryExpression); // true
 console.log(result.left instanceof t.Literal); // true
@@ -59,10 +59,10 @@ console.log(result.left.value == 1); // true;
 If you know the expected return type of the source string, you could pass the Type constructor as the second argument:
 
 ```tsx
-Parser.parseExpressionFromSource("1+1", t.BinaryExpression); 
+Parser.parseExpression("1+1", t.BinaryExpression); 
 // ok
 
-Parser.parseExpressionFromSource("10", t.BinaryExpression); 
+Parser.parseExpression("10", t.BinaryExpression); 
 // error, expected BinaryExpression but received Literal
 ```
 

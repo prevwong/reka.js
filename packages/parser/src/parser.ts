@@ -478,12 +478,12 @@ class _Parser extends Lexer {
  */
 export class Parser {
   /// Parse source into a Composite Program AST node
-  static parse(source: string) {
+  static parseProgram(source: string) {
     return new _Parser(source).parse();
   }
 
   /// Parse an expression string into a Expression AST node
-  static parseExpressionFromSource<T extends t.Type = t.Any>(
+  static parseExpression<T extends t.Type = t.Any>(
     source: string,
     expectedType?: t.TypeConstructor<T>
   ) {

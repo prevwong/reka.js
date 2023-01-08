@@ -37,7 +37,7 @@ const ConditionalTemplateSetting = observer(
             placeholder="counter > 0"
             value={condition || ''}
             onCommit={(value) => {
-              const parsedValue = Parser.parseExpressionFromSource(
+              const parsedValue = Parser.parseExpression(
                 value || '',
                 t.Expression
               );
@@ -119,7 +119,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
             });
           }}
           onCommit={(value) => {
-            const expr = Parser.parseExpressionFromSource(value, t.Identifier);
+            const expr = Parser.parseExpression(value, t.Identifier);
             setIteratorValue(expr.name);
             commitValue();
           }}
@@ -154,10 +154,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
             css={{ flex: 1 }}
             value={alias}
             onCommit={(value) => {
-              const expr = Parser.parseExpressionFromSource(
-                value,
-                t.Identifier
-              );
+              const expr = Parser.parseExpression(value, t.Identifier);
               setAliasValue(expr.name);
               commitValue();
             }}
@@ -184,10 +181,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
                   });
                 }}
                 onCommit={(value) => {
-                  const expr = Parser.parseExpressionFromSource(
-                    value,
-                    t.Identifier
-                  );
+                  const expr = Parser.parseExpression(value, t.Identifier);
                   setIndexValue(expr.name);
                   commitValue();
                 }}

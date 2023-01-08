@@ -144,9 +144,11 @@ export const computeExpression = (
 
   if (expr instanceof t.CallExpression) {
     composite.change(() => {
-      const v = env.getByIdentifier(expr.identifier);
+      const fn = env.getByIdentifier(expr.identifier);
 
-      v(...expr.arguments.map((arg) => computeExpression(arg, composite, env)));
+      fn(
+        ...expr.arguments.map((arg) => computeExpression(arg, composite, env))
+      );
     });
   }
 

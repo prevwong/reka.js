@@ -23,10 +23,7 @@ export const GlobalSettings = observer(() => {
         addingNewField={isAddingNewGlobal}
         onCancelAdding={() => setIsAddingNewGlobal(false)}
         onChange={(id, value) => {
-          const parsedValue = Parser.parseExpressionFromSource(
-            value,
-            t.Expression
-          );
+          const parsedValue = Parser.parseExpression(value, t.Expression);
 
           if (!id || !parsedValue) {
             return;

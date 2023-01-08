@@ -1,6 +1,6 @@
 import { Parser } from '@composite/parser';
 
-export const DUMMY_PROGRAM = Parser.parse(`
+export const DUMMY_PROGRAM = Parser.parseProgram(`
 val globalText = "something else";
 val globalCounter = 0;
 val isModalOpen = false;

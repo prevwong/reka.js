@@ -144,7 +144,7 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
 
       isSynchingFromCodeMirror.current = true;
       try {
-        const newAST = Parser.parse(code);
+        const newAST = Parser.parseProgram(code);
         editor.composite.change(() => {
           diffAST(currentStateRef.current, newAST);
           diffAST(editor.composite.program, currentStateRef.current);

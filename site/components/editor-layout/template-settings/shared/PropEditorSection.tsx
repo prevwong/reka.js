@@ -37,10 +37,7 @@ export const PropEditorSection = observer(
                 : []
             }
             onChange={(id, value) => {
-              const parsedValue = Parser.parseExpressionFromSource(
-                value,
-                t.Expression
-              );
+              const parsedValue = Parser.parseExpression(value, t.Expression);
               //   console.log("parsedValue", parsedValue);
               editor.composite.change(() => {
                 if (!template.classList) {
@@ -64,10 +61,7 @@ export const PropEditorSection = observer(
             onCancelAdding={() => setAddNewProp(false)}
             emptyValuesText={'No props set for this template'}
             onChange={(id, value) => {
-              const parsedValue = Parser.parseExpressionFromSource(
-                value,
-                t.Expression
-              );
+              const parsedValue = Parser.parseExpression(value, t.Expression);
 
               editor.composite.change(() => {
                 template.props[id] = parsedValue;
