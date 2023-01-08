@@ -12,13 +12,15 @@
   "author": "Prev Wong",
   "license": "ISC",
   "devDependencies": {
-    "@composite/types": "workspace:*"
+    "@composite/types": "workspace:*",
+    "@types/lodash": "^4.14.185"
   },
   "peerDependencies": {
     "@composite/types": "*"
   },
   "dependencies": {
     "fast-deep-equal": "^3.1.3",
+    "lodash": "^4.17.21",
     "mobx": "^6.3.13",
     "mobx-utils": "^6.0.5",
     "tiny-invariant": "^1.2.0"

@@ -31,6 +31,23 @@ export const UserFrameExtensionFactory = () =>
           height: '542px',
         },
         {
+          id: 'Demo Modal',
+          name: 'Modal',
+          props: {
+            title: t.literal({ value: 'My Modal' }),
+            isOpen: t.literal({ value: true }),
+            children: [
+              t.tagTemplate({
+                tag: 'text',
+                props: {
+                  value: t.literal({ value: 'Hello from Modal' }),
+                },
+                children: [],
+              }),
+            ],
+          },
+        },
+        {
           id: 'Primary Button',
           name: 'Button',
           props: {

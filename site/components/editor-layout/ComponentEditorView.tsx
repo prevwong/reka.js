@@ -71,9 +71,14 @@ const NoFrameSelectedMessage = () => {
         justifyContent: 'center',
         textAlign: 'center',
         height: '100%',
+        width: '100%',
       }}
     >
-      <Text css={{ color: '$grayA9' }}>No frame selected</Text>
+      <Text css={{ color: '$grayA9', lineHeight: '1.5rem' }}>
+        No frame selected.
+        <br />
+        Click "Add new Frame" to create one.
+      </Text>
     </Box>
   );
 };

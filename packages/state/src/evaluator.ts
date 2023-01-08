@@ -6,6 +6,7 @@ import {
   observable,
   runInAction,
 } from 'mobx';
+import omit from 'lodash/omit';
 
 import { ComponentViewEvaluator } from './component';
 import { Environment } from './environment';
@@ -66,10 +67,12 @@ export class ViewEvaluator {
   ) {
     this._view = observable.box();
 
+    const nonChildrenProps = omit(this.componentProps, ['children']);
+
     this.rootTemplate = t.componentTemplate({
       component: t.identifier({ name: this.componentName }),
-      props: this.componentProps,
-      children: [],
+      props: nonChildrenProps,
+      children: this.componentProps['children'] || [],
     });
 
     this.rootTemplateObserver = new Observer(this.rootTemplate);
@@ -491,7 +494,8 @@ export class ViewEvaluator {
 
   setProps(props: Record<string, any>) {
     runInAction(() => {
-      this.rootTemplate.props = props;
+      this.rootTemplate.props = omit(props, ['children']);
+      this.rootTemplate.children = props['children'];
     });
 
     this.computeTree();
