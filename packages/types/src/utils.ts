@@ -49,7 +49,7 @@ const isObjectLiteral = (t: any) => {
 /**
  * Compare 2 Types and merge differences
  */
-export const merge = <T extends t.Type>(a: T, b: T, opts: MergeTypeOpts) => {
+export const merge = <T extends t.Type>(a: T, b: T, opts?: MergeTypeOpts) => {
   const getOpt = (type: string): Required<TypeOpt> => {
     const schema = Schema.get(type);
 
