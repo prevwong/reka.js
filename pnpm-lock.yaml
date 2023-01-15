@@ -50,7 +50,7 @@ importers:
       prettier: 2.7.1
       rollup: 2.79.0
       tslib: 2.4.0
-      turbo: 1.6.3
+      turbo: 1.7.0
       typescript: 4.9.4
 
   packages/codemirror:
@@ -115,6 +115,43 @@ importers:
       '@types/react-dom': 17.0.17
       react: 17.0.2
 
+  packages/react-code-editor:
+    specifiers:
+      '@codemirror/basic-setup': ^0.19.1
+      '@codemirror/commands': ^0.19.8
+      '@codemirror/theme-one-dark': ^0.19.1
+      '@codemirror/view': ^0.19.40
+      '@composite/codemirror': workspace:*
+      '@composite/parser': workspace:*
+      '@composite/react': workspace:*
+      '@composite/state': workspace:*
+      '@composite/types': workspace:*
+      '@types/debounce': ^1.2.1
+      '@types/react': ^17.0.33
+      '@types/react-dom': ^17.0.10
+      lodash: ^4.17.21
+      mobx: ^6.3.13
+      mobx-react-lite: ^3.3.0
+      react: ^17.0.2
+    dependencies:
+      '@codemirror/basic-setup': 0.19.3
+      '@codemirror/commands': 0.19.8
+      '@codemirror/theme-one-dark': 0.19.1
+      '@codemirror/view': 0.19.48
+      lodash: 4.17.21
+      mobx: 6.6.1
+      mobx-react-lite: 3.4.0_mobx@6.6.1+react@17.0.2
+    devDependencies:
+      '@composite/codemirror': link:../codemirror
+      '@composite/parser': link:../parser
+      '@composite/react': link:../react
+      '@composite/state': link:../state
+      '@composite/types': link:../types
+      '@types/debounce': 1.2.1
+      '@types/react': 17.0.49
+      '@types/react-dom': 17.0.17
+      react: 17.0.2
+
   packages/state:
     specifiers:
       '@composite/types': workspace:*
@@ -158,6 +195,7 @@ importers:
       '@composite/collaborative': workspace:*
       '@composite/parser': workspace:*
       '@composite/react': workspace:*
+      '@composite/react-code-editor': workspace:*
       '@composite/state': workspace:*
       '@composite/types': workspace:*
       '@hashicorp/remark-plugins': ^4.1.1
@@ -229,6 +267,7 @@ importers:
       '@composite/collaborative': link:../packages/collaborative
       '@composite/parser': link:../packages/parser
       '@composite/react': link:../packages/react
+      '@composite/react-code-editor': link:../packages/react-code-editor
       '@composite/state': link:../packages/state
       '@composite/types': link:../packages/types
       '@hashicorp/remark-plugins': 4.1.1
@@ -2177,6 +2216,10 @@ packages:
 
   /@types/canvas-confetti/1.6.0:
     resolution: {integrity: sha512-Yq6rIccwcco0TLD5SMUrIM7Fk7Fe/C0jmNRxJJCLtAF6gebDkPuUjK5EHedxecm69Pi/aA+It39Ux4OHmFhjRw==}
+    dev: true
+
+  /@types/debounce/1.2.1:
+    resolution: {integrity: sha512-epMsEE85fi4lfmJUH/89/iV/LI+F5CvNIvmgs5g5jYFPfhO2S/ae8WSsLOKWdwtoaZw9Q2IhJ4tQ5tFCcS/4HA==}
     dev: true
 
   /@types/debug/4.1.7:
@@ -6414,65 +6457,65 @@ packages:
       fsevents: 2.3.2
     dev: false
 
-  /turbo-darwin-64/1.6.3:
-    resolution: {integrity: sha512-QmDIX0Yh1wYQl0bUS0gGWwNxpJwrzZU2GIAYt3aOKoirWA2ecnyb3R6ludcS1znfNV2MfunP+l8E3ncxUHwtjA==}
+  /turbo-darwin-64/1.7.0:
+    resolution: {integrity: sha512-hSGAueSf5Ko8J67mpqjpt9FsP6ePn1nMcl7IVPoJq5dHsgX3anCP/BPlexJ502bNK+87DDyhQhJ/LPSJXKrSYQ==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-darwin-arm64/1.6.3:
-    resolution: {integrity: sha512-75DXhFpwE7CinBbtxTxH08EcWrxYSPFow3NaeFwsG8aymkWXF+U2aukYHJA6I12n9/dGqf7yRXzkF0S/9UtdyQ==}
+  /turbo-darwin-arm64/1.7.0:
+    resolution: {integrity: sha512-BLLOW5W6VZxk5+0ZOj5AO1qjM0P5isIgjbEuyAl8lHZ4s9antUbY4CtFrspT32XxPTYoDl4UjviPMcSsbcl3WQ==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-64/1.6.3:
-    resolution: {integrity: sha512-O9uc6J0yoRPWdPg9THRQi69K6E2iZ98cRHNvus05lZbcPzZTxJYkYGb5iagCmCW/pq6fL4T4oLWAd6evg2LGQA==}
+  /turbo-linux-64/1.7.0:
+    resolution: {integrity: sha512-aw2qxmfZa+kT87SB3GNUoFimqEPzTlzlRqhPgHuAAT6Uf0JHnmebPt4K+ZPtDNl5yfVmtB05bhHPqw+5QV97Yg==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-arm64/1.6.3:
-    resolution: {integrity: sha512-dCy667qqEtZIhulsRTe8hhWQNCJO0i20uHXv7KjLHuFZGCeMbWxB8rsneRoY+blf8+QNqGuXQJxak7ayjHLxiA==}
+  /turbo-linux-arm64/1.7.0:
+    resolution: {integrity: sha512-AJEx2jX+zO5fQtJpO3r6uhTabj4oSA5ZhB7zTs/rwu/XqoydsvStA4X8NDW4poTbOjF7DcSHizqwi04tSMzpJw==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-64/1.6.3:
-    resolution: {integrity: sha512-lKRqwL3mrVF09b9KySSaOwetehmGknV9EcQTF7d2dxngGYYX1WXoQLjFP9YYH8ZV07oPm+RUOAKSCQuDuMNhiA==}
+  /turbo-windows-64/1.7.0:
+    resolution: {integrity: sha512-ewj7PPv2uxqv0r31hgnBa3E5qwUu7eyVRP5M1gB/TJXfSHduU79gbxpKCyxIZv2fL/N2/3U7EPOQPSZxBAoljA==}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-arm64/1.6.3:
-    resolution: {integrity: sha512-BXY1sDPEA1DgPwuENvDCD8B7Hb0toscjus941WpL8CVd10hg9pk/MWn9CNgwDO5Q9ks0mw+liDv2EMnleEjeNA==}
+  /turbo-windows-arm64/1.7.0:
+    resolution: {integrity: sha512-LzjOUzveWkvTD0jP8DBMYiAnYemmydsvqxdSmsUapHHJkl6wKZIOQNSO7pxsy+9XM/1/+0f9Y9F9ZNl5lePTEA==}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo/1.6.3:
-    resolution: {integrity: sha512-FtfhJLmEEtHveGxW4Ye/QuY85AnZ2ZNVgkTBswoap7UMHB1+oI4diHPNyqrQLG4K1UFtCkjOlVoLsllUh/9QRw==}
+  /turbo/1.7.0:
+    resolution: {integrity: sha512-cwympNwQNnQZ/TffBd8yT0i0O10Cf/hlxccCYgUcwhcGEb9rDjE5thDbHoHw1hlJQUF/5ua7ERJe7Zr0lNE/ww==}
     hasBin: true
     requiresBuild: true
     optionalDependencies:
-      turbo-darwin-64: 1.6.3
-      turbo-darwin-arm64: 1.6.3
-      turbo-linux-64: 1.6.3
-      turbo-linux-arm64: 1.6.3
-      turbo-windows-64: 1.6.3
-      turbo-windows-arm64: 1.6.3
+      turbo-darwin-64: 1.7.0
+      turbo-darwin-arm64: 1.7.0
+      turbo-linux-64: 1.7.0
+      turbo-linux-arm64: 1.7.0
+      turbo-windows-64: 1.7.0
+      turbo-windows-arm64: 1.7.0
     dev: true
 
   /type-check/0.4.0:

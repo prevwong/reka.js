@@ -1,0 +1,42 @@
+{
+  "name": "@composite/react-code-editor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./src/index.ts",
+  "scripts": {
+    "dev": "rollup -w -c rollup.config.js",
+    "build": "rollup -c rollup.config.js"
+  },
+  "keywords": [],
+  "author": "Prev Wong",
+  "license": "ISC",
+  "peerDependencies": {
+    "@composite/codemirror": "workspace:*",
+    "@composite/parser": "workspace:*",
+    "@composite/react": "workspace:*",
+    "@composite/state": "workspace:*",
+    "@composite/types": "workspace:*",
+    "react": "^16.8.0 || ^17 || ^18"
+  },
+  "dependencies": {
+    "@codemirror/basic-setup": "^0.19.1",
+    "@codemirror/commands": "^0.19.8",
+    "@codemirror/theme-one-dark": "^0.19.1",
+    "@codemirror/view": "^0.19.40",
+    "lodash": "^4.17.21",
+    "mobx": "^6.3.13",
+    "mobx-react-lite": "^3.3.0"
+  },
+  "devDependencies": {
+    "@composite/codemirror": "workspace:*",
+    "@composite/parser": "workspace:*",
+    "@composite/react": "workspace:*",
+    "@composite/state": "workspace:*",
+    "@composite/types": "workspace:*",
+    "@types/debounce": "^1.2.1",
+    "@types/react": "^17.0.33",
+    "@types/react-dom": "^17.0.10",
+    "react": "^17.0.2"
+  }
+}

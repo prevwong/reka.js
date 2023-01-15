@@ -20,6 +20,7 @@
     "@composite/collaborative": "workspace:*",
     "@composite/parser": "workspace:*",
     "@composite/react": "workspace:*",
+    "@composite/react-code-editor": "workspace:*",
     "@composite/state": "workspace:*",
     "@composite/types": "workspace:*",
     "@hashicorp/remark-plugins": "^4.1.1",

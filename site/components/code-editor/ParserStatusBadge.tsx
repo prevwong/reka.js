@@ -1,3 +1,4 @@
+import { ParserStatus } from '@composite/react-code-editor';
 import { CheckIcon, Cross1Icon, UpdateIcon } from '@radix-ui/react-icons';
 import { motion } from 'framer-motion';
 import * as React from 'react';
@@ -7,25 +8,6 @@ import { styled } from '@app/styles';
 import { Tooltip } from '../tooltip';
 
 const MotionUpdateIcon = motion(UpdateIcon);
-
-type ParsingStatus = {
-  type: 'parsing';
-};
-
-type ErrorStatus = {
-  type: 'error';
-  error: string;
-};
-
-type SuccessStatus = {
-  type: 'success';
-};
-
-export type ParserStatus = ParsingStatus | ErrorStatus | SuccessStatus;
-
-type ParserStatusBadgeProps = {
-  status: ParserStatus;
-};
 
 const StyledBadge = styled(motion.span, {
   display: 'flex',
@@ -56,6 +38,10 @@ const StyledBadge = styled(motion.span, {
     },
   },
 });
+
+type ParserStatusBadgeProps = {
+  status: ParserStatus;
+};
 
 export const ParserStatusBadge = (props: ParserStatusBadgeProps) => {
   const payload = React.useMemo(() => {
