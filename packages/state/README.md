@@ -4,7 +4,7 @@ Composite is a state management system for building no-code page editors.
 
 ## Why?
 
-A large part of the complexity of building no-code page editors comes from the architecting of the state management system to power such editors (ie: how should the end user designs be stored and how can preview their designs on our editors?)
+A large part of the complexity of building no-code page editors comes from the architecting of the state management system to power such editors (ie: how should the end user designs be stored and edited in a page editor?)
 
 Composite solves this by providing an AST-powered state system to enable end-users to create UI components that are nearly as complex as ones developers could write in code; along with an interpreter to efficiently compute an output that could be rendered on the browser.
 
@@ -165,4 +165,3 @@ const provider = new WebrtcProvider(
     doc
 );
 ```
-
