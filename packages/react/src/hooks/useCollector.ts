@@ -6,7 +6,7 @@ import { CompositeStateContext } from '../CompositeStateContext';
 type Collector<C extends Record<string, any>> = (composite: Composite) => C;
 
 export const useCollector = <C extends Record<string, any>>(
-  collector: Collector<C>,
+  collector?: Collector<C>,
   deps?: any[]
 ) => {
   const composite = React.useContext(CompositeStateContext);
@@ -14,12 +14,18 @@ export const useCollector = <C extends Record<string, any>>(
   collectorRef.current = collector;
 
   const [collected, setCollected] = React.useState<C>(
-    collectorRef.current(composite)
+    collectorRef.current?.(composite) ?? ({} as C)
   );
 
   React.useEffect(() => {
+    const { current: collector } = collectorRef;
+
+    if (!collector) {
+      return;
+    }
+
     return composite.subscribe(
-      (self) => collectorRef.current(self),
+      (self) => collector(self),
       (collected) => {
         return setCollected(collected);
       },
@@ -31,7 +37,7 @@ export const useCollector = <C extends Record<string, any>>(
   }, [composite, ...(deps || [])]);
 
   return {
-    state: composite,
+    composite,
     ...collected,
   };
 };
