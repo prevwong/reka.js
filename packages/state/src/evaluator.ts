@@ -148,28 +148,31 @@ export class ViewEvaluator {
 
     runInAction(() => {
       this._view.set(view);
-    });
 
-    this.viewObserver = new Observer(view, {
-      batch: false,
-      shouldIgnoreObservable: (type, key) => {
-        if (type instanceof t.View && key === 'template') {
-          return true;
-        }
-
-        return false;
-      },
-      hooks: {
-        onDispose: (payload) => {
-          const disposedType = payload.type;
-
-          if (disposedType instanceof t.View && disposedType.key !== 'frame') {
-            this.tplKeyToViewComputationCache.delete(disposedType.key);
-            this.tplKeyToComponentEvaluator.delete(disposedType.key);
-            this.tplKeyToView.delete(disposedType.key);
+      this.viewObserver = new Observer(view, {
+        batch: false,
+        shouldIgnoreObservable: (type, key) => {
+          if (type instanceof t.View && key === 'template') {
+            return true;
           }
+
+          return false;
         },
-      },
+        hooks: {
+          onDispose: (payload) => {
+            const disposedType = payload.type;
+
+            if (
+              disposedType instanceof t.View &&
+              disposedType.key !== 'frame'
+            ) {
+              this.tplKeyToViewComputationCache.delete(disposedType.key);
+              this.tplKeyToComponentEvaluator.delete(disposedType.key);
+              this.tplKeyToView.delete(disposedType.key);
+            }
+          },
+        },
+      });
     });
   }
 
