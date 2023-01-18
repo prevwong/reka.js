@@ -417,7 +417,7 @@ export class ViewEvaluator {
       console.warn('view error', template, error, ctx);
       view = new t.ErrorSystemView({
         key: createKey(ctx.path),
-        error: `Something went wrong, was unable to compute View.`,
+        error: String(error),
         template,
       });
     }
@@ -500,7 +500,7 @@ export class ViewEvaluator {
   setProps(props: Record<string, any>) {
     runInAction(() => {
       this.rootTemplate.props = omit(props, ['children']);
-      this.rootTemplate.children = props['children'];
+      this.rootTemplate.children = props['children'] || [];
     });
 
     this.computeTree();

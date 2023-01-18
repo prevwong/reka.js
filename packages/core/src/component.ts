@@ -152,7 +152,7 @@ export class ComponentViewEvaluator {
           } catch (err) {
             render = [
               t.errorSystemView({
-                error: 'Something went wrong when evaluating component',
+                error: String(err),
                 template: this.template,
                 key: this.key,
               }),
