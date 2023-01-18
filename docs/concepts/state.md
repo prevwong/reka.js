@@ -158,7 +158,7 @@ const GlobalCounterContextProvider = ({ children }) => {
     return (
         <GlobalCounterContext.Provider value={value, setValue}>
             {children}
-        </GlobalCOunterContext.Provider>
+        </GlobalCounterContext.Provider>
     )
 }
 
