@@ -1,4 +1,4 @@
-# Basic Setup
+# Getting started 
 
 ## Installation
 

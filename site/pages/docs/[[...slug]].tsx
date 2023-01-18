@@ -80,6 +80,11 @@ const DocPostContent = styled('div', {
       content: '',
     },
   },
+  'p > img': {
+    objectFit: 'contain',
+    margin: 'auto',
+    border: '1px solid #ddd',
+  },
   blockquote: {
     fontStyle: 'normal',
     fontSize: '$2',

@@ -6,7 +6,8 @@
     "apps/*",
     "packages/*",
     "docs",
-    "site"
+    "site",
+    "demo"
   ],
   "scripts": {
     "build": "turbo run build",

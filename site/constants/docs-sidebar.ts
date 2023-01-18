@@ -46,8 +46,12 @@ export const DOCS_SIDEBAR: DocSidebar = {
       title: 'Guides',
       children: [
         {
-          title: 'Basic setup',
+          title: 'Getting started',
           href: 'guides/setup',
+        },
+        {
+          title: 'Integration with React',
+          href: 'guides/editor',
         },
         {
           title: 'Realtime Collaboration',
