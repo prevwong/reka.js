@@ -2,7 +2,10 @@ import path from 'path';
 
 import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
+
+const shouldMinify = process.env.NODE_ENV === 'production';
 
 export default function createRollupConfig(config) {
   return {
@@ -21,6 +24,7 @@ export default function createRollupConfig(config) {
         nodeResolve(),
         typescript(),
         ...(config.plugins || []),
+        shouldMinify && terser(),
       ])
     ),
   };

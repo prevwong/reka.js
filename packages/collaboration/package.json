@@ -3,10 +3,10 @@
   "version": "0.1.0-alpha.0",
   "description": "Provides multiplayer functionality for Reka.js",
   "main": "./dist/index.js",
-  "types": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "rollup -w -c rollup.config.js",
-    "build": "rollup -c rollup.config.js",
+    "build": "cross-env NODE_ENV=production rollup -c rollup.config.js",
     "generate-ast": "./scripts/generate-ast.js"
   },
   "keywords": [],

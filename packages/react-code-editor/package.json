@@ -3,10 +3,10 @@
   "version": "0.1.0-alpha.0",
   "description": "Codemirror editor for editing Reka AST in code",
   "main": "./dist/index.js",
-  "types": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "rollup -w -c rollup.config.js",
-    "build": "rollup -c rollup.config.js"
+    "build": "cross-env NODE_ENV=production rollup -c rollup.config.js"
   },
   "keywords": [],
   "author": "Prev Wong",

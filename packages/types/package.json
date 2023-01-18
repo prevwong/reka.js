@@ -3,7 +3,7 @@
   "version": "0.1.0-alpha.0",
   "description": "Create and manage Reka data types",
   "main": "./dist/index.js",
-  "types": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "generate-ast": "./scripts/generate-ast.js",
     "generate-ast:watch": "nodemon --watch src/types.definition.ts -x ./scripts/generate-ast.js",
