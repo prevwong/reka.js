@@ -1,5 +1,5 @@
-import * as t from '@composite/types';
 import { observer, useCollector } from '@composite/react';
+import * as t from '@composite/types';
 import * as React from 'react';
 
 import { Renderer, RenderFrame } from '../Renderer';

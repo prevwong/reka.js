@@ -1,8 +1,7 @@
-import * as React from 'react';
-
-import * as t from '@composite/types';
-import { Composite } from '@composite/state';
 import { CompositeProvider } from '@composite/react';
+import { Composite } from '@composite/state';
+import * as t from '@composite/types';
+import * as React from 'react';
 
 import { Editor } from '@/components/Editor';
 import { Preview } from '@/components/Preview';
