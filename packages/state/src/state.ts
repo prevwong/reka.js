@@ -50,13 +50,13 @@ export class Composite {
 
   externals: StateExternals;
 
-  constructor(private readonly opts: StateOpts) {
+  constructor(private readonly opts?: StateOpts) {
     this.frames = [];
 
     this.externals = {
-      components: opts.externals?.components ?? [],
-      states: opts.externals?.states ?? {},
-      globals: opts.externals?.globals
+      components: opts?.externals?.components ?? [],
+      states: opts?.externals?.states ?? {},
+      globals: opts?.externals?.globals
         ? this.setupExternalGlobals(opts.externals?.globals)
         : {},
     };
@@ -125,7 +125,7 @@ export class Composite {
 
     this.extensionRegistry = new ExtensionRegistry(
       this,
-      this.opts.extensions ?? []
+      this.opts?.extensions ?? []
     );
 
     this.extensionRegistry.init();
