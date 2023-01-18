@@ -6,6 +6,7 @@ import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 
 const shouldMinify = process.env.NODE_ENV === 'production';
+const shouldIncludeInBundle = ['tslib'];
 
 export default function createRollupConfig(config) {
   return {
@@ -16,7 +17,11 @@ export default function createRollupConfig(config) {
         return config.external(id);
       }
 
-      return !id.startsWith('.') && !path.isAbsolute(id);
+      return (
+        !id.startsWith('.') &&
+        !path.isAbsolute(id) &&
+        !shouldIncludeInBundle.includes(id)
+      );
     },
     plugins: Array.from(
       new Set([
