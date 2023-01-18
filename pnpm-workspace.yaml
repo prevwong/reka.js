@@ -3,4 +3,4 @@ packages:
   - 'apps/*'
   - 'docs'
   - 'site'
-  - 'demo'
+  - 'example'

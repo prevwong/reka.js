@@ -7,7 +7,7 @@
     "packages/*",
     "docs",
     "site",
-    "demo"
+    "example"
   ],
   "scripts": {
     "build": "turbo run build",

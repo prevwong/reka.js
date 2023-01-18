@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build:frame-styles": "tailwindcss -c tailwind-full.config.js -i ./src/styles/globals.css -o ./public/globals.css",
+    "build:styles": "tailwindcss -c tailwind-full.config.js -i ./src/styles/globals.css -o ./public/globals.css",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "run-s build:styles"
   },
   "dependencies": {
     "@composite/react": "workspace:*",
