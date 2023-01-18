@@ -58,11 +58,11 @@ For example, let's leave a comment on a root `template` of one our components in
 const rootTemplate = reka.state.components[0].template;
 
 reka.change(() => {
-    let templateComments = reka.getExtensionState(CommentExtension).comments[rootTemplate.id];
+    let templateComments = reka.getExtension(CommentExtension).state.comments[rootTemplate.id];
 
     if ( !templateComments ) {
         templateComments = {};
-        reka.getExtensionState(CommentExtension).comments[rootTemplate.id] = templateComments;
+        reka.getExtension(CommentExtension).state.comments[rootTemplate.id] = templateComments;
     }
 
     templateComments.push(

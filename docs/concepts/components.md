@@ -134,40 +134,4 @@ Apart from specifying HTML tags in `template`, other Components can also be refe
 
 An `ExternalComponent` is simply a component that exists outside of the `State`. These components are typically useful when you need to expose some predefined components that your end-users could reuse.
 
-For example, let's imagine we have the following `Icon` React component:
-
-```tsx
-import * as icons from 'some-icon-library';
-
-const Icon = ({ name, size }) => {
-    return React.createElement(icons[name], {
-        size,
-    })
-}
-```
-
-Now, we can expose `Icon` as an `ExternalComponent` so that it can be referenced by a template of a `RekaComponent`: 
-
-```tsx
-{
-    type: "RekaComponent",
-    ...
-    template: {
-        type: "TagTemplate",
-        name: "div",
-        props: {...},
-        if: null,
-        each: null,
-        children: [
-            {
-                type: "ComponentTemplate",
-                component: { type: "Identifier", name: "Icon" }, // Where Icon is an ExternalComponent
-                props: {
-                    size: "large",
-                },
-                children: []
-            }
-        ]
-    }
-}
-```
+External Components are discussed further [here](/docs/concepts/externals)

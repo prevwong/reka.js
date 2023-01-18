@@ -40,6 +40,10 @@ export const DOCS_SIDEBAR: DocSidebar = {
           title: 'Frame',
           href: 'concepts/frame',
         },
+        {
+          title: 'Externals',
+          href: 'concepts/externals',
+        },
       ],
     },
     {
