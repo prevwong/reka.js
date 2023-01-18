@@ -152,6 +152,9 @@ export const CodeEditor = (props: CodeEditorProps) => {
             keymap.of([indentWithTab]),
             compositeCodemirrorExtension(),
             EditorView.theme({
+              '&': {
+                height: '100%',
+              },
               '&.cm-focused': {
                 outline: 'none!important',
               },
