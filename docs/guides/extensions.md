@@ -87,7 +87,7 @@ const CommentExtension = createExtension<CommentState>({
     key: 'comments', 
     state: {
         // initial state
-        comments: []
+        comments: {} 
     },
     init: extension => {
         extension.reka.listenToChanges((payload) => {

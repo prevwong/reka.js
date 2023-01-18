@@ -122,7 +122,7 @@ Apart from specifying HTML tags in `template`, other Components can also be refe
     children: [
         {
             type: "ComponentTemplate",
-            component: "Icon", // Where Icon is another RekaComponent or an ExternalComponent
+            component: { type: "Identifier", name: "Button" }, // Where Button is another RekaComponent or an ExternalComponent
             props: {},
             children: []
         }
@@ -161,7 +161,7 @@ Now, we can expose `Icon` as an `ExternalComponent` so that it can be referenced
         children: [
             {
                 type: "ComponentTemplate",
-                component: "Icon", // Where Icon is another RekaComponent or an ExternalComponent
+                component: { type: "Identifier", name: "Icon" }, // Where Icon is an ExternalComponent
                 props: {
                     size: "large",
                 },

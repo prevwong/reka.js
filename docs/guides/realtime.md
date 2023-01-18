@@ -7,7 +7,9 @@ Reka provides an additional `@rekajs/collaboration` package which enables multip
 
 ## Conflict-free Replicated Data Types (CRDT) 
 
-CRDT data structures are one of the ways to achieve realtime collaboration. In Reka, the `State` data structure by itself is **not** a CRDT and has no realtime collaborative capabilities; this is by design so we can keep the core of Reka more portable and we don't assume that everyone needs multiplayer features in their page builders, which would otherwise be additional bloat if multiplayer is not a requirement.
+CRDT data structures are one of the ways to achieve realtime collaboration. 
+
+In Reka, the `State` data structure by itself is **not** a CRDT and has no realtime collaborative capabilities; this is by design so we can keep the core of Reka more portable and we don't assume that everyone needs multiplayer features in their page builders, which would otherwise be additional bloat if multiplayer is not a requirement.
 
 The `@rekajs/collaboration` package provides a Reka `Extension` where the core `State` data structure is mirrored by a Yjs CRDT. 
 
