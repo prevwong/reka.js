@@ -19,7 +19,7 @@ type LayoutProps = {
   children?: React.ReactNode;
 };
 
-const SITE_TITLE = 'Reka';
+const SITE_TITLE = 'Reka.js';
 
 const Content = styled(motion.div, {
   position: 'relative',
