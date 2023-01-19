@@ -1,4 +1,4 @@
-import { StateOpts } from '@composite/state';
+import { StateOpts } from '@rekajs/state';
 
 import { CommentExtension } from '@app/extensions/CommentExtension';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';

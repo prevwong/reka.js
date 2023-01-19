@@ -1,4 +1,4 @@
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 import { computed, IComputedValue, runInAction, untracked } from 'mobx';
 
 import { Environment } from './environment';
@@ -7,20 +7,18 @@ import { createKey } from './utils';
 
 type ComponentViewTreeComputationCache = {
   component: t.Component;
-  computed: IComputedValue<
-    t.CompositeComponentView[] | t.ExternalComponentView[]
-  >;
+  computed: IComputedValue<t.RekaComponentView[] | t.ExternalComponentView[]>;
 };
 
 export class ComponentViewEvaluator {
   private declare resolveComponentComputation: IComputedValue<
-    t.CompositeComponentView[] | t.ErrorSystemView[] | t.ExternalComponentView[]
+    t.RekaComponentView[] | t.ErrorSystemView[] | t.ExternalComponentView[]
   >;
   private declare componentViewTreeComputation: ComponentViewTreeComputationCache | null;
 
-  private declare compositeComponentRootComputation: IComputedValue<t.View> | null;
-  private declare compositeComponentPropsComputation: IComputedValue<void> | null;
-  private declare compositeComponentStateComputation: IComputedValue<void> | null;
+  private declare rekaComponentRootComputation: IComputedValue<t.View> | null;
+  private declare rekaComponentPropsComputation: IComputedValue<void> | null;
+  private declare rekaComponentStateComputation: IComputedValue<void> | null;
 
   private readonly tree: ViewEvaluator;
   private readonly ctx: TemplateEvaluateContext;
@@ -44,13 +42,13 @@ export class ComponentViewEvaluator {
 
     this.env = env;
 
-    this.compositeComponentStateComputation = null;
+    this.rekaComponentStateComputation = null;
   }
 
   private computeViewTreeForComponent(component: t.Component) {
     if (component instanceof t.ExternalComponent) {
-      this.compositeComponentPropsComputation = null;
-      this.compositeComponentStateComputation = null;
+      this.rekaComponentPropsComputation = null;
+      this.rekaComponentStateComputation = null;
 
       return [
         t.externalComponentView({
@@ -71,8 +69,8 @@ export class ComponentViewEvaluator {
       ];
     }
 
-    if (component instanceof t.CompositeComponent) {
-      const componentViewTree = t.compositeComponentView({
+    if (component instanceof t.RekaComponent) {
+      const componentViewTree = t.rekaComponentView({
         key: this.key,
         component,
         render: [],
@@ -80,14 +78,14 @@ export class ComponentViewEvaluator {
       });
 
       untracked(() => {
-        if (this.compositeComponentRootComputation) {
-          return this.compositeComponentRootComputation.get();
+        if (this.rekaComponentRootComputation) {
+          return this.rekaComponentRootComputation.get();
         }
 
-        this.compositeComponentRootComputation = computed(() => {
+        this.rekaComponentRootComputation = computed(() => {
           let render: t.View[] = [];
-          if (!this.compositeComponentPropsComputation) {
-            this.compositeComponentPropsComputation = computed(() => {
+          if (!this.rekaComponentPropsComputation) {
+            this.rekaComponentPropsComputation = computed(() => {
               const slot = this.template.children.flatMap((child) =>
                 this.tree.computeTemplate(child, {
                   ...this.ctx,
@@ -131,8 +129,8 @@ export class ComponentViewEvaluator {
             });
           }
 
-          if (!this.compositeComponentStateComputation) {
-            this.compositeComponentStateComputation = computed(() => {
+          if (!this.rekaComponentStateComputation) {
+            this.rekaComponentStateComputation = computed(() => {
               component.state.forEach((val) => {
                 this.env.set(
                   val.name,
@@ -143,8 +141,8 @@ export class ComponentViewEvaluator {
           }
 
           try {
-            this.compositeComponentPropsComputation.get();
-            this.compositeComponentStateComputation.get();
+            this.rekaComponentPropsComputation.get();
+            this.rekaComponentStateComputation.get();
 
             render = this.tree.computeTemplate(component.template, {
               path: [this.key, 'root'],
@@ -175,7 +173,7 @@ export class ComponentViewEvaluator {
           return componentViewTree;
         });
 
-        return this.compositeComponentRootComputation.get();
+        return this.rekaComponentRootComputation.get();
       });
 
       return [componentViewTree];
@@ -219,8 +217,8 @@ export class ComponentViewEvaluator {
 
     const componentView = this.resolveComponentComputation.get();
 
-    if (this.compositeComponentRootComputation) {
-      this.compositeComponentRootComputation.get();
+    if (this.rekaComponentRootComputation) {
+      this.rekaComponentRootComputation.get();
     }
 
     return componentView;

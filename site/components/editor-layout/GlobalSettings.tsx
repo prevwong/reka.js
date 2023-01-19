@@ -1,5 +1,5 @@
-import { Parser } from '@composite/parser';
-import * as t from '@composite/types';
+import { Parser } from '@rekajs/parser';
+import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -30,13 +30,13 @@ export const GlobalSettings = observer(() => {
           }
 
           const existingGlobalStateName =
-            editor.composite.state.program.globals.find(
+            editor.reka.state.program.globals.find(
               (global) => global.name === id
             );
 
-          editor.composite.change(() => {
+          editor.reka.change(() => {
             if (!existingGlobalStateName) {
-              editor.composite.state.program.globals.push(
+              editor.reka.state.program.globals.push(
                 t.val({
                   name: id,
                   init: parsedValue,
@@ -49,7 +49,7 @@ export const GlobalSettings = observer(() => {
             existingGlobalStateName.init = parsedValue;
           });
         }}
-        values={editor.composite.state.program.globals.map((global) => ({
+        values={editor.reka.state.program.globals.map((global) => ({
           id: global.name,
           value: Parser.stringify(global.init),
         }))}

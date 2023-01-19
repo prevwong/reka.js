@@ -11,11 +11,11 @@
     "postinstall": "run-s build:styles"
   },
   "dependencies": {
-    "@composite/react": "workspace:*",
-    "@composite/react-code-editor": "workspace:*",
-    "@composite/state": "workspace:*",
-    "@composite/types": "workspace:*",
-    "@composite/parser": "workspace:*",
+    "@rekajs/react": "workspace:*",
+    "@rekajs/react-code-editor": "workspace:*",
+    "@rekajs/state": "workspace:*",
+    "@rekajs/types": "workspace:*",
+    "@rekajs/parser": "workspace:*",
     "@next/font": "13.1.2",
     "@types/node": "18.7.15",
     "@types/react": "^17.0.33",

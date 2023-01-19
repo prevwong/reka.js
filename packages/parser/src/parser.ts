@@ -1,6 +1,6 @@
 import * as b from '@babel/types';
-import * as t from '@composite/types';
-import { ecscapeObjKey } from '@composite/types';
+import * as t from '@rekajs/types';
+import { ecscapeObjKey } from '@rekajs/types';
 import acorn, { parseExpressionAt } from 'acorn';
 import invariant from 'tiny-invariant';
 
@@ -14,19 +14,19 @@ const parseWithAcorn = (source: string, loc: number) => {
   }) as b.Node & acorn.Node;
 };
 
-const parseExpressionWithAcornToCompositeType = <T extends t.Type = t.Any>(
+const parseExpressionWithAcornToRekaType = <T extends t.Type = t.Any>(
   source: string,
   loc: number,
   expectedType?: t.TypeConstructor<T>
 ) => {
   // Bootstrapping on acorn's parser for parsing basic expressions
   const expression = parseWithAcorn(source, loc);
-  const type = jsToComposite(expression as unknown as b.Node, expectedType);
+  const type = jsToReka(expression as unknown as b.Node, expectedType);
 
   return { expression, type };
 };
 
-const jsToComposite = <T extends t.Type = t.Any>(
+const jsToReka = <T extends t.Type = t.Any>(
   node: b.Node,
   expectedType?: t.TypeConstructor<T>
 ) => {
@@ -161,7 +161,7 @@ class _Parser extends Lexer {
     this.next();
 
     const globals: t.Val[] = [];
-    const components: t.CompositeComponent[] = [];
+    const components: t.RekaComponent[] = [];
 
     while (this.check(TokenType.COMPONENT) || this.check(TokenType.VAL)) {
       if (this.check(TokenType.VAL)) {
@@ -239,7 +239,7 @@ class _Parser extends Lexer {
       );
 
       if (b.isAssignmentPattern(param)) {
-        init = jsToComposite(param.right, t.Expression);
+        init = jsToReka(param.right, t.Expression);
 
         invariant(
           b.isIdentifier(param.left),
@@ -264,7 +264,7 @@ class _Parser extends Lexer {
     const template = this.parseElement();
     this.consume(TokenType.COMPONENT_TMPL_END);
 
-    return t.compositeComponent({
+    return t.rekaComponent({
       name: name.value,
       state,
       props,
@@ -458,7 +458,7 @@ class _Parser extends Lexer {
     loc: number,
     expectedType?: t.TypeConstructor<T>
   ) {
-    const { expression, type } = parseExpressionWithAcornToCompositeType(
+    const { expression, type } = parseExpressionWithAcornToRekaType(
       this.source,
       loc,
       expectedType
@@ -477,7 +477,7 @@ class _Parser extends Lexer {
  * A singleton that exposes parsing utilities
  */
 export class Parser {
-  /// Parse source into a Composite Program AST node
+  /// Parse source into a Reka Program AST node
   static parseProgram(source: string) {
     return new _Parser(source).parse();
   }
@@ -487,7 +487,7 @@ export class Parser {
     source: string,
     expectedType?: t.TypeConstructor<T>
   ) {
-    const { type } = parseExpressionWithAcornToCompositeType(
+    const { type } = parseExpressionWithAcornToRekaType(
       `{${source}}`,
       1,
       expectedType

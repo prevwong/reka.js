@@ -43,7 +43,7 @@ For example, let's say if we were to update a prop to the above Button component
 
 ```tsx
 {
-    type: "CompositeComponent",
+    type: "RekaComponent",
     props: [...],
     state: [...],
     template: {

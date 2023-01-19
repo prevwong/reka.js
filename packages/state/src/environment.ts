@@ -1,12 +1,12 @@
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 import { action, makeObservable, observable } from 'mobx';
 
-import { Composite } from './state';
+import { Reka } from './state';
 
 export class Environment {
   bindings: Map<string, any>;
 
-  constructor(readonly composite: Composite, readonly parent?: Environment) {
+  constructor(readonly reka: Reka, readonly parent?: Environment) {
     this.bindings = new Map();
 
     makeObservable(this, {
@@ -51,17 +51,17 @@ export class Environment {
     }
 
     if (!this.parent) {
-      return this.composite.externals.states[name] || undefined;
+      return this.reka.externals.states[name] || undefined;
     }
 
     return this.parent.getByName(name);
   }
 
   getByIdentifier(identifier: t.Identifier) {
-    const distance = this.composite.resolver.getDistance(identifier);
+    const distance = this.reka.resolver.getDistance(identifier);
 
     if (distance === undefined || distance === -1) {
-      return this.composite.externals.states[identifier.name];
+      return this.reka.externals.states[identifier.name];
     }
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -81,10 +81,10 @@ export class Environment {
   }
 
   inherit() {
-    return new Environment(this.composite, this);
+    return new Environment(this.reka, this);
   }
 
   clone() {
-    return new Environment(this.composite, this.parent);
+    return new Environment(this.reka, this.parent);
   }
 }

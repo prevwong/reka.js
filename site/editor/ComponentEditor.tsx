@@ -1,5 +1,5 @@
-import { Frame } from '@composite/state';
-import * as t from '@composite/types';
+import { Frame } from '@rekajs/state';
+import * as t from '@rekajs/types';
 import { makeObservable, action, observable } from 'mobx';
 import invariant from 'tiny-invariant';
 
@@ -49,7 +49,7 @@ export class ComponentEditor {
     });
 
     const userFrameExtension =
-      this.editor.composite.getExtension(UserFrameExtension);
+      this.editor.reka.getExtension(UserFrameExtension);
 
     this.disposeActiveFrameRemoval = userFrameExtension.subscribe(
       (state) => ({
@@ -81,7 +81,7 @@ export class ComponentEditor {
   }
 
   setInitialActiveFrame() {
-    const firstUserFrame = this.editor.composite
+    const firstUserFrame = this.editor.reka
       .getExtension(UserFrameExtension)
       .state.frames.filter((frame) => frame.name === this.component.name)[0];
 
@@ -102,7 +102,7 @@ export class ComponentEditor {
       return;
     }
 
-    const userFrame = this.editor.composite
+    const userFrame = this.editor.reka
       .getExtension(UserFrameExtension)
       .state.frames.find((frame) => frame.id === frameId);
 
@@ -111,8 +111,7 @@ export class ComponentEditor {
     }
 
     const stateFrame =
-      this.editor.composite.frames.find((frame) => frame.id === frameId) ||
-      null;
+      this.editor.reka.frames.find((frame) => frame.id === frameId) || null;
 
     invariant(stateFrame, 'State frame not found');
 
@@ -204,8 +203,9 @@ export class ComponentEditor {
 
   getCommentCount(tpl: t.Template) {
     return (
-      this.editor.composite.getExtension(CommentExtension).state
-        .templateToComments[tpl.id]?.length ?? 0
+      this.editor.reka.getExtension(CommentExtension).state.templateToComments[
+        tpl.id
+      ]?.length ?? 0
     );
   }
 }

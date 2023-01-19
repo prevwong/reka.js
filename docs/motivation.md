@@ -1,6 +1,6 @@
 # Motivation
 
-Composite is built as an experimental state management system for Craft.js, a library for building drag-and-drop page builders. 
+Reka is built as an experimental state management system for Craft.js, a library for building drag-and-drop page builders. 
 
 At the core of Craft.js is the `EditorState` which is a simple implicit tree data structure that represents the current state of the page that's being built by the end-user:
 

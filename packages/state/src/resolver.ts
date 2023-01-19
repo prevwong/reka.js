@@ -1,4 +1,4 @@
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 import {
   computed,
   IComputedValue,
@@ -8,7 +8,7 @@ import {
 } from 'mobx';
 
 import { Scope } from './scope';
-import { Composite } from './state';
+import { Reka } from './state';
 
 type CachedTemplateResolver = {
   computed: IComputedValue<void>;
@@ -33,7 +33,7 @@ export class Resolver {
   declare cachedGlobalsComputation: IComputedValue<void>;
   declare cachedComponentsComputation: IComputedValue<void>;
 
-  constructor(readonly composite: Composite) {
+  constructor(readonly reka: Reka) {
     this.scope = new Scope('root');
     this.identifiersToVariableDistance = new Map();
 
@@ -128,7 +128,7 @@ export class Resolver {
   }
 
   resolveComponent(component: t.Component, scope: Scope) {
-    if (component instanceof t.CompositeComponent) {
+    if (component instanceof t.RekaComponent) {
       let cache = this.cachedComponentResolver.get(component);
 
       if (!cache) {
@@ -233,7 +233,7 @@ export class Resolver {
   }
 
   resolveProgram() {
-    const program = this.composite.program;
+    const program = this.reka.program;
 
     if (!this.cachedGlobalsComputation) {
       this.cachedGlobalsComputation = computed(() => {

@@ -1,12 +1,12 @@
-# Composite
+# Reka
 
-Composite is a state management system for building no-code page editors.
+Reka is a state management system for building no-code page editors.
 
 ## Why?
 
 A large part of the complexity of building no-code page editors comes from the architecting of the state management system to power such editors (ie: how should the end user designs be stored and edited in a page editor?)
 
-Composite solves this by providing an AST-powered state system to enable end-users to create UI components that are nearly as complex as ones developers could write in code; along with an interpreter to efficiently compute an output that could be rendered on the browser.
+Reka solves this by providing an AST-powered state system to enable end-users to create UI components that are nearly as complex as ones developers could write in code; along with an interpreter to efficiently compute an output that could be rendered on the browser.
 
 It's primarily built to serve as the new state management system to power Craft.js and its page builders.
 
@@ -14,12 +14,12 @@ It's primarily built to serve as the new state management system to power Craft.
 
 ### AST-based State :zap:
 
-Composite's State is an AST which enables end-users to build complex UI components with features that developers are familiar with from UI frameworks such as React:
+Reka's State is an AST which enables end-users to build complex UI components with features that developers are familiar with from UI frameworks such as React:
 
 ```tsx
 [
     {
-        type: "CompositeComponent",
+        type: "RekaComponent",
         name: "Counter",
         props: []
         state: [
@@ -36,7 +36,7 @@ Composite's State is an AST which enables end-users to build complex UI componen
         }
     },
     {
-        type: "CompositeComponent",
+        type: "RekaComponent",
         name: "App",
         state: [],
         template: {
@@ -70,16 +70,16 @@ This essentially means that you could build page editors where your end-users ar
 
 ### Portable :car:
 
-Composite computes a component instance from its State by outputing a simple JSON structure called the `View`: 
+Reka computes a component instance from its State by outputing a simple JSON structure called the `View`: 
 
 ```tsx
 // Compute a View for the Counter component
-console.log(composite.createFrame('Counter').root);
+console.log(reka.createFrame('Counter').root);
 
 // console:
 {
-    type: "CompositeComponentView",
-    component: { type: "CompositeComponent", component: "Counter" },
+    type: "RekaComponentView",
+    component: { type: "RekaComponent", component: "Counter" },
     root: {
         type: "TagView",
         tag: "p",
@@ -92,16 +92,16 @@ console.log(composite.createFrame('Counter').root);
 }
 ```
 
-Whenever there's a change made to the State (eg: adding a new child to a parent template), Composite efficiently recomputes the updated `View`.
+Whenever there's a change made to the State (eg: adding a new child to a parent template), Reka efficiently recomputes the updated `View`.
 
-The `View` is a simple serialisable JSON structure So regardless of what UI framework you're working with to build your page builder, whether it's React, Vue or Svelte - building a renderer for Composite simply means taking this JSOn structure and rendering it in your preferred UI framework.
+The `View` is a simple serialisable JSON structure So regardless of what UI framework you're working with to build your page builder, whether it's React, Vue or Svelte - building a renderer for Reka simply means taking this JSOn structure and rendering it in your preferred UI framework.
 
 ### Extensible State :hammer:
 
 Of course, page builders often times may require additional data to be stored as part of the `State`. For example, you want your end users to be able to leave a comment on a template element; you can store these comments directly as part of the `State`: 
 
 ```tsx
-import { createExtension } from '@composite/state';
+import { createExtension } from '@rekajs/state';
 
 type CommentState = {
     comments: Array<{
@@ -123,8 +123,8 @@ const CommentExtension = createExtension<CommentState>({
 });
 
 // Usage
-composite.change(() => {
-    composite.getExtension(CommentExtension).comments.push({
+reka.change(() => {
+    reka.getExtension(CommentExtension).comments.push({
         templateId: '...',
         content: "This button tag should be larger!!" 
     })
@@ -133,12 +133,12 @@ composite.change(() => {
 
 ### Realtime Collaboration :tada:
 
-Oh, you need multiplayer in your page editor too? No problem, Composite provides an external package that allows realtime collaboration via a fully-featured CRDT backed by Yjs
+Oh, you need multiplayer in your page editor too? No problem, Reka provides an external package that allows realtime collaboration via a fully-featured CRDT backed by Yjs
 
 ```tsx
-import { Composite } from '@composite/state';
-import * as t from '@composite/types';
-import { createCollabExtension } from '@composite/collaboration';
+import { Reka } from '@rekajs/state';
+import * as t from '@rekajs/types';
+import { createCollabExtension } from '@rekajs/collaboration';
 
 import * as Y from 'yjs';
 import { WebrtcProvider } from 'y-webrtc';
@@ -152,12 +152,12 @@ const type = doc.getMap('my-collaborative-editor');
 
 const CollabExtension = createCollabExtension(type);
 
-// 3. Create a new Composite instance with an initial State
-const composite = new Composite({
+// 3. Create a new Reka instance with an initial State
+const reka = new Reka({
     extensions: [CollabExtension]
 }); 
 // The initial State Document, this should come from the Yjs type
-composite.load(t.unflatten(type.getMap('document')))
+reka.load(t.unflatten(type.getMap('document')))
 
 // 4. Bind connector
 const provider = new WebrtcProvider(

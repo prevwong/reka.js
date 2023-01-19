@@ -16,7 +16,7 @@ export const getCollaborativeYjsType = () => {
   return type;
 };
 
-export const getCollaborativeYjsCompositeState = () => {
+export const getCollaborativeYjsRekaState = () => {
   const document = type.get('document');
 
   invariant(

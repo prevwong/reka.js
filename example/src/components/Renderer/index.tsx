@@ -1,6 +1,6 @@
-import { observer } from '@composite/react';
-import { Frame } from '@composite/state';
-import * as t from '@composite/types';
+import { observer } from '@rekajs/react';
+import { Frame } from '@rekajs/state';
+import * as t from '@rekajs/types';
 import * as React from 'react';
 
 type RendererProps = {
@@ -22,7 +22,7 @@ export const Renderer = observer((props: RendererProps) => {
     );
   }
 
-  if (props.view instanceof t.CompositeComponentView) {
+  if (props.view instanceof t.RekaComponentView) {
     return props.view.render.map((r) => <Renderer key={r.id} view={r} />);
   }
 

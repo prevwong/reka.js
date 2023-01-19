@@ -16,7 +16,7 @@ Schema.define('Program', {
   scope: true,
   fields: (t) => ({
     globals: t.array(t.node('Val')),
-    components: t.array(t.node('CompositeComponent')),
+    components: t.array(t.node('RekaComponent')),
   }),
 });
 
@@ -173,7 +173,7 @@ Schema.define('Component', {
   }),
 });
 
-Schema.define('CompositeComponent', {
+Schema.define('RekaComponent', {
   extends: 'Component',
   fields: (t) => ({
     template: t.node('Template'),
@@ -257,7 +257,7 @@ Schema.define('ComponentView', {
   }),
 });
 
-Schema.define('CompositeComponentView', {
+Schema.define('RekaComponentView', {
   extends: 'ComponentView',
   fields: (t) => ({
     render: t.array(t.node('View')),

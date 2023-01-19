@@ -1,5 +1,5 @@
 {
-  "name": "@composite/react-code-editor",
+  "name": "@rekajs/react-code-editor",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
@@ -12,11 +12,11 @@
   "author": "Prev Wong",
   "license": "ISC",
   "peerDependencies": {
-    "@composite/codemirror": "workspace:*",
-    "@composite/parser": "workspace:*",
-    "@composite/react": "workspace:*",
-    "@composite/state": "workspace:*",
-    "@composite/types": "workspace:*",
+    "@rekajs/codemirror": "workspace:*",
+    "@rekajs/parser": "workspace:*",
+    "@rekajs/react": "workspace:*",
+    "@rekajs/state": "workspace:*",
+    "@rekajs/types": "workspace:*",
     "react": "^16.8.0 || ^17 || ^18"
   },
   "dependencies": {
@@ -29,11 +29,11 @@
     "mobx-react-lite": "^3.3.0"
   },
   "devDependencies": {
-    "@composite/codemirror": "workspace:*",
-    "@composite/parser": "workspace:*",
-    "@composite/react": "workspace:*",
-    "@composite/state": "workspace:*",
-    "@composite/types": "workspace:*",
+    "@rekajs/codemirror": "workspace:*",
+    "@rekajs/parser": "workspace:*",
+    "@rekajs/react": "workspace:*",
+    "@rekajs/state": "workspace:*",
+    "@rekajs/types": "workspace:*",
     "@types/debounce": "^1.2.1",
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",

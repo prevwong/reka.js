@@ -1,5 +1,5 @@
 {
-  "name": "composite",
+  "name": "reka",
   "version": "0.1.0",
   "private": true,
   "workspaces": [
@@ -45,7 +45,7 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "description": "Monorepo for Composite",
+  "description": "Monorepo for Reka",
   "main": ".eslintrc.js",
   "keywords": [],
   "author": "Prev Wong",

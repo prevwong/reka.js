@@ -1,4 +1,4 @@
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -92,7 +92,7 @@ const TemplateHeading = (props: TemplateHeadingProps) => {
           const template = props.template;
 
           if (template instanceof t.TagTemplate) {
-            editor.composite.change(() => {
+            editor.reka.change(() => {
               template.tag = newTitleValue;
             });
           }

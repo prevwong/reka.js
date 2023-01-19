@@ -44,9 +44,9 @@ export const memberExpression = (
 export const componentProp = (
   ...args: ConstructorParameters<typeof t.ComponentProp>
 ) => new t.ComponentProp(...args);
-export const compositeComponent = (
-  ...args: ConstructorParameters<typeof t.CompositeComponent>
-) => new t.CompositeComponent(...args);
+export const rekaComponent = (
+  ...args: ConstructorParameters<typeof t.RekaComponent>
+) => new t.RekaComponent(...args);
 export const externalComponent = (
   ...args: ConstructorParameters<typeof t.ExternalComponent>
 ) => new t.ExternalComponent(...args);
@@ -64,9 +64,9 @@ export const elementEach = (
 ) => new t.ElementEach(...args);
 export const tagView = (...args: ConstructorParameters<typeof t.TagView>) =>
   new t.TagView(...args);
-export const compositeComponentView = (
-  ...args: ConstructorParameters<typeof t.CompositeComponentView>
-) => new t.CompositeComponentView(...args);
+export const rekaComponentView = (
+  ...args: ConstructorParameters<typeof t.RekaComponentView>
+) => new t.RekaComponentView(...args);
 export const externalComponentView = (
   ...args: ConstructorParameters<typeof t.ExternalComponentView>
 ) => new t.ExternalComponentView(...args);

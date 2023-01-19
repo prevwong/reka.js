@@ -1,5 +1,5 @@
 {
-  "name": "@composite/collaborative",
+  "name": "@rekajs/collaborative",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
@@ -13,8 +13,8 @@
   "author": "Prev Wong",
   "license": "ISC",
   "dependencies": {
-    "@composite/state": "workspace:*",
-    "@composite/types": "workspace:*",
+    "@rekajs/state": "workspace:*",
+    "@rekajs/types": "workspace:*",
     "tiny-invariant": "^1.2.0",
     "yjs": "^13.5.27"
   },

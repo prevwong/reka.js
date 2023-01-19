@@ -1,5 +1,5 @@
-import { createExtension } from '@composite/state';
-import * as t from '@composite/types';
+import { createExtension } from '@rekajs/state';
+import * as t from '@rekajs/types';
 
 export type UserFrame = {
   id: string;
@@ -60,7 +60,7 @@ export const UserFrameExtensionFactory = () =>
     },
     globals: {},
     components: [
-      t.compositeComponent({
+      t.rekaComponent({
         name: 'ExtensionComponent',
         props: [],
         state: [],
@@ -106,7 +106,7 @@ export const UserFrameExtensionFactory = () =>
           Object.keys(collected.frameProps).forEach((key) => {
             const props = collected.frameProps[key];
 
-            const stateFrame = ext.composite.frames.find(
+            const stateFrame = ext.reka.frames.find(
               (frame) => frame.id === key
             );
 
@@ -130,7 +130,7 @@ export const UserFrameExtensionFactory = () =>
           const currentFrames = state.frames;
 
           currentFrames.forEach((currentFrame) => {
-            const stateFrame = ext.composite.frames.find(
+            const stateFrame = ext.reka.frames.find(
               (frame) => frame.id === currentFrame.id
             );
 
@@ -138,7 +138,7 @@ export const UserFrameExtensionFactory = () =>
               return;
             }
 
-            ext.composite.createFrame({
+            ext.reka.createFrame({
               id: currentFrame.id,
               component: {
                 name: currentFrame.name,
@@ -162,7 +162,7 @@ export const UserFrameExtensionFactory = () =>
           );
 
           deletedFrames.forEach((deletedFrame) => {
-            const frame = ext.composite.frames.find(
+            const frame = ext.reka.frames.find(
               (frame) => frame.id === deletedFrame.id
             );
 
@@ -170,7 +170,7 @@ export const UserFrameExtensionFactory = () =>
               return;
             }
 
-            ext.composite.removeFrame(frame);
+            ext.reka.removeFrame(frame);
           });
         },
         {

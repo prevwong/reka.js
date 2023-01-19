@@ -1,4 +1,4 @@
-import { Parser } from '@composite/parser';
+import { Parser } from '@rekajs/parser';
 
 export const DUMMY_PROGRAM = Parser.parseProgram(`
 val globalText = "something else";
@@ -24,7 +24,7 @@ component App() {
     </h2>
     <div className={"flex flex-col gap-4 px-12 opacity-80 font-light tracking-tight text-md"}>
      <p>
-      <text value={"Composite is a state management system for building no-code editors."}/>
+      <text value={"Reka is a state management system for building no-code editors."}/>
       <br/>
       <text value={"It enables you to build page editors where your users can design complex UI components on the browser the same way you could with code."}/>
      </p>
@@ -93,7 +93,7 @@ component App() {
     <FeatureCard
      title={"Realtime Collaboration"}
      noPadding={true}
-     description={"Composite enables an opt-in multiplayer functionality via CRDTs. Go ahead and edit this page in another tab to see it in action!"}
+     description={"Reka enables an opt-in multiplayer functionality via CRDTs. Go ahead and edit this page in another tab to see it in action!"}
     >
      <img
       src={"/images/placeholder.jpeg"}
@@ -103,7 +103,7 @@ component App() {
     <FeatureCard
      title={"Extensible"}
      noPadding={true}
-     description={"Need to create a Figma-like commenting system for your page editor? Composite lets you to create and store these additional values via extensions."}
+     description={"Need to create a Figma-like commenting system for your page editor? Reka lets you to create and store these additional values via extensions."}
     >
      <img src={"/images/extensible.png"}/>
     </FeatureCard>
@@ -184,7 +184,7 @@ component Header() => (
   <div className={"flex items-center w-full px-8 max-w-4xl m-auto"}>
    <div className={"flex-1"}>
     <span className={"text-sm font-semibold"}>
-     <text value={"craft.js | composite"}/>
+     <text value={"craft.js | reka"}/>
     </span>
    </div>
    <nav className={"list-none"}>

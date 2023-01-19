@@ -7,7 +7,7 @@
 !start-example
 
 ```tsx
-import { Parser } from '@composite/parser';
+import { Parser } from '@rekajs/parser';
 
 Parser.stringify(...);
 Parser.parse(...);
@@ -17,8 +17,8 @@ Parser.parse(...);
 !start-example parseProgram
 
 ```tsx
-import * as t from '@composite/types';
-import { Parser } from '@composite/parser';
+import * as t from '@rekajs/types';
+import { Parser } from '@rekajs/parser';
 
 const result = Parser.parseProgram(`
     val globalVariable = 0;
@@ -46,8 +46,8 @@ console.log(result.globals.length == 1); // true
 !start-example parseExpression
 
 ```tsx
-import * as t from '@composite/types';
-import { Parser } from '@composite/parser';
+import * as t from '@rekajs/types';
+import { Parser } from '@rekajs/parser';
 
 const result = Parser.parseExpression("1+2");
 
@@ -71,12 +71,12 @@ Parser.parseExpression("10", t.BinaryExpression);
 !start-example stringify
 
 ```tsx
-import * as t from '@composite/types';
-import { Parser } from '@composite/parser';
+import * as t from '@rekajs/types';
+import { Parser } from '@rekajs/parser';
 
 Parser.stringify(t.program({
     components: [
-        t.compositeComponent({
+        t.rekaComponent({
             name: 'App',
             state: [
                 t.val({name: "counter", init: t.literal({value: 0})})

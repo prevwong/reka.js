@@ -1,7 +1,7 @@
 import {
   CodeEditor as ReactCodeEditor,
   ParserStatus,
-} from '@composite/react-code-editor';
+} from '@rekajs/react-code-editor';
 import { motion } from 'framer-motion';
 import * as React from 'react';
 
@@ -124,7 +124,7 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
               display: currentTab === 'ast' ? 'block' : 'none',
             }}
           >
-            <Tree root={editor.composite.program} />
+            <Tree root={editor.reka.program} />
           </Box>
         </Box>
       </Box>

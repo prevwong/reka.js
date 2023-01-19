@@ -55,12 +55,12 @@ importers:
 
   example:
     specifiers:
-      '@composite/parser': workspace:*
-      '@composite/react': workspace:*
-      '@composite/react-code-editor': workspace:*
-      '@composite/state': workspace:*
-      '@composite/types': workspace:*
       '@next/font': 13.1.2
+      '@rekajs/parser': workspace:*
+      '@rekajs/react': workspace:*
+      '@rekajs/react-code-editor': workspace:*
+      '@rekajs/state': workspace:*
+      '@rekajs/types': workspace:*
       '@types/node': 18.7.15
       '@types/react': ^17.0.33
       '@types/react-dom': ^17.0.10
@@ -74,12 +74,12 @@ importers:
       tailwindcss: ^3.2.1
       typescript: 4.9.4
     dependencies:
-      '@composite/parser': link:../packages/parser
-      '@composite/react': link:../packages/react
-      '@composite/react-code-editor': link:../packages/react-code-editor
-      '@composite/state': link:../packages/state
-      '@composite/types': link:../packages/types
       '@next/font': 13.1.2
+      '@rekajs/parser': link:../packages/parser
+      '@rekajs/react': link:../packages/react
+      '@rekajs/react-code-editor': link:../packages/react-code-editor
+      '@rekajs/state': link:../packages/state
+      '@rekajs/types': link:../packages/types
       '@types/node': 18.7.15
       '@types/react': 17.0.49
       '@types/react-dom': 17.0.17
@@ -111,14 +111,14 @@ importers:
 
   packages/collaborative:
     specifiers:
-      '@composite/state': workspace:*
-      '@composite/types': workspace:*
+      '@rekajs/state': workspace:*
+      '@rekajs/types': workspace:*
       tiny-invariant: ^1.2.0
       y-protocols: ^1.0.5
       yjs: ^13.5.27
     dependencies:
-      '@composite/state': link:../state
-      '@composite/types': link:../types
+      '@rekajs/state': link:../state
+      '@rekajs/types': link:../types
       tiny-invariant: 1.2.0
       yjs: 13.5.41
     devDependencies:
@@ -127,7 +127,7 @@ importers:
   packages/parser:
     specifiers:
       '@babel/types': ^7.18.13
-      '@composite/types': workspace:*
+      '@rekajs/types': workspace:*
       acorn: ^8.7.0
       tiny-invariant: ^1.2.0
     dependencies:
@@ -135,12 +135,12 @@ importers:
       acorn: 8.8.0
       tiny-invariant: 1.2.0
     devDependencies:
-      '@composite/types': link:../types
+      '@rekajs/types': link:../types
 
   packages/react:
     specifiers:
-      '@composite/state': workspace:*
-      '@composite/types': workspace:*
+      '@rekajs/state': workspace:*
+      '@rekajs/types': workspace:*
       '@types/react': ^17.0.33
       '@types/react-dom': ^17.0.10
       mobx: ^6.3.13
@@ -150,8 +150,8 @@ importers:
       mobx: 6.6.1
       mobx-react-lite: 3.4.0_mobx@6.6.1+react@17.0.2
     devDependencies:
-      '@composite/state': link:../state
-      '@composite/types': link:../types
+      '@rekajs/state': link:../state
+      '@rekajs/types': link:../types
       '@types/react': 17.0.49
       '@types/react-dom': 17.0.17
       react: 17.0.2
@@ -162,11 +162,11 @@ importers:
       '@codemirror/commands': ^0.19.8
       '@codemirror/theme-one-dark': ^0.19.1
       '@codemirror/view': ^0.19.40
-      '@composite/codemirror': workspace:*
-      '@composite/parser': workspace:*
-      '@composite/react': workspace:*
-      '@composite/state': workspace:*
-      '@composite/types': workspace:*
+      '@rekajs/codemirror': workspace:*
+      '@rekajs/parser': workspace:*
+      '@rekajs/react': workspace:*
+      '@rekajs/state': workspace:*
+      '@rekajs/types': workspace:*
       '@types/debounce': ^1.2.1
       '@types/react': ^17.0.33
       '@types/react-dom': ^17.0.10
@@ -183,11 +183,11 @@ importers:
       mobx: 6.6.1
       mobx-react-lite: 3.4.0_mobx@6.6.1+react@17.0.2
     devDependencies:
-      '@composite/codemirror': link:../codemirror
-      '@composite/parser': link:../parser
-      '@composite/react': link:../react
-      '@composite/state': link:../state
-      '@composite/types': link:../types
+      '@rekajs/codemirror': link:../codemirror
+      '@rekajs/parser': link:../parser
+      '@rekajs/react': link:../react
+      '@rekajs/state': link:../state
+      '@rekajs/types': link:../types
       '@types/debounce': 1.2.1
       '@types/react': 17.0.49
       '@types/react-dom': 17.0.17
@@ -195,7 +195,7 @@ importers:
 
   packages/state:
     specifiers:
-      '@composite/types': workspace:*
+      '@rekajs/types': workspace:*
       '@types/lodash': ^4.14.185
       fast-deep-equal: ^3.1.3
       lodash: ^4.17.21
@@ -209,7 +209,7 @@ importers:
       mobx-utils: 6.0.5_mobx@6.6.1
       tiny-invariant: 1.2.0
     devDependencies:
-      '@composite/types': link:../types
+      '@rekajs/types': link:../types
       '@types/lodash': 4.14.191
 
   packages/types:
@@ -232,13 +232,6 @@ importers:
       '@codemirror/commands': ^0.19.8
       '@codemirror/theme-one-dark': ^0.19.1
       '@codemirror/view': ^0.19.40
-      '@composite/codemirror': workspace:*
-      '@composite/collaborative': workspace:*
-      '@composite/parser': workspace:*
-      '@composite/react': workspace:*
-      '@composite/react-code-editor': workspace:*
-      '@composite/state': workspace:*
-      '@composite/types': workspace:*
       '@hashicorp/remark-plugins': ^4.1.1
       '@prevwong/getdocs-ts': git+https://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:x-oauth-basic@github.com/prevwong/getdocs-ts.git
       '@radix-ui/colors': ^0.1.8
@@ -250,6 +243,13 @@ importers:
       '@radix-ui/react-tabs': ^0.1.4
       '@radix-ui/react-toggle-group': ^1.0.0
       '@radix-ui/react-tooltip': ^0.1.7
+      '@rekajs/codemirror': workspace:*
+      '@rekajs/collaborative': workspace:*
+      '@rekajs/parser': workspace:*
+      '@rekajs/react': workspace:*
+      '@rekajs/react-code-editor': workspace:*
+      '@rekajs/state': workspace:*
+      '@rekajs/types': workspace:*
       '@stitches/react': ^1.2.7
       '@tailwindcss/typography': ^0.5.8
       '@types/canvas-confetti': ^1.6.0
@@ -304,13 +304,6 @@ importers:
       '@codemirror/commands': 0.19.8
       '@codemirror/theme-one-dark': 0.19.1
       '@codemirror/view': 0.19.48
-      '@composite/codemirror': link:../packages/codemirror
-      '@composite/collaborative': link:../packages/collaborative
-      '@composite/parser': link:../packages/parser
-      '@composite/react': link:../packages/react
-      '@composite/react-code-editor': link:../packages/react-code-editor
-      '@composite/state': link:../packages/state
-      '@composite/types': link:../packages/types
       '@hashicorp/remark-plugins': 4.1.1
       '@prevwong/getdocs-ts': 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+x-oauth-basic@github.com/prevwong/getdocs-ts/2d912fe897b2bd1fbff95d3d77179de82f9efb32
       '@radix-ui/colors': 0.1.8
@@ -322,6 +315,13 @@ importers:
       '@radix-ui/react-tabs': 0.1.5_react@17.0.2
       '@radix-ui/react-toggle-group': 1.0.1_sfoxds7t5ydpegc3knd667wn6m
       '@radix-ui/react-tooltip': 0.1.7_sfoxds7t5ydpegc3knd667wn6m
+      '@rekajs/codemirror': link:../packages/codemirror
+      '@rekajs/collaborative': link:../packages/collaborative
+      '@rekajs/parser': link:../packages/parser
+      '@rekajs/react': link:../packages/react
+      '@rekajs/react-code-editor': link:../packages/react-code-editor
+      '@rekajs/state': link:../packages/state
+      '@rekajs/types': link:../packages/types
       '@stitches/react': 1.2.8_react@17.0.2
       canvas-confetti: 1.6.0
       classnames: 2.3.2

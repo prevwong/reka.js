@@ -27,12 +27,12 @@ Schema.register('ASTNode', ASTNode);
 
 type ProgramParameters = {
   globals: Val[];
-  components: CompositeComponent[];
+  components: RekaComponent[];
 };
 
 export class Program extends ASTNode {
   declare globals: Val[];
-  declare components: CompositeComponent[];
+  declare components: RekaComponent[];
   constructor(value: ProgramParameters) {
     super('Program', value);
   }
@@ -310,23 +310,23 @@ export abstract class Component extends ASTNode {
 
 Schema.register('Component', Component);
 
-type CompositeComponentParameters = {
+type RekaComponentParameters = {
   name: string;
   template: Template;
   state: Val[];
   props: ComponentProp[];
 };
 
-export class CompositeComponent extends Component {
+export class RekaComponent extends Component {
   declare template: Template;
   declare state: Val[];
   declare props: ComponentProp[];
-  constructor(value: CompositeComponentParameters) {
-    super('CompositeComponent', value);
+  constructor(value: RekaComponentParameters) {
+    super('RekaComponent', value);
   }
 }
 
-Schema.register('CompositeComponent', CompositeComponent);
+Schema.register('RekaComponent', RekaComponent);
 
 type ExternalComponentParameters = {
   name: string;
@@ -481,21 +481,21 @@ export abstract class ComponentView extends View {
 
 Schema.register('ComponentView', ComponentView);
 
-type CompositeComponentViewParameters = {
+type RekaComponentViewParameters = {
   key: string;
   template: Template;
   component: Component;
   render: View[];
 };
 
-export class CompositeComponentView extends ComponentView {
+export class RekaComponentView extends ComponentView {
   declare render: View[];
-  constructor(value: CompositeComponentViewParameters) {
-    super('CompositeComponentView', value);
+  constructor(value: RekaComponentViewParameters) {
+    super('RekaComponentView', value);
   }
 }
 
-Schema.register('CompositeComponentView', CompositeComponentView);
+Schema.register('RekaComponentView', RekaComponentView);
 
 type ExternalComponentViewParameters = {
   key: string;
@@ -607,7 +607,7 @@ export type Any =
   | MemberExpression
   | ComponentProp
   | Component
-  | CompositeComponent
+  | RekaComponent
   | ExternalComponent
   | Template
   | TagTemplate
@@ -617,7 +617,7 @@ export type Any =
   | View
   | TagView
   | ComponentView
-  | CompositeComponentView
+  | RekaComponentView
   | ExternalComponentView
   | SlotView
   | SystemView
@@ -645,7 +645,7 @@ export type Visitor = {
   MemberExpression: (node: MemberExpression) => any;
   ComponentProp: (node: ComponentProp) => any;
   Component: (node: Component) => any;
-  CompositeComponent: (node: CompositeComponent) => any;
+  RekaComponent: (node: RekaComponent) => any;
   ExternalComponent: (node: ExternalComponent) => any;
   Template: (node: Template) => any;
   TagTemplate: (node: TagTemplate) => any;
@@ -655,7 +655,7 @@ export type Visitor = {
   View: (node: View) => any;
   TagView: (node: TagView) => any;
   ComponentView: (node: ComponentView) => any;
-  CompositeComponentView: (node: CompositeComponentView) => any;
+  RekaComponentView: (node: RekaComponentView) => any;
   ExternalComponentView: (node: ExternalComponentView) => any;
   SlotView: (node: SlotView) => any;
   SystemView: (node: SystemView) => any;

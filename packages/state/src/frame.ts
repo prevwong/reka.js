@@ -1,8 +1,8 @@
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 import { makeObservable, observable, action } from 'mobx';
 
 import { ViewEvaluator } from './evaluator';
-import { Composite } from './state';
+import { Reka } from './state';
 import { defer } from './utils';
 
 type FrameComponentConfig = {
@@ -18,7 +18,7 @@ export type FrameOpts = {
 
 /**
   Creates a Frame that computes an output View tree for a Component instance.
-  You should not create this instance manually. Instead, use Composite.createFrame(...)
+  You should not create this instance manually. Instead, use Reka.createFrame(...)
  */
 export class Frame {
   /// An optional id to easily identify the Frame instance
@@ -31,7 +31,7 @@ export class Frame {
 
   private evaluator: ViewEvaluator;
 
-  constructor(opts: FrameOpts, readonly composite: Composite) {
+  constructor(opts: FrameOpts, readonly reka: Reka) {
     this.id = opts.id;
     this.component = opts.component;
 
@@ -39,7 +39,7 @@ export class Frame {
       this,
       this.component.name,
       this.component.props || {},
-      composite
+      reka
     );
 
     this.sync =

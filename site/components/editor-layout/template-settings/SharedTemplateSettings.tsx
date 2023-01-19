@@ -1,5 +1,5 @@
-import { Parser } from '@composite/parser';
-import * as t from '@composite/types';
+import { Parser } from '@rekajs/parser';
+import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -46,12 +46,12 @@ const ConditionalTemplateSetting = observer(
                 return;
               }
 
-              editor.composite.change(() => {
+              editor.reka.change(() => {
                 props.template.if = parsedValue;
               });
             }}
             onCancel={() => {
-              editor.composite.change(() => {
+              editor.reka.change(() => {
                 props.template.if = null;
               });
 
@@ -91,7 +91,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
       return;
     }
 
-    editor.composite.change(() => {
+    editor.reka.change(() => {
       props.template.each = t.elementEach({
         iterator: t.identifier({
           name: iterator,
@@ -114,7 +114,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
           onCancel={() => {
             resetValue();
 
-            editor.composite.change(() => {
+            editor.reka.change(() => {
               props.template.each = null;
             });
           }}
@@ -172,7 +172,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
                     return;
                   }
 
-                  editor.composite.change(() => {
+                  editor.reka.change(() => {
                     if (!props.template.each) {
                       return;
                     }

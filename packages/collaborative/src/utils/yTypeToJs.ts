@@ -1,8 +1,8 @@
-import { Composite } from '@composite/state';
-import * as t from '@composite/types';
+import { Reka } from '@rekajs/state';
+import * as t from '@rekajs/types';
 import * as Y from 'yjs';
 
-export const yTypeToJS = (_composite: Composite, types: any, yType: any) => {
+export const yTypeToJS = (_reka: Reka, types: any, yType: any) => {
   const convert = (value: any) => {
     // console.log("converting", value);
     if (value instanceof Y.Map) {

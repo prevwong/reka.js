@@ -1,13 +1,11 @@
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 
 import { ExtensionDefinition } from './extension';
-import { Composite } from './state';
+import { Reka } from './state';
 
 export type StateExternalGlobalAccessor = (opts: Record<string, any>) => any;
 export type StateExternalGlobals = Record<string, StateExternalGlobalAccessor>;
-export type StateExternalGlobalsFactory = (
-  composite: Composite
-) => StateExternalGlobals;
+export type StateExternalGlobalsFactory = (reka: Reka) => StateExternalGlobals;
 
 type StateExternalLocals = Record<string, any>;
 
@@ -33,7 +31,7 @@ export type StateSubscriberOpts = {
 };
 
 export type StateSubscriber<C> = {
-  collect: (composite: Composite) => C;
+  collect: (reka: Reka) => C;
   onCollect: (collected: C, prevCollected: C) => void;
   opts: StateSubscriberOpts;
 };

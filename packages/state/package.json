@@ -1,5 +1,5 @@
 {
-  "name": "@composite/state",
+  "name": "@rekajs/state",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
@@ -12,11 +12,11 @@
   "author": "Prev Wong",
   "license": "ISC",
   "devDependencies": {
-    "@composite/types": "workspace:*",
+    "@rekajs/types": "workspace:*",
     "@types/lodash": "^4.14.185"
   },
   "peerDependencies": {
-    "@composite/types": "*"
+    "@rekajs/types": "*"
   },
   "dependencies": {
     "fast-deep-equal": "^3.1.3",

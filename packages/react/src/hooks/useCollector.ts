@@ -1,20 +1,20 @@
-import { Composite } from '@composite/state';
+import { Reka } from '@rekajs/state';
 import * as React from 'react';
 
-import { CompositeStateContext } from '../CompositeStateContext';
+import { RekaStateContext } from '../RekaStateContext';
 
-type Collector<C extends Record<string, any>> = (composite: Composite) => C;
+type Collector<C extends Record<string, any>> = (reka: Reka) => C;
 
 export const useCollector = <C extends Record<string, any>>(
   collector?: Collector<C>,
   deps?: any[]
 ) => {
-  const composite = React.useContext(CompositeStateContext);
+  const reka = React.useContext(RekaStateContext);
   const collectorRef = React.useRef(collector);
   collectorRef.current = collector;
 
   const [collected, setCollected] = React.useState<C>(
-    collectorRef.current?.(composite) ?? ({} as C)
+    collectorRef.current?.(reka) ?? ({} as C)
   );
 
   React.useEffect(() => {
@@ -24,7 +24,7 @@ export const useCollector = <C extends Record<string, any>>(
       return;
     }
 
-    return composite.subscribe(
+    return reka.subscribe(
       (self) => collector(self),
       (collected) => {
         return setCollected(collected);
@@ -34,10 +34,10 @@ export const useCollector = <C extends Record<string, any>>(
       }
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [composite, ...(deps || [])]);
+  }, [reka, ...(deps || [])]);
 
   return {
-    composite,
+    reka,
     ...collected,
   };
 };

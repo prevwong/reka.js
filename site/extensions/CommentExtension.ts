@@ -1,5 +1,5 @@
-import { createExtension } from '@composite/state';
-import * as t from '@composite/types';
+import { createExtension } from '@rekajs/state';
+import * as t from '@rekajs/types';
 
 import { User } from '@app/editor/Editor';
 
@@ -21,7 +21,7 @@ export const CommentExtension = createExtension<CommentState>({
     templateToComments: {},
   },
   init: (extension) => {
-    extension.composite.listenToChanges((change) => {
+    extension.reka.listenToChanges((change) => {
       if (change.event !== 'dispose') {
         return;
       }
@@ -32,7 +32,7 @@ export const CommentExtension = createExtension<CommentState>({
         return;
       }
 
-      extension.composite.change(() => {
+      extension.reka.change(() => {
         delete extension.state.templateToComments[disposedType.id];
       });
     });

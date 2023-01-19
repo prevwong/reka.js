@@ -1,5 +1,5 @@
-import * as t from '@composite/types';
 import { ChatBubbleIcon, PlusIcon, TrashIcon } from '@radix-ui/react-icons';
+import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -59,13 +59,13 @@ const AddTemplateButton = (props: AddTemplateButtonProps) => {
         onAdd={(template) => {
           setOption(null);
 
-          editor.composite.change(() => {
+          editor.reka.change(() => {
             if (option === 'child') {
               props.target.children.push(template);
               return;
             }
 
-            const parent = editor.composite.getParent(props.target);
+            const parent = editor.reka.getParent(props.target);
 
             if (!parent) {
               return;
@@ -120,7 +120,7 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
 
   const editor = useEditor();
 
-  const template = editor.composite.getNodeFromId(props.templateId, t.Template);
+  const template = editor.reka.getNodeFromId(props.templateId, t.Template);
 
   if (!template) {
     return null;
@@ -204,17 +204,14 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
                 transparent
                 onClick={(e) => {
                   e.stopPropagation();
-                  editor.composite.change(() => {
-                    const parent = editor.composite.getParent(
-                      template,
-                      t.Template
-                    );
+                  editor.reka.change(() => {
+                    const parent = editor.reka.getParent(template, t.Template);
 
                     if (!parent || !(parent instanceof t.Template)) {
                       return;
                     }
 
-                    editor.composite.change(() => {
+                    editor.reka.change(() => {
                       parent.children.splice(
                         parent.children.indexOf(template),
                         1
@@ -247,9 +244,9 @@ type TemplateLayersProps = {
 export const TemplateLayers = (props: TemplateLayersProps) => {
   const editor = useEditor();
 
-  const component = editor.composite.getNodeFromId(
+  const component = editor.reka.getNodeFromId(
     props.componentId,
-    t.CompositeComponent
+    t.RekaComponent
   );
 
   if (!component) {

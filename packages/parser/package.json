@@ -1,5 +1,5 @@
 {
-  "name": "@composite/parser",
+  "name": "@rekajs/parser",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
@@ -12,10 +12,10 @@
   "author": "Prev Wong",
   "license": "ISC",
   "devDependencies": {
-    "@composite/types": "workspace:*"
+    "@rekajs/types": "workspace:*"
   },
   "peerDependencies": {
-    "@composite/types": "workspace:*"
+    "@rekajs/types": "workspace:*"
   },
   "dependencies": {
     "@babel/types": "^7.18.13",

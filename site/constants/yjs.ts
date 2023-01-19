@@ -1,1 +1,1 @@
-export const Y_ROOT_DOCUMENT = 'composite-state-document';
+export const Y_ROOT_DOCUMENT = 'reka-state-document';

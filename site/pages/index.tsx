@@ -1,4 +1,4 @@
-import { Parser } from '@composite/parser';
+import { Parser } from '@rekajs/parser';
 import * as React from 'react';
 
 import { EditorLayout } from '../components/editor-layout';

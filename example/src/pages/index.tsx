@@ -1,18 +1,18 @@
-import { CompositeProvider } from '@composite/react';
-import { Composite } from '@composite/state';
-import * as t from '@composite/types';
+import { RekaProvider } from '@rekajs/react';
+import { Reka } from '@rekajs/state';
+import * as t from '@rekajs/types';
 import * as React from 'react';
 
 import { Editor } from '@/components/Editor';
 import { Preview } from '@/components/Preview';
 
 export default function Home() {
-  const [composite, setComposite] = React.useState<Composite | null>(null);
+  const [reka, setReka] = React.useState<Reka | null>(null);
 
   React.useEffect(() => {
-    const composite = new Composite();
+    const reka = new Reka();
 
-    composite.load(
+    reka.load(
       t.state({
         extensions: {},
         program: t.program({
@@ -23,7 +23,7 @@ export default function Home() {
             }),
           ],
           components: [
-            t.compositeComponent({
+            t.rekaComponent({
               name: 'App',
               props: [],
               state: [],
@@ -59,7 +59,7 @@ export default function Home() {
                 ],
               }),
             }),
-            t.compositeComponent({
+            t.rekaComponent({
               name: 'Button',
               props: [
                 t.componentProp({
@@ -107,15 +107,15 @@ export default function Home() {
       })
     );
 
-    setComposite(composite);
+    setReka(reka);
   }, []);
 
-  if (!composite) {
+  if (!reka) {
     return null;
   }
 
   return (
-    <CompositeProvider state={composite}>
+    <RekaProvider state={reka}>
       <div className="flex h-screen">
         <div className="w-3/6 h-full border-r-2">
           <Editor />
@@ -124,6 +124,6 @@ export default function Home() {
           <Preview />
         </div>
       </div>
-    </CompositeProvider>
+    </RekaProvider>
   );
 }

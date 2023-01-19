@@ -1,5 +1,5 @@
-import { Parser } from '@composite/parser';
-import * as t from '@composite/types';
+import { Parser } from '@rekajs/parser';
+import * as t from '@rekajs/types';
 import { capitalize } from 'lodash';
 import * as React from 'react';
 
@@ -94,7 +94,7 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
                 onChange={(value) => {
                   setTemplateComponentName(value);
                 }}
-                items={editor.composite.components.map((component) => ({
+                items={editor.reka.components.map((component) => ({
                   value: component.name,
                   title: component.name,
                 }))}
@@ -179,7 +179,7 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
             if (templateType === 'component') {
               if (
                 !templateComponentName ||
-                !editor.composite.components.find(
+                !editor.reka.components.find(
                   (component) => component.name === templateComponentName
                 )
               ) {

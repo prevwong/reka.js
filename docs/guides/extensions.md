@@ -2,14 +2,14 @@
 
 Apart from storing the `Program` AST, the `State` could optionally store additional values that your page builder may require.
 
-For example, let's say you want to build a page builder where your end-users are able to leave a comment on a `Template` node of a `CompositeComponent`, similar to what you could do on apps like Figma. 
+For example, let's say you want to build a page builder where your end-users are able to leave a comment on a `Template` node of a `RekaComponent`, similar to what you could do on apps like Figma. 
 
 One way to go about this is store these comments directly as part of the `State`, through an Extension.
 
 ## Creating an Extension
 
 ```tsx
-import { createExtension } from '@composite/state';
+import { createExtension } from '@rekajs/state';
 
 type Comment = {
     userId: string;
@@ -33,14 +33,14 @@ const CommentExtension = createExtension<CommentState>({
 });
 ```
 
-The extension can then be used when creating a new `Composite` instance:
+The extension can then be used when creating a new `Reka` instance:
 
 ```tsx
-import { Composite } from '@composite/state';
+import { Reka } from '@rekajs/state';
 
 const CommentExtension = createExtension<CommentState>({...});
 
-const composite = new Composite({
+const reka = new Reka({
     state: {...},
     extension {
         CommentExtension
@@ -55,14 +55,14 @@ An `Extension` state can be accessed with the `.getExtensionState` method. Mutat
 For example, let's leave a comment on a root `template` of one our components in our state.
 
 ```tsx
-const rootTemplate = composite.state.components[0].template;
+const rootTemplate = reka.state.components[0].template;
 
-composite.change(() => {
-    let templateComments = composite.getExtensionState(CommentExtension).comments[rootTemplate.id];
+reka.change(() => {
+    let templateComments = reka.getExtensionState(CommentExtension).comments[rootTemplate.id];
 
     if ( !templateComments ) {
         templateComments = {};
-        composite.getExtensionState(CommentExtension).comments[rootTemplate.id] = templateComments;
+        reka.getExtensionState(CommentExtension).comments[rootTemplate.id] = templateComments;
     }
 
     templateComments.push(
@@ -81,7 +81,7 @@ But what happens when that `Template` gets removed? We probably should remove an
 We can do this by listening to `State` changes within the extension itself: 
 
 ```tsx
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 
 const CommentExtension = createExtension<CommentState>({
     key: 'comments', 
@@ -90,7 +90,7 @@ const CommentExtension = createExtension<CommentState>({
         comments: []
     },
     init: extension => {
-        extension.composite.listenToChanges((payload) => {
+        extension.reka.listenToChanges((payload) => {
             if ( payload.event !== "dispose" ) {
                 return;
             }
@@ -101,7 +101,7 @@ const CommentExtension = createExtension<CommentState>({
                 const deletedTemplateId = disposedType.id;
 
                 // remove any comments associated with the deleted Template
-                extension.composite.change(() => {
+                extension.reka.change(() => {
                    delete extension.state.templateToComments[deletedTemplateId.id];
                 })
             }

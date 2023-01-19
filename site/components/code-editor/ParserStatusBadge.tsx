@@ -1,5 +1,5 @@
-import { ParserStatus } from '@composite/react-code-editor';
 import { CheckIcon, Cross1Icon, UpdateIcon } from '@radix-ui/react-icons';
+import { ParserStatus } from '@rekajs/react-code-editor';
 import { motion } from 'framer-motion';
 import * as React from 'react';
 

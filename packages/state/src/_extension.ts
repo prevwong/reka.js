@@ -1,4 +1,4 @@
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 
 export type ExtensionState = Record<string, any>;
 

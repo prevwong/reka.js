@@ -1,5 +1,5 @@
-import * as t from '@composite/types';
-import { TypeConstructor } from '@composite/types';
+import * as t from '@rekajs/types';
+import { TypeConstructor } from '@rekajs/types';
 import {
   IArraySplice,
   IObjectDidChange,

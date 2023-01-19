@@ -1,4 +1,4 @@
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 import invariant from 'tiny-invariant';
 
 import { BinaryPrecedence, Precedence } from './precedence';
@@ -336,7 +336,7 @@ class _Stringifier {
           this.stringify(node.init);
         }
       },
-      CompositeComponent: (node) => {
+      RekaComponent: (node) => {
         this.writer.write(`component ${node.name}(`);
 
         const props = node.props.flatMap((prop) => {

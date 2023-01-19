@@ -1,24 +1,24 @@
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 
 import { ExtensionDefinition, ExtensionStateDefinition } from './definition';
 
 import { StateSubscriberOpts } from '../interfaces';
-import { Composite } from '../state';
+import { Reka } from '../state';
 
 export class Extension<S extends ExtensionStateDefinition | any = undefined> {
-  composite: Composite;
+  reka: Reka;
   definition: ExtensionDefinition<S>;
 
-  constructor(composite: Composite, definition: ExtensionDefinition<S>) {
-    this.composite = composite;
+  constructor(reka: Reka, definition: ExtensionDefinition<S>) {
+    this.reka = reka;
     this.definition = definition;
   }
 
   init() {
-    const existingState = this.composite.state.extensions[this.definition.key];
+    const existingState = this.reka.state.extensions[this.definition.key];
 
     if (this.definition.state && !existingState) {
-      this.composite.state.extensions[this.definition.key] = t.extensionState({
+      this.reka.state.extensions[this.definition.key] = t.extensionState({
         value: this.definition.state || null,
       });
     }
@@ -31,7 +31,7 @@ export class Extension<S extends ExtensionStateDefinition | any = undefined> {
   }
 
   get state() {
-    return this.composite.state.extensions[this.definition.key].value as S;
+    return this.reka.state.extensions[this.definition.key].value as S;
   }
 
   subscribe<C extends Record<string, any>>(
@@ -39,10 +39,6 @@ export class Extension<S extends ExtensionStateDefinition | any = undefined> {
     subscriber: (collected: C, prevCollected: C) => void,
     opts?: StateSubscriberOpts
   ) {
-    return this.composite.subscribe(
-      () => collector(this.state),
-      subscriber,
-      opts
-    );
+    return this.reka.subscribe(() => collector(this.state), subscriber, opts);
   }
 }

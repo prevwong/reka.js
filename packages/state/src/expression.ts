@@ -1,17 +1,17 @@
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 import { action } from 'mobx';
 
 import { Environment } from './environment';
-import { Composite } from './state';
+import { Reka } from './state';
 
 export const computeExpression = (
   expr: t.Any,
-  composite: Composite,
+  reka: Reka,
   env: Environment
 ) => {
   if (expr instanceof t.BinaryExpression) {
-    const left = computeExpression(expr.left, composite, env);
-    const right = computeExpression(expr.right, composite, env);
+    const left = computeExpression(expr.left, reka, env);
+    const right = computeExpression(expr.right, reka, env);
 
     switch (expr.operator) {
       case '+': {
@@ -45,21 +45,21 @@ export const computeExpression = (
   }
 
   if (expr instanceof t.ArrayExpression) {
-    return expr.elements.map((el) => computeExpression(el, composite, env));
+    return expr.elements.map((el) => computeExpression(el, reka, env));
   }
 
   if (expr instanceof t.ObjectExpression) {
     return Object.keys(expr.properties).reduce(
       (accum, key) => ({
         ...accum,
-        [key]: computeExpression(expr.properties[key], composite, env),
+        [key]: computeExpression(expr.properties[key], reka, env),
       }),
       {}
     );
   }
 
   if (expr instanceof t.MemberExpression) {
-    const obj = computeExpression(expr.object, composite, env);
+    const obj = computeExpression(expr.object, reka, env);
     return obj[expr.property.name];
   }
 
@@ -68,7 +68,7 @@ export const computeExpression = (
   }
 
   if (expr instanceof t.Val) {
-    env.set(expr.name, computeExpression(expr.init, composite, env));
+    env.set(expr.name, computeExpression(expr.init, reka, env));
     return;
   }
 
@@ -80,16 +80,16 @@ export const computeExpression = (
     const opts = Object.keys(expr.params).reduce(
       (accum, key) => ({
         ...accum,
-        [key]: computeExpression(expr.params[key], composite, env),
+        [key]: computeExpression(expr.params[key], reka, env),
       }),
       {}
     );
 
-    return composite.externals.globals[expr.name](opts);
+    return reka.externals.globals[expr.name](opts);
   }
 
   if (expr instanceof t.Assignment) {
-    const right = computeExpression(expr.right, composite, env);
+    const right = computeExpression(expr.right, reka, env);
 
     switch (expr.operator) {
       case '=': {
@@ -114,7 +114,7 @@ export const computeExpression = (
 
   if (expr instanceof t.Block) {
     expr.statements.forEach((statement) => {
-      computeExpression(statement, composite, env);
+      computeExpression(statement, reka, env);
     });
 
     return;
@@ -130,8 +130,8 @@ export const computeExpression = (
 
       let returnValue;
 
-      composite.change(() => {
-        returnValue = computeExpression(expr.body, composite, blockEnv);
+      reka.change(() => {
+        returnValue = computeExpression(expr.body, reka, blockEnv);
       });
 
       return returnValue;
@@ -143,30 +143,28 @@ export const computeExpression = (
   }
 
   if (expr instanceof t.CallExpression) {
-    composite.change(() => {
+    reka.change(() => {
       const fn = env.getByIdentifier(expr.identifier);
 
-      fn(
-        ...expr.arguments.map((arg) => computeExpression(arg, composite, env))
-      );
+      fn(...expr.arguments.map((arg) => computeExpression(arg, reka, env)));
     });
   }
 
   if (expr instanceof t.IfStatement) {
-    const bool = computeExpression(expr.condition, composite, env);
+    const bool = computeExpression(expr.condition, reka, env);
 
     if (bool) {
-      computeExpression(expr.consequent, composite, env);
+      computeExpression(expr.consequent, reka, env);
     }
   }
 
   if (expr instanceof t.ConditionalExpression) {
-    const bool = computeExpression(expr.condition, composite, env);
+    const bool = computeExpression(expr.condition, reka, env);
 
     if (bool) {
-      return computeExpression(expr.consequent, composite, env);
+      return computeExpression(expr.consequent, reka, env);
     }
 
-    return computeExpression(expr.alternate, composite, env);
+    return computeExpression(expr.alternate, reka, env);
   }
 };

@@ -1,5 +1,5 @@
-import * as t from '@composite/types';
 import { ChatBubbleIcon } from '@radix-ui/react-icons';
+import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import IFrame from 'react-frame-component';

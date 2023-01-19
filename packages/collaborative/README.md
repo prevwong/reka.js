@@ -1,11 +1,11 @@
-# @composite/collaboration
+# @rekajs/collaboration
 
-Enables multiplayer capabilities in Composite via `Yjs` CRDT.
+Enables multiplayer capabilities in Reka via `Yjs` CRDT.
 
 ## Installation 
 
 ```
-npm install @composite/collaboration
+npm install @rekajs/collaboration
 ```
 
 ## Usage

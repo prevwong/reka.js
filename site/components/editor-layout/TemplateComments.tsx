@@ -1,4 +1,4 @@
-import { observer, useCollector } from '@composite/react';
+import { observer, useCollector } from '@rekajs/react';
 import { formatDistance } from 'date-fns';
 import * as React from 'react';
 
@@ -43,9 +43,9 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
   const editor = useEditor();
   const containerRef = React.useRef<HTMLDivElement | null>(null);
 
-  const { comments } = useCollector((composite) => {
+  const { comments } = useCollector((reka) => {
     const comments: Comment[] =
-      composite.getExtension(CommentExtension).state.templateToComments[
+      reka.getExtension(CommentExtension).state.templateToComments[
         props.templateId
       ] ?? [];
 
@@ -175,13 +175,13 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
           placeholder="Add a new comment"
           value=""
           onCommit={(content) => {
-            editor.composite.change(() => {
-              const extension = editor.composite.getExtension(CommentExtension);
+            editor.reka.change(() => {
+              const extension = editor.reka.getExtension(CommentExtension);
 
               console.log('comments push', extension);
 
               const comments =
-                editor.composite.getExtension(CommentExtension).state
+                editor.reka.getExtension(CommentExtension).state
                   .templateToComments;
 
               if (!comments[props.templateId]) {

@@ -7,7 +7,7 @@ import {
 } from './definition';
 import { Extension } from './extension';
 
-import { Composite } from '../state';
+import { Reka } from '../state';
 
 export class ExtensionRegistry {
   private definitionToExtension: WeakMap<ExtensionDefinition, Extension> =
@@ -15,30 +15,22 @@ export class ExtensionRegistry {
   private keyToExtension: Map<string, Extension> = new Map();
   extensions: Extension[] = [];
 
-  constructor(
-    readonly composite: Composite,
-    definitions: ExtensionDefinition[]
-  ) {
+  constructor(readonly reka: Reka, definitions: ExtensionDefinition[]) {
     definitions.forEach((definition) => {
-      const extension = new Extension(this.composite, definition);
+      const extension = new Extension(this.reka, definition);
       this.definitionToExtension.set(definition, extension);
       this.keyToExtension.set(definition.key, extension);
       this.extensions.push(extension);
 
       runInAction(() => {
-        Object.assign(
-          this.composite.externals.states,
-          extension.definition.globals
-        );
-        this.composite.externals.components.push(
-          ...extension.definition.components
-        );
+        Object.assign(this.reka.externals.states, extension.definition.globals);
+        this.reka.externals.components.push(...extension.definition.components);
       });
     });
   }
 
   init() {
-    this.composite.change(() => {
+    this.reka.change(() => {
       this.extensions.map((extension) => extension.init());
     });
   }

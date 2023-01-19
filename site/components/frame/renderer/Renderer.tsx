@@ -1,6 +1,6 @@
-import { observer } from '@composite/react';
-import { toJS } from '@composite/state';
-import * as t from '@composite/types';
+import { observer } from '@rekajs/react';
+import { toJS } from '@rekajs/state';
+import * as t from '@rekajs/types';
 import * as React from 'react';
 import invariant from 'tiny-invariant';
 
@@ -134,7 +134,7 @@ const RenderComponentView = observer((props: RenderComponentViewProps) => {
     <SelectorContext.Provider
       value={{
         onConnect: (dom, view) => {
-          if (props.view instanceof t.CompositeComponentView) {
+          if (props.view instanceof t.RekaComponentView) {
             if (!componentContext) {
               return activeComponentEditor.connectTplDOM(
                 dom,
@@ -170,7 +170,7 @@ const RenderComponentView = observer((props: RenderComponentViewProps) => {
       >
         {props.view instanceof t.ExternalComponentView
           ? props.view.component.render(props.view.props)
-          : props.view instanceof t.CompositeComponentView
+          : props.view instanceof t.RekaComponentView
           ? props.view.render.map((r) => (
               <InternalRenderer view={r} key={r.id} />
             ))
@@ -218,7 +218,7 @@ export const Renderer = observer((props: RendererProps) => {
     ]);
   }, [editor]);
 
-  invariant(view instanceof t.CompositeComponentView, 'Unexpected root view');
+  invariant(view instanceof t.RekaComponentView, 'Unexpected root view');
 
   const activeFrameEditor = useEditorActiveComponent();
 

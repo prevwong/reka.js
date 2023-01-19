@@ -1,4 +1,4 @@
-import { CompositeProvider } from '@composite/react';
+import { RekaProvider } from '@rekajs/react';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
@@ -22,7 +22,7 @@ export const EditorContextProvider = ({
   React.useEffect(() => {
     const editor = new Editor(routerRef.current);
 
-    (window as any).state = editor.composite;
+    (window as any).state = editor.reka;
 
     setEditor(editor);
 
@@ -38,7 +38,7 @@ export const EditorContextProvider = ({
 
   return (
     <EditorContext.Provider value={editor}>
-      <CompositeProvider state={editor.composite}>{children}</CompositeProvider>
+      <RekaProvider state={editor.reka}>{children}</RekaProvider>
     </EditorContext.Provider>
   );
 };

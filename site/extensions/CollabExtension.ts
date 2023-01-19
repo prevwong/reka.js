@@ -1,4 +1,4 @@
-import { createCollabExtension } from '@composite/collaborative';
+import { createCollabExtension } from '@rekajs/collaborative';
 
 import { getCollaborativeYjsType } from '@app/utils';
 

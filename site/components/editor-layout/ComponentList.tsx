@@ -1,8 +1,8 @@
-import * as t from '@composite/types';
 import {
   ComponentBooleanIcon,
   ComponentPlaceholderIcon,
 } from '@radix-ui/react-icons';
+import * as t from '@rekajs/types';
 import { pascalCase } from 'pascal-case';
 import * as React from 'react';
 
@@ -68,7 +68,7 @@ const AddComponentModal = (props: AddComponentModalProps) => {
           onClick={() => {
             const safeComponentName = pascalCase(componentName);
 
-            const existingComponent = editor.composite.components.find(
+            const existingComponent = editor.reka.components.find(
               (component) => component.name === safeComponentName
             );
 
@@ -76,9 +76,9 @@ const AddComponentModal = (props: AddComponentModalProps) => {
               return;
             }
 
-            editor.composite.change(() => {
-              editor.composite.state.program.components.push(
-                t.compositeComponent({
+            editor.reka.change(() => {
+              editor.reka.state.program.components.push(
+                t.rekaComponent({
                   name: safeComponentName,
                   state: [],
                   props: [],
@@ -121,7 +121,7 @@ export const ComponentList = (props: ComponentListProps) => {
 
   const editor = useEditor();
 
-  const components = editor.composite.state.program.components;
+  const components = editor.reka.state.program.components;
 
   return (
     <React.Fragment>
@@ -164,7 +164,7 @@ export const ComponentList = (props: ComponentListProps) => {
                 },
               }}
             >
-              {component instanceof t.CompositeComponent ? (
+              {component instanceof t.RekaComponent ? (
                 <ComponentBooleanIcon />
               ) : (
                 <ComponentPlaceholderIcon />
@@ -174,22 +174,20 @@ export const ComponentList = (props: ComponentListProps) => {
               </Text>
               <Tooltip
                 content={
-                  component instanceof t.CompositeComponent
+                  component instanceof t.RekaComponent
                     ? ''
                     : 'This is an external component, we cannot edit it'
                 }
               >
                 <Box>
                   <Button
-                    disabled={
-                      component instanceof t.CompositeComponent !== true
-                    }
+                    disabled={component instanceof t.RekaComponent !== true}
                     onClick={() => {
                       props.onComponentSelected(component);
                     }}
                     css={{
                       cursor:
-                        component instanceof t.CompositeComponent
+                        component instanceof t.RekaComponent
                           ? 'auto'
                           : 'not-allowed',
                     }}

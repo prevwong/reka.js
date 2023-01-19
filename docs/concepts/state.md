@@ -1,6 +1,6 @@
 # State
 
-At the core of Composite is its `State` which is a data structure used to store :- 
+At the core of Reka is its `State` which is a data structure used to store :- 
 - Components and global variables that the end user has created; this part of the state is called the `Program`
 - Any additional state data stored by an Extension.
 
@@ -8,7 +8,7 @@ For now, we will focus on `Program` - an [Abstract Syntax Tree (AST)](https://en
 
 ## Component
 
-A Component designed by an end-user that's stored in `Program` is called a `CompositeComponent`.
+A Component designed by an end-user that's stored in `Program` is called a `RekaComponent`.
 
 Here's an example of a simple Button component stored in the state:
 
@@ -19,7 +19,7 @@ Here's an example of a simple Button component stored in the state:
         type: "Program",
         components: [
             {
-                type: "CompositeComponent",
+                type: "RekaComponent",
                 name: "Button",
                 props: [
                     {
@@ -115,7 +115,7 @@ Optionally, we can also define global variables that can be referenced throughou
         ],
         components: [
             {
-                type: "CompositeComponent",
+                type: "RekaComponent",
                 name: "Button",
                 props: [...],
                 state: [...]

@@ -13,7 +13,7 @@
 !start-example match
 
 ```tsx
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 
 const expr = t.literal({ value: 0 });
 
@@ -37,7 +37,7 @@ t.match(expr, {
 !start-example flatten
 
 ```tsx
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 
 const expr = t.binaryExpression({
     left: t.literal({ value: 2 }),
@@ -78,7 +78,7 @@ t.flatten(expr);
 !start-example merge
 
 ```tsx
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 
 const a = t.binaryExpression({
     left: t.literal({ value : 2 }),
@@ -103,7 +103,7 @@ console.log(a.left.value === b.left.value); // true
 !start-example unflatten
 
 ```tsx
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 
 const flattened = { types: {...}, root: "..." };
 
@@ -117,7 +117,7 @@ console.log(type instanceof t.Type) // true
 !start-example collect
 
 ```tsx
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 
 const expr = t.binaryExpression({
     left: t.literal({ value: 1 }),

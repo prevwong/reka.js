@@ -1,5 +1,5 @@
-import { Parser } from '@composite/parser';
-import * as t from '@composite/types';
+import { Parser } from '@rekajs/parser';
+import * as t from '@rekajs/types';
 import * as React from 'react';
 
 import { useEditor } from '@app/editor';
@@ -31,7 +31,7 @@ const getInitialComponentProps = (
   component: t.Component,
   existingProps: Record<string, any>
 ) => {
-  if (component instanceof t.CompositeComponent) {
+  if (component instanceof t.RekaComponent) {
     return component.props.reduce((accum, prop) => {
       return {
         ...accum,
@@ -48,7 +48,7 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
   const editor = useEditor();
 
   const existingFrame = props.frameId
-    ? editor.composite
+    ? editor.reka
         .getExtension(UserFrameExtension)
         .state.frames.find((frame) => frame.id === props.frameId)
     : null;
@@ -123,15 +123,13 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
             padding: '$2 $4',
           }}
           onClick={() => {
-            editor.composite.change(() => {
+            editor.reka.change(() => {
               if (!existingFrame) {
-                editor.composite
-                  .getExtension(UserFrameExtension)
-                  .state.frames.push({
-                    id: frameName,
-                    name: props.component.name,
-                    props: componentProps,
-                  });
+                editor.reka.getExtension(UserFrameExtension).state.frames.push({
+                  id: frameName,
+                  name: props.component.name,
+                  props: componentProps,
+                });
 
                 return;
               }

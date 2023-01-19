@@ -1,4 +1,4 @@
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 import * as Y from 'yjs';
 
 import { isLiteralObject, isPrimitiveValue } from './types';

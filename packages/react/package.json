@@ -1,5 +1,5 @@
 {
-  "name": "@composite/react",
+  "name": "@rekajs/react",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
@@ -12,8 +12,8 @@
   "author": "Prev Wong",
   "license": "ISC",
   "peerDependencies": {
-    "@composite/state": "workspace:*",
-    "@composite/types": "workspace:*",
+    "@rekajs/state": "workspace:*",
+    "@rekajs/types": "workspace:*",
     "react": "^16.8.0 || ^17 || ^18"
   },
   "dependencies": {
@@ -21,8 +21,8 @@
     "mobx-react-lite": "^3.3.0"
   },
   "devDependencies": {
-    "@composite/state": "workspace:*",
-    "@composite/types": "workspace:*",
+    "@rekajs/state": "workspace:*",
+    "@rekajs/types": "workspace:*",
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",
     "react": "^17.0.2"

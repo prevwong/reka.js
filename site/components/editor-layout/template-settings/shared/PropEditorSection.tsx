@@ -1,5 +1,5 @@
-import { Parser } from '@composite/parser';
-import * as t from '@composite/types';
+import { Parser } from '@rekajs/parser';
+import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -39,7 +39,7 @@ export const PropEditorSection = observer(
             onChange={(id, value) => {
               const parsedValue = Parser.parseExpression(value, t.Expression);
               //   console.log("parsedValue", parsedValue);
-              editor.composite.change(() => {
+              editor.reka.change(() => {
                 if (!template.classList) {
                   template.classList = t.objectExpression({
                     properties: {},
@@ -63,12 +63,12 @@ export const PropEditorSection = observer(
             onChange={(id, value) => {
               const parsedValue = Parser.parseExpression(value, t.Expression);
 
-              editor.composite.change(() => {
+              editor.reka.change(() => {
                 template.props[id] = parsedValue;
               });
             }}
             onRemove={(id) => {
-              editor.composite.change(() => {
+              editor.reka.change(() => {
                 delete template.props[id];
               });
             }}

@@ -1,4 +1,4 @@
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 import cx from 'classnames';
 import { IObservable, IObservableArray, isObservable, observe } from 'mobx';
 import { observer } from 'mobx-react-lite';

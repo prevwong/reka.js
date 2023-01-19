@@ -139,7 +139,7 @@ export const ComponentEditorView = observer(() => {
   const frameContainerDOMRef = React.useRef<HTMLDivElement | null>(null);
 
   const frames = componentEditor
-    ? editor.composite
+    ? editor.reka
         .getExtension(UserFrameExtension)
         .state.frames.filter(
           (frame) => frame.name === componentEditor.component.name
@@ -256,7 +256,7 @@ export const ComponentEditorView = observer(() => {
               size={5}
               value={componentEditor.activeFrame?.user.width ?? 'auto'}
               onCommit={(value) => {
-                editor.composite.change(() => {
+                editor.reka.change(() => {
                   const frame = frames.find(
                     (frame) => componentEditor.activeFrame?.user.id === frame.id
                   );
@@ -277,7 +277,7 @@ export const ComponentEditorView = observer(() => {
               size={5}
               value={componentEditor.activeFrame?.user.height ?? 'auto'}
               onCommit={(value) => {
-                editor.composite.change(() => {
+                editor.reka.change(() => {
                   const frame = frames.find(
                     (frame) => componentEditor.activeFrame?.user.id === frame.id
                   );
@@ -422,7 +422,7 @@ export const ComponentEditorView = observer(() => {
               transparent
               variant="danger"
               onClick={() => {
-                editor.composite.change(() => {
+                editor.reka.change(() => {
                   const userFrame = componentEditor.activeFrame?.user;
 
                   if (!userFrame) {
@@ -430,8 +430,7 @@ export const ComponentEditorView = observer(() => {
                   }
 
                   const userFrames =
-                    editor.composite.getExtension(UserFrameExtension).state
-                      .frames;
+                    editor.reka.getExtension(UserFrameExtension).state.frames;
 
                   userFrames.splice(userFrames.indexOf(userFrame), 1);
                 });

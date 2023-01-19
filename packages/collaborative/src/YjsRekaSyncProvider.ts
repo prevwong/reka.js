@@ -1,20 +1,20 @@
-import { Composite } from '@composite/state';
-import * as t from '@composite/types';
+import { Reka } from '@rekajs/state';
+import * as t from '@rekajs/types';
 import * as Y from 'yjs';
 
 import { getTypePathFromMobxChangePath, jsToYType, yTypeToJS } from './utils';
 
-export class YjsCompositeSyncProvider {
+export class YjsRekaSyncProvider {
   private mobxChangesToSync: any[] = [];
   private isBatchingMobxChanges = false;
   private isSynchingToMobx = false;
 
-  private declare compositeChangeUnsubscriber: () => void;
+  private declare rekaChangeUnsubscriber: () => void;
   private yDocChangeListener: (events: any, tr: any) => void;
 
   private yDoc: Y.Doc;
 
-  constructor(readonly composite: Composite, readonly type: Y.Map<any>) {
+  constructor(readonly reka: Reka, readonly type: Y.Map<any>) {
     if (!type.doc) {
       throw new Error();
     }
@@ -25,7 +25,7 @@ export class YjsCompositeSyncProvider {
       (window as any).crdt = this;
     }
     this.yDocChangeListener = (events, tr) => {
-      if (!this.composite) {
+      if (!this.reka) {
         return;
       }
 
@@ -41,19 +41,19 @@ export class YjsCompositeSyncProvider {
 
   dispose() {
     this.type.unobserveDeep(this.yDocChangeListener);
-    this.compositeChangeUnsubscriber();
+    this.rekaChangeUnsubscriber();
   }
 
   private withMobxSync(cb: () => void) {
     const prev = this.isSynchingToMobx;
     this.isSynchingToMobx = true;
-    this.composite.change(() => {
+    this.reka.change(() => {
       cb();
     });
     this.isSynchingToMobx = prev;
   }
 
-  get yCompositeDocument() {
+  get yRekaDocument() {
     return this.type.get('document');
   }
 
@@ -75,13 +75,13 @@ export class YjsCompositeSyncProvider {
           return traverse(value[curr], paths);
         };
 
-        return traverse(this.composite.getNodeFromId(paths[1]), paths.slice(2));
+        return traverse(this.reka.getNodeFromId(paths[1]), paths.slice(2));
       }
 
       return null;
     };
 
-    const yDocRoot = this.yCompositeDocument as Y.Map<any>;
+    const yDocRoot = this.yRekaDocument as Y.Map<any>;
 
     if (event.path.length === 0) {
       return;
@@ -101,7 +101,7 @@ export class YjsCompositeSyncProvider {
 
       event.keysChanged.forEach((key) => {
         obj[key] = yTypeToJS(
-          this.composite,
+          this.reka,
           yDocRoot.get('types'),
           (event.target as Y.Map<any>).get(key)
         );
@@ -123,11 +123,7 @@ export class YjsCompositeSyncProvider {
 
         if (delta.insert) {
           const m = (delta.insert as any[]).map((item) => {
-            const converted = yTypeToJS(
-              this.composite,
-              yDocRoot.get('types'),
-              item
-            );
+            const converted = yTypeToJS(this.reka, yDocRoot.get('types'), item);
 
             return converted;
           });
@@ -147,7 +143,7 @@ export class YjsCompositeSyncProvider {
         let removed: any[] = [];
         let insert: Record<string, any> = {};
 
-        const yDocRoot = this.yCompositeDocument;
+        const yDocRoot = this.yRekaDocument;
 
         changes.forEach((change) => {
           if (change.type === 'replace') {
@@ -185,7 +181,7 @@ export class YjsCompositeSyncProvider {
              * There's an edge case when we cannot resolve the root type from the Yjs Document
              *
              * This is when we just added a new Node and we instantly mutate a property in that node. For example:
-             * composite.change(() => {
+             * reka.change(() => {
              *    // New node created here
              *    template.classList = t.objectExpression({...})
              *
@@ -284,32 +280,30 @@ export class YjsCompositeSyncProvider {
   }
 
   init() {
-    // Listen to Composite state changes
-    this.compositeChangeUnsubscriber = this.composite.listenToChanges(
-      (change) => {
-        if (change.event !== 'change') {
-          return;
-        }
-
-        if (this.isSynchingToMobx) {
-          return;
-        }
-
-        this.mobxChangesToSync.push(change);
-
-        if (this.isBatchingMobxChanges) {
-          return;
-        }
-
-        this.isBatchingMobxChanges = true;
-
-        Promise.resolve().then(() => {
-          this.syncMobxChangesToYDoc(this.mobxChangesToSync);
-          this.mobxChangesToSync = [];
-          this.isBatchingMobxChanges = false;
-        });
+    // Listen to Reka state changes
+    this.rekaChangeUnsubscriber = this.reka.listenToChanges((change) => {
+      if (change.event !== 'change') {
+        return;
       }
-    );
+
+      if (this.isSynchingToMobx) {
+        return;
+      }
+
+      this.mobxChangesToSync.push(change);
+
+      if (this.isBatchingMobxChanges) {
+        return;
+      }
+
+      this.isBatchingMobxChanges = true;
+
+      Promise.resolve().then(() => {
+        this.syncMobxChangesToYDoc(this.mobxChangesToSync);
+        this.mobxChangesToSync = [];
+        this.isBatchingMobxChanges = false;
+      });
+    });
 
     // Listen to Y.js doc changes
     this.type.observeDeep(this.yDocChangeListener);

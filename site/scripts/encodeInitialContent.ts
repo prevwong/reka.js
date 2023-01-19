@@ -1,6 +1,6 @@
-import { jsToYType } from '@composite/collaborative';
-import { Composite } from '@composite/state';
-import * as t from '@composite/types';
+import { jsToYType } from '@rekajs/collaborative';
+import { Reka } from '@rekajs/state';
+import * as t from '@rekajs/types';
 
 import * as Y from 'yjs';
 import fs from 'fs';
@@ -13,18 +13,18 @@ const doc = new Y.Doc();
 
 const type = doc.getMap(Y_ROOT_DOCUMENT);
 
-const composite = new Composite({
+const reka = new Reka({
   ...createSharedStateGlobals(),
 });
 
-composite.load(
+reka.load(
   t.state({
     program: DUMMY_PROGRAM,
     extensions: {},
   })
 );
 
-const flattenState = t.flatten(composite.state);
+const flattenState = t.flatten(reka.state);
 
 const { converted } = jsToYType(flattenState);
 

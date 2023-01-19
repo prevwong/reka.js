@@ -1,10 +1,10 @@
 import { EditorState, basicSetup } from '@codemirror/basic-setup';
 import { indentWithTab } from '@codemirror/commands';
 import { EditorView, keymap } from '@codemirror/view';
-import { composite as compositeCodemirrorExtension } from '@composite/codemirror';
-import { Parser } from '@composite/parser';
-import { useCollector } from '@composite/react';
-import * as t from '@composite/types';
+import { reka as rekaCodemirrorExtension } from '@rekajs/codemirror';
+import { Parser } from '@rekajs/parser';
+import { useCollector } from '@rekajs/react';
+import * as t from '@rekajs/types';
 import debounce from 'lodash/debounce';
 import * as React from 'react';
 
@@ -89,13 +89,13 @@ type CodeEditorProps = React.DetailedHTMLProps<
 };
 
 export const CodeEditor = (props: CodeEditorProps) => {
-  const { composite } = useCollector();
+  const { reka } = useCollector();
 
   const domRef = React.useRef<HTMLDivElement | null>(null);
 
-  const currentStateRef = React.useRef(t.Schema.fromJSON(composite.program));
+  const currentStateRef = React.useRef(t.Schema.fromJSON(reka.program));
   const currentCodeStringRef = React.useRef<string>(
-    Parser.stringify(composite.program)
+    Parser.stringify(reka.program)
   );
 
   const isSynchingFromCodeMirror = React.useRef(false);
@@ -112,9 +112,9 @@ export const CodeEditor = (props: CodeEditorProps) => {
       isSynchingFromCodeMirror.current = true;
       try {
         const newAST = Parser.parseProgram(code);
-        composite.change(() => {
+        reka.change(() => {
           diffAST(currentStateRef.current, newAST);
-          diffAST(composite.program, currentStateRef.current);
+          diffAST(reka.program, currentStateRef.current);
         });
 
         props.onStatusChange?.({
@@ -129,7 +129,7 @@ export const CodeEditor = (props: CodeEditorProps) => {
       isSynchingFromCodeMirror.current = false;
       isTypingRef.current = false;
     }, 1000),
-    [composite]
+    [reka]
   );
 
   const [codemirrorView, setCodemirrorView] = React.useState<EditorView | null>(
@@ -150,7 +150,7 @@ export const CodeEditor = (props: CodeEditorProps) => {
           extensions: [
             basicSetup,
             keymap.of([indentWithTab]),
-            compositeCodemirrorExtension(),
+            rekaCodemirrorExtension(),
             EditorView.theme({
               '&': {
                 height: '100%',
@@ -202,14 +202,14 @@ export const CodeEditor = (props: CodeEditorProps) => {
 
       Promise.resolve().then(() => {
         const oldCode = currentCodeStringRef.current;
-        const newCode = Parser.stringify(composite.program);
+        const newCode = Parser.stringify(reka.program);
 
         if (newCode === oldCode) {
           isSynchingFromExternal.current = false;
           return;
         }
 
-        currentStateRef.current = t.Schema.fromJSON(composite.program);
+        currentStateRef.current = t.Schema.fromJSON(reka.program);
 
         const transaction = codemirrorView.state.update({
           changes: {
@@ -224,12 +224,12 @@ export const CodeEditor = (props: CodeEditorProps) => {
         isSynchingFromExternal.current = false;
       });
     }
-  }, [composite, codemirrorView]);
+  }, [reka, codemirrorView]);
 
   // If the AST changes (ie: from undo/redo or from multiplayer),
   // Then, sync those changes to the CodeMirror editor
   React.useEffect(() => {
-    const unsubscribe = composite.listenToChanges((payload) => {
+    const unsubscribe = reka.listenToChanges((payload) => {
       if (payload.event !== 'change') {
         return;
       }
@@ -240,9 +240,9 @@ export const CodeEditor = (props: CodeEditorProps) => {
     return () => {
       unsubscribe();
     };
-  }, [composite, codemirrorView, onExternalChange]);
+  }, [reka, codemirrorView, onExternalChange]);
 
   return <div {...props} ref={domRef} />;
 };
 
-CodeEditor.toString = () => '.composite-react-code-editor';
+CodeEditor.toString = () => '.reka-react-code-editor';

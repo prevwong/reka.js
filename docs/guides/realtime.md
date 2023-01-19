@@ -1,15 +1,15 @@
 # Realtime Collaboration
 
-Composite provides an additional `@composite/collaboration` package which enables multiplayer capabilities for your page editor.
+Reka provides an additional `@rekajs/collaboration` package which enables multiplayer capabilities for your page editor.
 
 > This package is powered by `Yjs` - a library for building [CRDTs](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type), it's recommended that you take a look at the official documentation before proceeding.  
 
 
 ## Conflict-free Replicated Data Types (CRDT) 
 
-CRDT data structures are one of the ways to achieve realtime collaboration. In Composite, the `State` data structure by itself is **not** a CRDT and has no realtime collaborative capabilities; this is by design so we can keep the core of Composite more portable and we don't assume that everyone needs multiplayer features in their page builders, which would otherwise be additional bloat if multiplayer is not a requirement.
+CRDT data structures are one of the ways to achieve realtime collaboration. In Reka, the `State` data structure by itself is **not** a CRDT and has no realtime collaborative capabilities; this is by design so we can keep the core of Reka more portable and we don't assume that everyone needs multiplayer features in their page builders, which would otherwise be additional bloat if multiplayer is not a requirement.
 
-The `@composite/collaboration` package provides a Composite `Extension` where the core `State` data structure is mirrored by a Yjs CRDT. 
+The `@rekajs/collaboration` package provides a Reka `Extension` where the core `State` data structure is mirrored by a Yjs CRDT. 
 
 Whenever there's a change that happens in the core `State` structure:
 - The changes are propagated to the mirrored CRDT, and all clients across the network will receive these changes in their own respective CRDTs without merge conflicts.
@@ -21,14 +21,14 @@ Whenever there's a change that happens in the core `State` structure:
 It's also important to note that the way `State` is represented in the CRDT is different. `State` itself is a nested tree while it is represented as a flat tree in its Yjs CRDT form:
 
 ```tsx
-// State representation in Composite
+// State representation in Reka
 {
     type: "State',
     program: {
         type: "Program",
         components: [
             {
-                type: "CompositeComponent",
+                type: "RekaComponent",
                 state: [],
                 props: [],
                 template: null,
@@ -49,7 +49,7 @@ It's also important to note that the way `State` is represented in the CRDT is d
             components: ["component-id"]
         },
         "component-id": {
-            type: "CompositeComponent",
+            type: "RekaComponent",
             state: [],
             props: [],
             template: null,
@@ -62,7 +62,7 @@ It's also important to note that the way `State` is represented in the CRDT is d
 ## Installation
 
 ```
-npm install @composite/collaboration yjs y-webrtc
+npm install @rekajs/collaboration yjs y-webrtc
 ```
 
 > We're installing `y-webrtc` to use the WebRTC connector for this example, but you could also use other connectors such as `y-websocket`
@@ -73,17 +73,17 @@ npm install @composite/collaboration yjs y-webrtc
 To setup, you need to first create the following via `yjs`:
 - A new Yjs `Doc` (`new Y.Doc()`)
 - A root `Y.Map` type (`.getMap(...)`)
-  > Note: that `@composite/collaboration` stores the actual flatten state in the `document` key of the root `Y.Map` that you provide the extension with
-- Create a new Composite instance and retrieve intiial `State` from the Yjs document
+  > Note: that `@rekajs/collaboration` stores the actual flatten state in the `document` key of the root `Y.Map` that you provide the extension with
+- Create a new Reka instance and retrieve intiial `State` from the Yjs document
 - Bind a Yjs connector (ie: `y-webrtc`)
 
 
 ```tsx
 // app.tsx
 
-import { Composite } from '@composite/state';
-import * as t from '@composite/types';
-import { createCollabExtension } from '@composite/collaboration';
+import { Reka } from '@rekajs/state';
+import * as t from '@rekajs/types';
+import { createCollabExtension } from '@rekajs/collaboration';
 
 import * as Y from 'yjs';
 import { WebrtcProvider } from 'y-webrtc';
@@ -97,12 +97,12 @@ const type = doc.getMap('my-collaborative-editor');
 
 const CollabExtension = createCollabExtension(type);
 
-// 3. Create a new Composite instance with an initial State
-const composite = new Composite({
+// 3. Create a new Reka instance with an initial State
+const reka = new Reka({
     extensions: [CollabExtension]
 }); 
 // The initial State Document, this should come from the Yjs type
-composite.load(t.unflatten(type.getMap('document')))
+reka.load(t.unflatten(type.getMap('document')))
 
 // 4. Bind connector
 const provider = new WebrtcProvider(
@@ -113,20 +113,20 @@ const provider = new WebrtcProvider(
 
 ### WebRTC extra: How to set initial State in Yjs locally
 
-In the above example with WebRTC, we're loading the initial `State` in Composite by getting the state that exists in the Yjs document. 
+In the above example with WebRTC, we're loading the initial `State` in Reka by getting the state that exists in the Yjs document. 
 
 However, as you may expect - the document in Yjs is empty initially. So, if you would like to setup an initial `State` with some `ComponentComponent`s locally, there're a few extra steps that you will have to do:
 
 #### 1) Create a script that generates a Yjs update 
 
-First, we need to create a script that will setup `Composite` and load an initial `State` as usual. We will then manually apply the initial `State` to our Yjs document:
+First, we need to create a script that will setup `Reka` and load an initial `State` as usual. We will then manually apply the initial `State` to our Yjs document:
 
 ```tsx
 // scripts/generate-encoded-initial-update.ts
 
-import { jsToYType } from '@composite/collaborative';
-import { Composite } from '@composite/state';
-import * as t from '@composite/types';
+import { jsToYType } from '@rekajs/collaborative';
+import { Reka } from '@rekajs/state';
+import * as t from '@rekajs/types';
 
 import * as Y from 'yjs';
 import fs from 'fs';
@@ -135,19 +135,19 @@ const doc = new Y.Doc();
 
 const type = doc.getMap('my-collaborative-editor');
 
-const composite = new Composite();
+const reka = new Reka();
 
-composite.load(
+reka.load(
   t.state({
     program: t.program({
         components: [
-            t.compositeComponent(...)
+            t.rekaComponent(...)
         ]
     }),
   })
 );
 
-const flattenState = t.flattenType(composite.state);
+const flattenState = t.flattenType(reka.state);
 
 const { converted } = jsToYType(flattenState);
 
@@ -165,13 +165,13 @@ fs.writeFileSync(
 
 #### 2) Apply the encoded update
 
-Then, in your actual application where you're setting up `Composite` with the `CollabExtension` - just ensure that you apply the encoded update:
+Then, in your actual application where you're setting up `Reka` with the `CollabExtension` - just ensure that you apply the encoded update:
 
 ```tsx
 // app.tsx
-import { Composite } from '@composite/state';
-import * as t from '@composite/types';
-import { createCollabExtension } from '@composite/collaboration';
+import { Reka } from '@rekajs/state';
+import * as t from '@rekajs/types';
+import { createCollabExtension } from '@rekajs/collaboration';
 
 import * as Y from 'yjs';
 import { WebrtcProvider } from 'y-webrtc';
@@ -190,12 +190,12 @@ Y.applyUpdate(doc, Buffer.from(ENCODED_INITIAL_UPDATE, 'base64'));
 
 const CollabExtension = createCollabExtension(type);
 
-// 3. Create a new Composite instance with an initial State
-const composite = new Composite({
+// 3. Create a new Reka instance with an initial State
+const reka = new Reka({
     extensions: [CollabExtension]
 }); 
 // The initial State Document, this should come from the Yjs type
-composite.load(t.unflatten(type.getMap('document')))
+reka.load(t.unflatten(type.getMap('document')))
 
 // 4. Bind connector
 const provider = new WebrtcProvider(

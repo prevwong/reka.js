@@ -1,26 +1,23 @@
-import { createExtension } from '@composite/state';
+import { createExtension } from '@rekajs/state';
 import invariant from 'tiny-invariant';
 import * as Y from 'yjs';
 
-import { YjsCompositeSyncProvider } from './YjsCompositeSyncProvider';
+import { YjsRekaSyncProvider } from './YjsRekaSyncProvider';
 
-const CompositeToYSyncProviders = new WeakMap();
+const RekaToYSyncProviders = new WeakMap();
 
 export const createCollabExtension = (type: Y.Map<any>) =>
   createExtension({
     key: 'collaboration',
     init: (ext) => {
-      const syncProvider = new YjsCompositeSyncProvider(ext.composite, type);
-      CompositeToYSyncProviders.set(ext.composite, syncProvider);
+      const syncProvider = new YjsRekaSyncProvider(ext.reka, type);
+      RekaToYSyncProviders.set(ext.reka, syncProvider);
       syncProvider.init();
     },
     dispose: (ext) => {
-      const syncProvider = CompositeToYSyncProviders.get(ext.composite);
+      const syncProvider = RekaToYSyncProviders.get(ext.reka);
 
-      invariant(
-        syncProvider,
-        'Cannot resolve Composite to YjsCompositeSyncProvider'
-      );
+      invariant(syncProvider, 'Cannot resolve Reka to YjsRekaSyncProvider');
 
       syncProvider.dispose();
     },

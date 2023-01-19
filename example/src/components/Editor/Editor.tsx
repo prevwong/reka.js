@@ -1,4 +1,4 @@
-import { CodeEditor } from '@composite/react-code-editor';
+import { CodeEditor } from '@rekajs/react-code-editor';
 import * as React from 'react';
 
 export const Editor = () => {

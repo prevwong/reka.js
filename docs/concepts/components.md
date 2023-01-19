@@ -1,16 +1,16 @@
 # Components
 
 There're two types of Components :-
-- `CompositeComponent` - components designed by end-users, these components are stored in `State`
+- `RekaComponent` - components designed by end-users, these components are stored in `State`
 - `ExternalComponent` - non-editable components exposed by page-builder developers 
 
-## CompositeComponent
+## RekaComponent
 
-A `CompositeComponent` can define the `props` that it exposes, the `state` value it holds and its render `template`:
+A `RekaComponent` can define the `props` that it exposes, the `state` value it holds and its render `template`:
 
 ```tsx
 {
-    type: "CompositeComponent",
+    type: "RekaComponent",
     name: "Button",
     props: [
         {
@@ -46,7 +46,7 @@ A `CompositeComponent` can define the `props` that it exposes, the `state` value
 
 ### Template
 
-The `template` of a `CompositeComponent` supports all functionalities that you would typically have as a developer in an UI framework (ie: React).
+The `template` of a `RekaComponent` supports all functionalities that you would typically have as a developer in an UI framework (ie: React).
 
 For example, the props of a template can support expressions:
 
@@ -122,7 +122,7 @@ Apart from specifying HTML tags in `template`, other Components can also be refe
     children: [
         {
             type: "ComponentTemplate",
-            component: "Icon", // Where Icon is another CompositeComponent or an ExternalComponent
+            component: "Icon", // Where Icon is another RekaComponent or an ExternalComponent
             props: {},
             children: []
         }
@@ -146,11 +146,11 @@ const Icon = ({ name, size }) => {
 }
 ```
 
-Now, we can expose `Icon` as an `ExternalComponent` so that it can be referenced by a template of a `CompositeComponent`: 
+Now, we can expose `Icon` as an `ExternalComponent` so that it can be referenced by a template of a `RekaComponent`: 
 
 ```tsx
 {
-    type: "CompositeComponent",
+    type: "RekaComponent",
     ...
     template: {
         type: "TagTemplate",
@@ -161,7 +161,7 @@ Now, we can expose `Icon` as an `ExternalComponent` so that it can be referenced
         children: [
             {
                 type: "ComponentTemplate",
-                component: "Icon", // Where Icon is another CompositeComponent or an ExternalComponent
+                component: "Icon", // Where Icon is another RekaComponent or an ExternalComponent
                 props: {
                     size: "large",
                 },

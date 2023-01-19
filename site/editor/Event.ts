@@ -1,5 +1,5 @@
-import { Frame } from '@composite/state';
-import * as t from '@composite/types';
+import { Frame } from '@rekajs/state';
+import * as t from '@rekajs/types';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 type EventState = {

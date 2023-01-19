@@ -1,4 +1,4 @@
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 import omit from 'lodash/omit';
 import {
   computed,
@@ -13,7 +13,7 @@ import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { Frame } from './frame';
 import { Observer } from './observer';
-import { Composite } from './state';
+import { Reka } from './state';
 import { createKey, isPrimitive, valueToHash } from './utils';
 
 export type TemplateEvaluateContext = {
@@ -63,7 +63,7 @@ export class ViewEvaluator {
     readonly frame: Frame,
     readonly componentName: string,
     readonly componentProps: Record<string, any>,
-    readonly composite: Composite
+    readonly reka: Reka
   ) {
     this._view = observable.box();
 
@@ -440,7 +440,7 @@ export class ViewEvaluator {
     let componentEvaluator = this.tplKeyToComponentEvaluator.get(key);
 
     if (!componentEvaluator) {
-      const componentEnv = this.composite.env.inherit();
+      const componentEnv = this.reka.env.inherit();
 
       componentEvaluator = new ComponentViewEvaluator(
         this,
@@ -456,14 +456,14 @@ export class ViewEvaluator {
   }
 
   computeExpr(expr: t.Any, env: Environment) {
-    return computeExpression(expr, this.composite, env);
+    return computeExpression(expr, this.reka, env);
   }
 
   computeTree() {
     const _compute = () => {
       const view = this.computeTemplate(this.rootTemplate, {
         path: ['frame'],
-        env: this.composite.env,
+        env: this.reka.env,
         classList: [],
       })[0];
 

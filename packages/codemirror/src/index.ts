@@ -8,7 +8,7 @@ import {
 
 import { parser } from './parser';
 
-export const compositeLanguage = LRLanguage.define({
+export const rekaLanguage = LRLanguage.define({
   parser: parser.configure({
     props: [
       indentNodeProp.add({}),
@@ -42,6 +42,6 @@ export const compositeLanguage = LRLanguage.define({
   },
 });
 
-export function composite() {
-  return new LanguageSupport(compositeLanguage, []);
+export function reka() {
+  return new LanguageSupport(rekaLanguage, []);
 }

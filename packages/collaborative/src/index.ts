@@ -1,3 +1,3 @@
 export * from './utils';
 export * from './extension';
-export * from './YjsCompositeSyncProvider';
+export * from './YjsRekaSyncProvider';

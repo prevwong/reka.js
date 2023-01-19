@@ -1,5 +1,5 @@
-import { Frame, Composite } from '@composite/state';
-import * as t from '@composite/types';
+import { Frame, Reka } from '@rekajs/state';
+import * as t from '@rekajs/types';
 import confetti from 'canvas-confetti';
 import {
   action,
@@ -22,7 +22,7 @@ import { UserIcon } from '@app/external/UserIcon';
 import {
   generateRandomName,
   getCollaborativeYjsDocument,
-  getCollaborativeYjsCompositeState,
+  getCollaborativeYjsRekaState,
 } from '@app/utils';
 
 import { ComponentEditor } from './ComponentEditor';
@@ -55,7 +55,7 @@ export class Editor {
 
   declare provider: WebrtcProvider;
 
-  composite: Composite;
+  reka: Reka;
 
   private declare iframeScrollTopListener;
 
@@ -104,7 +104,7 @@ export class Editor {
       setReady: action,
     });
 
-    this.composite = new Composite({
+    this.reka = new Reka({
       ...createSharedStateGlobals({
         externals: {
           components: [
@@ -145,13 +145,13 @@ export class Editor {
       }),
     });
 
-    this.composite.load(
-      t.unflatten(getCollaborativeYjsCompositeState().toJSON() as any),
+    this.reka.load(
+      t.unflatten(getCollaborativeYjsRekaState().toJSON() as any),
       false
     );
 
-    if (this.composite.program.components.length > 0) {
-      this.setActiveComponentEditor(this.composite.program.components[0]);
+    if (this.reka.program.components.length > 0) {
+      this.setActiveComponentEditor(this.reka.program.components[0]);
     }
 
     if (typeof window === 'undefined') {
@@ -159,7 +159,7 @@ export class Editor {
     }
 
     const provider = new WebrtcProvider(
-      'composite-yjs-test',
+      'reka-yjs-test',
       getCollaborativeYjsDocument()
     );
 
@@ -179,7 +179,7 @@ export class Editor {
       return;
     }
 
-    this.composite.dispose();
+    this.reka.dispose();
     this.provider.disconnect();
     this.provider.destroy();
   }
@@ -205,7 +205,7 @@ export class Editor {
 
       const scrollY = this.iframe?.contentDocument?.documentElement.scrollTop;
 
-      this.composite.updateExternalState('scrollTop', scrollY);
+      this.reka.updateExternalState('scrollTop', scrollY);
     };
 
     this.iframe.contentWindow?.addEventListener(

@@ -1,5 +1,5 @@
-import { Parser } from '@composite/parser';
-import * as t from '@composite/types';
+import { Parser } from '@rekajs/parser';
+import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -40,7 +40,7 @@ export const ComponentSettings = observer(() => {
 
   const component = editor.activeComponentEditor.component;
 
-  if (!(component instanceof t.CompositeComponent)) {
+  if (!(component instanceof t.RekaComponent)) {
     return null;
   }
 
@@ -79,7 +79,7 @@ export const ComponentSettings = observer(() => {
                 return;
               }
 
-              editor.composite.change(() => {
+              editor.reka.change(() => {
                 existingPropWithSameName.init = parsedValue;
               });
 
@@ -96,7 +96,7 @@ export const ComponentSettings = observer(() => {
               return;
             }
 
-            editor.composite.change(() => {
+            editor.reka.change(() => {
               component.props.push(
                 t.componentProp({
                   name: id,
@@ -136,7 +136,7 @@ export const ComponentSettings = observer(() => {
                 return;
               }
 
-              editor.composite.change(() => {
+              editor.reka.change(() => {
                 existingStateWithSameName.init = parsedValue;
               });
 
@@ -153,7 +153,7 @@ export const ComponentSettings = observer(() => {
               return;
             }
 
-            editor.composite.change(() => {
+            editor.reka.change(() => {
               component.state.push(
                 t.val({
                   name: id,

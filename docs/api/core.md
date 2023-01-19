@@ -1,28 +1,28 @@
-# @composite/core
+# @rekajs/core
 
-The core package of Composite. 
+The core package of Reka. 
 
 ## API
 
-!start-typedoc state/index.ts Composite
+!start-typedoc state/index.ts Reka
 
 !start-example
 
 ```tsx
-import { Composite } from '@composite/core';
-import * as t from '@composite/types';
+import { Reka } from '@rekajs/core';
+import * as t from '@rekajs/types';
 
 import confetti from 'canvas-confetti'
 import { Header } from './path-to-header-component.tsx';
 
-const composite = new Composite({
+const reka = new Reka({
    extensions: {
         states: {
             myGlobalVariable: 0
         },
-        globals: composite => ({
+        globals: reka => ({
             getGlobalVariable: () => {
-                return composite.getExternalState('myGlobalVariable')
+                return reka.getExternalState('myGlobalVariable')
             },
             confetti: () => {
                 return confetti();

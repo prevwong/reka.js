@@ -1,5 +1,5 @@
-import { observer, useCollector } from '@composite/react';
-import * as t from '@composite/types';
+import { observer, useCollector } from '@rekajs/react';
+import * as t from '@rekajs/types';
 import * as React from 'react';
 
 import { Renderer, RenderFrame } from '../Renderer';
@@ -23,7 +23,7 @@ const FRAMES = [
   },
 ];
 export const Preview = observer(() => {
-  const { composite } = useCollector();
+  const { reka } = useCollector();
 
   const [selectedFrameId, setSelectedFrameId] = React.useState<string | null>(
     FRAMES[0].id
@@ -33,20 +33,18 @@ export const Preview = observer(() => {
     return FRAMES.find((frame) => frame.id === selectedFrameId);
   }, [selectedFrameId]);
 
-  const selectedCompositeFrame = React.useMemo(() => {
+  const selectedRekaFrame = React.useMemo(() => {
     if (!selectedFrame) {
       return;
     }
 
-    let compositeFrame = composite.frames.find(
-      (frame) => frame.id === selectedFrame.id
-    );
+    let rekaFrame = reka.frames.find((frame) => frame.id === selectedFrame.id);
 
-    if (!compositeFrame) {
-      compositeFrame = composite.createFrame(selectedFrame);
+    if (!rekaFrame) {
+      rekaFrame = reka.createFrame(selectedFrame);
     }
 
-    return compositeFrame;
+    return rekaFrame;
   }, [selectedFrame]);
 
   return (
@@ -65,8 +63,8 @@ export const Preview = observer(() => {
         </select>
       </div>
       <div className="flex-1 px-2 py-2">
-        {selectedCompositeFrame ? (
-          <RenderFrame frame={selectedCompositeFrame} />
+        {selectedRekaFrame ? (
+          <RenderFrame frame={selectedRekaFrame} />
         ) : (
           <div className="px-3 py-4">No frame selected</div>
         )}

@@ -1,4 +1,4 @@
-import * as t from '@composite/types';
+import * as t from '@rekajs/types';
 import {
   computed,
   IComputedValue,
@@ -21,7 +21,7 @@ import { ChangeListenerSubscriber, Observer } from './observer';
 import { Resolver } from './resolver';
 import { toJS } from './utils';
 
-export class Composite {
+export class Reka {
   /**
    * Stores all existing Frames
    */
@@ -97,7 +97,7 @@ export class Composite {
   }
 
   /**
-   * All components that exists in the instance. Includes CompositeComponents in the Program AST and ExternalComponents that was passed to the instance in the constructor.
+   * All components that exists in the instance. Includes RekaComponents in the Program AST and ExternalComponents that was passed to the instance in the constructor.
    */
   get components() {
     return [...(this.externals.components ?? []), ...this.program.components];
@@ -305,7 +305,7 @@ export class Composite {
    * Subscribe to State changes for collected values
    */
   subscribe<C>(
-    collect: (composite: Composite) => C,
+    collect: (reka: Reka) => C,
     onCollect: (collected: C, prevCollected: C) => void,
     opts?: StateSubscriberOpts
   ) {

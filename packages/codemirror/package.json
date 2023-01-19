@@ -1,12 +1,12 @@
 {
-  "name": "@composite/codemirror",
+  "name": "@rekajs/codemirror",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
   "types": "./src/index.ts",
   "scripts": {
-    "generate-lezer-parser": "mkdir -p src/parser && lezer-generator src/composite.grammar -o src/parser/index.js && pnpm -w run lint:fix",
-    "generate-lezer-parser:watch": "nodemon --watch src/composite.grammar -x pnpm run generate-lezer-parser",
+    "generate-lezer-parser": "mkdir -p src/parser && lezer-generator src/reka.grammar -o src/parser/index.js && pnpm -w run lint:fix",
+    "generate-lezer-parser:watch": "nodemon --watch src/reka.grammar -x pnpm run generate-lezer-parser",
     "rollup:watch": "rollup -w -c rollup.config.js",
     "rollup:build": "rollup -c rollup.config.js",
     "dev": "run-p rollup:watch generate-lezer-parser:watch",

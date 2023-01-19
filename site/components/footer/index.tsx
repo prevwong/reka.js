@@ -46,7 +46,7 @@ export const Footer = () => {
           by <Link href="https://twitter.com/prevwong">@prevwong</Link>
         </Box>
         <Box>
-          Composite is released under the{' '}
+          Reka is released under the{' '}
           <Link href="https://github.com/prevwong/LICENSE">MIT license</Link>
         </Box>
       </Box>

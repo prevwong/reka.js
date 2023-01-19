@@ -67,23 +67,23 @@ export const DOCS_SIDEBAR: DocSidebar = {
       title: 'Packages',
       children: [
         {
-          title: '@composite/core',
+          title: '@rekajs/core',
           href: 'api/core',
         },
         {
-          title: '@composite/types',
+          title: '@rekajs/types',
           href: 'api/types',
         },
         {
-          title: '@composite/parser',
+          title: '@rekajs/parser',
           href: 'api/parser',
         },
         {
-          title: '@composite/collaboration',
+          title: '@rekajs/collaboration',
           href: 'api/collaboration',
         },
         {
-          title: '@composite/react',
+          title: '@rekajs/react',
           href: '#',
         },
       ],

@@ -1,12 +1,12 @@
-# @composite/parser
+# @rekajs/parser
 
-Parser for Composite AST. 
+Parser for Reka AST. 
 
-This package is mainly intended to provide an easy way to create Composite AST Nodes from code.
+This package is mainly intended to provide an easy way to create Reka AST Nodes from code.
 
 ## Syntax
 
-The Parser expects code to be written in a custom Composite-syntax. 
+The Parser expects code to be written in a custom Reka-syntax. 
 
 Apart from some syntactical differences in defining stateful variables and components, most of the syntax are identical to JSX (with some Vue/Svelte influence).
 

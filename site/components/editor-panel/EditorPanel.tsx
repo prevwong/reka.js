@@ -87,7 +87,7 @@ export const EditorPanel = observer(() => {
             py: '$2',
             px: '$0',
           }}
-          root={editor.composite.program}
+          root={editor.reka.program}
         />
         <CodeEditor
           css={{
