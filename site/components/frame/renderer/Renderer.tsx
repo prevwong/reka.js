@@ -1,5 +1,5 @@
+import { toJS } from '@rekajs/core';
 import { observer } from '@rekajs/react';
-import { toJS } from '@rekajs/state';
 import * as t from '@rekajs/types';
 import * as React from 'react';
 import invariant from 'tiny-invariant';

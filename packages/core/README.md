@@ -101,7 +101,7 @@ The `View` is a simple serialisable JSON structure So regardless of what UI fram
 Of course, page builders often times may require additional data to be stored as part of the `State`. For example, you want your end users to be able to leave a comment on a template element; you can store these comments directly as part of the `State`: 
 
 ```tsx
-import { createExtension } from '@rekajs/state';
+import { createExtension } from '@rekajs/core';
 
 type CommentState = {
     comments: Array<{
@@ -136,7 +136,7 @@ reka.change(() => {
 Oh, you need multiplayer in your page editor too? No problem, Reka provides an external package that allows realtime collaboration via a fully-featured CRDT backed by Yjs
 
 ```tsx
-import { Reka } from '@rekajs/state';
+import { Reka } from '@rekajs/core';
 import * as t from '@rekajs/types';
 import { createCollabExtension } from '@rekajs/collaboration';
 

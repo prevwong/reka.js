@@ -1,5 +1,5 @@
+import { Reka } from '@rekajs/core';
 import { RekaProvider } from '@rekajs/react';
-import { Reka } from '@rekajs/state';
 import * as t from '@rekajs/types';
 import * as React from 'react';
 

@@ -56,10 +56,10 @@ importers:
   example:
     specifiers:
       '@next/font': 13.1.2
+      '@rekajs/core': workspace:*
       '@rekajs/parser': workspace:*
       '@rekajs/react': workspace:*
       '@rekajs/react-code-editor': workspace:*
-      '@rekajs/state': workspace:*
       '@rekajs/types': workspace:*
       '@types/node': 18.7.15
       '@types/react': ^17.0.33
@@ -75,10 +75,10 @@ importers:
       typescript: 4.9.4
     dependencies:
       '@next/font': 13.1.2
+      '@rekajs/core': link:../packages/core
       '@rekajs/parser': link:../packages/parser
       '@rekajs/react': link:../packages/react
       '@rekajs/react-code-editor': link:../packages/react-code-editor
-      '@rekajs/state': link:../packages/state
       '@rekajs/types': link:../packages/types
       '@types/node': 18.7.15
       '@types/react': 17.0.49
@@ -111,18 +111,37 @@ importers:
 
   packages/collaborative:
     specifiers:
-      '@rekajs/state': workspace:*
+      '@rekajs/core': workspace:*
       '@rekajs/types': workspace:*
       tiny-invariant: ^1.2.0
       y-protocols: ^1.0.5
       yjs: ^13.5.27
     dependencies:
-      '@rekajs/state': link:../state
+      '@rekajs/core': link:../core
       '@rekajs/types': link:../types
       tiny-invariant: 1.2.0
       yjs: 13.5.41
     devDependencies:
       y-protocols: 1.0.5
+
+  packages/core:
+    specifiers:
+      '@rekajs/types': workspace:*
+      '@types/lodash': ^4.14.185
+      fast-deep-equal: ^3.1.3
+      lodash: ^4.17.21
+      mobx: ^6.3.13
+      mobx-utils: ^6.0.5
+      tiny-invariant: ^1.2.0
+    dependencies:
+      fast-deep-equal: 3.1.3
+      lodash: 4.17.21
+      mobx: 6.6.1
+      mobx-utils: 6.0.5_mobx@6.6.1
+      tiny-invariant: 1.2.0
+    devDependencies:
+      '@rekajs/types': link:../types
+      '@types/lodash': 4.14.191
 
   packages/parser:
     specifiers:
@@ -139,7 +158,7 @@ importers:
 
   packages/react:
     specifiers:
-      '@rekajs/state': workspace:*
+      '@rekajs/core': workspace:*
       '@rekajs/types': workspace:*
       '@types/react': ^17.0.33
       '@types/react-dom': ^17.0.10
@@ -150,7 +169,7 @@ importers:
       mobx: 6.6.1
       mobx-react-lite: 3.4.0_mobx@6.6.1+react@17.0.2
     devDependencies:
-      '@rekajs/state': link:../state
+      '@rekajs/core': link:../core
       '@rekajs/types': link:../types
       '@types/react': 17.0.49
       '@types/react-dom': 17.0.17
@@ -163,9 +182,9 @@ importers:
       '@codemirror/theme-one-dark': ^0.19.1
       '@codemirror/view': ^0.19.40
       '@rekajs/codemirror': workspace:*
+      '@rekajs/core': workspace:*
       '@rekajs/parser': workspace:*
       '@rekajs/react': workspace:*
-      '@rekajs/state': workspace:*
       '@rekajs/types': workspace:*
       '@types/debounce': ^1.2.1
       '@types/react': ^17.0.33
@@ -184,33 +203,14 @@ importers:
       mobx-react-lite: 3.4.0_mobx@6.6.1+react@17.0.2
     devDependencies:
       '@rekajs/codemirror': link:../codemirror
+      '@rekajs/core': link:../core
       '@rekajs/parser': link:../parser
       '@rekajs/react': link:../react
-      '@rekajs/state': link:../state
       '@rekajs/types': link:../types
       '@types/debounce': 1.2.1
       '@types/react': 17.0.49
       '@types/react-dom': 17.0.17
       react: 17.0.2
-
-  packages/state:
-    specifiers:
-      '@rekajs/types': workspace:*
-      '@types/lodash': ^4.14.185
-      fast-deep-equal: ^3.1.3
-      lodash: ^4.17.21
-      mobx: ^6.3.13
-      mobx-utils: ^6.0.5
-      tiny-invariant: ^1.2.0
-    dependencies:
-      fast-deep-equal: 3.1.3
-      lodash: 4.17.21
-      mobx: 6.6.1
-      mobx-utils: 6.0.5_mobx@6.6.1
-      tiny-invariant: 1.2.0
-    devDependencies:
-      '@rekajs/types': link:../types
-      '@types/lodash': 4.14.191
 
   packages/types:
     specifiers:
@@ -245,10 +245,10 @@ importers:
       '@radix-ui/react-tooltip': ^0.1.7
       '@rekajs/codemirror': workspace:*
       '@rekajs/collaborative': workspace:*
+      '@rekajs/core': workspace:*
       '@rekajs/parser': workspace:*
       '@rekajs/react': workspace:*
       '@rekajs/react-code-editor': workspace:*
-      '@rekajs/state': workspace:*
       '@rekajs/types': workspace:*
       '@stitches/react': ^1.2.7
       '@tailwindcss/typography': ^0.5.8
@@ -317,10 +317,10 @@ importers:
       '@radix-ui/react-tooltip': 0.1.7_sfoxds7t5ydpegc3knd667wn6m
       '@rekajs/codemirror': link:../packages/codemirror
       '@rekajs/collaborative': link:../packages/collaborative
+      '@rekajs/core': link:../packages/core
       '@rekajs/parser': link:../packages/parser
       '@rekajs/react': link:../packages/react
       '@rekajs/react-code-editor': link:../packages/react-code-editor
-      '@rekajs/state': link:../packages/state
       '@rekajs/types': link:../packages/types
       '@stitches/react': 1.2.8_react@17.0.2
       canvas-confetti: 1.6.0

@@ -1,4 +1,4 @@
-import { Frame } from '@rekajs/state';
+import { Frame } from '@rekajs/core';
 import * as t from '@rekajs/types';
 import { makeObservable, action, observable } from 'mobx';
 import invariant from 'tiny-invariant';

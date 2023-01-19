@@ -1,4 +1,4 @@
-import { createExtension } from '@rekajs/state';
+import { createExtension } from '@rekajs/core';
 import * as t from '@rekajs/types';
 
 import { User } from '@app/editor/Editor';

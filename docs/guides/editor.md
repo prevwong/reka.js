@@ -7,7 +7,7 @@ In this guide, we'll build a simple React app to interact/manipulate the state o
 We'll be using `next` to scaffold a React application. We'll also be using some React-specific APIs for Reka provided by the `@rekajs/react` package.
 
 ```
-npm install next @rekajs/state @rekajs/types @rekajs/react
+npm install next @rekajs/core @rekajs/types @rekajs/react
 ```
 
 > `@rekajs/react` is still in a very early stage of development, much of its API is still subject to change and improvements 
@@ -26,7 +26,7 @@ Finally, we will create a new `<Editor />` component where we will provide some 
 import * as React from 'react';
 
 import * as t from '@rekajs/types';
-import { Reka } from '@rekajs/state';
+import { Reka } from '@rekajs/core';
 import { RekaProvider } from '@rekajs/react';
 
 import { Editor } from '@/components/Editor';
@@ -279,7 +279,7 @@ All we've to do here is go through each type of `View`, and return a correspondi
 ```tsx
 // src/components/Renderer.tsx
 import { observer } from '@rekajs/react';
-import { Frame } from '@rekajs/state';
+import { Frame } from '@rekajs/core';
 import * as t from '@rekajs/types';
 import * as React from 'react';
 

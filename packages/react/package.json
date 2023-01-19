@@ -12,7 +12,7 @@
   "author": "Prev Wong",
   "license": "ISC",
   "peerDependencies": {
-    "@rekajs/state": "workspace:*",
+    "@rekajs/core": "workspace:*",
     "@rekajs/types": "workspace:*",
     "react": "^16.8.0 || ^17 || ^18"
   },
@@ -21,7 +21,7 @@
     "mobx-react-lite": "^3.3.0"
   },
   "devDependencies": {
-    "@rekajs/state": "workspace:*",
+    "@rekajs/core": "workspace:*",
     "@rekajs/types": "workspace:*",
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",

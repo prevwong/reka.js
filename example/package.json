@@ -13,7 +13,7 @@
   "dependencies": {
     "@rekajs/react": "workspace:*",
     "@rekajs/react-code-editor": "workspace:*",
-    "@rekajs/state": "workspace:*",
+    "@rekajs/core": "workspace:*",
     "@rekajs/types": "workspace:*",
     "@rekajs/parser": "workspace:*",
     "@next/font": "13.1.2",

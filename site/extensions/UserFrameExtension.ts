@@ -1,4 +1,4 @@
-import { createExtension } from '@rekajs/state';
+import { createExtension } from '@rekajs/core';
 import * as t from '@rekajs/types';
 
 export type UserFrame = {

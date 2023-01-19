@@ -1,4 +1,4 @@
-import { Frame, Reka } from '@rekajs/state';
+import { Frame, Reka } from '@rekajs/core';
 import * as t from '@rekajs/types';
 import confetti from 'canvas-confetti';
 import {

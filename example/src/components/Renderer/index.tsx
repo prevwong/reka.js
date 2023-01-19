@@ -1,5 +1,5 @@
+import { Frame } from '@rekajs/core';
 import { observer } from '@rekajs/react';
-import { Frame } from '@rekajs/state';
 import * as t from '@rekajs/types';
 import * as React from 'react';
 

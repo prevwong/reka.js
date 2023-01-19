@@ -3,7 +3,7 @@
 ## Installation
 
 ```
-npm install @rekajs/types @rekajs/state
+npm install @rekajs/types @rekajs/core
 ```
 
 ## Define a new State
@@ -13,7 +13,7 @@ First, we need a new `Reka` instance which requires a `State` data type - to con
 For now, we will create an initial `State` type with a simple App component:
 
 ```tsx
-import { Reka } from '@rekajs/state';
+import { Reka } from '@rekajs/core';
 import * as t from '@rekajs/types';
 
 const reka = new Reka();

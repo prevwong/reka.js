@@ -13,7 +13,7 @@
   "author": "Prev Wong",
   "license": "ISC",
   "dependencies": {
-    "@rekajs/state": "workspace:*",
+    "@rekajs/core": "workspace:*",
     "@rekajs/types": "workspace:*",
     "tiny-invariant": "^1.2.0",
     "yjs": "^13.5.27"

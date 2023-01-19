@@ -81,7 +81,7 @@ To setup, you need to first create the following via `yjs`:
 ```tsx
 // app.tsx
 
-import { Reka } from '@rekajs/state';
+import { Reka } from '@rekajs/core';
 import * as t from '@rekajs/types';
 import { createCollabExtension } from '@rekajs/collaboration';
 
@@ -125,7 +125,7 @@ First, we need to create a script that will setup `Reka` and load an initial `St
 // scripts/generate-encoded-initial-update.ts
 
 import { jsToYType } from '@rekajs/collaborative';
-import { Reka } from '@rekajs/state';
+import { Reka } from '@rekajs/core';
 import * as t from '@rekajs/types';
 
 import * as Y from 'yjs';
@@ -169,7 +169,7 @@ Then, in your actual application where you're setting up `Reka` with the `Collab
 
 ```tsx
 // app.tsx
-import { Reka } from '@rekajs/state';
+import { Reka } from '@rekajs/core';
 import * as t from '@rekajs/types';
 import { createCollabExtension } from '@rekajs/collaboration';
 

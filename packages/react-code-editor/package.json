@@ -15,7 +15,7 @@
     "@rekajs/codemirror": "workspace:*",
     "@rekajs/parser": "workspace:*",
     "@rekajs/react": "workspace:*",
-    "@rekajs/state": "workspace:*",
+    "@rekajs/core": "workspace:*",
     "@rekajs/types": "workspace:*",
     "react": "^16.8.0 || ^17 || ^18"
   },
@@ -32,7 +32,7 @@
     "@rekajs/codemirror": "workspace:*",
     "@rekajs/parser": "workspace:*",
     "@rekajs/react": "workspace:*",
-    "@rekajs/state": "workspace:*",
+    "@rekajs/core": "workspace:*",
     "@rekajs/types": "workspace:*",
     "@types/debounce": "^1.2.1",
     "@types/react": "^17.0.33",

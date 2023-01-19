@@ -4,7 +4,7 @@ The core package of Reka.
 
 ## API
 
-!start-typedoc state/index.ts Reka
+!start-typedoc core/index.ts Reka
 
 !start-example
 
@@ -44,11 +44,11 @@ const reka = new Reka({
 
 !end-typedoc
 
-!start-typedoc state/index.ts Frame
+!start-typedoc core/index.ts Frame
 
 !end-typedoc
 
-!start-typedoc state/index.ts Extension
+!start-typedoc core/index.ts Extension
 
 !end-typedoc
 

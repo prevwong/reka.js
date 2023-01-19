@@ -9,7 +9,7 @@ One way to go about this is store these comments directly as part of the `State`
 ## Creating an Extension
 
 ```tsx
-import { createExtension } from '@rekajs/state';
+import { createExtension } from '@rekajs/core';
 
 type Comment = {
     userId: string;
@@ -36,7 +36,7 @@ const CommentExtension = createExtension<CommentState>({
 The extension can then be used when creating a new `Reka` instance:
 
 ```tsx
-import { Reka } from '@rekajs/state';
+import { Reka } from '@rekajs/core';
 
 const CommentExtension = createExtension<CommentState>({...});
 

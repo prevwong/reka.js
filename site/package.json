@@ -21,7 +21,7 @@
     "@rekajs/parser": "workspace:*",
     "@rekajs/react": "workspace:*",
     "@rekajs/react-code-editor": "workspace:*",
-    "@rekajs/state": "workspace:*",
+    "@rekajs/core": "workspace:*",
     "@rekajs/types": "workspace:*",
     "@hashicorp/remark-plugins": "^4.1.1",
     "@prevwong/getdocs-ts": "git+https://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:x-oauth-basic@github.com/prevwong/getdocs-ts.git",

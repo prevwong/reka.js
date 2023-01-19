@@ -1,5 +1,5 @@
 import { jsToYType } from '@rekajs/collaborative';
-import { Reka } from '@rekajs/state';
+import { Reka } from '@rekajs/core';
 import * as t from '@rekajs/types';
 
 import * as Y from 'yjs';

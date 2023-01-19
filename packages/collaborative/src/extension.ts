@@ -1,4 +1,4 @@
-import { createExtension } from '@rekajs/state';
+import { createExtension } from '@rekajs/core';
 import invariant from 'tiny-invariant';
 import * as Y from 'yjs';
 

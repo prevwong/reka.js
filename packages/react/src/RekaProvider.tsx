@@ -1,4 +1,4 @@
-import { Reka } from '@rekajs/state';
+import { Reka } from '@rekajs/core';
 import * as React from 'react';
 
 import { RekaStateContext } from './RekaStateContext';
