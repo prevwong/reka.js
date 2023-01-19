@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-css-tags */
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import * as React from 'react';

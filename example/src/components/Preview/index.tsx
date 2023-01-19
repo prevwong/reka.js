@@ -2,7 +2,7 @@ import { observer, useCollector } from '@rekajs/react';
 import * as t from '@rekajs/types';
 import * as React from 'react';
 
-import { Renderer, RenderFrame } from '../Renderer';
+import { RenderFrame } from '../Renderer';
 
 const FRAMES = [
   {
@@ -45,7 +45,7 @@ export const Preview = observer(() => {
     }
 
     return rekaFrame;
-  }, [selectedFrame]);
+  }, [reka, selectedFrame]);
 
   return (
     <div className="w-full h-full flex flex-col text-xs">
