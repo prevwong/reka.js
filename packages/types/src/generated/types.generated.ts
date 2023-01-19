@@ -517,11 +517,11 @@ Schema.register('ExternalComponentView', ExternalComponentView);
 type SlotViewParameters = {
   key: string;
   template: Template;
-  view: View[];
+  children: View[];
 };
 
 export class SlotView extends View {
-  declare view: View[];
+  declare children: View[];
   constructor(value: SlotViewParameters) {
     super('SlotView', value);
   }

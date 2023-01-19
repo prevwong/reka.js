@@ -275,7 +275,7 @@ Schema.define('ExternalComponentView', {
 Schema.define('SlotView', {
   extends: 'View',
   fields: (t) => ({
-    view: t.array(t.node('View')),
+    children: t.array(t.node('View')),
   }),
 });
 

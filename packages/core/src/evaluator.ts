@@ -373,7 +373,7 @@ export class ViewEvaluator {
       t.slotView({
         key: createKey(ctx.path),
         template,
-        view: ctx.env.getByName('$$children'),
+        children: ctx.env.getByName('$$children'),
       }),
     ];
   }

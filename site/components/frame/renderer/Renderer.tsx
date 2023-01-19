@@ -93,7 +93,7 @@ export const RenderSlotView = observer((props: RenderSlotViewProps) => {
         value={{
           onConnect: (dom, view) => {
             if (!parentComponent) {
-              if (props.view.view.indexOf(view) > -1) {
+              if (props.view.children.indexOf(view) > -1) {
                 return activeComponentEditor.connectTplDOM(
                   dom,
                   props.view.template,
@@ -112,7 +112,7 @@ export const RenderSlotView = observer((props: RenderSlotViewProps) => {
           },
         }}
       >
-        {props.view.view.map((v) => (
+        {props.view.children.map((v) => (
           <InternalRenderer key={v.id} view={v} />
         ))}
       </SelectorContext.Provider>
