@@ -8,21 +8,21 @@ For example, let's say we created a `Frame` for the Button component above with 
 
 ```tsx
 {
-    type: "ElementView",
+    type: "TagView",
     tag: "button",
     props: {
         className: "bg-blue-900",
     },
     children: [
         {
-            type: "ElementView",
+            type: "TagView",
             tag: "text",
             props: {
                 value: 0
             },
         },
         {
-            type: "ElementView",
+            type: "TagView",
             tag: "text",
             props: {
                 value: "I'm enabled!"
@@ -65,7 +65,7 @@ Then, the resulting output will be updated accordingly:
 
 ```tsx
 {
-    type: "ElementView",
+    type: "TagView",
     tag: "button",
     props: {
         className: "bg-green-900", // <-- updated 
@@ -82,20 +82,39 @@ Given that the `View` is essentially a serialisable JSON structure, we can easil
 
 ```tsx
 const Renderer = ({ view }) => {
-    if ( view.type === "ElementView" ) {
-        if ( view.tag === 'text' ) {
-            return view.props.value;
+    if (props.view instanceof t.TagView) {
+        if (props.view.tag === 'text') {
+            return <span>{props.view.props.value}</span>;
         }
 
         return React.createElement(
-            view.tag,
-            view.props,
-            view.children.map(child => <Renderer key={child.id} view={child} />)
-        )
+            props.view.tag,
+            props.view.props,
+            props.view.children.map((child) => (
+                <Renderer key={child.id} view={child} />
+            ))
+        );
     }
 
-    if ( view.type === "ComponentView" ) {
-        return <Renderer view={view.root} />
+    if (props.view instanceof t.RekaComponentView) {
+        return props.view.render.map((r) => <Renderer key={r.id} view={r} />);
+    }
+
+    if (props.view instanceof t.ExternalComponentView) {
+        return props.view.component.render(props.view.props);
+    }
+
+    if (props.view instanceof t.SlotView) {
+        return props.view.view.map((r) => <Renderer key={r.id} view={r} />);
+    }
+
+    if (props.view instanceof t.ErrorSystemView) {
+        return (
+            <div className="">
+                Something went wrong. <br />
+                {props.view.error}
+            </div>
+        );
     }
 
     return null;
