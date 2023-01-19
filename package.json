@@ -16,7 +16,8 @@
     "lint:fix": "eslint --fix . --ext .js,.jsx,.ts,.tsx",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prettier": "prettier --write .",
-    "generate-api-docs": "node ./scripts/generate-api-docs.js"
+    "generate-api-docs": "node ./scripts/generate-api-docs.js",
+    "test": "vitest"
   },
   "devDependencies": {
     "@babel/plugin-syntax-flow": "^7.18.6",
@@ -42,7 +43,8 @@
     "rollup": "^2.79.0",
     "tslib": "^2.4.0",
     "turbo": "latest",
-    "typescript": "4.9.4"
+    "typescript": "4.9.4",
+    "vitest": "^0.27.2"
   },
   "engines": {
     "node": ">=14.0.0"

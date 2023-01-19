@@ -8,7 +8,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "inlineSources": false,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "moduleResolution": "node",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
@@ -18,7 +18,8 @@
     "declarationDir": "./dist",
     "lib": ["es5", "es6", "dom", "ESNext"],
     "target": "ES5",
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "types": ["vitest/globals"]
   },
   "exclude": ["node_modules"]
 }
