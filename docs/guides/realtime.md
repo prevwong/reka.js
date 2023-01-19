@@ -76,7 +76,7 @@ To setup, you need to first create the following via `yjs`:
 - A new Yjs `Doc` (`new Y.Doc()`)
 - A root `Y.Map` type (`.getMap(...)`)
   > Note: that `@rekajs/collaboration` stores the actual flatten state in the `document` key of the root `Y.Map` that you provide the extension with
-- Create a new Reka instance and retrieve intiial `State` from the Yjs document
+- Create a new Reka instance and retrieve initial `State` from the Yjs document
 - Bind a Yjs connector (ie: `y-webrtc`)
 
 
