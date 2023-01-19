@@ -333,6 +333,7 @@ export const collect = (type: t.Type) => {
   return types;
 };
 
+/// @internal
 export const ecscapeObjKey = (key: string) => {
   const match = key.match(/(?:")?(.+)(?:")?/);
 
