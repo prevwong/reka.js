@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build:frame-styles": "tailwindcss -c tailwind-frame.config.js -i ./styles/frame.css -o ./public/frame.css",
-    "dev": "next dev",
+    "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
