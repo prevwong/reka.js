@@ -1,4 +1,4 @@
-import { jsToYType } from '@rekajs/collaborative';
+import { jsToYType } from '@rekajs/collaboration';
 import { Reka } from '@rekajs/core';
 import * as t from '@rekajs/types';
 

@@ -124,7 +124,7 @@ First, we need to create a script that will setup `Reka` and load an initial `St
 ```tsx
 // scripts/generate-encoded-initial-update.ts
 
-import { jsToYType } from '@rekajs/collaborative';
+import { jsToYType } from '@rekajs/collaboration';
 import { Reka } from '@rekajs/core';
 import * as t from '@rekajs/types';
 

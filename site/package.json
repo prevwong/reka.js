@@ -17,7 +17,7 @@
     "@codemirror/theme-one-dark": "^0.19.1",
     "@codemirror/view": "^0.19.40",
     "@rekajs/codemirror": "workspace:*",
-    "@rekajs/collaborative": "workspace:*",
+    "@rekajs/collaboration": "workspace:*",
     "@rekajs/parser": "workspace:*",
     "@rekajs/react": "workspace:*",
     "@rekajs/react-code-editor": "workspace:*",
