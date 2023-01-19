@@ -1,4 +1,4 @@
-# Reka
+# reka.js 
 
 Reka is a state management system for building no-code page editors.
 
