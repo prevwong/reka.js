@@ -198,11 +198,12 @@ export const merge = <T extends t.Type>(a: T, b: T, opts?: MergeTypeOpts) => {
 };
 
 type FlatType = {
-  $$typeId: string;
+  type: string;
+  [key: string]: any;
 };
 
-type FlattenedType = {
-  root: FlatType;
+export type FlattenedType = {
+  root: { $$typeId: string };
   types: Record<string, FlatType>;
 };
 
