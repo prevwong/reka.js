@@ -1,7 +1,7 @@
 {
   "name": "@rekajs/parser",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0-alpha.0",
+  "description": "Parser for Reka syntax",
   "main": "./dist/index.js",
   "types": "./src/index.ts",
   "scripts": {
@@ -10,12 +10,12 @@
   },
   "keywords": [],
   "author": "Prev Wong",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@rekajs/types": "workspace:*"
   },
   "peerDependencies": {
-    "@rekajs/types": "workspace:*"
+    "@rekajs/types": "0.1.0-alpha.0"
   },
   "dependencies": {
     "@babel/types": "^7.18.13",

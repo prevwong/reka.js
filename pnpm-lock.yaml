@@ -109,7 +109,7 @@ importers:
     devDependencies:
       '@lezer/generator': 0.15.4
 
-  packages/collaborative:
+  packages/collaboration:
     specifiers:
       '@rekajs/core': workspace:*
       '@rekajs/types': workspace:*
@@ -117,11 +117,11 @@ importers:
       y-protocols: ^1.0.5
       yjs: ^13.5.27
     dependencies:
-      '@rekajs/core': link:../core
-      '@rekajs/types': link:../types
       tiny-invariant: 1.2.0
       yjs: 13.5.41
     devDependencies:
+      '@rekajs/core': link:../core
+      '@rekajs/types': link:../types
       y-protocols: 1.0.5
 
   packages/core:
@@ -244,7 +244,7 @@ importers:
       '@radix-ui/react-toggle-group': ^1.0.0
       '@radix-ui/react-tooltip': ^0.1.7
       '@rekajs/codemirror': workspace:*
-      '@rekajs/collaborative': workspace:*
+      '@rekajs/collaboration': workspace:*
       '@rekajs/core': workspace:*
       '@rekajs/parser': workspace:*
       '@rekajs/react': workspace:*
@@ -316,7 +316,7 @@ importers:
       '@radix-ui/react-toggle-group': 1.0.1_sfoxds7t5ydpegc3knd667wn6m
       '@radix-ui/react-tooltip': 0.1.7_sfoxds7t5ydpegc3knd667wn6m
       '@rekajs/codemirror': link:../packages/codemirror
-      '@rekajs/collaborative': link:../packages/collaborative
+      '@rekajs/collaboration': link:../packages/collaboration
       '@rekajs/core': link:../packages/core
       '@rekajs/parser': link:../packages/parser
       '@rekajs/react': link:../packages/react

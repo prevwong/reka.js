@@ -1,7 +1,7 @@
 {
   "name": "@rekajs/collaboration",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0-alpha.0",
+  "description": "Provides multiplayer functionality for Reka.js",
   "main": "./dist/index.js",
   "types": "./src/index.ts",
   "scripts": {
@@ -11,14 +11,18 @@
   },
   "keywords": [],
   "author": "Prev Wong",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
-    "@rekajs/core": "workspace:*",
-    "@rekajs/types": "workspace:*",
     "tiny-invariant": "^1.2.0",
     "yjs": "^13.5.27"
   },
+  "peerDependencies": {
+    "@rekajs/core": "0.1.0-alpha.0",
+    "@rekajs/types": "0.1.0-alpha.0"
+  },
   "devDependencies": {
+    "@rekajs/core": "workspace:*",
+    "@rekajs/types": "workspace:*",
     "y-protocols": "^1.0.5"
   }
 }

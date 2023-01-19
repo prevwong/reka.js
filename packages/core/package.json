@@ -1,7 +1,7 @@
 {
   "name": "@rekajs/core",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0-alpha.0",
+  "description": "State management system for building no-code page editors",
   "main": "./dist/index.js",
   "types": "./src/index.ts",
   "scripts": {
@@ -10,13 +10,13 @@
   },
   "keywords": [],
   "author": "Prev Wong",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@rekajs/types": "workspace:*",
     "@types/lodash": "^4.14.185"
   },
   "peerDependencies": {
-    "@rekajs/types": "*"
+    "@rekajs/types": "0.1.0-alpha.0"
   },
   "dependencies": {
     "fast-deep-equal": "^3.1.3",

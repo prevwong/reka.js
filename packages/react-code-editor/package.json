@@ -1,7 +1,7 @@
 {
   "name": "@rekajs/react-code-editor",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0-alpha.0",
+  "description": "Codemirror editor for editing Reka AST in code",
   "main": "./dist/index.js",
   "types": "./src/index.ts",
   "scripts": {
@@ -10,13 +10,13 @@
   },
   "keywords": [],
   "author": "Prev Wong",
-  "license": "ISC",
+  "license": "MIT",
   "peerDependencies": {
-    "@rekajs/codemirror": "workspace:*",
-    "@rekajs/parser": "workspace:*",
-    "@rekajs/react": "workspace:*",
-    "@rekajs/core": "workspace:*",
-    "@rekajs/types": "workspace:*",
+    "@rekajs/codemirror": "0.1.0-alpha.0",
+    "@rekajs/parser": "0.1.0-alpha.0",
+    "@rekajs/react": "0.1.0-alpha.0",
+    "@rekajs/core": "0.1.0-alpha.0",
+    "@rekajs/types": "0.1.0-alpha.0",
     "react": "^16.8.0 || ^17 || ^18"
   },
   "dependencies": {
