@@ -1,7 +1,7 @@
-@include "packages/collaborative/README.md"
+@include "packages/collaboration/README.md"
 
 ## API
 
-!start-typedoc collaborative/index.ts createCollabExtension
+!start-typedoc collaboration/index.ts createCollabExtension
 
 !end-typedoc
