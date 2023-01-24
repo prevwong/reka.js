@@ -1,7 +1,7 @@
 import * as b from '@babel/types';
 import * as t from '@rekajs/types';
 import { ecscapeObjKey } from '@rekajs/types';
-import acorn, { Parser as AcornParser, parseExpressionAt } from 'acorn';
+import acorn, { Parser as AcornParser } from 'acorn';
 import jsx from 'acorn-jsx';
 import invariant from 'tiny-invariant';
 
