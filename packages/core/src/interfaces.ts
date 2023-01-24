@@ -30,6 +30,10 @@ export type StateSubscriberOpts = {
   fireImmediately?: boolean;
 };
 
+export type StateWatcherOpts = {
+  fireImmediately?: boolean;
+};
+
 export type StateSubscriber<C> = {
   collect: (reka: Reka) => C;
   onCollect: (collected: C, prevCollected: C) => void;

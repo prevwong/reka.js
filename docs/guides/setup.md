@@ -192,7 +192,7 @@ console.log(frame.root);
 
 ## Subscribing to changes
 
-Often times, it would be pretty useful to know when there's a change made to either a part of the `State` :
+Often times, it would be pretty useful to know when there's a change to a Reka data structure (ie: the `State` or `View`):
 
 ```tsx
 import * as t from '@rekajs/types';
@@ -229,7 +229,7 @@ const frame = reka.createFrame(...);
 
 const appComponent = reka.state.components[0];
 
-reka.subscribe(() => {
+reka.watch(() => {
     console.log('frame root tag =>', frame.root.tag);
 })
 

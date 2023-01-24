@@ -1,5 +1,6 @@
 import * as t from '@rekajs/types';
 import {
+  autorun,
   computed,
   IComputedValue,
   makeObservable,
@@ -16,6 +17,7 @@ import {
   StateExternals,
   StateOpts,
   StateSubscriberOpts,
+  StateWatcherOpts,
 } from './interfaces';
 import { ChangeListenerSubscriber, Observer } from './observer';
 import { Resolver } from './resolver';
@@ -302,7 +304,7 @@ export class Reka {
   }
 
   /**
-   * Subscribe to State changes for collected values
+   * Subscribe to changes made in a Reka instance
    */
   subscribe<C>(
     collect: (reka: Reka) => C,
@@ -323,7 +325,24 @@ export class Reka {
   }
 
   /**
-   * Dispose instance, stops all future re-computations
+   * Watch changes made within a Reka instance
+   */
+  watch(cb: () => void, opts?: StateWatcherOpts) {
+    const disposer = autorun(() => {
+      cb();
+    });
+
+    if (opts?.fireImmediately) {
+      cb();
+    }
+
+    return () => {
+      disposer();
+    };
+  }
+
+  /**
+   * Dispose instance, stops all future computations
    */
   dispose() {
     this.observer.dispose();
