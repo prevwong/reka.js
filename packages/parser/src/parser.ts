@@ -1,7 +1,8 @@
 import * as b from '@babel/types';
 import * as t from '@rekajs/types';
 import { ecscapeObjKey } from '@rekajs/types';
-import acorn, { parseExpressionAt } from 'acorn';
+import acorn, { Parser as AcornParser, parseExpressionAt } from 'acorn';
+import jsx from 'acorn-jsx';
 import invariant from 'tiny-invariant';
 
 import { Lexer } from './lexer';
@@ -9,7 +10,9 @@ import { Stringifier } from './stringifier';
 import { TokenType } from './tokens';
 
 const parseWithAcorn = (source: string, loc: number) => {
-  return parseExpressionAt(source, loc, {
+  const JSXParser = AcornParser.extend(jsx());
+
+  return JSXParser.parseExpressionAt(source, loc, {
     ecmaVersion: 2020,
   }) as b.Node & acorn.Node;
 };
@@ -136,6 +139,71 @@ const jsToReka = <T extends t.Type = t.Any>(
           left: _convert(node.left),
           operator: node.operator as any,
           right: _convert(node.right),
+        });
+      }
+      case 'JSXElement': {
+        const identifier = node.openingElement.name;
+        invariant(b.isJSXIdentifier(identifier), 'Invalid JSX identifier');
+
+        const identifierName = identifier.name;
+
+        const isComponent =
+          identifierName[0] === identifierName[0].toUpperCase();
+
+        const directives = {
+          if: null,
+          each: null,
+          classList: null,
+        };
+
+        const props = node.openingElement.attributes.reduce((accum, attr) => {
+          invariant(b.isJSXAttribute(attr), 'Invalid attribute');
+
+          const attrName = attr.name.name;
+          invariant(typeof attrName === 'string', 'Invalid attribute name');
+
+          if (
+            attrName.startsWith('@') &&
+            Object.keys(directives).includes(attrName.substring(1))
+          ) {
+            directives[attrName.substring(1)] = attr.value
+              ? _convert(attr.value)
+              : null;
+
+            return accum;
+          }
+
+          return {
+            ...accum,
+            [attrName]: attr.value ? _convert(attr.value) : undefined,
+          };
+        }, {});
+
+        const children = node.children.map((child) => _convert(child));
+
+        if (isComponent) {
+          return t.componentTemplate({
+            component: t.identifier({
+              name: identifierName,
+            }),
+            props,
+            children,
+            ...directives,
+          });
+        }
+
+        if (identifierName === 'slot') {
+          return t.slotTemplate({
+            props: {},
+            children: [],
+          });
+        }
+
+        return t.tagTemplate({
+          tag: identifierName,
+          props,
+          children,
+          ...directives,
         });
       }
       default: {

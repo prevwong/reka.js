@@ -190,7 +190,7 @@ Schema.define('ExternalComponent', {
 });
 
 Schema.define('Template', {
-  extends: 'ASTNode',
+  extends: 'Expression',
   abstract: true,
   fields: (t) => ({
     props: t.map(t.node('Expression')),

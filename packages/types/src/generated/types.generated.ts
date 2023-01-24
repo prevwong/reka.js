@@ -350,7 +350,7 @@ type TemplateParameters = {
   classList?: ObjectExpression | null;
 };
 
-export abstract class Template extends ASTNode {
+export abstract class Template extends Expression {
   declare props: Record<string, Expression>;
   declare children: Template[];
   declare if: Expression | null;

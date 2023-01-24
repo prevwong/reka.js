@@ -154,10 +154,12 @@ importers:
       '@babel/types': ^7.18.13
       '@rekajs/types': workspace:*
       acorn: ^8.7.0
+      acorn-jsx: ^5.3.2
       tiny-invariant: ^1.2.0
     dependencies:
       '@babel/types': 7.18.13
       acorn: 8.8.0
+      acorn-jsx: 5.3.2_acorn@8.8.0
       tiny-invariant: 1.2.0
     devDependencies:
       '@rekajs/types': link:../types

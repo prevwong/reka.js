@@ -20,6 +20,7 @@
   "dependencies": {
     "@babel/types": "^7.18.13",
     "acorn": "^8.7.0",
+    "acorn-jsx": "^5.3.2",
     "tiny-invariant": "^1.2.0"
   }
 }

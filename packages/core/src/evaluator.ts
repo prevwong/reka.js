@@ -69,10 +69,16 @@ export class ViewEvaluator {
 
     const nonChildrenProps = omit(this.componentProps, ['children']);
 
+    let children = this.componentProps['children'];
+
+    if (children) {
+      children = Array.isArray(children) ? children : [children];
+    }
+
     this.rootTemplate = t.componentTemplate({
       component: t.identifier({ name: this.componentName }),
       props: nonChildrenProps,
-      children: this.componentProps['children'] || [],
+      children: children || [],
     });
 
     this.rootTemplateObserver = new Observer(this.rootTemplate);
@@ -502,7 +508,11 @@ export class ViewEvaluator {
       this.rootTemplate.props = omit(props, ['children']);
 
       if (props['children']) {
-        this.rootTemplate.children = props['children'];
+        const children = Array.isArray(props['children'])
+          ? props['children']
+          : [props['children']];
+
+        t.merge(this.rootTemplate.children, children);
       }
     });
 

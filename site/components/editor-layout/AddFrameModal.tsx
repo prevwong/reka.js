@@ -32,13 +32,22 @@ const getInitialComponentProps = (
   existingProps: Record<string, any>
 ) => {
   if (component instanceof t.RekaComponent) {
-    return component.props.reduce((accum, prop) => {
-      return {
-        ...accum,
-        [prop.name]:
-          existingProps[prop.name] ?? prop.init ?? t.literal({ value: '' }),
-      };
-    }, {});
+    const props: Record<string, t.Expression> = component.props.reduce(
+      (accum, prop) => {
+        return {
+          ...accum,
+          [prop.name]:
+            existingProps[prop.name] ?? prop.init ?? t.literal({ value: '' }),
+        };
+      },
+      {}
+    );
+
+    if (existingProps['children']) {
+      props['children'] = existingProps['children'];
+    }
+
+    return props;
   }
 
   return {};

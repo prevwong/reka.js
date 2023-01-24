@@ -110,7 +110,7 @@ type PairInputFieldProps = {
   disableEditId?: boolean;
   disableEditValue?: boolean;
   onRemove?: () => void;
-  onChange?: (id: string, value: string) => void;
+  onChange?: (id: string, value: string, clear: () => void) => void;
   valuePlaceholder?: string;
 };
 
@@ -218,7 +218,6 @@ type PairInputProps = {
   valuePlaceholder?: string;
   onChange?: (id: string, value: string, type: 'update' | 'new') => void;
   onRemove?: (id: string, value: string) => void;
-  onAdd?: (id: string, value: string, clear: () => void) => void;
   onCancelAdding?: () => void;
   addingNewField?: boolean;
   emptyValuesText?: string;
@@ -245,8 +244,10 @@ const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
       onRemove={() => {
         props.onCancel();
       }}
-      onChange={(id, value) => {
+      onChange={(id, value, clear) => {
         commit(id, value);
+
+        clear();
       }}
     />
   );
@@ -270,7 +271,10 @@ const PairInputField = ({
       return;
     }
 
-    onChange(newId, newValue);
+    onChange(newId, newValue, () => {
+      setNewId('');
+      setNewValue('');
+    });
   };
 
   return (
