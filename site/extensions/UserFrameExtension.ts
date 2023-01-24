@@ -19,6 +19,23 @@ export const UserFrameExtensionFactory = () =>
     state: {
       frames: [
         { id: 'Main App', name: 'App', width: '100%', height: '100%' },
+        {
+          id: 'Dummy Feature Card',
+          name: 'FeatureCard',
+          props: {
+            title: t.literal({ value: 'Some Feature' }),
+            description: t.literal({
+              value: 'An interesting feature description',
+            }),
+            children: t.tagTemplate({
+              tag: 'text',
+              props: {
+                value: t.literal({ value: 'Some child text' }),
+              },
+              children: [],
+            }),
+          },
+        },
         { id: 'Top Header', name: 'Header' },
         {
           id: 'Card',
