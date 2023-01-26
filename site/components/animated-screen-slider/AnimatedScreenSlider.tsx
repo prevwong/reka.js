@@ -18,6 +18,7 @@ type Screen = {
 type AnimatedScreenSliderProps = {
   screens: Screen[];
   active?: string;
+  onSetup?: (getPath: () => string, goTo: (id: string) => void) => void;
 };
 
 export const AnimatedScreenSlider = (props: AnimatedScreenSliderProps) => {
@@ -59,6 +60,16 @@ export const AnimatedScreenSlider = (props: AnimatedScreenSliderProps) => {
       });
     },
   };
+
+  React.useEffect(() => {
+    if (!props.onSetup) {
+      return;
+    }
+
+    return props.onSetup(() => {
+      return pathsRef.current[pathsRef.current.length - 1];
+    }, callbacks.goTo);
+  }, [props.onSetup]);
 
   return (
     <React.Fragment>

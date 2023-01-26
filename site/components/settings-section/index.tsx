@@ -1,9 +1,16 @@
-import { ChevronDownIcon, PlusIcon } from '@radix-ui/react-icons';
+import {
+  ChevronDownIcon,
+  InfoCircledIcon,
+  PlusIcon,
+} from '@radix-ui/react-icons';
 import { AnimatePresence, motion } from 'framer-motion';
 import * as React from 'react';
 
 import { IconButton } from '@app/components/button';
 import { styled } from '@app/styles';
+
+import { Box } from '../box';
+import { Tooltip } from '../tooltip';
 
 const StyledSettingSectionHeader = styled(motion.div, {
   display: 'flex',
@@ -16,12 +23,15 @@ const StyledSettingSectionHeader = styled(motion.div, {
 
   '> header': {
     flex: 1,
+
+    display: 'flex',
     '> span': {
       mb: '-$1',
       color: '$grayA12',
       fontSize: '$2',
       fontWeight: '500',
-      flex: 1,
+      display: 'flex',
+      alignItems: 'center',
     },
   },
 });
@@ -39,6 +49,7 @@ const StyledSettingSection = styled('div', {
 
 type SettingSectionProps = {
   title: string;
+  info?: string;
   onAdd?: () => void;
   children?: React.ReactNode;
   collapsedOnInitial?: boolean;
@@ -57,7 +68,17 @@ export const SettingSection = (props: SettingSectionProps) => {
         onClick={() => setIsOpen(!isOpen)}
       >
         <header>
-          <span>{props.title}</span>
+          <span>
+            {props.title}
+            {props.info && (
+              <Tooltip content={props.info}>
+                <Box css={{ ml: '$2', opacity: '0.7' }}>
+                  <InfoCircledIcon width={12} height={12} />
+                </Box>
+              </Tooltip>
+            )}
+          </span>
+
           <IconButton transparent css={{ ml: '$2' }}>
             <ChevronDownIcon />
           </IconButton>

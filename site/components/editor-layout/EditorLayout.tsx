@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
+import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -109,6 +110,24 @@ export const EditorLayout = observer(
           <Box css={{ position: 'relative', flex: 1 }}>
             <AnimatedScreenSlider
               active={'component-list'}
+              onSetup={(getPath, goTo) => {
+                return autorun(() => {
+                  const selectedTpl =
+                    editor.activeComponentEditor?.tplEvent.selected;
+
+                  const path = getPath();
+
+                  if (path !== 'component-list') {
+                    return;
+                  }
+
+                  if (!selectedTpl) {
+                    return;
+                  }
+
+                  goTo('component-editor');
+                });
+              }}
               screens={[
                 {
                   id: 'component-list',

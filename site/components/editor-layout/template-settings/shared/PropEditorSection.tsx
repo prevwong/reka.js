@@ -23,7 +23,9 @@ export const PropEditorSection = observer(
       <React.Fragment>
         <SettingSection
           title={'Class List'}
+          info={'Add CSS classes conditionally'}
           onAdd={() => setAddNewClassListItem(true)}
+          collapsedOnInitial={false}
         >
           <PairInput
             addingNewField={addNewClassListItem}
@@ -36,6 +38,11 @@ export const PropEditorSection = observer(
                   }))
                 : []
             }
+            onRemove={(id) => {
+              editor.reka.change(() => {
+                delete template.classList?.properties[id];
+              });
+            }}
             onChange={(id, value) => {
               const parsedValue = Parser.parseExpression(value, t.Expression);
               //   console.log("parsedValue", parsedValue);

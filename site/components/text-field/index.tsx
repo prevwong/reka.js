@@ -138,6 +138,8 @@ export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
       if (!onCancel) {
         return;
       }
+
+      onCancel();
     };
 
     return (

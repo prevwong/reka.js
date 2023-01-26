@@ -31,7 +31,11 @@ const ConditionalTemplateSetting = observer(
     }, [props.template, setCondition]);
 
     return (
-      <SettingSection title={'Conditional'} collapsedOnInitial={false}>
+      <SettingSection
+        title={'Conditional'}
+        info={'Render this template conditionally'}
+        collapsedOnInitial={false}
+      >
         <Box>
           <TextField
             placeholder="counter > 0"
@@ -81,16 +85,12 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
   );
 
   const resetValue = React.useCallback(() => {
-    setIteratorValue(props.template.each?.iterator.name ?? '');
-    setAliasValue(props.template.each?.alias.name ?? '');
-    setIndexValue(props.template.each?.index?.name ?? '');
-  }, [props.template, setIteratorValue, setAliasValue, setIndexValue]);
+    setIteratorValue('');
+    setAliasValue('');
+    setIndexValue('');
+  }, [setIteratorValue, setAliasValue, setIndexValue]);
 
-  const commitValue = () => {
-    if (!iterator || !alias) {
-      return;
-    }
-
+  const commitValue = (iterator: string, alias: string, index: string) => {
     editor.reka.change(() => {
       props.template.each = t.elementEach({
         iterator: t.identifier({
@@ -105,23 +105,29 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
   };
 
   return (
-    <SettingSection title="Loop" collapsedOnInitial={false}>
+    <SettingSection
+      title="Loop"
+      info={'Render this template for each item in an array/list'}
+      collapsedOnInitial={false}
+    >
       <Box css={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
         <TextField
           css={{ flex: 1 }}
           placeholder="array"
           value={iterator}
           onCancel={() => {
+            console.log('cancelll');
             resetValue();
 
             editor.reka.change(() => {
+              console.log('cancel');
               props.template.each = null;
             });
           }}
           onCommit={(value) => {
             const expr = Parser.parseExpression(value, t.Identifier);
             setIteratorValue(expr.name);
-            commitValue();
+            commitValue(expr.name, alias, index);
           }}
         />
       </Box>
@@ -156,7 +162,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
             onCommit={(value) => {
               const expr = Parser.parseExpression(value, t.Identifier);
               setAliasValue(expr.name);
-              commitValue();
+              commitValue(iterator, expr.name, index);
             }}
           />
           {isExposingIndex && (
@@ -183,7 +189,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
                 onCommit={(value) => {
                   const expr = Parser.parseExpression(value, t.Identifier);
                   setIndexValue(expr.name);
-                  commitValue();
+                  commitValue(iterator, alias, expr.name);
                 }}
               />
             </React.Fragment>
