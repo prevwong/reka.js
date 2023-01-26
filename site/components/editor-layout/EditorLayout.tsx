@@ -98,7 +98,11 @@ export const EditorLayout = observer(
               marginLeft: 0,
             },
           }}
-          transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+          transition={{
+            duration: 0.4,
+            ease: [0.04, 0.62, 0.23, 0.98],
+            delay: 0.2,
+          }}
         >
           <GlobalSettings />
 
@@ -140,7 +144,11 @@ export const EditorLayout = observer(
             code: { width: RIGHT_SIDEBAR_CODE_WIDTH },
             preview: { width: 0 },
           }}
-          transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+          transition={{
+            duration: 0.4,
+            ease: [0.04, 0.62, 0.23, 0.98],
+            delay: 0.2,
+          }}
         >
           <AnimatePresence initial={false}>
             {editor.mode === EditorMode.Code && (
@@ -162,7 +170,11 @@ export const EditorLayout = observer(
                     right: '-100%',
                   },
                 }}
-                transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+                transition={{
+                  duration: 0.4,
+                  ease: [0.04, 0.62, 0.23, 0.98],
+                  delay: 0.2,
+                }}
               >
                 <CodeEditor />
               </StyledCodeContainer>
@@ -186,7 +198,11 @@ export const EditorLayout = observer(
                     right: '-100%',
                   },
                 }}
-                transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+                transition={{
+                  duration: 0.4,
+                  ease: [0.04, 0.62, 0.23, 0.98],
+                  delay: 0.2,
+                }}
               >
                 <TemplateSettings />
               </StyledSettingsEditor>

@@ -210,7 +210,6 @@ export const ComponentEditorView = observer(() => {
         transition={{
           duration: 0.4,
           ease: [0.04, 0.62, 0.23, 0.98],
-          delay: 0.2,
         }}
       >
         <Box
