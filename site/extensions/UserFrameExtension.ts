@@ -21,7 +21,7 @@ export const UserFrameExtensionFactory = () =>
         { id: 'Main App', name: 'App', width: '100%', height: '100%' },
         {
           id: 'Dummy Feature Card',
-          name: 'FeatureCard',
+          name: 'Feature',
           props: {
             title: t.literal({ value: 'Some Feature' }),
             description: t.literal({

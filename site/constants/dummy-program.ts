@@ -53,7 +53,7 @@ component App() {
     </div>
    </div>
    <div className={"grid grid-cols-2 mt-8 px-8 gap-6"}>
-    <FeatureCard
+    <Feature
      title={"Components"}
      description={"End-users can design components with stateful values, expressions and templates similar to what is possible with code in UI frameworks like React."}
     >
@@ -82,15 +82,15 @@ component App() {
        />
       </div>
      </div>
-    </FeatureCard>
-    <FeatureCard
+    </Feature>
+    <Feature
      title={"External Functionalities"}
      noPadding={true}
      description={"Expose Javascript functions or React/Vue/Svelte from your codebase for your end-users to use in their pages"}
     >
      <Animation/>
-    </FeatureCard>
-    <FeatureCard
+    </Feature>
+    <Feature
      title={"Realtime Collaboration"}
      noPadding={true}
      description={"Reka enables an opt-in multiplayer functionality via CRDTs. Go ahead and edit this page in another tab to see it in action!"}
@@ -99,14 +99,14 @@ component App() {
       src={"/images/placeholder.jpeg"}
       className={"object-cover"}
      />
-    </FeatureCard>
-    <FeatureCard
+    </Feature>
+    <Feature
      title={"Extensible"}
      noPadding={true}
      description={"Need to create a Figma-like commenting system for your page editor? Reka lets you to create and store these additional values via extensions."}
     >
      <img src={"/images/extensible.png"}/>
-    </FeatureCard>
+    </Feature>
    </div>
   </div>
   <div className={"py-10 px-8 max-w-4xl	m-auto"}>
@@ -147,7 +147,7 @@ component App() {
  </div>
 )
 
-component FeatureCard(title="Feature",description,noPadding=false) => (
+component Feature(title="Feature",description,noPadding=false) => (
  <div className={"flex flex-col border-2 border-solid border-black rounded-md overflow-hidden"}>
   <div className={"px-5 py-5"}>
    <h2 className={"font-semibold text-lg"}>
