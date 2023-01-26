@@ -75,3 +75,5 @@ A React component is able to do the following :-
 So, a more *complete* page builder would be one that allows the end-user to essentially build UI components as a developer would write a React component. In essence, this would mean a page builder would be a code editor but with UI abstractions.
 
 Currently, Craft.js' `EditorState` essentially stores the template of a single App component, and allows end-users to reorder elements, and mutate static prop values of each elements in the state. However, much of what's possible with writing React code as listed above, is not easily-replicable with Craft.js.
+
+Reka is intended to replace the internal state management system of Craft.js to support the above features. 
