@@ -14,7 +14,7 @@ It's primarily built to serve as the new state management system to power Craft.
 
 ### AST-based State :zap:
 
-Reka's State is an AST which enables end-users to build complex UI components with features that developers are familiar with from UI frameworks such as React:
+Reka's State is an Abstract Syntax Tree (AST) which enables end-users to build complex UI components with features that developers are familiar with from UI frameworks such as React:
 
 ```tsx
 [
@@ -209,3 +209,7 @@ const provider = new WebrtcProvider(
     doc
 );
 ```
+
+## Acknowledgements :raised_hands:
+
+Reka is inspired by [Plasmic](https://www.plasmic.app/), [Builder.io](https://builder.io) and [Mitosis](https://github.com/BuilderIO/mitosis)

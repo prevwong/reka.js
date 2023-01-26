@@ -113,11 +113,11 @@ const provider = new WebrtcProvider(
 );
 ```
 
-### WebRTC extra: How to set initial State in Yjs locally
+### Bonus: How to set initial State in Yjs locally with WebRTC
 
 In the above example with WebRTC, we're loading the initial `State` in Reka by getting the state that exists in the Yjs document. 
 
-However, as you may expect - the document in Yjs is empty initially. So, if you would like to setup an initial `State` with some `ComponentComponent`s locally, there're a few extra steps that you will have to do:
+However, as you may expect - the document in Yjs is empty initially, which could be problematic for Yjs in determining the initial state. So, if you would like to setup an initial `State` with some `ComponentComponent`s locally, there're a few extra steps that you will have to do:
 
 #### 1) Create a script that generates a Yjs update 
 

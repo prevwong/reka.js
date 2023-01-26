@@ -2,9 +2,14 @@
 
 ## Installation
 
+First, we need to install 2 packages:
+- `@rekajs/types` which provides APIs to create Reka data types (ie: the `State` AST nodes)
+- `@rekajs/core` which allows us to create a new `Reka` instance
+  
 ```
 npm install @rekajs/types @rekajs/core
 ```
+
 
 ## Define a new State
 

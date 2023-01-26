@@ -76,4 +76,4 @@ So, a more *complete* page builder would be one that allows the end-user to esse
 
 Currently, Craft.js' `EditorState` essentially stores the template of a single App component, and allows end-users to reorder elements, and mutate static prop values of each elements in the state. However, much of what's possible with writing React code as listed above, is not easily-replicable with Craft.js.
 
-Reka is intended to replace the internal state management system of Craft.js to support the above features. 
+Reka is intended to replace the internal state management system of Craft.js to support the above features; while Craft.js itself would continue to provide higher-level functionalities for page builders such as drag-n-drop.
