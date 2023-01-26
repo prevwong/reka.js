@@ -202,21 +202,36 @@ const frame = reka.createFrame(...);
 
 const appComponent = reka.state.components[0];
 
-reka.subscribe(() => {
+reka.watch(() => {
     if ( appComponent.template instanceof t.TagView ) {
         console.log('appComponent =>', appComponent.template.tag);
     }
 });
 
+reka.subscribe(() => {
+    return {
+        tag: appComponent.template.tag
+    }
+}, (collected) => {
+    console.log("tag: ", collected.tag);
+})
+
 reka.change(() => {
     appComponent.template.tag = 'section';
 })
-// 1) console: appComponent => section
+// 1) 
+// console:
+// appComponent => section
+// tag: section
 
 reka.change(() => {
     appComponent.template.tag = 'div';
 })
-// 2) console: appComponent => div
+// 2) 
+// console:
+// appComponent => div
+// tag: div
+
 ```
 
 The same can be done in order watch for changes made to a resulting View:
@@ -236,10 +251,14 @@ reka.watch(() => {
 reka.change(() => {
     appComponent.template.tag = 'section';
 })
-// 1) console: frame root tag => section
+// 1) 
+// console: 
+// frame root tag => section
 
 reka.change(() => {
     appComponent.template.tag = 'div';
 })
-// 2) console: frame root tag => div
+// 2) 
+// console: 
+// frame root tag => div
 ```
