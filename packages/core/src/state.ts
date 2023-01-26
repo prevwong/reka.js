@@ -265,7 +265,7 @@ export class Reka {
   /**
    * Get a Frame instance by its id (if it has an id specified to it)
    */
-  getFrameById(id: string) {
+  getFrame(id: string) {
     return this.idToFrame.get(id);
   }
 

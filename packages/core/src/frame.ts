@@ -11,7 +11,7 @@ type FrameComponentConfig = {
 };
 
 export type FrameOpts = {
-  id?: string;
+  id: string;
   component: FrameComponentConfig;
   syncImmediately?: boolean;
 };
@@ -21,8 +21,8 @@ export type FrameOpts = {
   You should not create this instance manually. Instead, use Reka.createFrame(...)
  */
 export class Frame {
-  /// An optional id to easily identify the Frame instance
-  id: string | undefined;
+  /// An id to easily identify the Frame instance
+  id: string;
 
   /// Frame only computes (and recomputes) its View when sync is set to true
   sync: boolean;
