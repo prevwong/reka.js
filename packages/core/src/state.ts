@@ -352,4 +352,8 @@ export class Reka {
   toJSON() {
     return this.state;
   }
+
+  static create(opts: StateOpts) {
+    return new Reka(opts);
+  }
 }

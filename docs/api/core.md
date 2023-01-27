@@ -15,7 +15,7 @@ import * as t from '@rekajs/types';
 import confetti from 'canvas-confetti'
 import { Header } from './path-to-header-component.tsx';
 
-const reka = new Reka({
+const reka = Reka.create({
    extensions: {
         states: {
             myGlobalVariable: 0

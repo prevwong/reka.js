@@ -10,7 +10,7 @@ export default function Home() {
   const [reka, setReka] = React.useState<Reka | null>(null);
 
   React.useEffect(() => {
-    const reka = new Reka();
+    const reka = Reka.create();
 
     reka.load(
       t.state({

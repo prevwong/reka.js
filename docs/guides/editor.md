@@ -15,7 +15,7 @@ npm install next @rekajs/core @rekajs/types @rekajs/react
 
 ## Basic setup
 
-First we'll create a new Reka instance and load it with a very simple App component with just a "Hello World" text. 
+First we'll create a Reka.create instance and load it with a very simple App component with just a "Hello World" text. 
 
 We will expose this Reka instance so we can access it throughout our React application with the `RekaProvider` React context provider.
 
@@ -36,7 +36,7 @@ export default function Home() {
   const [reka, setReka] = React.useState<Reka | null>(null);
 
   React.useEffect(() => {
-    const reka = new Reka();
+    const reka = Reka.create();
 
     reka.load(
       t.state({

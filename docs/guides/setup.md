@@ -21,7 +21,7 @@ For now, we will create an initial `State` type with a simple App component:
 import { Reka } from '@rekajs/core';
 import * as t from '@rekajs/types';
 
-const reka = new Reka();
+const reka = Reka.create();
 
 reka.load(
     t.State({
@@ -70,7 +70,7 @@ const App = () => {
 Next, let's create a new `Frame` to evaluate an instance of our newly created App component from above:
 
 ```tsx
-const reka = new Reka(...);
+const reka = Reka.create(...);
 
 const frame = reka.createFrame({
     component: {
@@ -202,7 +202,7 @@ Often times, it would be pretty useful to know when there's a change to a Reka d
 ```tsx
 import * as t from '@rekajs/types';
 
-const reka = new Reka(...);
+const reka = Reka.create(...);
 const frame = reka.createFrame(...);
 
 const appComponent = reka.state.components[0];
@@ -244,7 +244,7 @@ The same can be done in order watch for changes made to a resulting View:
 ```tsx
 import * as t from '@rekajs/types';
 
-const reka = new Reka(...);
+const reka = Reka.create(...);
 const frame = reka.createFrame(...);
 
 const appComponent = reka.state.components[0];

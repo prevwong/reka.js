@@ -40,7 +40,7 @@ import { Reka } from '@rekajs/core';
 
 const CommentExtension = createExtension<CommentState>({...});
 
-const reka = new Reka({
+const reka = Reka.create({
     state: {...},
     extension {
         CommentExtension

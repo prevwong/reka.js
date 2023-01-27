@@ -104,7 +104,7 @@ export class Editor {
       setReady: action,
     });
 
-    this.reka = new Reka({
+    this.reka = Reka.create({
       ...createSharedStateGlobals({
         externals: {
           components: [

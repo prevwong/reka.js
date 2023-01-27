@@ -13,7 +13,7 @@ const doc = new Y.Doc();
 
 const type = doc.getMap(Y_ROOT_DOCUMENT);
 
-const reka = new Reka({
+const reka = Reka.create({
   ...createSharedStateGlobals(),
 });
 

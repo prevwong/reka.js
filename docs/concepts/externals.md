@@ -25,7 +25,7 @@ Now, we can expose `Icon` as an `ExternalComponent` so that it can be referenced
 ```tsx
 const Icon = ({ name, size }) => {...}
 
-const reka = new Reka({
+const reka = Reka.create({
     externals: {
         components: [
             t.externalComponent({
@@ -64,7 +64,7 @@ const reka = new Reka({
 The next type of externals are External Globals. These are useful for when you need to expose some variables that could provide additional functionality for the end-users. For example, you could expose an external global that returns the current time:
 
 ```tsx
-const reka = new Reka({
+const reka = Reka.create({
     externals: {
         globals: self => ({
             getCurrentTime: (params) => {
@@ -113,7 +113,7 @@ Finally, the last type of externals are External States. These're useful if you 
 For example, lets say you want your end-users to be able to do something with the current `scrollTop` position of the page:
 
 ```tsx
-const reka = new Reka({
+const reka = Reka.create({
     externals: {
         states: {
             scrollTop: 0,

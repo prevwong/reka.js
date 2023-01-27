@@ -137,7 +137,7 @@ You probably want to expose some JS functionalities for the end-users of your pa
 
 ```tsx
 // 1) Expose global to return current time
-const reka = new Reka({
+const reka = Reka.create({
     externals: {
         globals: self => ({
             getDateTime: () => {
@@ -196,8 +196,8 @@ const type = doc.getMap('my-collaborative-editor');
 
 const CollabExtension = createCollabExtension(type);
 
-// 3. Create a new Reka instance with an initial State
-const reka = new Reka({
+// 3. Create a Reka.create instance with an initial State
+const reka = Reka.create({
     extensions: [CollabExtension]
 }); 
 // The initial State Document, this should come from the Yjs type

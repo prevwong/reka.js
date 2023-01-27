@@ -76,7 +76,7 @@ To setup, you need to first create the following via `yjs`:
 - A new Yjs `Doc` (`new Y.Doc()`)
 - A root `Y.Map` type (`.getMap(...)`)
   > Note: that `@rekajs/collaboration` stores the actual flatten state in the `document` key of the root `Y.Map` that you provide the extension with
-- Create a new Reka instance and retrieve initial `State` from the Yjs document
+- Create a Reka.create instance and retrieve initial `State` from the Yjs document
 - Bind a Yjs connector (ie: `y-webrtc`)
 
 
@@ -99,8 +99,8 @@ const type = doc.getMap('my-collaborative-editor');
 
 const CollabExtension = createCollabExtension(type);
 
-// 3. Create a new Reka instance with an initial State
-const reka = new Reka({
+// 3. Create a Reka.create instance with an initial State
+const reka = Reka.create({
     extensions: [CollabExtension]
 }); 
 // The initial State Document, this should come from the Yjs type
@@ -137,7 +137,7 @@ const doc = new Y.Doc();
 
 const type = doc.getMap('my-collaborative-editor');
 
-const reka = new Reka();
+const reka = Reka.create();
 
 reka.load(
   t.state({
@@ -192,8 +192,8 @@ Y.applyUpdate(doc, Buffer.from(ENCODED_INITIAL_UPDATE, 'base64'));
 
 const CollabExtension = createCollabExtension(type);
 
-// 3. Create a new Reka instance with an initial State
-const reka = new Reka({
+// 3. Create a Reka.create instance with an initial State
+const reka = Reka.create({
     extensions: [CollabExtension]
 }); 
 // The initial State Document, this should come from the Yjs type
