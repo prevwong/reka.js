@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import * as React from 'react';
 
 import { styled } from '@app/styles';
@@ -44,7 +43,11 @@ export const Footer = () => {
             ♥︎
           </Text>{' '}
           by{' '}
-          <a href="https://twitter.com/prevwong" target="_blank">
+          <a
+            href="https://twitter.com/prevwong"
+            target="_blank"
+            rel="noreferrer"
+          >
             @prevwong
           </a>
         </Box>
@@ -53,6 +56,7 @@ export const Footer = () => {
           <a
             href="https://github.com/prevwong/reka.js/blob/main/LICENSE"
             target="_blank"
+            rel="noreferrer"
           >
             MIT license
           </a>

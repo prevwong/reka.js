@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import * as React from 'react';
 
 import { Box } from '@app/components/box';
@@ -8,7 +9,6 @@ import { DOCS_SIDEBAR } from '@app/constants/docs-sidebar';
 import { styled } from '@app/styles';
 import { getAllDocs, getDocBySlug } from '@app/utils/docs';
 import markdownToHtml from '@app/utils/markdown';
-import { useRouter } from 'next/router';
 
 const DocNav = styled(motion.nav, {
   width: '15rem',
@@ -145,7 +145,7 @@ const Docs = (props: any) => {
     return () => {
       contentDom.removeEventListener('click', onClick);
     };
-  }, []);
+  }, [router]);
 
   return (
     <Box css={{ display: 'flex', gap: '$3' }}>
