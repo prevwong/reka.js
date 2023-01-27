@@ -38,7 +38,7 @@ Component templates are similar to templates in JSX with some differences:
 
 #### Text values
 
-Text values be written in a `<text />` tag:
+Text values must be written in a `<text />` tag:
 
 ```
 component ComponentName() {} => (
@@ -47,6 +47,8 @@ component ComponentName() {} => (
 ```
 
 #### Conditionals
+
+To conditionally render an element, specify the `@if` directive: 
 
 ```
 component ComponentName(prop1) {
@@ -60,7 +62,8 @@ component ComponentName(prop1) {
 
 #### Foreach
 
-Iterating through an array: 
+To render an element for each item in a list, specify the `@each` directive:
+
 ```
 val items = ["a", "b", "c"];
 
@@ -81,6 +84,8 @@ Specifying index variable:
 ```
 
 #### Children
+
+A component can accept children elements by rendering the `<slot />` element:
 
 ```
 component Button() {} => (
