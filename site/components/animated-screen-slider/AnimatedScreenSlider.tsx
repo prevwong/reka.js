@@ -19,6 +19,7 @@ type AnimatedScreenSliderProps = {
   screens: Screen[];
   active?: string;
   onSetup?: (getPath: () => string, goTo: (id: string) => void) => void;
+  goBackText?: string;
 };
 
 export const AnimatedScreenSlider = (props: AnimatedScreenSliderProps) => {
@@ -131,7 +132,7 @@ export const AnimatedScreenSlider = (props: AnimatedScreenSliderProps) => {
                         callbacks.goBack();
                       }}
                     >
-                      Go Back
+                      {props.goBackText ?? 'Go Back'}
                     </Button>
                   </Box>
                 )}

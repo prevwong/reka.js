@@ -109,6 +109,7 @@ export const EditorLayout = observer(
 
           <Box css={{ position: 'relative', flex: 1 }}>
             <AnimatedScreenSlider
+              goBackText="Components"
               active={'component-list'}
               onSetup={(getPath, goTo) => {
                 return autorun(() => {
