@@ -8,6 +8,7 @@ import { DOCS_SIDEBAR } from '@app/constants/docs-sidebar';
 import { styled } from '@app/styles';
 import { getAllDocs, getDocBySlug } from '@app/utils/docs';
 import markdownToHtml from '@app/utils/markdown';
+import { useRouter } from 'next/router';
 
 const DocNav = styled(motion.nav, {
   width: '15rem',
@@ -108,6 +109,44 @@ const DocPostContentHeader = styled('div', {
 });
 
 const Docs = (props: any) => {
+  const contentDomRef = React.useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
+
+  React.useEffect(() => {
+    const { current: contentDom } = contentDomRef;
+
+    if (!contentDom) {
+      return;
+    }
+
+    const onClick = (e: MouseEvent) => {
+      if (!(e.target instanceof HTMLAnchorElement)) {
+        return;
+      }
+
+      e.preventDefault();
+
+      const href = e.target.href;
+
+      const url = new URL(href);
+
+      const isExternal = url.host !== window.location.host;
+
+      if (isExternal) {
+        window.open(href, '__blank');
+        return;
+      }
+
+      router.push(href);
+    };
+
+    contentDom.addEventListener('click', onClick);
+
+    return () => {
+      contentDom.removeEventListener('click', onClick);
+    };
+  }, []);
+
   return (
     <Box css={{ display: 'flex', gap: '$3' }}>
       <DocNav
@@ -168,6 +207,7 @@ const Docs = (props: any) => {
                 textDecoration: 'none',
               },
             }}
+            ref={contentDomRef}
             dangerouslySetInnerHTML={{ __html: props.doc.content }}
           ></Box>
         </Box>

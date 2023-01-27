@@ -43,11 +43,19 @@ export const Footer = () => {
           >
             ♥︎
           </Text>{' '}
-          by <Link href="https://twitter.com/prevwong">@prevwong</Link>
+          by{' '}
+          <a href="https://twitter.com/prevwong" target="_blank">
+            @prevwong
+          </a>
         </Box>
         <Box>
           Reka is released under the{' '}
-          <Link href="https://github.com/prevwong/LICENSE">MIT license</Link>
+          <a
+            href="https://github.com/prevwong/reka.js/blob/main/LICENSE"
+            target="_blank"
+          >
+            MIT license
+          </a>
         </Box>
       </Box>
     </StyledFooter>

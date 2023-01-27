@@ -174,7 +174,7 @@ export const Header = observer(() => {
             </Link>
           </Box>
           <Menu>
-            <a href="https://github.com/prevwong/reka" target="__blank">
+            <a href="https://github.com/prevwong/reka.js" target="__blank">
               Github
             </a>
             <Link href="/docs/introduction">Documentation</Link>
