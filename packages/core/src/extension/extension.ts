@@ -5,11 +5,11 @@ import { ExtensionDefinition, ExtensionStateDefinition } from './definition';
 import { StateSubscriberOpts } from '../interfaces';
 import { Reka } from '../state';
 
-export class Extension<S extends ExtensionStateDefinition | any = undefined> {
+export class Extension<D extends ExtensionDefinition = any> {
   reka: Reka;
-  definition: ExtensionDefinition<S>;
+  definition: D;
 
-  constructor(reka: Reka, definition: ExtensionDefinition<S>) {
+  constructor(reka: Reka, definition: D) {
     this.reka = reka;
     this.definition = definition;
   }
@@ -31,11 +31,11 @@ export class Extension<S extends ExtensionStateDefinition | any = undefined> {
   }
 
   get state() {
-    return this.reka.state.extensions[this.definition.key].value as S;
+    return this.reka.state.extensions[this.definition.key].value as D['state'];
   }
 
   subscribe<C extends Record<string, any>>(
-    collector: (state: S) => C,
+    collector: (state: D['state']) => C,
     subscriber: (collected: C, prevCollected: C) => void,
     opts?: StateSubscriberOpts
   ) {

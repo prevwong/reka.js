@@ -124,7 +124,7 @@ const CommentExtension = createExtension<CommentState>({
 
 // Usage
 reka.change(() => {
-    reka.getExtension(CommentExtension).comments.push({
+    reka.getExtension(CommentExtension).state.comments.push({
         templateId: '...',
         content: "This button tag should be larger!!" 
     })

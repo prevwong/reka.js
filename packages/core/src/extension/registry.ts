@@ -1,10 +1,7 @@
 import { runInAction } from 'mobx';
 import invariant from 'tiny-invariant';
 
-import {
-  ExtensionDefinition,
-  StateFromExtensionDefinition,
-} from './definition';
+import { ExtensionDefinition } from './definition';
 import { Extension } from './extension';
 
 import { Reka } from '../state';
@@ -39,17 +36,17 @@ export class ExtensionRegistry {
     this.extensions.map((extension) => extension.dispose());
   }
 
-  getExtensionFromDefinition<E extends ExtensionDefinition<any>>(
-    definition: E
-  ): StateFromExtensionDefinition<E> {
+  getExtensionFromDefinition<D extends ExtensionDefinition<any>>(
+    definition: D
+  ): Extension<D> {
     const extension = this.definitionToExtension.get(definition);
     invariant(extension, `Extension "${definition.key}" not found`);
     return extension;
   }
 
-  getExtensionStateValue<E extends ExtensionDefinition<any>>(definition: E) {
+  getExtensionStateValue<D extends ExtensionDefinition<any>>(definition: D) {
     const extension = this.getExtensionFromDefinition(definition);
-    return extension.state as E['state'];
+    return extension.state as D['state'];
   }
 
   getExtensionByKey(key: string) {

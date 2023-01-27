@@ -25,7 +25,7 @@ import { toJS } from './utils';
 
 export class Reka {
   /**
-   * Stores all existing Frames
+   * A list of RekaComponent instances
    */
   frames: Frame[];
 
@@ -272,7 +272,7 @@ export class Reka {
   /**
    * Get an Extension's state from its definition
    */
-  getExtension<E extends ExtensionDefinition<any>>(definition: E) {
+  getExtension<D extends ExtensionDefinition<any>>(definition: D) {
     return this.extensionRegistry.getExtensionFromDefinition(definition);
   }
 
@@ -353,6 +353,9 @@ export class Reka {
     return this.state;
   }
 
+  /**
+   * Create a new Reka instance
+   */
   static create(opts: StateOpts) {
     return new Reka(opts);
   }
