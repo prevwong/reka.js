@@ -1,4 +1,5 @@
 import * as t from '@rekajs/types';
+import { safeObjKey } from '@rekajs/utils';
 import cx from 'classnames';
 import { IObservable, IObservableArray, isObservable, observe } from 'mobx';
 import { observer } from 'mobx-react-lite';
@@ -103,7 +104,7 @@ const PrimitiveElement = observer(({ name, value }: PrimitiveElementProps) => {
 const COLLAPSIBLE_STATE = new WeakMap();
 
 const createSafeObjKey = (str: string) => {
-  return t.ecscapeObjKey(str).replaceAll(/\/|\*/g, '--');
+  return safeObjKey(str).replaceAll(/\/|\*/g, '--');
 };
 
 const Element = observer(

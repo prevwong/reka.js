@@ -1,9 +1,8 @@
 import * as b from '@babel/types';
 import * as t from '@rekajs/types';
-import { ecscapeObjKey } from '@rekajs/types';
+import { invariant, safeObjKey } from '@rekajs/utils';
 import acorn, { Parser as AcornParser } from 'acorn';
 import jsx from 'acorn-jsx';
-import invariant from 'tiny-invariant';
 
 import { Lexer } from './lexer';
 import { Stringifier } from './stringifier';
@@ -87,7 +86,7 @@ const jsToReka = <T extends t.Type = t.Any>(
 
             return {
               ...accum,
-              [`${ecscapeObjKey(key)}`]: _convert(property.value),
+              [`${safeObjKey(key)}`]: _convert(property.value),
             };
           }, {}),
         });

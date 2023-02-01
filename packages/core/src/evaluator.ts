@@ -1,4 +1,5 @@
 import * as t from '@rekajs/types';
+import { safeObjKey } from '@rekajs/utils';
 import omit from 'lodash/omit';
 import {
   computed,
@@ -236,7 +237,7 @@ export class ViewEvaluator {
                 );
 
                 if (bool) {
-                  accum.push(t.ecscapeObjKey(key));
+                  accum.push(safeObjKey(key));
                 }
 
                 return accum;

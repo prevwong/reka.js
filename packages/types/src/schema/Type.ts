@@ -1,5 +1,4 @@
-import invariant from 'invariant';
-import shortUUID from 'short-uuid';
+import { getRandomId, invariant } from '@rekajs/utils';
 
 import { Schema } from './Schema';
 
@@ -9,7 +8,7 @@ export class Type {
 
   constructor(type: string, json: any) {
     this.type = type;
-    this.id = json.id || shortUUID.generate();
+    this.id = json.id || getRandomId();
 
     const definition = Schema.get(this.type);
     invariant(

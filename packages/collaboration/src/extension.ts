@@ -1,5 +1,5 @@
 import { createExtension } from '@rekajs/core';
-import invariant from 'tiny-invariant';
+import { invariant } from '@rekajs/utils';
 import * as Y from 'yjs';
 
 import { YjsRekaSyncProvider } from './YjsRekaSyncProvider';

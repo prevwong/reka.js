@@ -1,5 +1,5 @@
+import { invariant } from '@rekajs/utils';
 import { runInAction } from 'mobx';
-import invariant from 'tiny-invariant';
 
 import { ExtensionDefinition } from './definition';
 import { Extension } from './extension';

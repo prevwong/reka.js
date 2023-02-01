@@ -1,5 +1,5 @@
 import * as t from '@rekajs/types';
-import invariant from 'tiny-invariant';
+import { invariant, safeObjKey } from '@rekajs/utils';
 
 import { BinaryPrecedence, Precedence } from './precedence';
 
@@ -214,7 +214,7 @@ class _Stringifier {
         this.writer.write('{');
         this.writer.withIndent(() => {
           Object.keys(node.properties).forEach((property, i, arr) => {
-            this.writer.write(`"${t.ecscapeObjKey(property)}": `);
+            this.writer.write(`"${safeObjKey(property)}": `);
             this.stringify(node.properties[property]);
 
             if (i !== arr.length - 1) {

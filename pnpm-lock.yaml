@@ -57,7 +57,7 @@ importers:
       prettier: 2.7.1
       rollup: 2.79.0
       tslib: 2.4.0
-      turbo: 1.7.0
+      turbo: 1.7.1
       typescript: 4.9.4
       vitest: 0.27.2
 
@@ -121,11 +121,11 @@ importers:
     specifiers:
       '@rekajs/core': workspace:*
       '@rekajs/types': workspace:*
-      tiny-invariant: ^1.2.0
+      '@rekajs/utils': ^0.1.0-alpha.0
       y-protocols: ^1.0.5
       yjs: ^13.5.27
     dependencies:
-      tiny-invariant: 1.2.0
+      '@rekajs/utils': link:../utils
       yjs: 13.5.41
     devDependencies:
       '@rekajs/core': link:../core
@@ -135,18 +135,18 @@ importers:
   packages/core:
     specifiers:
       '@rekajs/types': workspace:*
+      '@rekajs/utils': ^0.1.0-alpha.0
       '@types/lodash': ^4.14.185
       fast-deep-equal: ^3.1.3
       lodash: ^4.17.21
       mobx: ^6.3.13
       mobx-utils: ^6.0.5
-      tiny-invariant: ^1.2.0
     dependencies:
+      '@rekajs/utils': link:../utils
       fast-deep-equal: 3.1.3
       lodash: 4.17.21
       mobx: 6.6.1
       mobx-utils: 6.0.5_mobx@6.6.1
-      tiny-invariant: 1.2.0
     devDependencies:
       '@rekajs/types': link:../types
       '@types/lodash': 4.14.191
@@ -155,14 +155,14 @@ importers:
     specifiers:
       '@babel/types': ^7.18.13
       '@rekajs/types': workspace:*
+      '@rekajs/utils': ^0.1.0-alpha.0
       acorn: ^8.7.0
       acorn-jsx: ^5.3.2
-      tiny-invariant: ^1.2.0
     dependencies:
       '@babel/types': 7.18.13
+      '@rekajs/utils': link:../utils
       acorn: 8.8.0
       acorn-jsx: 5.3.2_acorn@8.8.0
-      tiny-invariant: 1.2.0
     devDependencies:
       '@rekajs/types': link:../types
 
@@ -224,16 +224,16 @@ importers:
 
   packages/types:
     specifiers:
-      invariant: ^2.2.4
-      nanoid: ^3.2.0
-      short-uuid: ^4.2.0
-      shortid: ^2.2.16
+      '@rekajs/utils': ^0.1.0-alpha.0
+    dependencies:
+      '@rekajs/utils': link:../utils
+
+  packages/utils:
+    specifiers:
+      nanoid: ^3.3.4
       tiny-invariant: ^1.2.0
     dependencies:
-      invariant: 2.2.4
       nanoid: 3.3.4
-      short-uuid: 4.2.0
-      shortid: 2.2.16
       tiny-invariant: 1.2.0
 
   site:
@@ -260,6 +260,7 @@ importers:
       '@rekajs/react': workspace:*
       '@rekajs/react-code-editor': workspace:*
       '@rekajs/types': workspace:*
+      '@rekajs/utils': workspace:*
       '@stitches/react': ^1.2.7
       '@tailwindcss/typography': ^0.5.8
       '@types/canvas-confetti': ^1.6.0
@@ -332,6 +333,7 @@ importers:
       '@rekajs/react': link:../packages/react
       '@rekajs/react-code-editor': link:../packages/react-code-editor
       '@rekajs/types': link:../packages/types
+      '@rekajs/utils': link:../packages/utils
       '@stitches/react': 1.2.8_react@17.0.2
       canvas-confetti: 1.6.0
       classnames: 2.3.2
@@ -5863,10 +5865,6 @@ packages:
   /ms/2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  /nanoid/2.1.11:
-    resolution: {integrity: sha512-s/snB+WGm6uwi0WjsZdaVcuf3KJXlfGl2LcxgwkEwJF0D/BWzVWAZW/XY4bFaiR7s0Jk3FPvlnepg1H1b1UwlA==}
-    dev: false
-
   /nanoid/3.3.4:
     resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
@@ -6977,12 +6975,6 @@ packages:
       uuid: 8.3.2
     dev: false
 
-  /shortid/2.2.16:
-    resolution: {integrity: sha512-Ugt+GIZqvGXCIItnsL+lvFJOiN7RYqlGy7QE41O3YC1xbNSeDGIRO7xg2JJXIAj1cAGnOeC1r7/T9pgrtQbv4g==}
-    dependencies:
-      nanoid: 2.1.11
-    dev: false
-
   /side-channel/1.0.4:
     resolution: {integrity: sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==}
     dependencies:
@@ -7476,65 +7468,65 @@ packages:
       yargs: 17.6.2
     dev: true
 
-  /turbo-darwin-64/1.7.0:
-    resolution: {integrity: sha512-hSGAueSf5Ko8J67mpqjpt9FsP6ePn1nMcl7IVPoJq5dHsgX3anCP/BPlexJ502bNK+87DDyhQhJ/LPSJXKrSYQ==}
+  /turbo-darwin-64/1.7.1:
+    resolution: {integrity: sha512-H2txI1gkCQpav+5qGVxB4RzPTTqgDmzbXaJXbjYDR8cS0X/Oq5STea6fRTfumYR2x86Gr3co0V4fQfwILnfvYg==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-darwin-arm64/1.7.0:
-    resolution: {integrity: sha512-BLLOW5W6VZxk5+0ZOj5AO1qjM0P5isIgjbEuyAl8lHZ4s9antUbY4CtFrspT32XxPTYoDl4UjviPMcSsbcl3WQ==}
+  /turbo-darwin-arm64/1.7.1:
+    resolution: {integrity: sha512-T7yLTMAdnwfaF9H3uBizztLld1aK/gYiNubpl4HCbMsE/aYEbITtNx1dAFQnjRiPHS4dNYK4gIKc9nnAsnfkxg==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-64/1.7.0:
-    resolution: {integrity: sha512-aw2qxmfZa+kT87SB3GNUoFimqEPzTlzlRqhPgHuAAT6Uf0JHnmebPt4K+ZPtDNl5yfVmtB05bhHPqw+5QV97Yg==}
+  /turbo-linux-64/1.7.1:
+    resolution: {integrity: sha512-kQw+jEpEVUskfPy+7rMF5x6e9Za9AbdD9P7bSo1JuV+tZgUOaFc5iC9Zyj26qhc0Zzl4qZecZ9YccNbZKZ9yCQ==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-arm64/1.7.0:
-    resolution: {integrity: sha512-AJEx2jX+zO5fQtJpO3r6uhTabj4oSA5ZhB7zTs/rwu/XqoydsvStA4X8NDW4poTbOjF7DcSHizqwi04tSMzpJw==}
+  /turbo-linux-arm64/1.7.1:
+    resolution: {integrity: sha512-PLe0XBJ/YEmiQh+jDcmTRZlxVtkY0CerAu/AKE/c9hCnp6shYqG+peyyuCEzIssUCij2A5yhVd7SIOTQGDzFrQ==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-64/1.7.0:
-    resolution: {integrity: sha512-ewj7PPv2uxqv0r31hgnBa3E5qwUu7eyVRP5M1gB/TJXfSHduU79gbxpKCyxIZv2fL/N2/3U7EPOQPSZxBAoljA==}
+  /turbo-windows-64/1.7.1:
+    resolution: {integrity: sha512-70ndrkQomG4JlAAaflVL+Io1msItHiZUq/zf88Nk4z30QSqqC0Zl4rOpUPE3v1IYSO48bUabshySZa9/aTPHhw==}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-arm64/1.7.0:
-    resolution: {integrity: sha512-LzjOUzveWkvTD0jP8DBMYiAnYemmydsvqxdSmsUapHHJkl6wKZIOQNSO7pxsy+9XM/1/+0f9Y9F9ZNl5lePTEA==}
+  /turbo-windows-arm64/1.7.1:
+    resolution: {integrity: sha512-344XY2SrugfHtIe06Vbi17yZ4SRkPvWghvO/gUgUkgSZN06oYj0SHN2+z8pnLkBTfgkt2zBm2cqFFpVFwa8F2A==}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo/1.7.0:
-    resolution: {integrity: sha512-cwympNwQNnQZ/TffBd8yT0i0O10Cf/hlxccCYgUcwhcGEb9rDjE5thDbHoHw1hlJQUF/5ua7ERJe7Zr0lNE/ww==}
+  /turbo/1.7.1:
+    resolution: {integrity: sha512-0ngDU5+2/wLuvTKpc2ZyDtO6aPeHTa6ASlQGySCx+lwSDiE4fCkRVvNINDtT1HgdO/bEo2CQkLoen/Qjf7wWiQ==}
     hasBin: true
     requiresBuild: true
     optionalDependencies:
-      turbo-darwin-64: 1.7.0
-      turbo-darwin-arm64: 1.7.0
-      turbo-linux-64: 1.7.0
-      turbo-linux-arm64: 1.7.0
-      turbo-windows-64: 1.7.0
-      turbo-windows-arm64: 1.7.0
+      turbo-darwin-64: 1.7.1
+      turbo-darwin-arm64: 1.7.1
+      turbo-linux-64: 1.7.1
+      turbo-linux-arm64: 1.7.1
+      turbo-windows-64: 1.7.1
+      turbo-windows-arm64: 1.7.1
     dev: true
 
   /type-check/0.4.0:

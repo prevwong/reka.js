@@ -1,7 +1,8 @@
 {
-  "name": "@rekajs/types",
+  "name": "@rekajs/utils",
+  "private": true,
   "version": "0.1.0-alpha.0",
-  "description": "Create and manage Reka data types",
+  "description": "Internal utilities used across the Reka monorepo",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -15,6 +16,7 @@
   "author": "Prev Wong",
   "license": "MIT",
   "dependencies": {
-    "@rekajs/utils": "^0.1.0-alpha.0"
+    "nanoid": "^3.3.4",
+    "tiny-invariant": "^1.2.0"
   }
 }

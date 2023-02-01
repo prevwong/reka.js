@@ -13,7 +13,7 @@
   "author": "Prev Wong",
   "license": "MIT",
   "dependencies": {
-    "tiny-invariant": "^1.2.0",
+    "@rekajs/utils": "^0.1.0-alpha.0",
     "yjs": "^13.5.27"
   },
   "peerDependencies": {

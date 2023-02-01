@@ -1,5 +1,6 @@
 import * as t from '@rekajs/types';
 import { TypeConstructor } from '@rekajs/types';
+import { invariant } from '@rekajs/utils';
 import {
   IArraySplice,
   IObjectDidChange,
@@ -12,7 +13,6 @@ import {
   observe,
   runInAction,
 } from 'mobx';
-import invariant from 'tiny-invariant';
 
 import { isObjectLiteral } from './utils';
 
