@@ -1,16 +1,11 @@
-import {
-  ChevronDownIcon,
-  InfoCircledIcon,
-  PlusIcon,
-} from '@radix-ui/react-icons';
+import { ChevronDownIcon, PlusIcon } from '@radix-ui/react-icons';
 import { AnimatePresence, motion } from 'framer-motion';
 import * as React from 'react';
 
 import { IconButton } from '@app/components/button';
 import { styled } from '@app/styles';
 
-import { Box } from '../box';
-import { Tooltip } from '../tooltip';
+import { Info } from '../info';
 
 const StyledSettingSectionHeader = styled(motion.div, {
   display: 'flex',
@@ -70,13 +65,7 @@ export const SettingSection = (props: SettingSectionProps) => {
         <header>
           <span>
             {props.title}
-            {props.info && (
-              <Tooltip content={props.info}>
-                <Box css={{ ml: '$2', opacity: '0.7' }}>
-                  <InfoCircledIcon width={12} height={12} />
-                </Box>
-              </Tooltip>
-            )}
+            {props.info && <Info info={props.info} />}
           </span>
 
           <IconButton transparent css={{ ml: '$2' }}>

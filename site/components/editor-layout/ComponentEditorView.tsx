@@ -1,4 +1,3 @@
-import { InfoCircledIcon } from '@radix-ui/react-icons';
 import { motion } from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
@@ -14,11 +13,11 @@ import { TemplateComments } from './TemplateComments';
 import { Box } from '../box';
 import { Button } from '../button';
 import { RenderFrame } from '../frame/RenderFrame';
+import { Info } from '../info';
 import { Select } from '../select';
 import { Switch } from '../switch';
 import { Text } from '../text';
 import { TextField } from '../text-field';
-import { Tooltip } from '../tooltip';
 import { Tree } from '../tree';
 
 const StyledFrameContainer = styled('div', {
@@ -244,6 +243,7 @@ export const ComponentEditorView = observer(() => {
           >
             Add new Frame
           </Button>
+          <Info info="A Frame is an instance of a Reka Component" />
         </Box>
         <Box css={{ display: 'flex', alignItems: 'center' }}>
           <Text size={1} css={{ mr: '$3', color: '$grayA11' }}>
@@ -371,31 +371,30 @@ export const ComponentEditorView = observer(() => {
                 }}
                 checked={componentEditor.activeFrame.state.sync}
               />
-              <Tooltip
-                content={
-                  componentEditor.activeFrame.state.sync
-                    ? "The Frame's View tree will be updated when there's a change made to State"
-                    : 'Frame will not recompute its View tree'
-                }
+
+              <Text
+                size={1}
+                css={{
+                  display: 'flex',
+                  gap: '$2',
+                  fontSize: '10px',
+                  color: '$slate10',
+                  alignItems: 'center',
+                }}
               >
-                <Text
-                  size={1}
-                  css={{
-                    display: 'flex',
-                    gap: '$2',
-                    fontSize: '10px',
-                    color: '$slate10',
-                    alignItems: 'center',
-                  }}
-                >
-                  {componentEditor.activeFrame?.state.sync
-                    ? 'Synching'
-                    : 'Not synching'}
-                  <Box>
-                    <InfoCircledIcon width={12} height={12} />
-                  </Box>
-                </Text>
-              </Tooltip>
+                {componentEditor.activeFrame?.state.sync
+                  ? 'Synching'
+                  : 'Not synching'}
+                <Box>
+                  <Info
+                    info={
+                      componentEditor.activeFrame.state.sync
+                        ? "The Frame's View tree will be updated when there's a change made to State"
+                        : 'Frame will not recompute its View tree'
+                    }
+                  />
+                </Box>
+              </Text>
             </Box>
           </Box>
           <Box
