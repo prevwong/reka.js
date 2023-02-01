@@ -2,7 +2,7 @@ import * as t from '@rekajs/types';
 import { makeObservable, observable, action } from 'mobx';
 
 import { ViewEvaluator } from './evaluator';
-import { Reka } from './state';
+import { Reka } from './reka';
 import { defer } from './utils';
 
 type FrameComponentConfig = {

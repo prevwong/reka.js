@@ -14,7 +14,7 @@ import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { Frame } from './frame';
 import { Observer } from './observer';
-import { Reka } from './state';
+import { Reka } from './reka';
 import { createKey, isPrimitive, valueToHash } from './utils';
 
 export type TemplateEvaluateContext = {

@@ -1,7 +1,7 @@
 import * as t from '@rekajs/types';
 import { action, makeObservable, observable } from 'mobx';
 
-import { Reka } from './state';
+import { Reka } from './reka';
 
 export class Environment {
   bindings: Map<string, any>;

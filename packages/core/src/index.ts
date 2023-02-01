@@ -1,4 +1,4 @@
-export * from './state';
+export * from './reka';
 export * from './frame';
 export * from './extension';
 export * from './interfaces';

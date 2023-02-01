@@ -1,7 +1,7 @@
 import * as t from '@rekajs/types';
 
 import { ExtensionDefinition } from './extension';
-import { Reka } from './state';
+import { Reka } from './reka';
 
 export type StateExternalGlobalAccessor = (opts: Record<string, any>) => any;
 export type StateExternalGlobals = Record<string, StateExternalGlobalAccessor>;

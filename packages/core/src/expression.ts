@@ -2,7 +2,7 @@ import * as t from '@rekajs/types';
 import { action } from 'mobx';
 
 import { Environment } from './environment';
-import { Reka } from './state';
+import { Reka } from './reka';
 
 export const computeExpression = (
   expr: t.Any,

@@ -4,7 +4,7 @@ import { runInAction } from 'mobx';
 import { ExtensionDefinition } from './definition';
 import { Extension } from './extension';
 
-import { Reka } from '../state';
+import { Reka } from '../reka';
 
 export class ExtensionRegistry {
   private definitionToExtension: WeakMap<ExtensionDefinition, Extension> =

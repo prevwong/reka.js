@@ -7,8 +7,8 @@ import {
   runInAction,
 } from 'mobx';
 
+import { Reka } from './reka';
 import { Scope } from './scope';
-import { Reka } from './state';
 
 type CachedTemplateResolver = {
   computed: IComputedValue<void>;

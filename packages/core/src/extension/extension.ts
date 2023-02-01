@@ -3,7 +3,7 @@ import * as t from '@rekajs/types';
 import { ExtensionDefinition } from './definition';
 
 import { StateSubscriberOpts } from '../interfaces';
-import { Reka } from '../state';
+import { Reka } from '../reka';
 
 export class Extension<D extends ExtensionDefinition = any> {
   reka: Reka;
