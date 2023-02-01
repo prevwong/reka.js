@@ -28,7 +28,7 @@ const StyledScreen = styled('div', {
 });
 
 const LEFT_SIDEBAR_WIDTH = 250;
-const RIGHT_SIDEBAR_UI_WIDTH = 300;
+const RIGHT_SIDEBAR_UI_WIDTH = 250;
 const RIGHT_SIDEBAR_CODE_WIDTH = 500;
 
 const StyledLeftSidebarContainer = styled(motion.div, {

@@ -1,23 +1,27 @@
+import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { motion } from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { useEditor } from '@app/editor';
+import { useEditor, useEditorActiveComponent } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
 import { styled } from '@app/styles';
 
 import { AddFrameModal } from './AddFrameModal';
+import { EditPreviewSize } from './EditPreviewSize';
 import { TemplateComments } from './TemplateComments';
 
 import { Box } from '../box';
-import { Button } from '../button';
+import { Button, IconButton } from '../button';
+import { Dropdown } from '../dropdown';
 import { RenderFrame } from '../frame/RenderFrame';
 import { Info } from '../info';
+import { MobileFallback } from '../mobile-fallback';
+import { Popover } from '../popover';
 import { Select } from '../select';
 import { Switch } from '../switch';
 import { Text } from '../text';
-import { TextField } from '../text-field';
 import { Tree } from '../tree';
 
 const StyledFrameContainer = styled('div', {
@@ -132,7 +136,7 @@ export const ComponentEditorView = observer(() => {
   const [showAddFrameModal, setShowAddFrameModal] = React.useState(false);
   const [isEditingFrame, setIsEditingFrame] = React.useState(false);
 
-  const componentEditor = editor.activeComponentEditor;
+  const componentEditor = useEditorActiveComponent();
 
   const containerDOMRef = React.useRef<HTMLDivElement | null>(null);
   const frameContainerDOMRef = React.useRef<HTMLDivElement | null>(null);
@@ -146,6 +150,29 @@ export const ComponentEditorView = observer(() => {
     : [];
 
   const [frameScale, setFrameScale] = React.useState(1);
+
+  const setEditFrame = React.useCallback(
+    (bool = true) => {
+      setShowAddFrameModal(bool);
+      setIsEditingFrame(bool);
+    },
+    [setShowAddFrameModal, setIsEditingFrame]
+  );
+
+  const removeFrame = React.useCallback(() => {
+    editor.reka.change(() => {
+      const userFrame = componentEditor.activeFrame?.user;
+
+      if (!userFrame) {
+        return;
+      }
+
+      const userFrames =
+        editor.reka.getExtension(UserFrameExtension).state.frames;
+
+      userFrames.splice(userFrames.indexOf(userFrame), 1);
+    });
+  }, [editor, componentEditor]);
 
   const computeFrameScale = React.useCallback(() => {
     if (!showViewTree) {
@@ -246,50 +273,24 @@ export const ComponentEditorView = observer(() => {
           <Info info="A Frame is an instance of a Reka Component" />
         </Box>
         <Box css={{ display: 'flex', alignItems: 'center' }}>
-          <Text size={1} css={{ mr: '$3', color: '$grayA11' }}>
-            Preview size
-          </Text>
-          <Box css={{ display: 'flex', alignItems: 'center' }}>
-            <TextField
-              placeholder="100%"
-              size={5}
-              value={componentEditor.activeFrame?.user.width ?? 'auto'}
-              onCommit={(value) => {
-                editor.reka.change(() => {
-                  const frame = frames.find(
-                    (frame) => componentEditor.activeFrame?.user.id === frame.id
-                  );
-
-                  if (!frame) {
-                    return;
-                  }
-
-                  frame.width = value;
-                });
-              }}
-            />
-            <Text size={1} css={{ mx: '$2', color: '$grayA10' }}>
-              x
-            </Text>
-            <TextField
-              placeholder="100%"
-              size={5}
-              value={componentEditor.activeFrame?.user.height ?? 'auto'}
-              onCommit={(value) => {
-                editor.reka.change(() => {
-                  const frame = frames.find(
-                    (frame) => componentEditor.activeFrame?.user.id === frame.id
-                  );
-
-                  if (!frame) {
-                    return;
-                  }
-
-                  frame.height = value;
-                });
-              }}
-            />
-          </Box>
+          <MobileFallback
+            fallback={
+              <Popover
+                trigger={
+                  <IconButton>
+                    <DotsHorizontalIcon />
+                  </IconButton>
+                }
+              >
+                <Box
+                  css={{ display: 'flex', flexDirection: 'column', gap: '$3' }}
+                >
+                  <EditPreviewSize frames={frames} />
+                </Box>
+              </Popover>
+            }
+            render={<EditPreviewSize frames={frames} />}
+          />
         </Box>
       </Toolbar>
 
@@ -406,39 +407,62 @@ export const ComponentEditorView = observer(() => {
               gap: '$2',
             }}
           >
-            <Button
-              transparent
-              variant="primary"
-              onClick={() => {
-                setShowAddFrameModal(true);
-                setIsEditingFrame(true);
-              }}
-            >
-              Edit Frame Props
-            </Button>
-            <Button
-              transparent
-              variant="danger"
-              onClick={() => {
-                editor.reka.change(() => {
-                  const userFrame = componentEditor.activeFrame?.user;
-
-                  if (!userFrame) {
-                    return;
-                  }
-
-                  const userFrames =
-                    editor.reka.getExtension(UserFrameExtension).state.frames;
-
-                  userFrames.splice(userFrames.indexOf(userFrame), 1);
-                });
-              }}
-            >
-              Remove Frame
-            </Button>
-            <Button onClick={() => setShowViewTree(!showViewTree)}>
-              Toggle View
-            </Button>
+            <MobileFallback
+              size={1200}
+              fallback={
+                <Dropdown
+                  items={[
+                    {
+                      title: 'Edit frame props',
+                      onSelect: () => {
+                        setEditFrame(true);
+                      },
+                    },
+                    {
+                      title: 'Remove frame',
+                      onSelect: () => {
+                        removeFrame();
+                      },
+                    },
+                    {
+                      title: 'Toggle View',
+                      onSelect: () => {
+                        setShowViewTree(!showViewTree);
+                      },
+                    },
+                  ]}
+                >
+                  <IconButton>
+                    <DotsHorizontalIcon />
+                  </IconButton>
+                </Dropdown>
+              }
+              render={
+                <React.Fragment>
+                  <Button
+                    transparent
+                    variant="primary"
+                    onClick={() => {
+                      setEditFrame(true);
+                    }}
+                  >
+                    Edit Frame Props
+                  </Button>
+                  <Button
+                    transparent
+                    variant="danger"
+                    onClick={() => {
+                      removeFrame();
+                    }}
+                  >
+                    Remove Frame
+                  </Button>
+                  <Button onClick={() => setShowViewTree(!showViewTree)}>
+                    Toggle View
+                  </Button>
+                </React.Fragment>
+              }
+            />
           </Box>
           {componentEditor.activeFrame.templateToShowComments && (
             <TemplateComments activeFrame={componentEditor.activeFrame} />
@@ -456,8 +480,7 @@ export const ComponentEditorView = observer(() => {
           isEditingFrame ? componentEditor.activeFrame?.user.id : undefined
         }
         onClose={() => {
-          setShowAddFrameModal(false);
-          setIsEditingFrame(false);
+          setEditFrame(false);
         }}
       />
     </Box>
