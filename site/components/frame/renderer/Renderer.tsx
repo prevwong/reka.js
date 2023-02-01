@@ -1,8 +1,8 @@
 import { toJS } from '@rekajs/core';
 import { observer } from '@rekajs/react';
 import * as t from '@rekajs/types';
+import { invariant } from '@rekajs/utils';
 import * as React from 'react';
-import invariant from 'tiny-invariant';
 
 import { useEditor, useEditorActiveComponent } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';

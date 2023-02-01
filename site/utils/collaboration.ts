@@ -1,4 +1,4 @@
-import invariant from 'tiny-invariant';
+import { invariant } from '@rekajs/utils';
 import * as Y from 'yjs';
 
 import { ENCODED_DUMMY_PROGRAM, Y_ROOT_DOCUMENT } from '@app/constants';

@@ -1,7 +1,7 @@
 import { Frame } from '@rekajs/core';
 import * as t from '@rekajs/types';
+import { invariant } from '@rekajs/utils';
 import { makeObservable, action, observable } from 'mobx';
-import invariant from 'tiny-invariant';
 
 import { CommentExtension } from '@app/extensions/CommentExtension';
 import {
