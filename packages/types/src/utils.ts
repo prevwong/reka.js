@@ -87,12 +87,6 @@ export const merge = (a: any, b: any, opts?: MergeTypeOpts) => {
       return a;
     }
 
-    // We cannot safely determine the identify of the function
-    // So just replace it with the right hand side
-    // if (typeof a === "function" && typeof b === "function") {
-    //   return b;
-    // }
-
     if (Array.isArray(a) && Array.isArray(b)) {
       if (a.length > b.length) {
         a.splice(b.length);
@@ -105,13 +99,10 @@ export const merge = (a: any, b: any, opts?: MergeTypeOpts) => {
           continue;
         }
 
-        // console.log("diff-arr", a[i], mergedElement);
-
         a[i] = mergedElement;
       }
 
       for (let i = a.length; i < b.length; i++) {
-        // console.log("push", b[i], JSON.parse(JSON.stringify(b[i])));
         a.push(b[i]);
       }
 
@@ -125,12 +116,10 @@ export const merge = (a: any, b: any, opts?: MergeTypeOpts) => {
 
       const options = getOpt(a.type);
 
-      // console.log("diff", a, b, options);
+      const diffed = options.diff(a, b);
 
-      const o = options.diff(a, b);
-
-      if (o !== undefined) {
-        return o;
+      if (diffed !== undefined) {
+        return diffed;
       }
 
       const fields = Schema.get(a.type).fields;
@@ -139,13 +128,6 @@ export const merge = (a: any, b: any, opts?: MergeTypeOpts) => {
         if (options.exclude.includes(field.name)) {
           continue;
         }
-        // if (a instanceof t.View) {
-        //   console.log(
-        //     "visiting field",
-        //     field.name,
-        //     options.exclude.includes(field.name)
-        //   );
-        // }
 
         const newValue = mergeValue(a[field.name], b[field.name]);
         if (a[field.name] !== newValue) {
@@ -159,9 +141,6 @@ export const merge = (a: any, b: any, opts?: MergeTypeOpts) => {
     if (isObjectLiteral(a) && isObjectLiteral(b)) {
       for (const key in b) {
         if (a[key]) {
-          // if (typeof a[key] === "function" && typeof b[key] === "function") {
-          //   console.log("func diff", key, [a, b], [a[key], b[key]]);
-          // }
           const t = mergeValue(a[key], b[key]);
 
           a[key] = t;
@@ -184,6 +163,7 @@ export const merge = (a: any, b: any, opts?: MergeTypeOpts) => {
 
     if (typeof a === 'function' && typeof b === 'function' && opts?.function) {
       const diff = opts.function(a, b);
+
       if (diff !== undefined) {
         return diff;
       }

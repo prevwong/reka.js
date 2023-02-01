@@ -4,7 +4,6 @@ import * as Y from 'yjs';
 
 export const yTypeToJS = (_reka: Reka, types: any, yType: any) => {
   const convert = (value: any) => {
-    // console.log("converting", value);
     if (value instanceof Y.Map) {
       if (value.get('$$typeId')) {
         // throw new Error(value.get("$$typeId"));
