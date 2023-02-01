@@ -1,6 +1,6 @@
 import * as t from '@rekajs/types';
 
-import { ExtensionDefinition, ExtensionStateDefinition } from './definition';
+import { ExtensionDefinition } from './definition';
 
 import { StateSubscriberOpts } from '../interfaces';
 import { Reka } from '../state';

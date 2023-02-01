@@ -70,6 +70,8 @@ export const AnimatedScreenSlider = (props: AnimatedScreenSliderProps) => {
     return props.onSetup(() => {
       return pathsRef.current[pathsRef.current.length - 1];
     }, callbacks.goTo);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.onSetup]);
 
   return (
