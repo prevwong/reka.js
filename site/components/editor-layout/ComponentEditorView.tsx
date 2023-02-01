@@ -31,27 +31,6 @@ const StyledFrameContainer = styled('div', {
   display: 'flex',
   alignItems: 'center',
   backgroundColor: '$grayA5',
-  '> iframe': {
-    display: 'block',
-    margin: '0 auto',
-    width: '100%',
-    height: '100%',
-    boxShadow: 'none',
-    border: '1px solid transparent',
-    borderRadius: 0,
-    background: '#fff',
-  },
-  variants: {
-    isNotFullWidth: {
-      true: {
-        padding: '$4',
-        '> iframe': {
-          borderColor: 'rgb(0 0 0 / 7%)',
-          borderRadius: '$1',
-        },
-      },
-    },
-  },
 });
 
 const TOOLBAR_HEIGHT = 56;
@@ -115,18 +94,6 @@ const NoFrameSelectedMessage = () => {
       </Text>
     </Box>
   );
-};
-
-const isNotFullWidth = (
-  width: number | string | undefined,
-  height: number | string | undefined
-) => {
-  const isFullWidth = width === '100%' && height === '100%';
-  const isUnset = !width && !height;
-
-  const isNotFullWidth = !isFullWidth && !isUnset;
-
-  return isNotFullWidth;
 };
 
 export const ComponentEditorView = observer(() => {
@@ -286,22 +253,18 @@ export const ComponentEditorView = observer(() => {
           <React.Fragment>
             <StyledFrameContainer
               ref={frameContainerDOMRef}
-              isNotFullWidth={isNotFullWidth(
-                componentEditor.activeFrame.user.width,
-                componentEditor.activeFrame.user.height
-              )}
               css={{
                 filter: `grayscale(${
                   componentEditor.activeFrame.state.sync ? 0 : 1
                 })`,
                 transition: '0.2s ease-in',
-                '> iframe': {
-                  maxWidth: componentEditor.activeFrame.user.width,
-                  maxHeight: componentEditor.activeFrame.user.height,
-                },
               }}
             >
-              <RenderFrame frame={componentEditor.activeFrame} />
+              <RenderFrame
+                width={componentEditor.activeFrame.user.width}
+                height={componentEditor.activeFrame.user.height}
+                frame={componentEditor.activeFrame}
+              />
             </StyledFrameContainer>
 
             {componentEditor.activeFrame.state.view && showViewTree && (
