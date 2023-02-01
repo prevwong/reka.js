@@ -149,8 +149,6 @@ export const ComponentEditorView = observer(() => {
         )
     : [];
 
-  const [frameScale, setFrameScale] = React.useState(1);
-
   const setEditFrame = React.useCallback(
     (bool = true) => {
       setShowAddFrameModal(bool);
@@ -173,27 +171,6 @@ export const ComponentEditorView = observer(() => {
       userFrames.splice(userFrames.indexOf(userFrame), 1);
     });
   }, [editor, componentEditor]);
-
-  const computeFrameScale = React.useCallback(() => {
-    if (!showViewTree) {
-      setFrameScale(1);
-      return;
-    }
-
-    const { current: containerDOM } = containerDOMRef;
-
-    if (!containerDOM) {
-      return;
-    }
-
-    // const width = containerDOM.getBoundingClientRect().width;
-    // TODO: scale
-    // setFrameScale((width - 400) / width);
-  }, [showViewTree]);
-
-  React.useEffect(() => {
-    computeFrameScale();
-  }, [computeFrameScale]);
 
   if (!componentEditor) {
     return (
@@ -324,10 +301,7 @@ export const ComponentEditorView = observer(() => {
                 },
               }}
             >
-              <RenderFrame
-                frame={componentEditor.activeFrame}
-                scale={frameScale}
-              />
+              <RenderFrame frame={componentEditor.activeFrame} />
             </StyledFrameContainer>
 
             {componentEditor.activeFrame.state.view && showViewTree && (
