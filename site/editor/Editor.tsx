@@ -23,6 +23,7 @@ import {
   generateRandomName,
   getCollaborativeYjsDocument,
   getCollaborativeYjsRekaState,
+  getCollabRoomId,
 } from '@app/utils';
 
 import { ComponentEditor } from './ComponentEditor';
@@ -159,7 +160,7 @@ export class Editor {
     }
 
     const provider = new WebrtcProvider(
-      'reka-yjs-test',
+      getCollabRoomId(),
       getCollaborativeYjsDocument()
     );
 

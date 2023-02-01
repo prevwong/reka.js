@@ -1,4 +1,4 @@
-import { invariant } from '@rekajs/utils';
+import { getRandomId, invariant } from '@rekajs/utils';
 import * as Y from 'yjs';
 
 import { ENCODED_DUMMY_PROGRAM, Y_ROOT_DOCUMENT } from '@app/constants';
@@ -25,4 +25,21 @@ export const getCollaborativeYjsRekaState = () => {
   );
 
   return document;
+};
+
+/**
+ * Get room name to join via WebRTC
+ * Note: Generating a random room id for each machine to prevent the demo on the production site to be altered
+ */
+export const getCollabRoomId = () => {
+  const RANDOM_ROOM_ID_LOCALSTORAGE_KEY = 'rekajs-site-random-room-id';
+
+  let randomRoomId = localStorage.getItem(RANDOM_ROOM_ID_LOCALSTORAGE_KEY);
+
+  if (!randomRoomId) {
+    randomRoomId = getRandomId();
+    localStorage.setItem(RANDOM_ROOM_ID_LOCALSTORAGE_KEY, randomRoomId);
+  }
+
+  return `reka-yjs-test-${randomRoomId}`;
 };
