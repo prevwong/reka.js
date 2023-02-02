@@ -13,13 +13,13 @@ component App() {
   <Header/>
   <div
    style={{
-    "backgroundImage": "linear-gradient(188deg, rgb(255 255 255), rgb(238 251 250), rgb(255 255 255))",
-    "backgroundSize": "400% 400%"
+    "background": "linear-gradient(180deg, #FFB7B7 0%, #727272 100%), radial-gradient(60.91% 100% at 50% 0%, #FFD1D1 0%, #260000 100%), linear-gradient(127.43deg, #00FFFF 0%, #FFFFFF 100%), radial-gradient(100.22% 100% at 70.57% 0%, #FF0000 0%, #00FFE0 100%), linear-gradient(64.82deg, #DBFF00 0%, #3300FF 100%)",
+    "background-blend-mode": "screen, overlay, color-burn, color-dodge, normal"
    }}
-   className={"bg-orange-100 gradient-animation text-neutral-800 w-full h-full flex flex-col justify-center"}
+   className={"text-neutral-800 w-full h-full flex flex-col justify-center"}
   >
    <div className={"px-8 max-w-2xl m-auto w-full text-center flex flex-col items-center"}>
-    <h2 className={"text-4xl mb-4 font-semibold tracking-tighter"}>
+    <h2 className={"text-6xl mb-4 font-bold tracking-tighter"}>
      <text value={"Build powerful no-code editors"}/>
     </h2>
     <div className={"flex flex-col gap-4 px-12 opacity-80 font-light tracking-tight text-md"}>
@@ -42,11 +42,11 @@ component App() {
   <div className={"pt-20 pb-10 max-w-4xl m-auto"}>
    <div className={"flex"}>
     <div className={"px-8 w-1/3"}>
-     <h2 className={"text-2xl font-semibold tracking-tighter"}>
+     <h2 className={"text-3xl font-semibold tracking-tighter"}>
       <text value={"Powered by code, unlimited flexibility"}/>
      </h2>
     </div>
-    <div className={"flex-1 px-8 text-slate-600"}>
+    <div className={"flex-1 px-10 text-slate-600"}>
      <p>
       <text value={"The contents of the editor is stored in an Abstract Syntax Tree, along with an interpreter that efficiently evaluates the output to render. This means your end-users could design UI components with the power of expressions, states, conditionals and loops."}/>
      </p>
@@ -183,7 +183,7 @@ component Header() => (
  >
   <div className={"flex items-center w-full px-8 max-w-4xl m-auto"}>
    <div className={"flex-1"}>
-    <span className={"text-sm font-semibold"}>
+    <span className={"text-sm font-medium"}>
      <text value={"craft.js | reka"}/>
     </span>
    </div>
