@@ -4,8 +4,8 @@ import * as React from 'react';
 import { styled } from '@app/styles';
 
 const StyledSwitch = styled(SwitchPrimitive.Root, {
-  width: '38px',
-  height: '20px',
+  width: '35px',
+  height: '15px',
   borderRadius: '100px',
   position: 'relative',
   backgroundColor: '$blackA6',
@@ -16,8 +16,8 @@ const StyledSwitch = styled(SwitchPrimitive.Root, {
 });
 
 const StyledThumb = styled(SwitchPrimitive.Thumb, {
-  width: '14px',
-  height: '14px',
+  width: '12px',
+  height: '12px',
   display: 'block',
   borderRadius: '$round',
   transform: 'translateX(2px)',
