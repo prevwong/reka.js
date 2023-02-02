@@ -36,31 +36,30 @@ export type User = {
 };
 
 export enum EditorMode {
-  Code = 'code',
-  UI = 'ui',
   Preview = 'preview',
+  UI = 'ui',
+  Code = 'code',
 }
 
 export class Editor {
+  compactSidebar: boolean = false;
+  compactSidebarVisible: boolean = false;
+
   activeFrame: Frame | null;
   user: User;
   peers: User[];
   connected: boolean;
   frameToEvent: WeakMap<Frame, Event>;
-
   componentToComponentEditor: WeakMap<t.Component, ComponentEditor>;
   activeComponentEditor: ComponentEditor | null;
   iframe: HTMLIFrameElement | null;
-
   mode: EditorMode;
-
-  declare provider: WebrtcProvider;
-
+  ready: boolean;
   reka: Reka;
 
+  private declare provider: WebrtcProvider;
   private declare iframeScrollTopListener;
-
-  ready: boolean;
+  private declare windowResizeHandler: () => void;
 
   constructor(readonly router: NextRouter) {
     this.activeFrame = null;
@@ -91,6 +90,9 @@ export class Editor {
     this.iframe = null;
 
     makeObservable(this, {
+      compactSidebar: observable,
+      compactSidebarVisible: observable,
+      showCompactSidebar: action,
       activeFrame: observable,
       setActiveFrame: action,
       peers: observable,
@@ -159,6 +161,25 @@ export class Editor {
       return;
     }
 
+    this.windowResizeHandler = () => {
+      if (document.body.clientWidth < 900) {
+        runInAction(() => {
+          this.compactSidebar = true;
+          this.compactSidebarVisible = false;
+        });
+
+        return;
+      }
+
+      runInAction(() => {
+        this.compactSidebar = false;
+        this.compactSidebarVisible = false;
+      });
+    };
+
+    this.windowResizeHandler();
+    window.addEventListener('resize', this.windowResizeHandler);
+
     const provider = new WebrtcProvider(
       getCollabRoomId(),
       getCollaborativeYjsDocument()
@@ -169,6 +190,10 @@ export class Editor {
     this.peers = this.getPeers();
     this.broadcastLocalUser();
     this.listenAwareness();
+  }
+
+  showCompactSidebar(bool: boolean) {
+    this.compactSidebarVisible = bool;
   }
 
   setReady(bool: boolean) {
@@ -183,6 +208,8 @@ export class Editor {
     this.reka.dispose();
     this.provider.disconnect();
     this.provider.destroy();
+
+    window.removeEventListener('resize', this.windowResizeHandler);
   }
 
   registerIframe(iframe: HTMLIFrameElement) {

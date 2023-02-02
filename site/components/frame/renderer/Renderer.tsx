@@ -212,6 +212,10 @@ export const Renderer = observer((props: RendererProps) => {
   const editor = useEditor();
 
   React.useEffect(() => {
+    if (editor.ready) {
+      return;
+    }
+
     requestAnimationSequence([
       [() => editor.setReady(true), 200],
       [() => editor.setMode(EditorMode.UI), 400],

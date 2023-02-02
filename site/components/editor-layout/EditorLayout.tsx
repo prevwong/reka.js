@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { useEditor } from '@app/editor';
-import { EditorMode } from '@app/editor/Editor';
+import { Editor, EditorMode } from '@app/editor/Editor';
 import { styled } from '@app/styles';
 
 import { ComponentEditorView } from './ComponentEditorView';
@@ -39,7 +39,8 @@ const StyledLeftSidebarContainer = styled(motion.div, {
   display: 'flex',
   flexDirection: 'column',
   borderRight: '1px solid $grayA5',
-  background: '#fff',
+  background: 'rgba(255,255,255,0.8)',
+  backdropFilter: 'blur(10px)',
   marginLeft: 0,
 });
 
@@ -79,23 +80,74 @@ const StyledFrameView = styled(motion.div, {
   flex: 1,
 });
 
+const getNoneFrameWidth = (editor: Editor) => {
+  if (editor.mode === EditorMode.Code) {
+    return RIGHT_SIDEBAR_CODE_WIDTH;
+  }
+
+  const leftSidebarWidth = editor.compactSidebar ? 0 : LEFT_SIDEBAR_WIDTH;
+  return leftSidebarWidth + RIGHT_SIDEBAR_UI_WIDTH;
+};
+
 export const EditorLayout = observer(
   (props: React.ComponentProps<typeof StyledScreen>) => {
     const editor = useEditor();
 
+    const leftSidebarDomRef = React.useRef<HTMLDivElement | null>(null);
+    const leftSidebarAnimate =
+      (editor.mode === EditorMode.UI && !editor.compactSidebar) ||
+      editor.compactSidebarVisible
+        ? 'show'
+        : 'hide';
+
+    React.useEffect(() => {
+      const { current: dom } = leftSidebarDomRef;
+
+      if (!document.body || !dom) {
+        return;
+      }
+
+      const onClickOutside = (e: MouseEvent) => {
+        const target = e.target;
+
+        if (!target || !(target instanceof HTMLElement)) {
+          return;
+        }
+
+        if (dom.contains(target)) {
+          return;
+        }
+
+        editor.showCompactSidebar(false);
+      };
+
+      document.body.addEventListener('click', onClickOutside);
+
+      return () => {
+        document.body.removeEventListener('click', onClickOutside);
+      };
+    }, [editor]);
+
     return (
       <StyledScreen {...props}>
         <StyledLeftSidebarContainer
-          initial={false}
-          animate={editor.mode}
+          initial="hide"
+          animate={[
+            leftSidebarAnimate,
+            ...(editor.compactSidebar || editor.mode === EditorMode.Code
+              ? ['compact']
+              : []),
+          ]}
+          ref={leftSidebarDomRef}
           variants={{
-            code: {
+            compact: {
+              position: 'absolute',
+              zIndex: '9999',
+            },
+            hide: {
               marginLeft: 0 - LEFT_SIDEBAR_WIDTH,
             },
-            preview: {
-              marginLeft: 0 - LEFT_SIDEBAR_WIDTH,
-            },
-            ui: {
+            show: {
               marginLeft: 0,
             },
           }}
@@ -105,61 +157,58 @@ export const EditorLayout = observer(
             delay: 0.2,
           }}
         >
-          <GlobalSettings />
+          <Box css={{ position: 'relative', minWidth: LEFT_SIDEBAR_WIDTH }}>
+            <GlobalSettings />
+            <Box css={{ position: 'relative', flex: 1 }}>
+              <AnimatedScreenSlider
+                goBackText="Components"
+                active={'component-list'}
+                onSetup={(getPath, goTo) => {
+                  return autorun(() => {
+                    const selectedTpl =
+                      editor.activeComponentEditor?.tplEvent.selected;
 
-          <Box css={{ position: 'relative', flex: 1 }}>
-            <AnimatedScreenSlider
-              goBackText="Components"
-              active={'component-list'}
-              onSetup={(getPath, goTo) => {
-                return autorun(() => {
-                  const selectedTpl =
-                    editor.activeComponentEditor?.tplEvent.selected;
+                    const path = getPath();
 
-                  const path = getPath();
+                    if (path !== 'component-list') {
+                      return;
+                    }
 
-                  if (path !== 'component-list') {
-                    return;
-                  }
+                    if (!selectedTpl) {
+                      return;
+                    }
 
-                  if (!selectedTpl) {
-                    return;
-                  }
-
-                  goTo('component-editor');
-                });
-              }}
-              screens={[
-                {
-                  id: 'component-list',
-                  render: (cb) => {
-                    return (
-                      <ComponentList
-                        onComponentSelected={(component) => {
-                          editor.setActiveComponentEditor(component);
-                          cb.goTo('component-editor');
-                        }}
-                      />
-                    );
+                    goTo('component-editor');
+                  });
+                }}
+                screens={[
+                  {
+                    id: 'component-list',
+                    render: (cb) => {
+                      return (
+                        <ComponentList
+                          onComponentSelected={(component) => {
+                            editor.setActiveComponentEditor(component);
+                            cb.goTo('component-editor');
+                          }}
+                        />
+                      );
+                    },
                   },
-                },
-                {
-                  id: 'component-editor',
-                  render: () => {
-                    return <ComponentSettings />;
+                  {
+                    id: 'component-editor',
+                    render: () => {
+                      return <ComponentSettings />;
+                    },
                   },
-                },
-              ]}
-            />
+                ]}
+              />
+            </Box>
           </Box>
         </StyledLeftSidebarContainer>
         <StyledFrameView
           style={{
-            width: `calc(100vw - ${
-              editor.mode === EditorMode.UI
-                ? `${LEFT_SIDEBAR_WIDTH + RIGHT_SIDEBAR_UI_WIDTH}`
-                : `${RIGHT_SIDEBAR_CODE_WIDTH}`
-            }px)`,
+            width: `calc(100vw - ${getNoneFrameWidth(editor)}px)`,
           }}
         >
           <ComponentEditorView />

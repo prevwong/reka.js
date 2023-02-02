@@ -1,4 +1,7 @@
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import {
+  DotsHorizontalIcon,
+  DoubleArrowRightIcon,
+} from '@radix-ui/react-icons';
 import { motion } from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
@@ -189,6 +192,17 @@ export const ComponentEditorView = observer(() => {
             alignItems: 'center',
           }}
         >
+          {(editor.compactSidebar || editor.mode === EditorMode.Code) && (
+            <IconButton
+              css={{ mr: '$4' }}
+              onClick={() => {
+                editor.showCompactSidebar(true);
+              }}
+            >
+              <DoubleArrowRightIcon />
+            </IconButton>
+          )}
+
           <Text css={{ mr: '$4' }}>{componentEditor.component.name}</Text>
           {frames.length > 0 && (
             <Select
