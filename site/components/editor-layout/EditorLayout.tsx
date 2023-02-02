@@ -153,7 +153,15 @@ export const EditorLayout = observer(
             />
           </Box>
         </StyledLeftSidebarContainer>
-        <StyledFrameView>
+        <StyledFrameView
+          style={{
+            width: `calc(100vw - ${
+              editor.mode === EditorMode.UI
+                ? `${LEFT_SIDEBAR_WIDTH + RIGHT_SIDEBAR_UI_WIDTH}`
+                : `${RIGHT_SIDEBAR_CODE_WIDTH}`
+            }px)`,
+          }}
+        >
           <ComponentEditorView />
         </StyledFrameView>
         <StyledRightSidebarContainer

@@ -205,14 +205,14 @@ export const ComponentEditorView = observer(() => {
           )}
 
           <Button
-            css={{ ml: '$2' }}
+            css={{ ml: '$3', px: '$2' }}
             transparent
             variant="primary"
             onClick={() => {
               setShowAddFrameModal(true);
             }}
           >
-            Add new Frame
+            Add Frame
           </Button>
           <Info info="A Frame is an instance of a Reka Component" />
         </Box>

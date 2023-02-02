@@ -42,7 +42,6 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
 
     const setPos = () => {
       const domRect = props.dom.getBoundingClientRect();
-      const iframeRect = iframe.getBoundingClientRect();
 
       const left = iframe.offsetLeft + domRect.left;
       const top = iframe.offsetTop + domRect.top;
@@ -51,7 +50,7 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
       containerDom.style.left = Math.max(iframe.offsetLeft, left) + 'px';
       containerDom.style.top =
         Math.min(
-          iframeRect.height + iframe.offsetTop,
+          iframe.clientHeight + iframe.offsetTop,
           Math.max(iframe.offsetTop, top)
         ) + 'px';
       containerDom.style.height = domRect.height + 'px';
@@ -60,7 +59,7 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
       if (
         left < iframe.offsetLeft ||
         top <= iframe.offsetTop ||
-        top >= iframeRect.height + iframe.offsetTop
+        top >= iframe.clientHeight + iframe.offsetTop
       ) {
         containerDom.classList.add('overflow');
 
