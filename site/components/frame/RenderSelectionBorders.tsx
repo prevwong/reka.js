@@ -63,6 +63,10 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
       ) {
         containerDom.classList.add('overflow');
 
+        if (props.dom.offsetTop >= iframe.clientHeight + iframe.offsetTop) {
+          containerDom.classList.add('overflow-border-hidden');
+        }
+
         if (top <= iframe.offsetTop) {
           containerDom.classList.add('overflow-top');
         } else {
@@ -74,6 +78,7 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
 
       containerDom.classList.remove(
         'overflow',
+        'overflow-border-hidden',
         'overflow-top',
         'overflow-bottom'
       );
@@ -143,7 +148,9 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
         pointerEvents: 'none',
         opacity: 0,
         '&.overflow': {
-          borderColor: 'transparent',
+          '&.overflow-border-hidden': {
+            borderColor: 'transparent',
+          },
           '&.overflow-top': {
             '> div': {
               top: 0,
