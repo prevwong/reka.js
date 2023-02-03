@@ -53,15 +53,13 @@ export const UserFrameExtensionFactory = () =>
           props: {
             title: t.literal({ value: 'My Modal' }),
             isOpen: t.literal({ value: true }),
-            children: [
-              t.tagTemplate({
-                tag: 'text',
-                props: {
-                  value: t.literal({ value: 'Hello from Modal' }),
-                },
-                children: [],
-              }),
-            ],
+            children: t.tagTemplate({
+              tag: 'text',
+              props: {
+                value: t.literal({ value: 'Hello from Modal' }),
+              },
+              children: [],
+            }),
           },
         },
         {
