@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
 import * as React from 'react';
 
-export const UserAnimation = () => {
+export const UserAnimation = React.forwardRef<HTMLDivElement>((_, ref) => {
   return (
-    <div className="w-full h-full bg-indigo-600 relative">
+    <div ref={ref} className="w-full h-full bg-indigo-600 relative">
       <div className="flex items-center justify-center py-10">
         <motion.div
           style={{
@@ -30,4 +30,4 @@ export const UserAnimation = () => {
       </div>
     </div>
   );
-};
+});

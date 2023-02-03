@@ -120,6 +120,30 @@ export const RenderSlotView = observer((props: RenderSlotViewProps) => {
   );
 });
 
+type RenderExternalComponentViewProps = {
+  view: t.ExternalComponentView;
+};
+
+const RenderExternalComponentView = (
+  props: RenderExternalComponentViewProps
+) => {
+  const { onConnect } = React.useContext(SelectorContext);
+
+  const element = React.useMemo(() => {
+    return props.view.component.render(props.view.props);
+  }, [props.view.component]);
+
+  return React.cloneElement(element, {
+    ref: (dom: HTMLElement) => {
+      if (!dom) {
+        return;
+      }
+
+      return onConnect(dom, props.view);
+    },
+  });
+};
+
 type RenderComponentViewProps = {
   view: t.ComponentView;
 };
@@ -134,29 +158,39 @@ const RenderComponentView = observer((props: RenderComponentViewProps) => {
     <SelectorContext.Provider
       value={{
         onConnect: (dom, view) => {
-          if (props.view instanceof t.RekaComponentView) {
-            if (!componentContext) {
-              return activeComponentEditor.connectTplDOM(
-                dom,
-                view.template,
-                true
-              );
-            }
+          if (!componentContext) {
+            return activeComponentEditor.connectTplDOM(
+              dom,
+              view.template,
+              true
+            );
+          }
 
+          if (
+            slotContext?.parentComponent !== componentContext.root &&
+            componentContext.component !== componentContext.root
+          ) {
+            return;
+          }
+
+          if (
+            (props.view instanceof t.RekaComponentView &&
+              props.view.render.indexOf(view) > -1) ||
+            props.view instanceof t.ExternalComponentView
+          ) {
             if (
-              slotContext?.parentComponent !== componentContext.root &&
-              componentContext.component !== componentContext.root
+              props.view instanceof t.ExternalComponentView &&
+              slotContext &&
+              componentContext.parentComponent !== slotContext.parentComponent
             ) {
               return;
             }
 
-            if (props.view.render.indexOf(view) > -1) {
-              return activeComponentEditor.connectTplDOM(
-                dom,
-                props.view.template,
-                true
-              );
-            }
+            return activeComponentEditor.connectTplDOM(
+              dom,
+              props.view.template,
+              true
+            );
           }
         },
       }}
@@ -168,13 +202,11 @@ const RenderComponentView = observer((props: RenderComponentViewProps) => {
           component: props.view.component,
         }}
       >
-        {props.view instanceof t.ExternalComponentView
-          ? props.view.component.render(props.view.props)
-          : props.view instanceof t.RekaComponentView
-          ? props.view.render.map((r) => (
-              <InternalRenderer view={r} key={r.id} />
-            ))
-          : null}
+        {props.view instanceof t.ExternalComponentView ? (
+          <RenderExternalComponentView view={props.view} />
+        ) : props.view instanceof t.RekaComponentView ? (
+          props.view.render.map((r) => <InternalRenderer view={r} key={r.id} />)
+        ) : null}
       </ComponentContext.Provider>
     </SelectorContext.Provider>
   );

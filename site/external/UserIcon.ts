@@ -9,7 +9,7 @@ type UserIconProps = {
   name: string;
 };
 
-export const UserIcon = (props: UserIconProps) => {
+export const UserIcon = React.forwardRef<any, UserIconProps>((props, ref) => {
   const [icon, setIcon] = React.useState(null);
 
   React.useEffect(() => {
@@ -26,5 +26,11 @@ export const UserIcon = (props: UserIconProps) => {
     return null;
   }
 
-  return React.createElement(icon);
-};
+  return React.createElement(
+    'span',
+    {
+      ref,
+    },
+    React.createElement(icon)
+  );
+});
