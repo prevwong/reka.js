@@ -205,6 +205,9 @@ const jsToReka = <T extends t.Type = t.Any>(
           ...directives,
         });
       }
+      case 'JSXExpressionContainer': {
+        return t.Schema.fromJSON(node.expression);
+      }
       default: {
         return t.Schema.fromJSON(node) as t.Type;
       }
