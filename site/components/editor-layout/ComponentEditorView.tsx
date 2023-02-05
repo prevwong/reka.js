@@ -41,10 +41,10 @@ const TOOLBAR_HEIGHT = 56;
 const Toolbar = styled(motion.div, {
   display: 'flex',
   px: '$4',
-  py: '$4',
+  py: '$3',
   borderBottom: '1px solid $grayA5',
   width: '100%',
-  height: `${TOOLBAR_HEIGHT}px`,
+
   alignItems: 'center',
   position: 'relative',
   zIndex: '$4',

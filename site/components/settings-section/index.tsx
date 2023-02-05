@@ -5,6 +5,7 @@ import * as React from 'react';
 import { IconButton } from '@app/components/button';
 import { styled } from '@app/styles';
 
+import { Box } from '../box';
 import { Info } from '../info';
 
 const StyledSettingSectionHeader = styled(motion.div, {
@@ -34,7 +35,7 @@ const StyledSettingSectionHeader = styled(motion.div, {
 const StyledSettingSection = styled('div', {
   display: 'flex',
   px: '$4',
-  py: '$4',
+  py: '$3',
   flexDirection: 'column',
   borderBottom: '1px solid $grayA5',
   '&:last-child': {
@@ -100,11 +101,11 @@ export const SettingSection = (props: SettingSectionProps) => {
             exit="collapsed"
             variants={{
               open: { opacity: 1, height: 'auto' },
-              collapsed: { opacity: 0, height: 0 },
+              collapsed: { opacity: 0, height: 0, paddingBottom: 0 },
             }}
             transition={{ duration: 0.2, ease: [0.04, 0.62, 0.23, 0.98] }}
           >
-            {props.children}
+            <Box css={{ py: '$2', pb: '$4' }}>{props.children}</Box>
           </motion.section>
         )}
       </AnimatePresence>

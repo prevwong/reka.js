@@ -142,7 +142,7 @@ export const EditorLayout = observer(
           variants={{
             compact: {
               position: 'absolute',
-              zIndex: '9999',
+              zIndex: '100',
             },
             hide: {
               marginLeft: 0 - LEFT_SIDEBAR_WIDTH,
