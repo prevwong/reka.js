@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { IconButton } from '@app/components/button';
 import { styled } from '@app/styles';
+import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
 import { Box } from '../box';
 import { Info } from '../info';
@@ -13,7 +14,6 @@ const StyledSettingSectionHeader = styled(motion.div, {
   position: 'relative',
   alignItems: 'center',
   cursor: 'pointer',
-  background: '#fff',
   mt: '2px',
   mb: '1px',
 
@@ -41,6 +41,12 @@ const StyledSettingSection = styled('div', {
   '&:last-child': {
     borderBottomColor: 'transparent',
   },
+});
+
+const StyledSettingSectionContent = styled(motion.section, {
+  overflow: 'hidden',
+  marginLeft: '-$4',
+  marginRight: '-$4',
 });
 
 type SettingSectionProps = {
@@ -94,7 +100,7 @@ export const SettingSection = (props: SettingSectionProps) => {
       </StyledSettingSectionHeader>
       <AnimatePresence initial={false}>
         {isOpen && (
-          <motion.section
+          <StyledSettingSectionContent
             key="content"
             initial="collapsed"
             animate="open"
@@ -103,10 +109,10 @@ export const SettingSection = (props: SettingSectionProps) => {
               open: { opacity: 1, height: 'auto' },
               collapsed: { opacity: 0, height: 0, paddingBottom: 0 },
             }}
-            transition={{ duration: 0.2, ease: [0.04, 0.62, 0.23, 0.98] }}
+            transition={CREATE_BEZIER_TRANSITION()}
           >
-            <Box css={{ py: '$2', pb: '$4' }}>{props.children}</Box>
-          </motion.section>
+            <Box css={{ py: '$2', pb: '$4', px: '$4' }}>{props.children}</Box>
+          </StyledSettingSectionContent>
         )}
       </AnimatePresence>
     </StyledSettingSection>

@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { Box } from '@app/components/box';
+import { Text } from '@app/components/text';
 import { TextField } from '@app/components/text-field';
 import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
@@ -142,7 +143,25 @@ export const TemplateSettings = observer(() => {
   const template = editor.activeComponentEditor?.tplEvent.selected;
 
   if (!template) {
-    return null;
+    return (
+      <Box
+        css={{
+          px: '$8',
+          py: '$4',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+          textAlign: 'center',
+          gap: '$2',
+        }}
+      >
+        <Text size={2} css={{ color: '$slate10', lineHeight: '1.2rem' }}>
+          Click on an element on the screen to start editing a template.
+        </Text>
+      </Box>
+    );
   }
 
   return <InternalTemplateSettings key={template.id} template={template} />;

@@ -10,6 +10,7 @@ import { useEditor, useEditorActiveComponent } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
 import { styled } from '@app/styles';
+import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
 import { AddFrameModal } from './AddFrameModal';
 import { EditPreviewSize } from './EditPreviewSize';
@@ -36,7 +37,7 @@ const StyledFrameContainer = styled('div', {
   backgroundColor: '$grayA5',
 });
 
-const TOOLBAR_HEIGHT = 56;
+const TOOLBAR_HEIGHT = 40;
 
 const Toolbar = styled(motion.div, {
   display: 'flex',
@@ -44,7 +45,7 @@ const Toolbar = styled(motion.div, {
   py: '$3',
   borderBottom: '1px solid $grayA5',
   width: '100%',
-
+  height: TOOLBAR_HEIGHT,
   alignItems: 'center',
   position: 'relative',
   zIndex: '$4',
@@ -180,10 +181,7 @@ export const ComponentEditorView = observer(() => {
             opacity: 0,
           },
         }}
-        transition={{
-          duration: 0.4,
-          ease: [0.04, 0.62, 0.23, 0.98],
-        }}
+        transition={CREATE_BEZIER_TRANSITION()}
       >
         <Box
           css={{
@@ -303,6 +301,7 @@ export const ComponentEditorView = observer(() => {
               opacity: 1,
             },
           }}
+          transition={CREATE_BEZIER_TRANSITION()}
         >
           <Box
             css={{

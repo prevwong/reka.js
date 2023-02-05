@@ -10,6 +10,7 @@ import { Box } from '@app/components/box';
 import { useEditor } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 import { styled } from '@app/styles';
+import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
 import { Button, IconButton } from '../button';
 import { Collaborators } from '../editor-panel/Collaborators';
@@ -127,10 +128,7 @@ const HeaderToolbars = <T extends Record<string, React.ReactElement>>(
                     opacity: 0,
                   },
                 }}
-                transition={{
-                  ease: [0.19, 1, 0.22, 1],
-                  duration: 0.4,
-                }}
+                transition={CREATE_BEZIER_TRANSITION()}
               >
                 {props.toolbars[key]}
               </motion.div>
@@ -159,7 +157,7 @@ export const Header = observer(() => {
           opacity: 0,
         },
       }}
-      transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+      transition={CREATE_BEZIER_TRANSITION()}
     >
       <Box css={{ display: 'flex', ai: 'center' }}>
         <Box css={{ display: 'flex', flex: 1, ai: 'center' }}>

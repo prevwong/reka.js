@@ -6,6 +6,7 @@ import * as React from 'react';
 
 import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
+import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
 import { Footer } from '../footer';
 import { Header, HEADER_HEIGHT } from '../header';
@@ -55,7 +56,7 @@ export const Layout = observer((props: LayoutProps) => {
             height: `calc(100vh - ${HEADER_HEIGHT}px)`,
           },
         }}
-        transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+        transition={CREATE_BEZIER_TRANSITION()}
       >
         {props.children}
         {router.pathname !== '/' && <Footer />}

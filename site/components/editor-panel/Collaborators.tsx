@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
+import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
 import { Tooltip } from '../tooltip';
 import { UserAvatar } from '../user-avatar';
@@ -45,10 +46,7 @@ export const Collaborators = observer(() => {
               transform: 'scale(1)',
             }}
             exit={{ transform: 'scale(0)' }}
-            transition={{
-              ease: [0.19, 1, 0.22, 1],
-              duration: 0.4,
-            }}
+            transition={CREATE_BEZIER_TRANSITION()}
           />
         ))}
         <MotionCollabUser
@@ -59,10 +57,7 @@ export const Collaborators = observer(() => {
             transform: 'scale(1)',
           }}
           exit={{ transform: 'scale(0)' }}
-          transition={{
-            ease: [0.19, 1, 0.22, 1],
-            duration: 0.4,
-          }}
+          transition={CREATE_BEZIER_TRANSITION()}
         />
       </AnimatePresence>
     </StyledCollaboratorsContainers>

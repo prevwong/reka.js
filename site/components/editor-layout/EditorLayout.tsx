@@ -6,6 +6,7 @@ import * as React from 'react';
 import { useEditor } from '@app/editor';
 import { Editor, EditorMode } from '@app/editor/Editor';
 import { styled } from '@app/styles';
+import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
 import { ComponentEditorView } from './ComponentEditorView';
 import { ComponentList } from './ComponentList';
@@ -151,11 +152,7 @@ export const EditorLayout = observer(
               marginLeft: 0,
             },
           }}
-          transition={{
-            duration: 0.4,
-            ease: [0.04, 0.62, 0.23, 0.98],
-            delay: 0.2,
-          }}
+          transition={CREATE_BEZIER_TRANSITION({ delay: 0.2 })}
         >
           <Box css={{ position: 'relative', minWidth: LEFT_SIDEBAR_WIDTH }}>
             <GlobalSettings />
@@ -221,11 +218,7 @@ export const EditorLayout = observer(
             code: { width: RIGHT_SIDEBAR_CODE_WIDTH },
             preview: { width: 0 },
           }}
-          transition={{
-            duration: 0.4,
-            ease: [0.04, 0.62, 0.23, 0.98],
-            delay: 0.2,
-          }}
+          transition={CREATE_BEZIER_TRANSITION({ delay: 0.2 })}
         >
           <AnimatePresence initial={false}>
             {editor.mode === EditorMode.Code && (
@@ -247,11 +240,7 @@ export const EditorLayout = observer(
                     right: '-100%',
                   },
                 }}
-                transition={{
-                  duration: 0.4,
-                  ease: [0.04, 0.62, 0.23, 0.98],
-                  delay: 0.2,
-                }}
+                transition={CREATE_BEZIER_TRANSITION()}
               >
                 <CodeEditor />
               </StyledCodeContainer>
@@ -275,11 +264,7 @@ export const EditorLayout = observer(
                     right: '-100%',
                   },
                 }}
-                transition={{
-                  duration: 0.4,
-                  ease: [0.04, 0.62, 0.23, 0.98],
-                  delay: 0.2,
-                }}
+                transition={CREATE_BEZIER_TRANSITION()}
               >
                 <TemplateSettings />
               </StyledSettingsEditor>

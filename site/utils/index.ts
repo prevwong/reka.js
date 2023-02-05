@@ -40,3 +40,14 @@ export const requestAnimationSequence = (sequences: AnimationSequence[]) => {
 
   window.requestAnimationFrame(animate);
 };
+
+export const CREATE_BEZIER_TRANSITION = (
+  opts: Partial<{ duration: number; delay: number }> = {
+    duration: 0.4,
+    delay: 0,
+  }
+) => ({
+  ease: [0.19, 1, 0.22, 1],
+  duration: opts.duration,
+  delay: opts.delay,
+});

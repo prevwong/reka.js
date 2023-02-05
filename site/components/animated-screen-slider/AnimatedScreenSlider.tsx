@@ -1,6 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import * as React from 'react';
 
+import { CREATE_BEZIER_TRANSITION } from '@app/utils';
+
 import { Box } from '../box';
 import { Button } from '../button';
 
@@ -119,10 +121,7 @@ export const AnimatedScreenSlider = (props: AnimatedScreenSliderProps) => {
                   top: 0,
                   background: '#fff',
                 }}
-                transition={{
-                  x: { type: 'spring', stiffness: 300, damping: 30 },
-                  opacity: { duration: 0.2 },
-                }}
+                transition={CREATE_BEZIER_TRANSITION()}
               >
                 {paths.length > 0 && i > 0 && screen.hideBackButton !== true && (
                   <Box css={{ py: '$4', px: '$4' }}>
