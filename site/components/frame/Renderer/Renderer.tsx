@@ -131,7 +131,7 @@ const RenderExternalComponentView = (
 
   const element = React.useMemo(() => {
     return props.view.component.render(props.view.props);
-  }, [props.view.component]);
+  }, [props.view.component, props.view.props]);
 
   return React.cloneElement(element, {
     ref: (dom: HTMLElement) => {
