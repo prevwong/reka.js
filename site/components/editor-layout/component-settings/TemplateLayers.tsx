@@ -207,13 +207,19 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
                   editor.reka.change(() => {
                     const parent = editor.reka.getParent(template, t.Template);
 
-                    if (!parent || !(parent instanceof t.Template)) {
+                    if (!parent) {
+                      return;
+                    }
+
+                    const parentNode = parent.node;
+
+                    if (!(parentNode instanceof t.Template)) {
                       return;
                     }
 
                     editor.reka.change(() => {
-                      parent.children.splice(
-                        parent.children.indexOf(template),
+                      parentNode.children.splice(
+                        parentNode.children.indexOf(template),
                         1
                       );
                     });
