@@ -132,15 +132,22 @@ const reka = Reka.create({
     externals: {
         states: {
             scrollTop: 0,
-        }
+        },
+        globals: self => ({
+            getScrollTop: () => {
+                return self.getExternalState('scrollTop')
+            }
+        })
     }
 });
 
+// Update the "scrollTop" external state on browser scroll
 window.addEventListener('scroll', () => {
     reka.updateExternalState('scrollTop', window.scrollTop)
 });
 
-// Then, the end-user could do something with the "scrollTop" external:
+// Then, the end-user could do something with the "scrollTop" external state:
+// Note that the external state must be accessed via an external global:
 {
     type: "RekaComponent",
     template: {
@@ -149,7 +156,7 @@ window.addEventListener('scroll', () => {
         children: [],
         // show this <div /> only if the scrollTop is more than 200px
         if: t.binaryExpression({
-            left: t.identifier({ name: 'scrollTop' }),
+            left: t.externalGlobal({ name: 'getScrollTop' }),
             operator: '>=',
             right: t.literal({ value: 200 }) 
         })
