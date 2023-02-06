@@ -356,7 +356,7 @@ export class Reka {
   /**
    * Create a new Reka instance
    */
-  static create(opts: StateOpts) {
+  static create(opts?: StateOpts) {
     return new Reka(opts);
   }
 }
