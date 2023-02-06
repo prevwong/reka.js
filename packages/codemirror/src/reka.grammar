@@ -11,7 +11,7 @@ expression {
 }
 
 ComponentDeclaration {
-  kw<"component"> VariableName Parameters ComponentStateDeclaration "=>" ComponentTemplate
+  kw<"component"> VariableName ComponentProps ComponentStateDeclaration? "=>" ComponentTemplate
 }
 
 ComponentStateDeclaration {
@@ -47,8 +47,12 @@ VariableDeclaration {
   kw<"val"> VariableName "=" expression ";"
 }
 
-Parameters {
-  "(" (identifier ("," identifier)*)? ")"
+ComponentPropDeclaration {
+  identifier ("=" expression)
+}
+
+ComponentProps {
+  "(" (ComponentPropDeclaration ("," ComponentPropDeclaration)*)? ")"
 }
 
 kw<term> { @specialize[@name={term}]<identifier, term> }
