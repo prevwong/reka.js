@@ -123,7 +123,7 @@ export const EditorLayout = observer(
     return (
       <StyledScreen {...props}>
         <StyledLeftSidebarContainer
-          initial="hide"
+          initial={false}
           animate={[
             leftSidebarAnimate,
             ...(editor.compactSidebar || editor.mode === EditorMode.Code
