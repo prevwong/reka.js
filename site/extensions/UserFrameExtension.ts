@@ -159,7 +159,7 @@ export const UserFrameExtensionFactory = () =>
                 name: currentFrame.name,
                 props: currentFrame.props,
               },
-              syncImmediately: false,
+              syncImmediately: true,
             });
           });
 

@@ -86,7 +86,7 @@ component App() {
     <Feature
      title={"External Functionalities"}
      noPadding={true}
-     description={"Expose Javascript functions or React/Vue/Svelte from your codebase for your end-users to use in their pages"}
+     description={"Expose Javascript functions or React components from your codebase for your end-users to use in their pages"}
     >
      <Animation/>
     </Feature>
