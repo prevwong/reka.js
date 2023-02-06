@@ -61,24 +61,18 @@ const reka = Reka.create({
 
 ## External Globals
 
-The next type of externals are External Globals. These are useful for when you need to expose some variables that could provide additional functionality for the end-users. For example, you could expose an external global that returns the current time:
+The next type of externals are External Globals. These are useful for when you need to expose some variables that could provide additional functionality for the end-users. For example, you could expose an external global that returns a random number:
 
 ```tsx
 const reka = Reka.create({
     externals: {
         globals: self => ({
-            getCurrentTime: (params) => {
-                if ( params.format === 'now' ) {
-                    return Date.now();
+             getRandomNumber: (params) => {
+                if ( params.strong === true ) {
+                    return crypto.getRandomValues();
                 }
 
-                const date = new Date();
-
-                if ( params.format === 'year' ) {
-                    return date.getYear();
-                }
-
-                // return something else
+                return Math.random();
             }
         })
     }
@@ -88,21 +82,42 @@ const reka = Reka.create({
 {
     type: "RekaComponent",
     template: {
-        type: "TagTemplate",
-        name: "text",
-        props: {
-            value: t.binaryExpression({
-                left: t.literal({ value: "Current year is: " }),
-                operator: "+",
-                right: t.externalGlobal({
-                    name: "getCurrentTime", // <-- 
-                    params: {
-                        format: t.literal({ value: 'now' })
-                    }
-                })
-            })
-        }
-    }
+        type: 'TagTemplate",
+        tag: 'div',
+        props: {},
+        children: [
+            {
+                type: "TagTemplate",
+                name: "text",
+                props: {
+                    value: t.binaryExpression({
+                        left: t.literal({ value: "Random number (via Math.random): " }),
+                        operator: "+",
+                        right: t.externalGlobal({
+                            name: "getRandomNumber", // <-- call external global
+                            params: {}
+                        })
+                    })
+                }
+            },
+            {
+                type: "TagTemplate",
+                name: "text",
+                props: {
+                    value: t.binaryExpression({
+                        left: t.literal({ value: "Random number (via crypto): " }),
+                        operator: "+",
+                        right: t.externalGlobal({
+                            name: "getRandomNumber", // <-- call external global
+                            params: {
+                                strong: t.literal({ value: true }) // <- specify "strong" param = true, so we will use crypto.getRandomValues()
+                            }
+                        })
+                    })
+                }
+            }
+        ]
+    } 
 }
 ```
 

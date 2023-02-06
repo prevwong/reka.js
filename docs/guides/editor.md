@@ -15,124 +15,125 @@ npm install next @rekajs/core @rekajs/types @rekajs/react
 
 ## Basic setup
 
-First we'll create a Reka.create instance and load it with a very simple App component with just a "Hello World" text. 
+First we'll create a Reka instance and load it with some components.
 
-We will expose this Reka instance so we can access it throughout our React application with the `RekaProvider` React context provider.
+We will expose this Reka instance so we can access it throughout our React application with the `RekaProvider` context provider.
 
-Finally, we will create a new `<Editor />` component where we will provide some UI to interact with the Reka instance along with a `<Preview />` component that will render the components in our Reka instance:
+Lastly, we will create a new `<Editor />` component where we will provide some UI to interact with the Reka instance along with a `<Preview />` component that will render the components in our Reka instance:
 
 ```tsx
 // src/pages/index.tsx
-import * as React from 'react';
-
-import * as t from '@rekajs/types';
 import { Reka } from '@rekajs/core';
 import { RekaProvider } from '@rekajs/react';
+import * as t from '@rekajs/types';
+import * as React from 'react';
 
 import { Editor } from '@/components/Editor';
 import { Preview } from '@/components/Preview';
 
-export default function Home() {
-  const [reka, setReka] = React.useState<Reka | null>(null);
+const reka = Reka.create();
 
-  React.useEffect(() => {
-    const reka = Reka.create();
-
-    reka.load(
-      t.state({
-        extensions: {},
-        program: t.program({
-          globals: [
-            t.val({
-              name: 'globalText',
-              init: t.literal({ value: 'Global Text!' }),
-            }),
-          ],
-          components: [
-            t.rekaComponent({
-              name: 'App',
-              props: [],
-              state: [],
-              template: t.tagTemplate({
-                tag: 'div',
-                props: {},
-                children: [
-                  t.tagTemplate({
-                    tag: 'h4',
-                    props: {},
-                    children: [
-                      t.tagTemplate({
-                        tag: 'text',
-                        props: {
-                          value: t.literal({ value: 'Hello World' }),
-                        },
-                        children: [],
-                      }),
-                    ],
-                  }),
-
-                  t.componentTemplate({
-                    component: t.identifier({ name: 'Button' }),
-                    props: {},
-                    children: [],
-                  }),
-                ],
+reka.load(
+  t.state({
+    extensions: {},
+    program: t.program({
+      globals: [
+        t.val({
+          name: 'globalText',
+          init: t.literal({ value: 'Global Text!' }),
+        }),
+      ],
+      components: [
+        t.rekaComponent({
+          name: 'App',
+          props: [],
+          state: [],
+          template: t.tagTemplate({
+            tag: 'div',
+            props: {
+              className: t.literal({
+                value: 'bg-neutral-100 px-3 py-4 w-full h-full',
               }),
-            }),
-            t.rekaComponent({
-              name: 'Button',
-              props: [
-                t.componentProp({
-                  name: 'text',
-                  init: t.literal({ value: 'Click me!' }),
-                }),
-              ],
-              state: [
-                t.val({ name: 'counter', init: t.literal({ value: 0 }) }),
-              ],
-              template: t.tagTemplate({
-                tag: 'button',
+            },
+            children: [
+              t.tagTemplate({
+                tag: 'h4',
                 props: {
-                  onClick: t.func({
-                    params: [],
-                    body: t.block({
-                      statements: [
-                        t.assignment({
-                          left: t.identifier({ name: 'counter' }),
-                          operator: '+=',
-                          right: t.literal({ value: 1 }),
-                        }),
-                      ],
-                    }),
-                  }),
+                  className: t.literal({ value: 'text-lg w-full' }),
                 },
                 children: [
                   t.tagTemplate({
                     tag: 'text',
                     props: {
-                      value: t.binaryExpression({
-                        left: t.identifier({ name: 'text' }),
-                        operator: '+',
-                        right: t.identifier({ name: 'counter' }),
-                      }),
+                      value: t.literal({ value: 'Hello World' }),
                     },
                     children: [],
                   }),
                 ],
               }),
+
+              t.componentTemplate({
+                component: t.identifier({ name: 'Button' }),
+                props: {},
+                children: [],
+              }),
+            ],
+          }),
+        }),
+        t.rekaComponent({
+          name: 'Button',
+          props: [
+            t.componentProp({
+              name: 'text',
+              init: t.literal({ value: 'Click me!' }),
             }),
           ],
+          state: [t.val({ name: 'counter', init: t.literal({ value: 0 }) })],
+          template: t.tagTemplate({
+            tag: 'button',
+            props: {
+              className: t.literal({ value: 'rounded border-2 px-3 py-2' }),
+              onClick: t.func({
+                params: [],
+                body: t.block({
+                  statements: [
+                    t.assignment({
+                      left: t.identifier({ name: 'counter' }),
+                      operator: '+=',
+                      right: t.literal({ value: 1 }),
+                    }),
+                  ],
+                }),
+              }),
+            },
+            children: [
+              t.tagTemplate({
+                tag: 'text',
+                props: {
+                  value: t.identifier({ name: 'text' }),
+                },
+                children: [],
+              }),
+              t.tagTemplate({
+                tag: 'text',
+                props: {
+                  value: t.binaryExpression({
+                    left: t.literal({ value: ' -> ' }),
+                    operator: '+',
+                    right: t.identifier({ name: 'counter' }),
+                  }),
+                },
+                children: [],
+              }),
+            ],
+          }),
         }),
-      })
-    );
+      ],
+    }),
+  })
+);
 
-    setReka(reka);
-  }, []);
-
-  if (!reka) {
-    return null;
-  }
-
+export default function Home() {
   return (
     <RekaProvider state={reka}>
       <div className="flex h-screen">
@@ -152,123 +153,97 @@ export default function Home() {
 
 Let's first start building the `<Preview />` component, which will essentially contain our renderer for the components we have in our Reka instance.
 
-In order to render a `RekaComponent`, we need to first have a `Frame`, which is essentially an instance of the component that computes a `View`, the render tree of that component. 
+In order to render a `RekaComponent`, we need to first have a `Frame`, which is essentially an instance of the component that computes a `View`, the render tree of that component's instance.
 
-To keep this guide simple, we will just define a list of `Frame` to create, and provide a dropdown that lets us to switch between the frames that we have defined:
+To keep this guide simple, we will just create some frames manually right after initialising our Reka instance:
 
 ```tsx
+// src/pages/index.tsx
+import { Reka } from '@rekajs/core';
+import { RekaProvider } from '@rekajs/react';
 import * as t from '@rekajs/types';
-
 import * as React from 'react';
 
-const FRAMES = [
-    {
-        id: 'Main App', 
-        component: { 
-            name: 'App', 
-            props: {} 
-        }
+import { Editor } from '@/components/Editor';
+import { Preview } from '@/components/Preview';
+
+const reka = Reka.create();
+
+reka.load(...);
+
+reka.createFrame({
+  id: 'Main app',
+  component: {
+    name: 'App',
+  },
+});
+
+reka.createFrame({
+  id: 'Primary button',
+  component: {
+    name: 'Button',
+    props: {
+      text: t.literal({ value: 'Primary button' }),
     },
-    {
-        id: 'Primary Button',
-        component: { 
-            name: 'Button', 
-            props: {
-                text: t.literal({ value: "A Primary Button!" }),
-            }
-        }
-    }
-];
+  },
+});
 
-export const Preview = () => {
-    const [selectedFrameId, setSelectedFrameId] = React.useState<string>(FRAMES[0]);
-     
-    return (
-        <div className="w-full h-full flex flex-col text-xs">
-            <div className="px-2 py-2 border-b-2">
-                <select onChange={value => setSelectedFrameId(value) }>
-                    {FRAMES.map((frame) => (
-                        <option key={frame.id} value={frame.id}>
-                            {frame.id}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <div className="flex-1">
-                <div className="px-3 py-4">No frame selected</div>
-            </div>
-        </div>
-    )
-}
+
+export default function Home() {...}
 ```
 
-Next, we need to actually get the `Frame` in Reka depending on the frame that was selected from the list that we have defined locally:
+Now, let's actually create the `<Preview />` React component for our frames:
 
 ```tsx
-const FRAMES = [...];
+// src/pages/Preview.tsx
+import { Frame } from '@rekajs/core';
+import { observer, useCollector } from '@rekajs/react';
+import * as React from 'react';
 
-export const Preview = () => {
-    const { reka } = useReka();
-    const [selectedFrameId, setSelectedFrameId] = React.useState<string>(FRAMES[0].id);
-    
-    const selectedFrame = React.useMemo(() => {
-        return FRAMES.find(frame => frame.id === selectedFrameId);
-    }, [selectedFrameId])
+import { RenderFrame } from '../Renderer';
 
-    const selectedRekaFrame = React.useMemo(() => {
-        if ( !selectedFrame ) {
-            return;
-        }
+export const Preview = observer(() => {
+  const { reka } = useCollector();
 
-        let rekaFrame = reka.frames.find(frame => frame.id === selectedFrame.id);
-
-        // If the selected Frame does not exist in the Reka instance, create it
-        if ( !rekaFrame ) {
-            rekaFrame = reka.createFrame(selectedFrame);
-        }
-
-        return rekaFrame;
-    }, [selectedFrame]);
-
-    return (...)
-}
-```
-
-Finally, once we have our Reka `Frame`, we can access its `View` and pass that to our renderer:
-
-```tsx
-
-export const Preview = () => {
-  ...
-
-  const selectedRekaFrame = React.useMemo(() => {...}, [selectedFrame]);
+  const [selectedFrame, setSelectedFrame] = React.useState<Frame>(
+    reka.frames[0]
+  );
 
   return (
     <div className="w-full h-full flex flex-col text-xs">
       <div className="px-2 py-2 border-b-2">
         <select
           onChange={(e) => {
-            setSelectedFrameId(e.target.value);
+            const frameId = e.target.value;
+            const frame = reka.frames.find((frame) => frame.id === frameId);
+
+            if (!frame) {
+              return;
+            }
+
+            setSelectedFrame(frame);
           }}
         >
-          {FRAMES.map((frame) => (
+          {reka.frames.map((frame) => (
             <option key={frame.id} value={frame.id}>
               {frame.id}
             </option>
           ))}
         </select>
       </div>
-      <div className="flex-1">
-        {selectedRekaFrame?.view ? (
-          <Renderer view={selectedRekaFrame.view} />
+      <div className="flex-1 px-2 py-2">
+        {selectedFrame ? (
+          <RenderFrame frame={selectedFrame} />
         ) : (
           <div className="px-3 py-4">No frame selected</div>
         )}
       </div>
     </div>
   );
-};
+});
 ```
+
+> Reka's State is built with Mobx. The `observer` HOC used above is a re-export of the same HOC from the `mobx-react-lite` package.
 
 ## Renderer
 
@@ -340,7 +315,6 @@ export const RenderFrame = observer((props: RenderFrameProps) => {
 
 ```
 
-> Reka's State is built with Mobx. The `observer` HOC used above is a re-export of the same HOC from the `mobx-react-lite` package.
 
 ![Renderer](/images/guides/react/renderer.gif)
 
