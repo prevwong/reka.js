@@ -85,7 +85,7 @@ The `Frame` instance computes a `View` which is essentially the resulting render
 We can retrieve the computed `View` by accessing `root` property of a `Frame`:
 
 ```tsx
-const view = frame.root;
+const view = frame.view;
 
 // view =
 {
@@ -157,7 +157,7 @@ reka.change(() => {...});
 
 console.log(appComponent.template.children[1]);
 
-console.log(frame.root);
+console.log(frame.view);
 // console:
 {
     type: "RekaComponentView",
@@ -250,7 +250,7 @@ const frame = reka.createFrame(...);
 const appComponent = reka.state.components[0];
 
 reka.watch(() => {
-    console.log('frame root tag =>', frame.root.tag);
+    console.log('frame root tag =>', frame.view.tag);
 })
 
 reka.change(() => {

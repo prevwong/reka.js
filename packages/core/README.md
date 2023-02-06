@@ -74,7 +74,7 @@ Reka computes a component instance from its State by outputing a simple JSON str
 
 ```tsx
 // Compute a View for the Counter component
-console.log(reka.createFrame('Counter').root);
+console.log(reka.createFrame('Counter').view);
 
 // console:
 {
