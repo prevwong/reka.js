@@ -82,12 +82,7 @@ const StyledFrameView = styled(motion.div, {
 });
 
 const getNoneFrameWidth = (editor: Editor) => {
-  if (editor.mode === EditorMode.Code) {
-    return RIGHT_SIDEBAR_CODE_WIDTH;
-  }
-
-  const leftSidebarWidth = editor.compactSidebar ? 0 : LEFT_SIDEBAR_WIDTH;
-  return leftSidebarWidth + RIGHT_SIDEBAR_UI_WIDTH;
+  return LEFT_SIDEBAR_WIDTH + RIGHT_SIDEBAR_UI_WIDTH;
 };
 
 export const EditorLayout = observer(
@@ -205,7 +200,10 @@ export const EditorLayout = observer(
         </StyledLeftSidebarContainer>
         <StyledFrameView
           style={{
-            width: `calc(100vw - ${getNoneFrameWidth(editor)}px)`,
+            width: `calc(100vw - ${
+              LEFT_SIDEBAR_WIDTH +
+              Math.max(RIGHT_SIDEBAR_CODE_WIDTH, RIGHT_SIDEBAR_UI_WIDTH)
+            }px)`,
           }}
         >
           <ComponentEditorView />

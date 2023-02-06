@@ -44,7 +44,6 @@ const StyledSettingSection = styled('div', {
 });
 
 const StyledSettingSectionContent = styled(motion.section, {
-  overflow: 'hidden',
   marginLeft: '-$4',
   marginRight: '-$4',
 });
@@ -106,8 +105,13 @@ export const SettingSection = (props: SettingSectionProps) => {
             animate="open"
             exit="collapsed"
             variants={{
-              open: { opacity: 1, height: 'auto' },
-              collapsed: { opacity: 0, height: 0, paddingBottom: 0 },
+              open: { opacity: 1, height: 'auto', overflow: 'unset' },
+              collapsed: {
+                opacity: 0,
+                height: 0,
+                paddingBottom: 0,
+                overflow: 'hidden',
+              },
             }}
             transition={CREATE_BEZIER_TRANSITION()}
           >
