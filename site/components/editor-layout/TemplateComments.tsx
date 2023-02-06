@@ -22,6 +22,7 @@ const StyledContainer = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   position: 'fixed',
+  width: '250px',
   zIndex: '$4',
   borderRadius: '$2',
   boxShadow: '0px 0px 30px 10px rgb(0 0 0 / 12%)',
@@ -62,10 +63,14 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
     }
 
     const domRect = props.templateDOM.getBoundingClientRect();
-    const iframeRect = props.iframeDOM.getBoundingClientRect();
+    const containerDomRect = containerDOM.getBoundingClientRect();
 
-    const top = iframeRect.top + domRect.top + 10;
-    const left = iframeRect.left + domRect.left + domRect.width + 10;
+    const top = props.iframeDOM.offsetTop + domRect.top;
+    const left =
+      props.iframeDOM.offsetLeft +
+      domRect.left +
+      domRect.width -
+      containerDomRect.width;
 
     containerDOM.style.top = `${top}px`;
     containerDOM.style.left = `${left}px`;

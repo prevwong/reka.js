@@ -4,7 +4,7 @@ import * as React from 'react';
 import IFrame from 'react-frame-component';
 import { ThreeDots } from 'react-loader-spinner';
 
-import { useEditor } from '@app/editor';
+import { useEditor, useEditorActiveComponent } from '@app/editor';
 import { ActiveFrame } from '@app/editor/ComponentEditor';
 import { styled } from '@app/styles';
 
@@ -13,6 +13,7 @@ import { RenderSelectionBorders } from './RenderSelectionBorders';
 import { Renderer } from './Renderer';
 
 import { Box } from '../box';
+import { TemplateComments } from '../editor-layout/TemplateComments';
 
 const isNotFullWidth = (
   width: number | string | undefined,
@@ -67,8 +68,9 @@ type RenderFrameViewProps = {
 
 const DESKTOP_WIDTH = 800;
 
-const RenderFrameView = (props: RenderFrameViewProps) => {
+const RenderFrameView = observer((props: RenderFrameViewProps) => {
   const editor = useEditor();
+  const activeComponentEditor = useEditorActiveComponent();
 
   const containerDomRef = React.useRef<HTMLDivElement | null>(null);
   const frameDomRef = React.useRef<HTMLDivElement | null>(null);
@@ -135,10 +137,14 @@ const RenderFrameView = (props: RenderFrameViewProps) => {
           <Renderer key={props.view.id} view={props.view} />
         </IFrame>
         <RenderSelectionBorders />
+
+        {activeComponentEditor.activeFrame?.templateToShowComments && (
+          <TemplateComments activeFrame={activeComponentEditor.activeFrame} />
+        )}
       </StyledFrameContainer>
     </Box>
   );
-};
+});
 
 type RenderFrameProps = {
   frame: ActiveFrame;

@@ -14,7 +14,6 @@ import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
 import { AddFrameModal } from './AddFrameModal';
 import { EditPreviewSize } from './EditPreviewSize';
-import { TemplateComments } from './TemplateComments';
 
 import { Box } from '../box';
 import { Button, IconButton } from '../button';
@@ -26,6 +25,7 @@ import { Popover } from '../popover';
 import { Select } from '../select';
 import { Switch } from '../switch';
 import { Text } from '../text';
+import { Tooltip } from '../tooltip';
 import { Tree } from '../tree';
 
 const StyledFrameContainer = styled('div', {
@@ -191,14 +191,25 @@ export const ComponentEditorView = observer(() => {
           }}
         >
           {(editor.compactSidebar || editor.mode === EditorMode.Code) && (
-            <IconButton
-              css={{ mr: '$4' }}
-              onClick={() => {
-                editor.showCompactSidebar(true);
-              }}
-            >
-              <DoubleArrowRightIcon />
-            </IconButton>
+            <Tooltip content="Toggle sidebar">
+              <IconButton
+                css={{ mr: '$4' }}
+                onClick={(e) => {
+                  e.stopPropagation();
+
+                  editor.showCompactSidebar(!editor.compactSidebarVisible);
+                }}
+              >
+                <DoubleArrowRightIcon
+                  style={{
+                    transition: '0.2s ease-in',
+                    transform: `rotate(${
+                      editor.compactSidebarVisible ? 180 : 0
+                    }deg)`,
+                  }}
+                />
+              </IconButton>
+            </Tooltip>
           )}
 
           <Text css={{ mr: '$4' }}>{componentEditor.component.name}</Text>
@@ -414,9 +425,6 @@ export const ComponentEditorView = observer(() => {
               }
             />
           </Box>
-          {componentEditor.activeFrame.templateToShowComments && (
-            <TemplateComments activeFrame={componentEditor.activeFrame} />
-          )}
         </BottomToolbar>
       )}
 
