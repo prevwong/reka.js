@@ -316,7 +316,8 @@ export const RenderFrame = observer((props: RenderFrameProps) => {
 ```
 
 
-![Renderer](/images/guides/react/renderer.gif)
+<video src="https://user-images.githubusercontent.com/16416929/216907135-521f96c7-c1c2-4bc8-ac2c-d20696f91785.mov" controls></video>
+
 
 
 ## Editor
@@ -333,8 +334,9 @@ export const Editor = () => {
   const { reka } = useCollector();
 
   return (
-    <div>
+    <div className="w-full h-full p-4">
       <button
+        className="text-sm px-3 py-2 rounded bg-neutral-200 text-neutral-600"
         onClick={() => {
           const appComponent = reka.state.program.components.find(
             (component) => component.name === 'App'
@@ -364,7 +366,7 @@ export const Editor = () => {
 };
 ```
 
-![Code Editor](/images/guides/react/add-template.gif)
+<video src="https://user-images.githubusercontent.com/16416929/216907145-d158a1ac-a3e1-4bdb-9345-abecf281d109.mov" controls></video>
 
 
 ### Parser
@@ -397,6 +399,7 @@ export const Editor = () => {
                 onChange={(e) => setNewTextValue(e.target.value)}
             />
             <button
+                className="text-sm px-3 py-2 rounded bg-neutral-200 text-neutral-600"
                 onClick={() => {
                     if (!newTextValue) {
                         return;
@@ -435,7 +438,8 @@ export const Editor = () => {
     )
 }
 ```
-![Parser](/images/guides/react/text-input2.gif)
+<video src="https://user-images.githubusercontent.com/16416929/216907178-df3e2140-4f39-4633-8e62-02c1a83fd406.mov" controls></video>
+
 
 Hence, to create a proper page editor with Reka, all we need to do is to create UI elements that mutate the Reka state like we did above. 
 
@@ -455,12 +459,12 @@ import * as React from 'react';
 
 export const Editor = () => {
   return (
-    <div>
+    <div className="w-full h-full p-4">
       <CodeEditor />
     </div>
   );
 };
 ```
 
-![Code Editor](/images/guides/react/code-editor.gif)
+<video src="https://user-images.githubusercontent.com/16416929/216907150-9ad75d22-a5a8-464c-8b29-db472c1eafac.mov" controls></video>
 
