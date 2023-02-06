@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { useEditor } from '@app/editor';
-import { Editor, EditorMode } from '@app/editor/Editor';
+import { EditorMode } from '@app/editor/Editor';
 import { styled } from '@app/styles';
 import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
@@ -80,10 +80,6 @@ const StyledFrameView = styled(motion.div, {
   transition: '0.2s ease-in',
   flex: 1,
 });
-
-const getNoneFrameWidth = (editor: Editor) => {
-  return LEFT_SIDEBAR_WIDTH + RIGHT_SIDEBAR_UI_WIDTH;
-};
 
 export const EditorLayout = observer(
   (props: React.ComponentProps<typeof StyledScreen>) => {
