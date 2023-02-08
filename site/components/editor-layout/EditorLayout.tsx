@@ -128,13 +128,16 @@ export const EditorLayout = observer(
             leftSidebarAnimate,
             ...(editor.compactSidebar || editor.mode === EditorMode.Code
               ? ['compact']
-              : []),
+              : ['standard']),
           ]}
           ref={leftSidebarDomRef}
           variants={{
             compact: {
               position: 'absolute',
               zIndex: '100',
+            },
+            standard: {
+              position: 'relative',
             },
             hide: {
               marginLeft: 0 - LEFT_SIDEBAR_WIDTH,

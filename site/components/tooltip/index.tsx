@@ -30,6 +30,7 @@ const StyledContent = styled(TooltipPrimitive.Content, {
   lineHeight: 1,
   color: '#fff',
   backgroundColor: '$gray12',
+  position: 'relative',
   boxShadow:
     'hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px',
   '@media (prefers-reduced-motion: no-preference)': {
@@ -46,12 +47,6 @@ const StyledContent = styled(TooltipPrimitive.Content, {
   },
 });
 
-const StyledArrow = styled(TooltipPrimitive.Arrow, {
-  fill: '$gray12',
-  width: '6px',
-  height: '2px',
-});
-
 type TooltipProps = {
   content: string;
   children: React.ReactNode;
@@ -64,10 +59,7 @@ export const Tooltip = ({ children, content }: TooltipProps) => {
       open={content === '' ? false : undefined}
     >
       <TooltipPrimitive.Trigger>{children}</TooltipPrimitive.Trigger>
-      <StyledContent sideOffset={5}>
-        {content}
-        <StyledArrow />
-      </StyledContent>
+      <StyledContent sideOffset={5}>{content}</StyledContent>
     </TooltipPrimitive.Root>
   );
 };
