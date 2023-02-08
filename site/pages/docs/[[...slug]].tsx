@@ -233,7 +233,7 @@ const Docs = (props: any) => {
             <Cross1Icon style={{ width: '15px', height: '15px' }} />
           </IconButton>
         </Box>
-        <Box class="doc-nav-content">
+        <Box className="doc-nav-content">
           {DOCS_SIDEBAR.main.map((link, i) => (
             <Link key={i} href={`/docs/${link.href}`} passHref legacyBehavior>
               <DocLink primary active={props.slug === link.href}>
