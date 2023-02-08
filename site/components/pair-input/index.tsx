@@ -1,11 +1,11 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
 import * as React from 'react';
-import TextareaAutosize from 'react-textarea-autosize';
 
 import { styled } from '@app/styles';
 
 import { Box } from '../box';
 import { IconButton } from '../button';
+import { ExpressionInput } from '../expression-input';
 import { Text } from '../text';
 import { TextField } from '../text-field';
 
@@ -68,42 +68,6 @@ const StyledValueFieldContainer = styled('div', {
   position: 'relative',
 });
 
-const StyledValueField = styled('div', {
-  position: 'relative',
-  width: '100%',
-});
-
-const StyledTextareaContainer = styled('div', {
-  position: 'absolute',
-  top: '-1px',
-  left: '-1px',
-  width: 'calc(100% + 1px)',
-  zIndex: '$4',
-  border: '1px solid transparent',
-  borderRadius: '$2',
-  overflow: 'hidden',
-  boxShadow: '0px 3px 16px 0px rgb(0 0 0 / 16%)',
-  background: '#fff',
-  variants: {
-    error: {
-      true: {
-        borderColor: '$red8',
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
-      },
-    },
-  },
-});
-
-const StyledTextarea = styled(TextareaAutosize, {
-  width: '100%',
-  fontSize: '$1',
-  padding: '$3 $3',
-  outline: 'none',
-  resize: 'none',
-  fontFamily: 'JetBrains Mono',
-});
-
 type PairInputFieldProps = {
   id: string;
   value: string;
@@ -112,100 +76,6 @@ type PairInputFieldProps = {
   onRemove?: () => void;
   onChange?: (id: string, value: string, clear: () => void) => void;
   valuePlaceholder?: string;
-};
-
-type TextareaEditorProps = React.ComponentProps<typeof StyledTextarea> & {
-  onClose: () => void;
-  onCommit: () => void;
-};
-
-const TextareaEditor = ({
-  onClose,
-  onCommit,
-  value,
-  ...props
-}: TextareaEditorProps) => {
-  const [hasError, setHasError] = React.useState('');
-  const domRef = React.useRef<HTMLTextAreaElement | null>(null);
-
-  const onCommitRef = React.useRef(onCommit);
-  onCommitRef.current = onCommit;
-
-  const onCloseRef = React.useRef(onClose);
-  onCloseRef.current = onClose;
-
-  const commit = React.useCallback(() => {
-    const { current: onCommit } = onCommitRef;
-    const { current: onClose } = onCloseRef;
-
-    try {
-      onCommit();
-      onClose();
-    } catch (err) {
-      setHasError(String(err));
-    }
-  }, [setHasError]);
-
-  React.useEffect(() => {
-    const { current: dom } = domRef;
-
-    if (!dom) {
-      return;
-    }
-
-    dom.focus();
-    dom.setSelectionRange(dom.value.length, dom.value.length);
-
-    const listener = (e: any) => {
-      if (dom.contains(e.target as any) === true) {
-        return;
-      }
-
-      commit();
-    };
-
-    const parent = dom.closest('[role="dialog"]') ?? window;
-
-    parent.addEventListener('mousedown', listener);
-
-    return () => {
-      parent.removeEventListener('mousedown', listener);
-    };
-  }, [commit]);
-
-  return (
-    <StyledTextareaContainer error={!!hasError}>
-      <StyledTextarea
-        {...props}
-        value={value}
-        ref={domRef}
-        onChange={(e) => {
-          props.onChange?.(e);
-          setHasError('');
-        }}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            commit();
-          }
-        }}
-      />
-      {hasError && (
-        <Box
-          css={{
-            position: 'relative',
-            width: '100%',
-            padding: '$2 $3',
-            backgroundColor: '$red8',
-            color: 'white',
-            zIndex: '$2',
-          }}
-        >
-          <Text size={1}>{hasError}</Text>
-        </Box>
-      )}
-    </StyledTextareaContainer>
-  );
 };
 
 type PairInputValue = {
@@ -264,7 +134,6 @@ const PairInputField = ({
 }: PairInputFieldProps) => {
   const [newId, setNewId] = React.useState(id);
   const [newValue, setNewValue] = React.useState(value);
-  const [showTextareaEditor, setShowTextareaEditor] = React.useState(false);
 
   const commit = () => {
     if (!newId || !newValue || !onChange) {
@@ -298,44 +167,17 @@ const PairInputField = ({
         disabled={disableEditId}
       />
       <StyledValueFieldContainer>
-        <StyledValueField>
-          <TextField
-            value={newValue}
-            onChange={() => {
-              return;
-            }}
-            onKeyUp={(e) => {
-              if (e.key !== 'Enter') {
-                return;
-              }
-
-              commit();
-            }}
-            onBlur={() => {
-              commit();
-            }}
-            onFocus={() => {
-              setShowTextareaEditor(true);
-            }}
-            disabled={disableEditValue}
-            placeholder={valuePlaceholder}
-          />
-
-          {showTextareaEditor && (
-            <TextareaEditor
-              value={newValue}
-              onChange={(e) => {
-                setNewValue(e.target.value);
-              }}
-              onCommit={() => {
-                commit();
-              }}
-              onClose={() => {
-                setShowTextareaEditor(false);
-              }}
-            />
-          )}
-        </StyledValueField>
+        <ExpressionInput
+          value={newValue}
+          placeholder={valuePlaceholder}
+          onChange={(newValue) => {
+            setNewValue(newValue);
+          }}
+          onCommit={() => {
+            commit();
+          }}
+          disable={disableEditValue}
+        />
         <IconButton
           transparent
           onClick={() => {

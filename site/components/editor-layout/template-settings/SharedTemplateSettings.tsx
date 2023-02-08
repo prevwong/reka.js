@@ -5,6 +5,7 @@ import * as React from 'react';
 
 import { Box } from '@app/components/box';
 import { Button } from '@app/components/button';
+import { ExpressionInput } from '@app/components/expression-input';
 import { SettingSection } from '@app/components/settings-section';
 import { Text } from '@app/components/text';
 import { TextField } from '@app/components/text-field';
@@ -17,18 +18,9 @@ type SharedTemplateSettingsProps = {
 const ConditionalTemplateSetting = observer(
   (props: SharedTemplateSettingsProps) => {
     const editor = useEditor();
-    const [condition, setCondition] = React.useState<string | null>(
-      props.template.if ? Parser.stringify(props.template.if) : null
+    const [condition, setCondition] = React.useState<string>(
+      props.template.if ? Parser.stringify(props.template.if) : ''
     );
-
-    const resetCondition = React.useCallback(() => {
-      if (!props.template.if) {
-        setCondition(null);
-        return;
-      }
-
-      setCondition(Parser.stringify(props.template.if));
-    }, [props.template, setCondition]);
 
     return (
       <SettingSection
@@ -37,12 +29,13 @@ const ConditionalTemplateSetting = observer(
         collapsedOnInitial={false}
       >
         <Box>
-          <TextField
+          <ExpressionInput
+            value={condition}
             placeholder="counter > 0"
-            value={condition || ''}
-            onCommit={(value) => {
+            onChange={(value) => setCondition(value)}
+            onCommit={() => {
               const parsedValue = Parser.parseExpression(
-                value || '',
+                condition || '',
                 t.Expression
               );
 
@@ -59,7 +52,7 @@ const ConditionalTemplateSetting = observer(
                 props.template.if = null;
               });
 
-              resetCondition();
+              setCondition('');
             }}
           />
         </Box>
