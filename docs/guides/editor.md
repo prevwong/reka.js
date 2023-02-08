@@ -10,7 +10,7 @@ We'll be using `next` to scaffold a React application. We'll also be using some 
 npm install next @rekajs/core @rekajs/types @rekajs/react
 ```
 
-> `@rekajs/react` is still in a very early stage of development, much of its API is still subject to change and improvements 
+> The `@rekajs/react` is still a work in progress is subject to change and improvements 
 
 
 ## Basic setup

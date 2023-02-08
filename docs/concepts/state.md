@@ -152,16 +152,6 @@ If you're coming from React, these globals are more akin to stateful values stor
 ```tsx
 const GlobalCounterContext = React.createContext();
 
-const GlobalCounterContextProvider = ({ children }) => {
-    const [value, setValue] = React.useState(0);
-
-    return (
-        <GlobalCounterContext.Provider value={value, setValue}>
-            {children}
-        </GlobalCounterContext.Provider>
-    )
-}
-
 const Button = (props) => {
     const globalCounter = React.useContext(GlobalCounterContext);
 

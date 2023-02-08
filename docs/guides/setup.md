@@ -13,7 +13,7 @@ npm install @rekajs/types @rekajs/core
 
 ## Define a new State
 
-First, we need a new `Reka` instance which requires a `State` data type - to contain a list of components and global variables created by the end-user.
+First, we need a new `Reka` instance which requires a `State` data type which will be used to store the components and global variables created by the end-user. 
 
 For now, we will create an initial `State` type with a simple App component:
 
@@ -53,7 +53,7 @@ reka.load(
 )
 ```
 
-The above example is equivalent to the following the React component:
+The above component in the State is equivalent to the following the React component:
 
 ```tsx
 const App = () => {
@@ -80,7 +80,7 @@ const frame = reka.createFrame({
 });
 ```
 
-The `Frame` instance computes a `View` which is essentially the resulting render output of a component's instance. 
+The `Frame` instance computes a `View` which is the resulting render output of a component's instance. 
 
 We can retrieve the computed `View` by accessing `root` property of a `Frame`:
 
@@ -116,7 +116,7 @@ Now that we have a working `Reka` instance with a valid `State`, let's try to ma
 
 Changes made to the `State` must be wrapped with the `.change()` method.
 
-For example, let's add a new `<button>` element:
+For example, let's add a new `<button>` element to our App component:
 
 ```tsx
 const appComponent = reka.state.components[0];
