@@ -51,11 +51,11 @@ export const DOCS_SIDEBAR: DocSidebar = {
       children: [
         {
           title: 'Getting started',
-          href: 'guides/setup',
+          href: 'guides/getting-started',
         },
         {
           title: 'Integration with React',
-          href: 'guides/editor',
+          href: 'guides/react',
         },
         {
           title: 'Realtime Collaboration',
@@ -88,7 +88,7 @@ export const DOCS_SIDEBAR: DocSidebar = {
         },
         {
           title: '@rekajs/react',
-          href: '#',
+          href: 'api/react',
         },
       ],
     },

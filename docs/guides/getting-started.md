@@ -13,7 +13,7 @@ npm install @rekajs/types @rekajs/core
 
 ## Define a new State
 
-First, we need a new `Reka` instance which requires a `State` data type which will be used to store the components and global variables created by the end-user. 
+First, we need a new `Reka` instance which requires a `State` data type that will be used to store the components and global variables created by the end-user. 
 
 For now, we will create an initial `State` type with a simple App component:
 

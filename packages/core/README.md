@@ -1,10 +1,10 @@
 # reka.js 
 
-Reka is a state management system for building no-code page editors.
+Reka is a state management system for building no-code editors.
 
 ## Why?
 
-A large part of the complexity of building no-code page editors comes from the architecting of the state management system to power such editors (ie: how should the end user designs be stored and edited in a page editor?)
+A large part of the complexity of building no-code editors comes from the architecting of the state management system to power such editors (ie: how should the end user designs be stored and edited in a page editor?)
 
 Reka solves this by providing an AST-powered state system to enable end-users to create UI components that are nearly as complex as ones developers could write in code; along with an interpreter to efficiently compute an output that could be rendered on the browser.
 
@@ -14,7 +14,7 @@ It's primarily built to serve as the new state management system to power Craft.
 
 ### AST-based State :zap:
 
-Reka's State is an Abstract Syntax Tree (AST) which enables end-users to build complex UI components with features that developers are familiar with from UI frameworks such as React:
+At the core of Reka is the State data structure which is an Abstract Syntax Tree (AST). This enables end-users to build complex UI components with features that developers are familiar with from UI frameworks such as React:
 
 ```tsx
 [

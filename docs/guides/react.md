@@ -2,6 +2,8 @@
 
 In this guide, we'll build a simple React app to interact/manipulate the state of a Reka instance along with a renderer for Reka components. 
 
+> The source code for the end result can be found [here](https://github.com/prevwong/reka.js/tree/main/example)
+
 ## Installation
 
 We'll be using `next` to scaffold a React application. We'll also be using some React-specific APIs for Reka provided by the `@rekajs/react` package.
@@ -10,7 +12,7 @@ We'll be using `next` to scaffold a React application. We'll also be using some 
 npm install next @rekajs/core @rekajs/types @rekajs/react
 ```
 
-> The `@rekajs/react` is still a work in progress is subject to change and improvements 
+> The `@rekajs/react` package is still a work in progress is subject to change and improvements 
 
 
 ## Basic setup

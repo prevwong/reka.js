@@ -4,7 +4,9 @@ Apart from storing the `Program` AST, the `State` could optionally store additio
 
 For example, let's say you want to build a page builder where your end-users are able to leave a comment on a `Template` node of a `RekaComponent`, similar to what you could do on apps like Figma. 
 
-One way to go about this is store these comments directly as part of the `State`, through an Extension.
+One way to go about this is to store these comments directly as part of the `State`, through an Extension. 
+
+> An important benefit of storing additional values via an Extension's state is in realtime collaboration via the `@rekajs/collaboration` package where the Extension's state is automatically synced across peers.
 
 ## Creating an Extension
 
