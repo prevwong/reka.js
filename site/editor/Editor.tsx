@@ -162,7 +162,7 @@ export class Editor {
     }
 
     this.windowResizeHandler = () => {
-      if (document.body.clientWidth < 900) {
+      if (document.body.clientWidth <= 1100) {
         runInAction(() => {
           this.compactSidebar = true;
           this.compactSidebarVisible = false;

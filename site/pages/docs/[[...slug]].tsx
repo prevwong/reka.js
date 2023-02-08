@@ -1,9 +1,11 @@
+import { Cross1Icon, HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
 import { Box } from '@app/components/box';
+import { IconButton } from '@app/components/button';
 import { Text } from '@app/components/text';
 import { DOCS_SIDEBAR } from '@app/constants/docs-sidebar';
 import { styled } from '@app/styles';
@@ -13,7 +15,15 @@ import markdownToHtml from '@app/utils/markdown';
 const DocNav = styled(motion.nav, {
   width: '15rem',
   position: 'relative',
-  '> div': {
+  display: 'flex',
+  flexDirection: 'column',
+  '.mobile-nav-header': {
+    width: '100%',
+    px: '$4',
+    mt: '$5',
+    display: 'none',
+  },
+  '.doc-nav-content': {
     display: 'flex',
     flexDirection: 'column',
     px: '$4',
@@ -21,6 +31,38 @@ const DocNav = styled(motion.nav, {
     height: 'calc(100vh - 50px)',
     position: 'sticky',
     top: '5rem',
+  },
+
+  '@mobile': {
+    width: '20rem',
+    position: 'fixed',
+    left: '-100%',
+    top: '50px',
+    height: 'calc(100vh - 50px)',
+    background: 'rgba(255,255,255,0.5)',
+    zIndex: '$4',
+    backdropFilter: 'blur(10px)',
+    overflow: 'hidden',
+    transition: '0.2s ease-in',
+    '> .mobile-nav-header': {
+      display: 'flex',
+    },
+    '> .doc-nav-content': {
+      height: '100%',
+      position: 'relative',
+      overflow: 'scroll',
+      top: 0,
+      py: '$4',
+    },
+  },
+  variants: {
+    active: {
+      true: {
+        '@mobile': {
+          left: 0,
+        },
+      },
+    },
   },
 });
 
@@ -63,9 +105,28 @@ const DocPostContent = styled('div', {
     py: '$5',
     px: '$8',
     margin: '0 auto',
-    maxWidth: '100%',
-    '@media screen and (min-width: 1000px)': {
-      maxWidth: '1000px',
+    display: 'flex',
+    gap: '$5',
+    alignItems: 'flex-start',
+    maxWidth: '1000px',
+    [`> ${IconButton}`]: {
+      display: 'none',
+      px: '$3',
+      py: '$3',
+      svg: {
+        width: '15px',
+        height: '15px',
+      },
+    },
+
+    '@mobile': {
+      margin: 0,
+      px: '$4',
+      py: '$5',
+      maxWidth: '100%',
+      [`> ${IconButton}`]: {
+        display: 'block',
+      },
     },
   },
 
@@ -102,6 +163,9 @@ const DocPostContent = styled('div', {
 
 const DocPostContentHeader = styled('div', {
   pb: '$6',
+  display: 'flex',
+  gap: '$4',
+  alignItems: 'center',
   '> h1': {
     fontSize: '$5',
     fontWeight: 600,
@@ -111,6 +175,8 @@ const DocPostContentHeader = styled('div', {
 const Docs = (props: any) => {
   const contentDomRef = React.useRef<HTMLDivElement | null>(null);
   const router = useRouter();
+
+  const [mobileNavActive, setMobileNavActive] = React.useState(false);
 
   React.useEffect(() => {
     const { current: contentDom } = contentDomRef;
@@ -148,22 +214,26 @@ const Docs = (props: any) => {
   }, [router]);
 
   return (
-    <Box css={{ display: 'flex', gap: '$3' }}>
-      <DocNav
-        animate="enter"
-        initial="exit"
-        variants={{
-          enter: {
-            opacity: 1,
-            left: 0,
-          },
-          exit: {
-            opacity: 0,
-            left: -200,
-          },
-        }}
-      >
-        <Box>
+    <Box css={{ display: 'flex', gap: '$3', position: 'relative' }}>
+      <DocNav active={mobileNavActive}>
+        <Box
+          className="mobile-nav-header"
+          css={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            mb: '$4',
+          }}
+        >
+          <IconButton
+            transparent
+            onClick={() => {
+              setMobileNavActive(false);
+            }}
+          >
+            <Cross1Icon style={{ width: '15px', height: '15px' }} />
+          </IconButton>
+        </Box>
+        <Box class="doc-nav-content">
           {DOCS_SIDEBAR.main.map((link, i) => (
             <Link key={i} href={`/docs/${link.href}`} passHref legacyBehavior>
               <DocLink primary active={props.slug === link.href}>
@@ -196,20 +266,29 @@ const Docs = (props: any) => {
       </DocNav>
       <DocPostContent>
         <Box css={{ width: '100%' }}>
-          <DocPostContentHeader>
-            <h1>{props.doc.title}</h1>
-          </DocPostContentHeader>
-          <Box
-            className="prose prose-md prose-headings:font-medium prose-h1:mt-8 mb-8 prose-code:bg-"
-            css={{
-              maxWidth: '100%',
-              '> h2 > a': {
-                textDecoration: 'none',
-              },
+          <IconButton
+            onClick={() => {
+              setMobileNavActive(!mobileNavActive);
             }}
-            ref={contentDomRef}
-            dangerouslySetInnerHTML={{ __html: props.doc.content }}
-          ></Box>
+          >
+            <HamburgerMenuIcon />
+          </IconButton>
+          <Box css={{ width: '100%', overflow: 'scroll' }}>
+            <DocPostContentHeader>
+              <h1>{props.doc.title}</h1>
+            </DocPostContentHeader>
+            <Box
+              className="prose prose-md prose-headings:font-medium prose-h1:mt-8 mb-8 prose-code:bg-"
+              css={{
+                maxWidth: '100%',
+                '> h2 > a': {
+                  textDecoration: 'none',
+                },
+              }}
+              ref={contentDomRef}
+              dangerouslySetInnerHTML={{ __html: props.doc.content }}
+            ></Box>
+          </Box>
         </Box>
       </DocPostContent>
     </Box>
