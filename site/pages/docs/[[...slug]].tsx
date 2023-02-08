@@ -43,7 +43,7 @@ const DocNav = styled(motion.nav, {
     zIndex: '$4',
     backdropFilter: 'blur(10px)',
     overflow: 'hidden',
-    transition: '0.2s ease-in',
+    transition: '0.4s cubic-bezier(0.19, 1, 0.22, 1)',
     '> .mobile-nav-header': {
       display: 'flex',
     },
