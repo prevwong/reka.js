@@ -2,21 +2,20 @@
 
 Reka provides an additional `@rekajs/collaboration` package which enables multiplayer capabilities for your page editor.
 
-> This package is powered by `Yjs` - a library for building [CRDTs](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type), it's recommended that you take a look at the official documentation before proceeding.  
+> This package is powered by `Yjs` - a library for building [CRDTs](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type), it's recommended that you take a look at the official documentation before proceeding.
 
+## Conflict-free Replicated Data Types (CRDT)
 
-## Conflict-free Replicated Data Types (CRDT) 
+CRDT data structures are commonly used to achieve realtime collaboration.
 
-CRDT data structures are one of the ways to achieve realtime collaboration. 
+In Reka, the `State` data structure by itself is **not** a CRDT and has no realtime collaborative capabilities; this is by design so we can keep the core of Reka more portable and we don't assume that everyone needs multiplayer features in their page builders, which would otherwise be additional bloat if multiplayer is not an actual requirement.
 
-In Reka, the `State` data structure by itself is **not** a CRDT and has no realtime collaborative capabilities; this is by design so we can keep the core of Reka more portable and we don't assume that everyone needs multiplayer features in their page builders, which would otherwise be additional bloat if multiplayer is not a requirement.
+The `@rekajs/collaboration` package provides an `Extension` where the core `State` data structure is mirrored by a Yjs CRDT.
 
-The `@rekajs/collaboration` package provides a Reka `Extension` where the core `State` data structure is mirrored by a Yjs CRDT. 
+Whenever there's a change in the `State` data structure:
 
-Whenever there's a change that happens in the core `State` structure:
-- The changes are propagated to the mirrored CRDT, and all clients across the network will receive these changes in their own respective CRDTs without merge conflicts.
-- When clients across the network receives the changes in the mirrored CRDT structure, these changes are then finally applied back to the core `State` structure.
-
+- These changes are propagated to the mirrored CRDT, and all clients in the network will receive these changes in their own respective CRDTs without conflicts.
+- Then, changes from the CRDT structure are applied back to the core `State` structure on each client.
 
 ### State Representation
 
@@ -69,11 +68,11 @@ npm install @rekajs/collaboration yjs y-webrtc
 
 > We're installing `y-webrtc` to use the WebRTC connector for this example, but you could also use other connectors such as `y-websocket`
 
-
 ## Basic setup
 
 To setup, you need to first create the following via `yjs`:
-- A new Yjs `Doc` 
+
+- A new Yjs `Doc`
 - A root `Y.Map` type
   > Note: that `@rekajs/collaboration` stores the actual flatten state in the `document` key of the root `Y.Map` that you provide the extension with
 - Create a new `Reka` instance and retrieve initial `State` from the Yjs document
@@ -97,32 +96,29 @@ const doc = new Y.Doc();
 // Initially, this will be empty; see the section below on how to correctly set the initial state
 const type = doc.getMap('my-collaborative-editor');
 // Note: The flattened State will be stored in the "document" key:
-// type.getMap('document') 
+// type.getMap('document')
 
 const CollabExtension = createCollabExtension(type);
 
 // 3. Create a Reka.create instance with an initial State
 const reka = Reka.create({
-    extensions: [CollabExtension]
-}); 
+  extensions: [CollabExtension],
+});
 
 // The initial State Document, this should come from the Yjs type
-reka.load(t.unflatten(type.getMap('document')))
+reka.load(t.unflatten(type.getMap('document')));
 
 // 4. Bind connector
-const provider = new WebrtcProvider(
-    'collab-room',
-    doc
-);
+const provider = new WebrtcProvider('collab-room', doc);
 ```
 
 ### How to set initial State in Yjs locally with WebRTC
 
-In the above example with WebRTC, we're loading the initial `State` in Reka by getting the state that exists in the Yjs document. 
+In the above example with WebRTC, we're loading the initial `State` in Reka by getting the state that exists in the Yjs document.
 
 However, as you may expect - the document in Yjs is empty initially, which could be problematic for Yjs in determining the initial state. So, if you would like to setup an initial `State` with some `ComponentComponent`s locally, there're a few extra steps that you will have to do:
 
-#### 1) Create a script that generates a Yjs update 
+#### 1) Create a script that generates a Yjs update
 
 First, we need to create a script that will setup `Reka` and load an initial `State` as usual. We will then manually apply that initial `State` to our Yjs document:
 
@@ -192,22 +188,19 @@ const doc = new Y.Doc();
 // 2. Create a new Y.Map from the Doc
 const type = doc.getMap('my-collaborative-editor');
 
-// 2.5: Apply initial update! <--- 
+// 2.5: Apply initial update! <---
 Y.applyUpdate(doc, Buffer.from(ENCODED_INITIAL_UPDATE, 'base64'));
 
 const CollabExtension = createCollabExtension(type);
 
 // 3. Create a Reka.create instance with an initial State
 const reka = Reka.create({
-    extensions: [CollabExtension]
-}); 
+  extensions: [CollabExtension],
+});
 
 // The initial State Document, this should come from the Yjs type
-reka.load(t.unflatten(type.getMap('document')))
+reka.load(t.unflatten(type.getMap('document')));
 
 // 4. Bind connector
-const provider = new WebrtcProvider(
-    'collab-room',
-    doc
-);
+const provider = new WebrtcProvider('collab-room', doc);
 ```

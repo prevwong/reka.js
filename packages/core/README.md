@@ -1,4 +1,4 @@
-# reka.js 
+# reka.js
 
 Reka is a state management system for building no-code editors.
 
@@ -30,7 +30,7 @@ At the core of Reka is the State data structure which is an Abstract Syntax Tree
             tag: 'p',
             props: {},
             children: [
-                { type: "TagTemplate", tag: 'text', props: { value: { type: "Literal", value: "My counter: " } },            
+                { type: "TagTemplate", tag: 'text', props: { value: { type: "Literal", value: "My counter: " } },
                 { type: "TagTemplate", tag: 'text', props: { value: { type: "Identifier", value: "counter" } } }}
             ]
         }
@@ -70,7 +70,7 @@ This essentially means that you could build page editors where your end-users ar
 
 ### Portable :car:
 
-Reka computes a component instance from its State by outputing a simple JSON structure called the `View`: 
+Reka computes a component instance from its State by outputing a simple JSON structure called the `View`:
 
 ```tsx
 // Compute a View for the Counter component
@@ -98,81 +98,82 @@ The `View` is a simple serialisable JSON structure. So regardless of what UI fra
 
 ### Extensible State :hammer:
 
-Of course, page builders often times may require additional data to be stored as part of the `State`. For example, you want your end users to be able to leave a comment on a template element; you can store these comments directly as part of the `State`: 
+Of course, page builders often times may require additional data to be stored as part of the `State`. For example, let's say you want your end-users to be able to leave a comment on a template element; you can store these comments directly as part of the `State`:
 
 ```tsx
 import { createExtension } from '@rekajs/core';
 
 type CommentState = {
-    comments: Array<{
-        templateId: string; // Id of the Template element associated with the comment
-        content: string;
-    }>
-}
+  comments: Array<{
+    templateId: string; // Id of the Template element associated with the comment
+    content: string;
+  }>;
+};
 
 const CommentExtension = createExtension<CommentState>({
-    key: 'comments', 
-    state: {
-        // initial state
-        comments: []
-    },
-    init: extension => {
-        // do whatever your extension may have to do here
-        // ie: send some data to the backend or listen to some changes made in State
-    }
+  key: 'comments',
+  state: {
+    // initial state
+    comments: [],
+  },
+  init: (extension) => {
+    // do whatever your extension may have to do here
+    // ie: send some data to the backend or listen to some changes made in State
+  },
 });
 
 // Usage
 reka.change(() => {
-    reka.getExtension(CommentExtension).state.comments.push({
-        templateId: '...',
-        content: "This button tag should be larger!!" 
-    })
-})
+  reka.getExtension(CommentExtension).state.comments.push({
+    templateId: '...',
+    content: 'This button tag should be larger!!',
+  });
+});
 ```
 
 ### External Functionalities :fire:
 
-You probably want to expose some JS functionalities for the end-users of your page builder to use. For example, let's say you want your end-users to output the current date time:
+You may also want to expose some JS functionalities for the end-users of your page builder to use. For example, let's say you want your end-users to output the current date time:
 
 ```tsx
 // 1) Expose global to return current time
 const reka = Reka.create({
-    externals: {
-        globals: self => ({
-            getDateTime: () => {
-                return Date.now();
-            }
-        })
-    }
+  externals: {
+    globals: (self) => ({
+      getDateTime: () => {
+        return Date.now();
+      },
+    }),
+  },
 });
 
 // 2) Global is now accessible throughout the State:
-reka.load(t.state({
+reka.load(
+  t.state({
     program: t.program({
-        components: [
-            t.rekaComponent({
-                name: 'App',
-                states: [],
-                props: [],
-                template: t.tagTemplate({
-                    tag: 'text',
-                    props: {
-                        value: t.binaryExpression({
-                            left: t.literal({ value: 'Current date time is: ' }),
-                            operator: '+',
-                            right: t.externalGlobal({
-                                name: 'getDateTime', // <-- access global to return current time
-                                params: []
-                            })
-                        })
-                    }
-                })
-            })
-        ]
-    })
-}))
-
+      components: [
+        t.rekaComponent({
+          name: 'App',
+          states: [],
+          props: [],
+          template: t.tagTemplate({
+            tag: 'text',
+            props: {
+              value: t.binaryExpression({
+                left: t.literal({ value: 'Current date time is: ' }),
+                operator: '+',
+                right: t.externalGlobal({
+                  name: 'getDateTime', // <-- access global to return current time
+                  params: [],
+                }),
+              }),
+            },
+          }),
+        }),
+      ],
+    }),
+  })
+);
 ```
 
 ### Realtime Collaboration :tada:
@@ -198,16 +199,13 @@ const CollabExtension = createCollabExtension(type);
 
 // 3. Create a Reka.create instance with an initial State
 const reka = Reka.create({
-    extensions: [CollabExtension]
-}); 
+  extensions: [CollabExtension],
+});
 // The initial State Document, this should come from the Yjs type
-reka.load(t.unflatten(type.getMap('document')))
+reka.load(t.unflatten(type.getMap('document')));
 
 // 4. Bind connector
-const provider = new WebrtcProvider(
-    'collab-room',
-    doc
-);
+const provider = new WebrtcProvider('collab-room', doc);
 ```
 
 ## Acknowledgements :raised_hands:

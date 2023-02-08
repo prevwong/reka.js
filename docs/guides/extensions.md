@@ -2,11 +2,11 @@
 
 Apart from storing the `Program` AST, the `State` could optionally store additional values that your page builder may require.
 
-For example, let's say you want to build a page builder where your end-users are able to leave a comment on a `Template` node of a `RekaComponent`, similar to what you could do on apps like Figma. 
+For example, let's say you want to build a page builder where your end-users are able to leave a comment on a `Template` node of a `RekaComponent`, similar to what you could do on apps like Figma.
 
-One way to go about this is to store these comments directly as part of the `State`, through an Extension. 
+One way to go about this is to store these comments directly as part of the `State`, through an Extension.
 
-> An important benefit of storing additional values via an Extension's state is in realtime collaboration via the `@rekajs/collaboration` package where the Extension's state is automatically synced across peers.
+> Apart from being able to interact with these additional values with the same APIs as the rest of Reka, another benefit of storing additional values via an Extension's state is in realtime collaboration via the `@rekajs/collaboration` package; where the Extension's state is automatically synced across peers.
 
 ## Creating an Extension
 
@@ -14,24 +14,24 @@ One way to go about this is to store these comments directly as part of the `Sta
 import { createExtension } from '@rekajs/core';
 
 type Comment = {
-    userId: string;
-    content: string;
+  userId: string;
+  content: string;
 };
 
 type CommentState = {
-    templateIdToComments: Record<string, Comment[]>;
+  templateIdToComments: Record<string, Comment[]>;
 };
 
 const CommentExtension = createExtension<CommentState>({
-    key: 'comments', 
-    state: {
-        // initial state
-        comments: {}
-    },
-    init: extension => {
-        // do whatever your extension may have to do here
-        // ie: send some data to the backend or listen to some changes made in State
-    }
+  key: 'comments',
+  state: {
+    // initial state
+    comments: {},
+  },
+  init: (extension) => {
+    // do whatever your extension may have to do here
+    // ie: send some data to the backend or listen to some changes made in State
+  },
 });
 ```
 
@@ -76,38 +76,38 @@ reka.change(() => {
 
 ## Keeping Extension state in-sync
 
-In our Comment Extension example, you may have noticed that a `Comment` has a reference to a `templateId` (which is the `id` of a `Template` node in the `Program` AST). 
+In our Comment Extension example, you may have noticed that a `Comment` has a reference to a `templateId` (which is the `id` of a `Template` node in the `Program` AST).
 
-But what happens when that `Template` gets removed? We probably should remove any `Comment` that is associated with that template as well. 
+But what happens when that `Template` gets removed? We probably should remove any `Comment` that is associated with that template as well.
 
-We can do this by listening to `State` changes within the extension itself: 
+We can do this by listening to `State` changes within the extension itself:
 
 ```tsx
 import * as t from '@rekajs/types';
 
 const CommentExtension = createExtension<CommentState>({
-    key: 'comments', 
-    state: {
-        // initial state
-        comments: {} 
-    },
-    init: extension => {
-        extension.reka.listenToChanges((payload) => {
-            if ( payload.event !== "dispose" ) {
-                return;
-            }
+  key: 'comments',
+  state: {
+    // initial state
+    comments: {},
+  },
+  init: (extension) => {
+    extension.reka.listenToChanges((payload) => {
+      if (payload.event !== 'dispose') {
+        return;
+      }
 
-            const disposedType = payload.value;
+      const disposedType = payload.value;
 
-            if ( disposedType instanceof t.Template ) {
-                const deletedTemplateId = disposedType.id;
+      if (disposedType instanceof t.Template) {
+        const deletedTemplateId = disposedType.id;
 
-                // remove any comments associated with the deleted Template
-                extension.reka.change(() => {
-                   delete extension.state.templateToComments[deletedTemplateId.id];
-                })
-            }
+        // remove any comments associated with the deleted Template
+        extension.reka.change(() => {
+          delete extension.state.templateToComments[deletedTemplateId.id];
         });
-    }
+      }
+    });
+  },
 });
 ```

@@ -1,6 +1,7 @@
 # State
 
-At the core of Reka is its `State` which is a data structure used to store :- 
+At the core of Reka is its `State` which is a data structure used to store :-
+
 - Components and global variables that the end user has created; this part of the state is called the `Program`
 - Any additional state data stored by an Extension.
 
@@ -79,24 +80,24 @@ Here's an example of a simple Button component stored in the state:
 }
 ```
 
-In the above example, we have a very basic Button component that would look something like the following if it was written with React: 
+In the above example, we have a very basic Button component that would look something like the following if it was written with React:
 
 ```tsx
 const Button = ({ enabled }) => {
-    const [counter, _] = useState(0);
+  const [counter, _] = useState(0);
 
-    return (
-        <button className="bg-blue-900">
-            {counter}
-            {enabled && "I'm enabled!"}
-        </button>
-    )
-}
+  return (
+    <button className="bg-blue-900">
+      {counter}
+      {enabled && "I'm enabled!"}
+    </button>
+  );
+};
 ```
 
 ## Globals
 
-Optionally, we can also define global variables that can be referenced throughout the `Program`: 
+Additionally, we can also define global variables that can be referenced throughout the `Program`:
 
 ```tsx
 {
@@ -153,12 +154,8 @@ If you're coming from React, these globals are more akin to stateful values stor
 const GlobalCounterContext = React.createContext();
 
 const Button = (props) => {
-    const globalCounter = React.useContext(GlobalCounterContext);
+  const globalCounter = React.useContext(GlobalCounterContext);
 
-    return (
-        <button className="bg-blue-900">
-            {globalCounter}
-        </button>
-    )
-}
+  return <button className="bg-blue-900">{globalCounter}</button>;
+};
 ```
