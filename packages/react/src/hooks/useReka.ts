@@ -5,7 +5,7 @@ import { RekaStateContext } from '../RekaStateContext';
 
 type Collector<C extends Record<string, any>> = (reka: Reka) => C;
 
-export const useCollector = <C extends Record<string, any>>(
+export const useReka = <C extends Record<string, any>>(
   collector?: Collector<C>,
   deps?: any[]
 ) => {

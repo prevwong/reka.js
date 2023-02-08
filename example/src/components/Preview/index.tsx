@@ -1,11 +1,11 @@
 import { Frame } from '@rekajs/core';
-import { observer, useCollector } from '@rekajs/react';
+import { observer, useReka } from '@rekajs/react';
 import * as React from 'react';
 
 import { RenderFrame } from '../Renderer';
 
 export const Preview = observer(() => {
-  const { reka } = useCollector();
+  const { reka } = useReka();
 
   const [selectedFrame, setSelectedFrame] = React.useState<Frame>(
     reka.frames[0]

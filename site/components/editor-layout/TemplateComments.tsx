@@ -1,4 +1,4 @@
-import { observer, useCollector } from '@rekajs/react';
+import { observer, useReka } from '@rekajs/react';
 import { formatDistance } from 'date-fns';
 import * as React from 'react';
 
@@ -44,7 +44,7 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
   const editor = useEditor();
   const containerRef = React.useRef<HTMLDivElement | null>(null);
 
-  const { comments } = useCollector((reka) => {
+  const { comments } = useReka((reka) => {
     const comments: Comment[] =
       reka.getExtension(CommentExtension).state.templateToComments[
         props.templateId

@@ -3,7 +3,7 @@ import { indentWithTab } from '@codemirror/commands';
 import { EditorView, keymap } from '@codemirror/view';
 import { reka as rekaCodemirrorExtension } from '@rekajs/codemirror';
 import { Parser } from '@rekajs/parser';
-import { useCollector } from '@rekajs/react';
+import { useReka } from '@rekajs/react';
 import * as t from '@rekajs/types';
 import debounce from 'lodash/debounce';
 import * as React from 'react';
@@ -89,7 +89,7 @@ type CodeEditorProps = React.DetailedHTMLProps<
 };
 
 export const CodeEditor = (props: CodeEditorProps) => {
-  const { reka } = useCollector();
+  const { reka } = useReka();
 
   const domRef = React.useRef<HTMLDivElement | null>(null);
 

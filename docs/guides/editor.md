@@ -197,13 +197,13 @@ Now, let's actually create the `<Preview />` React component for our frames:
 ```tsx
 // src/pages/Preview.tsx
 import { Frame } from '@rekajs/core';
-import { observer, useCollector } from '@rekajs/react';
+import { observer, useReka } from '@rekajs/react';
 import * as React from 'react';
 
 import { RenderFrame } from '../Renderer';
 
 export const Preview = observer(() => {
-  const { reka } = useCollector();
+  const { reka } = useReka();
 
   const [selectedFrame, setSelectedFrame] = React.useState<Frame>(
     reka.frames[0]
@@ -327,11 +327,11 @@ Now, lets create a simple Editor component that interacts with our `Reka` instan
 ```tsx
 // src/components/Editor.tsx
 import * as t from '@rekajs/types';
-import { useCollector } from '@rekajs/react';
+import { useReka } from '@rekajs/react';
 import * as React from 'react';
 
 export const Editor = () => {
-  const { reka } = useCollector();
+  const { reka } = useReka();
 
   return (
     <div className="w-full h-full p-4">

@@ -1,1 +1,1 @@
-export * from './useCollector';
+export * from './useReka';
