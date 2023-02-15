@@ -35,9 +35,12 @@ const generateMarkdownForTypeParam = (typeParam: any) => {
 };
 
 const generateMarkDownForTypeParams = (typeParams: any[]) => {
-  const args = typeParams.flatMap((typeParam) =>
-    generateMarkdownForTypeParam(typeParam)
-  );
+  const args = typeParams.flatMap((typeParam, i, arr) => {
+    return [
+      ...generateMarkdownForTypeParam(typeParam),
+      ...(i !== arr.length - 1 ? [u('text', { value: ', ' })] : []),
+    ];
+  });
 
   if (typeParams.length > 0) {
     return [u('text', { value: '<' }), ...args, u('text', { value: '>' })];
@@ -247,13 +250,13 @@ const _generateTypedocMarkdown = (
             { depth: 4 },
             generateMarkDownForFunctionSignature(type.id, signature)
           ),
-          generateTypeBadge('function'),
-          ...(type.description
-            ? [u('paragraph', [u('text', { value: type.description })])]
-            : []),
-          ...(examples[type.id] ?? []),
         ];
       }),
+      generateTypeBadge('function'),
+      ...(type.description
+        ? [u('paragraph', [u('text', { value: type.description })])]
+        : []),
+      ...(examples[type.id] ?? []),
     ];
   }
 
