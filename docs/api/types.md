@@ -2,7 +2,7 @@
 
 ## API
 
-!start-typedoc types/types.docs.ts classes 
+!start-typedoc types/types.docs.ts classes
 
 !end-typedoc
 
@@ -18,18 +18,18 @@ import * as t from '@rekajs/types';
 const expr = t.literal({ value: 0 });
 
 t.match(expr, {
-    Literal: type => {
-        // do stuff
-    }
+  Literal: (type) => {
+    // do stuff
+  },
 });
 
 // If a callback for Literal is not specified,
 // But a callback for the parent Type of Literal (in this case, Expression) will be used
 t.match(expr, {
-    Expression: type => {
-        // do stuff
-    }
-})
+  Expression: (type) => {
+    // do stuff
+  },
+});
 ```
 
 !end-example
@@ -67,7 +67,7 @@ t.flatten(expr);
         },
         "right-id": {
             type: "Literal",
-            value: 4 
+            value: 4
         }
     }
 }
@@ -81,15 +81,15 @@ t.flatten(expr);
 import * as t from '@rekajs/types';
 
 const a = t.binaryExpression({
-    left: t.literal({ value : 2 }),
-    operator: '<',
-    right: t.literal( { value : 4 })
+  left: t.literal({ value: 2 }),
+  operator: '<',
+  right: t.literal({ value: 4 }),
 });
 
 const b = t.binaryExpression({
-    left: t.literal({ value: 10 }),
-    operator: '<',
-    right: t.literal( { value : 4 }) 
+  left: t.literal({ value: 10 }),
+  operator: '<',
+  right: t.literal({ value: 4 }),
 });
 
 t.merge(a, b);
@@ -120,14 +120,40 @@ console.log(type instanceof t.Type) // true
 import * as t from '@rekajs/types';
 
 const expr = t.binaryExpression({
-    left: t.literal({ value: 1 }),
-    operator: '+',
-    right: t.literal({ value: 2 })
+  left: t.literal({ value: 1 }),
+  operator: '+',
+  right: t.literal({ value: 2 }),
 });
 
 const collectedTypes = t.collect(expr);
 
 // collectedTypes = [t.BinaryExpression(...), t.Literal({ value : 1 }), t.Literal({ value: 2 })]
+```
+
+!end-example
+
+!start-example assert
+
+```tsx
+import * as t from '@rekajs/types';
+
+t.assert(t.literal({ value: 0 }), t.Literal); // ok
+
+t.assert(t.identifier({ name: 'counter' }), t.Literal); // throws
+
+// Specify an optional callback to traverse and return a value from the asserted type
+const expr = t.assert(
+  t.binaryExpression({
+    left: t.literal({ value: 1 }),
+    operator: '+',
+    right: t.literal({ value: 2 }),
+  }),
+  t.BinaryExpression,
+  (value) => {
+    return t.left;
+  }
+);
+console.log(expr instanceof t.Expression); // true
 ```
 
 !end-example
