@@ -233,7 +233,7 @@ export class Reka {
   /**
    * Create a new Frame instance
    */
-  createFrame(opts: FrameOpts) {
+  async createFrame(opts: FrameOpts) {
     const frame = new Frame(opts, this);
 
     if (opts.id) {
@@ -243,7 +243,7 @@ export class Reka {
     this.frames.push(frame);
 
     if (!this.init) {
-      frame.compute();
+      await frame.compute();
     }
 
     return frame;

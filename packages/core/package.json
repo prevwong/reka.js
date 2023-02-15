@@ -13,6 +13,7 @@
   "license": "MIT",
   "devDependencies": {
     "@rekajs/types": "workspace:*",
+    "@rekajs/parser": "workspace:*",
     "@types/lodash": "^4.14.185"
   },
   "peerDependencies": {

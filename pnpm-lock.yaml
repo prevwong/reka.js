@@ -134,6 +134,7 @@ importers:
 
   packages/core:
     specifiers:
+      '@rekajs/parser': workspace:*
       '@rekajs/types': workspace:*
       '@rekajs/utils': ^0.1.0
       '@types/lodash': ^4.14.185
@@ -148,6 +149,7 @@ importers:
       mobx: 6.6.1
       mobx-utils: 6.0.5_mobx@6.6.1
     devDependencies:
+      '@rekajs/parser': link:../parser
       '@rekajs/types': link:../types
       '@types/lodash': 4.14.191
 
