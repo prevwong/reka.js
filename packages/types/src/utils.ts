@@ -1,4 +1,6 @@
-import { Schema } from './schema';
+import { invariant } from '@rekajs/utils';
+
+import { Schema, Type, TypeConstructor } from './schema';
 import * as t from './types.docs';
 
 /**
@@ -310,3 +312,34 @@ export const collect = (type: t.Type) => {
 
   return types;
 };
+
+/**
+ * Assert a value's Type
+ */
+export function assert<T extends Type>(
+  value: Type | undefined,
+  assertedType: TypeConstructor<T>
+): T;
+export function assert<T extends Type, C extends (value: T) => any>(
+  value: Type | undefined,
+  assertedType: TypeConstructor<T>,
+  cb: C
+): ReturnType<C>;
+export function assert<T extends Type, C extends (value: T) => any>(
+  value: Type | undefined,
+  assertedType: TypeConstructor<T>,
+  cb?: C
+) {
+  invariant(
+    value instanceof assertedType,
+    `Invalid type. Expected type ${
+      assertedType.name
+    }, but received ${JSON.stringify(value)}`
+  );
+
+  if (cb) {
+    return cb(value as T);
+  }
+
+  return value as T;
+}
