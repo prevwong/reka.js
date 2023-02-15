@@ -78,6 +78,21 @@ describe('Stringifier', () => {
             each: t.elementEach({
               iterator: t.identifier({ name: 'posts' }),
               alias: t.identifier({ name: 'post' }),
+              index: t.identifier({ name: 'i' }),
+            }),
+          })
+        )
+      ).toEqual(`<div @each={(post, i) in posts} />`);
+
+      expect(
+        Stringifier.toString(
+          t.tagTemplate({
+            tag: 'div',
+            props: {},
+            children: [],
+            each: t.elementEach({
+              iterator: t.identifier({ name: 'posts' }),
+              alias: t.identifier({ name: 'post' }),
             }),
           })
         )

@@ -271,14 +271,18 @@ class _Stringifier {
         if (eachDirective) {
           props.push(
             this.writer.withTemp(() => {
-              this.writer.write(`@each={${eachDirective.alias.name} in `);
-              if (!eachDirective.index) {
-                this.writer.write(eachDirective.iterator.name);
-              } else {
+              this.writer.write(`@each={`);
+
+              if (eachDirective.index) {
                 this.writer.write(
-                  `(${eachDirective.iterator.name}, ${eachDirective.index.name})`
+                  `(${eachDirective.alias.name}, ${eachDirective.index.name})`
                 );
+              } else {
+                this.writer.write(eachDirective.alias.name);
               }
+
+              this.writer.write(` in ${eachDirective.iterator.name}`);
+
               this.writer.write(`}`);
             })
           );
