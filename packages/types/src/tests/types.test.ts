@@ -200,4 +200,17 @@ describe('Reka Types', () => {
       ).toEqual(true);
     });
   });
+
+  describe('assert', () => {
+    it.only('should assert Type of value', () => {
+      const literalValue = t.literal({ value: 0 });
+      expect(t.assert(literalValue, t.Literal)).toEqual(literalValue);
+
+      expect(() =>
+        t.assert(t.literal({ value: 0 }), t.BinaryExpression)
+      ).toThrow();
+
+      expect(t.assert(literalValue, t.Literal, (v) => v.value)).toEqual(0);
+    });
+  });
 });

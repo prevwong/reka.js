@@ -330,7 +330,12 @@ export function assert<T extends Type, C extends (value: T) => any>(
   assertedType: TypeConstructor<T>,
   cb?: C
 ) {
-  invariant(value instanceof assertedType, 'Invalid Type');
+  invariant(
+    value instanceof assertedType,
+    `Invalid type. Expected type ${
+      assertedType.name
+    }, but received ${JSON.stringify(value)}`
+  );
 
   if (cb) {
     return cb(value as T);
