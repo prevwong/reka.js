@@ -211,9 +211,11 @@ export class Reka {
   sync() {
     this.syncHead();
 
-    this.frames.forEach((frame) => {
-      frame.compute();
-    });
+    return Promise.all(
+      this.frames.map((frame) => {
+        return frame.compute();
+      })
+    );
   }
 
   /**
@@ -227,7 +229,7 @@ export class Reka {
       return;
     }
 
-    this.sync();
+    return this.sync();
   }
 
   /**

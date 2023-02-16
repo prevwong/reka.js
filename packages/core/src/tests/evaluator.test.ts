@@ -2,10 +2,15 @@ import { Parser } from '@rekajs/parser';
 import * as t from '@rekajs/types';
 import { invariant } from '@rekajs/utils';
 
+import { FrameOpts } from '../frame';
+import { StateOpts } from '../interfaces';
 import { Reka } from '../reka';
 
-const createFrame = (program: string) => {
-  const reka = Reka.create();
+const createFrame = (
+  program: string,
+  opts?: Partial<{ state: StateOpts; frame: FrameOpts }>
+) => {
+  const reka = Reka.create(opts?.state);
 
   reka.load(
     t.state({
@@ -16,9 +21,11 @@ const createFrame = (program: string) => {
 
   return reka.createFrame({
     id: 'main-frame',
+    ...(opts?.frame ?? {}),
     component: {
       name: 'App',
       props: {},
+      ...(opts?.frame?.component ?? {}),
     },
   });
 };
@@ -112,6 +119,59 @@ describe('evaluator', () => {
           });
         });
       });
+    });
+  });
+
+  describe('variables', () => {
+    it('should re-evaluate if component state/props is updated', async () => {
+      const frame = await createFrame(`
+        component App(color="red") {
+          val counter = 0;
+        } => (
+          <text value={"Hello: " + counter + ", " + color} />
+        )
+      `);
+
+      const view = t.assert(frame.view, t.RekaComponentView, (view) => {
+        return t.assert(view.render[0], t.TagView);
+      });
+
+      expect(view.props['value']).toEqual('Hello: 0, red');
+
+      await frame.reka.change(() => {
+        frame.reka.program.components[0].state[0].init = t.literal({
+          value: 10,
+        });
+      });
+
+      expect(view.props['value']).toEqual('Hello: 10, red');
+
+      await frame.reka.change(() => {
+        frame.reka.program.components[0].props[0].init = t.literal({
+          value: 'blue',
+        });
+      });
+
+      expect(view.props['value']).toEqual('Hello: 10, blue');
+    });
+    it('should re-evaluate if side-effect causes value in env to change', async () => {
+      const frame = await createFrame(`
+      component App() {
+        val counter = 0;
+      } => (
+        <button value={counter} onClick={() => { counter += 2; }} />
+      )
+    `);
+
+      const view = t.assert(frame.view, t.RekaComponentView, (view) => {
+        return t.assert(view.render[0], t.TagView);
+      });
+
+      expect(view.props['value']).toEqual(0);
+
+      await view.props['onClick']();
+
+      expect(view.props['value']).toEqual(2);
     });
   });
 });

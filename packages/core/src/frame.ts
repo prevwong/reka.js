@@ -78,11 +78,11 @@ export class Frame {
 
   /// Compute a View tree
   compute() {
-    if (!this.sync) {
-      return;
-    }
+    return defer(async () => {
+      if (!this.sync) {
+        return;
+      }
 
-    return defer(() => {
       return this.evaluator.computeTree();
     });
   }
