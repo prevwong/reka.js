@@ -28,6 +28,16 @@ export class Scope {
     return -1;
   }
 
+  has(name: string) {
+    return this.variableNames.has(name);
+  }
+
+  forEach(cb: (name: string) => void) {
+    for (const name of this.variableNames) {
+      cb(name);
+    }
+  }
+
   toString() {
     const keyToId: string[] = [];
 
