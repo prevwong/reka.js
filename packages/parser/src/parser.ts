@@ -16,21 +16,27 @@ const parseWithAcorn = (source: string, loc: number) => {
   }) as b.Node & acorn.Node;
 };
 
+type AcornParserOptions<T extends t.Type = t.Any> = {
+  expectedType?: t.TypeConstructor<T>;
+  isElementEachDirective?: boolean;
+};
+
 const parseExpressionWithAcornToRekaType = <T extends t.Type = t.Any>(
   source: string,
   loc: number,
-  expectedType?: t.TypeConstructor<T>
+  opts?: AcornParserOptions<T>
 ) => {
   // Bootstrapping on acorn's parser for parsing basic expressions
   const expression = parseWithAcorn(source, loc);
-  const type = jsToReka(expression as unknown as b.Node, expectedType);
+
+  const type = jsToReka(expression as unknown as b.Node, opts);
 
   return { expression, type };
 };
 
 const jsToReka = <T extends t.Type = t.Any>(
   node: b.Node,
-  expectedType?: t.TypeConstructor<T>
+  opts?: AcornParserOptions<T>
 ) => {
   const _convert = (node: b.Node) => {
     switch (node.type) {
@@ -134,6 +140,21 @@ const jsToReka = <T extends t.Type = t.Any>(
         });
       }
       case 'BinaryExpression': {
+        if (node.operator === 'in' && opts?.isElementEachDirective) {
+          let alias: t.Identifier;
+
+          if (b.isIdentifier(node.left)) {
+            alias = _convert(node.left);
+          } else {
+            throw new Error();
+          }
+
+          return t.elementEach({
+            alias,
+            iterator: _convert(node.right),
+          });
+        }
+
         return t.binaryExpression({
           left: _convert(node.left),
           operator: node.operator as any,
@@ -216,9 +237,9 @@ const jsToReka = <T extends t.Type = t.Any>(
 
   const type = _convert(node) as t.Any;
 
-  if (expectedType) {
+  if (opts?.expectedType) {
     invariant(
-      type instanceof expectedType,
+      type instanceof opts.expectedType,
       `Parser return an unexpected type.`
     );
   }
@@ -309,7 +330,7 @@ class _Parser extends Lexer {
       );
 
       if (b.isAssignmentPattern(param)) {
-        init = jsToReka(param.right, t.Expression);
+        init = jsToReka(param.right, { expectedType: t.Expression });
 
         invariant(
           b.isIdentifier(param.left),
@@ -361,37 +382,9 @@ class _Parser extends Lexer {
   }
 
   private parseElementEach() {
-    let index: t.Identifier | undefined, alias: t.Identifier;
-
-    this.consume(TokenType.ELEMENT_EXPR_START);
-    if (this.check(TokenType.LPAREN)) {
-      this.consume(TokenType.LPAREN);
-      alias = t.identifier({
-        name: this.consume(TokenType.IDENTIFIER).value,
-      });
-      this.consume(TokenType.COMMA);
-      index = t.identifier({
-        name: this.consume(TokenType.IDENTIFIER).value,
-      });
-      this.consume(TokenType.RPAREN);
-    } else {
-      alias = t.identifier({
-        name: this.consume(TokenType.IDENTIFIER).value,
-      });
-    }
-
-    this.consume(TokenType.IN);
-
-    const iterator = t.identifier({
-      name: this.consume(TokenType.IDENTIFIER).value,
-    });
-
-    this.consume(TokenType.ELEMENT_EXPR_END);
-
-    return t.elementEach({
-      index,
-      alias,
-      iterator,
+    return this.parseElementExpr({
+      expectedType: t.ElementEach,
+      isElementEachDirective: true,
     });
   }
 
@@ -517,21 +510,21 @@ class _Parser extends Lexer {
     });
   }
 
-  private parseElementExpr() {
+  private parseElementExpr<T extends t.Type>(opts?: AcornParserOptions<T>) {
     this.consume(TokenType.ELEMENT_EXPR_START);
-    const expr = this.parseExpressionAt(this.previousToken.pos + 1);
+    const expr = this.parseExpressionAt(this.previousToken.pos + 1, opts);
     this.consume(TokenType.ELEMENT_EXPR_END);
     return expr;
   }
 
   private parseExpressionAt<T extends t.Type = t.Any>(
     loc: number,
-    expectedType?: t.TypeConstructor<T>
+    opts?: AcornParserOptions<T>
   ) {
     const { expression, type } = parseExpressionWithAcornToRekaType(
       this.source,
       loc,
-      expectedType
+      opts
     );
 
     // Since we're using acorn to parse the expression
@@ -557,11 +550,9 @@ export class Parser {
     source: string,
     expectedType?: t.TypeConstructor<T>
   ) {
-    const { type } = parseExpressionWithAcornToRekaType(
-      `{${source}}`,
-      1,
-      expectedType
-    );
+    const { type } = parseExpressionWithAcornToRekaType(`{${source}}`, 1, {
+      expectedType,
+    });
 
     return type as T;
   }

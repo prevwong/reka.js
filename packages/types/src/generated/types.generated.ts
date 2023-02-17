@@ -418,13 +418,13 @@ Schema.register('SlotTemplate', SlotTemplate);
 type ElementEachParameters = {
   alias: Identifier;
   index?: Identifier | null;
-  iterator: Identifier;
+  iterator: Expression;
 };
 
 export class ElementEach extends ASTNode {
   declare alias: Identifier;
   declare index: Identifier | null;
-  declare iterator: Identifier;
+  declare iterator: Expression;
   constructor(value: ElementEachParameters) {
     super('ElementEach', value);
   }

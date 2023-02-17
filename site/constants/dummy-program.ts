@@ -123,7 +123,7 @@ component App() {
      name={post.name}
      description={post.description}
      image={post.image}
-     @each={post in posts}
+     @each={post in $getPosts()}
     />
    </div>
   </div>

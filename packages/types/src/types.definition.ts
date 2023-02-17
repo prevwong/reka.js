@@ -228,7 +228,7 @@ Schema.define('ElementEach', {
   fields: (t) => ({
     alias: t.node('Identifier'),
     index: t.defaultValue(t.union(t.node('Identifier'), t.nullish), null),
-    iterator: t.node('Identifier'),
+    iterator: t.node('Expression'),
   }),
 });
 

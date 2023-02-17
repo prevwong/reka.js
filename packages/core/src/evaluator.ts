@@ -308,7 +308,7 @@ export class ViewEvaluator {
     const tplEnv = ctx.env.inherit();
 
     const eachComputation = computed(() => {
-      const iterator = tplEnv.getByIdentifier(eachExpr.iterator);
+      const iterator = this.computeExpr(eachExpr.iterator, tplEnv);
 
       const views: t.View[] = [];
 
