@@ -314,45 +314,59 @@ export class ViewEvaluator {
 
       const iterationValueHashes = new Set();
 
-      for (let i = 0; i < iterator.length; i++) {
-        const value = iterator[i];
-        let iteratorValueHash = `${iteratorHash}.${valueToHash(value)}`;
+      if (iterator) {
+        for (let i = 0; i < iterator.length; i++) {
+          const value = iterator[i];
+          let iteratorValueHash = `${iteratorHash}.${valueToHash(value)}`;
 
-        if (isPrimitive(value)) {
-          iteratorValueHash = `${iteratorValueHash}.${i}`;
+          if (isPrimitive(value)) {
+            iteratorValueHash = `${iteratorValueHash}.${i}`;
+          }
+
+          iterationValueHashes.add(iteratorValueHash);
+
+          let iteratorCache = iteration.get(iteratorValueHash);
+
+          if (!iteratorCache) {
+            const inheritedEnv = tplEnv.clone();
+
+            iteratorCache = {
+              computed: computed(() => {
+                inheritedEnv.set(eachExpr.alias.name, value);
+
+                if (eachExpr.index) {
+                  inheritedEnv.set(eachExpr.index.name, i);
+                }
+
+                return renderTemplate(template, {
+                  ...ctx,
+                  path: [...ctx.path, iteratorValueHash],
+                  env: inheritedEnv,
+                })[0];
+              }),
+            };
+
+            iteration.set(iteratorValueHash, iteratorCache);
+          }
+
+          const view = iteratorCache.computed.get();
+
+          if (view) {
+            views.push(view);
+          }
         }
-
-        iterationValueHashes.add(iteratorValueHash);
-
-        let iteratorCache = iteration.get(iteratorValueHash);
-
-        if (!iteratorCache) {
-          const inheritedEnv = tplEnv.clone();
-
-          iteratorCache = {
-            computed: computed(() => {
-              inheritedEnv.set(eachExpr.alias.name, value);
-
-              if (eachExpr.index) {
-                inheritedEnv.set(eachExpr.index.name, i);
-              }
-
-              return renderTemplate(template, {
-                ...ctx,
-                path: [...ctx.path, iteratorValueHash],
-                env: inheritedEnv,
-              })[0];
-            }),
-          };
-
-          iteration.set(iteratorValueHash, iteratorCache);
-        }
-
-        const view = iteratorCache.computed.get();
-
-        if (view) {
-          views.push(view);
-        }
+      } else {
+        views.push(
+          t.errorSystemView({
+            error: `Invalid iterator "${JSON.stringify(
+              eachExpr.iterator,
+              null,
+              2
+            )}"`,
+            key: createKey(ctx.path),
+            template,
+          })
+        );
       }
 
       for (const k of iteration.keys()) {
