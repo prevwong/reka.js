@@ -66,8 +66,8 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
 
   const [isExposingIndex, setIsExposingIndex] = React.useState(false);
 
-  const [iterator, setIteratorValue] = React.useState(
-    () => props.template.each?.iterator.name ?? ''
+  const [iterator, setIteratorValue] = React.useState<t.Expression | null>(
+    () => props.template.each?.iterator ?? null
   );
   const [alias, setAliasValue] = React.useState(
     () => props.template.each?.alias.name ?? ''
@@ -78,17 +78,24 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
   );
 
   const resetValue = React.useCallback(() => {
-    setIteratorValue('');
+    setIteratorValue(null);
     setAliasValue('');
     setIndexValue('');
   }, [setIteratorValue, setAliasValue, setIndexValue]);
 
-  const commitValue = (iterator: string, alias: string, index: string) => {
+  const commitValue = (
+    iterator: t.Expression | null,
+    alias: string,
+    index: string
+  ) => {
     editor.reka.change(() => {
+      if (!iterator) {
+        props.template.each = null;
+        return;
+      }
+
       props.template.each = t.elementEach({
-        iterator: t.identifier({
-          name: iterator,
-        }),
+        iterator,
         alias: t.identifier({
           name: alias,
         }),
@@ -107,20 +114,18 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
         <TextField
           css={{ flex: 1 }}
           placeholder="array"
-          value={iterator}
+          value={iterator ? Parser.stringify(iterator) : ''}
           onCancel={() => {
-            console.log('cancelll');
             resetValue();
 
             editor.reka.change(() => {
-              console.log('cancel');
               props.template.each = null;
             });
           }}
           onCommit={(value) => {
-            const expr = Parser.parseExpression(value, t.Identifier);
-            setIteratorValue(expr.name);
-            commitValue(expr.name, alias, index);
+            const expr = Parser.parseExpression(value, t.Expression);
+            setIteratorValue(expr);
+            commitValue(expr, alias, index);
           }}
         />
       </Box>

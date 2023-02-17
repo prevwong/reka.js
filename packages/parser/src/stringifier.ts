@@ -281,7 +281,13 @@ class _Stringifier {
                 this.writer.write(eachDirective.alias.name);
               }
 
-              this.writer.write(` in ${eachDirective.iterator.name}`);
+              this.writer.write(` in `);
+
+              const iteratorStr = this.writer.withTemp(() =>
+                this.stringify(eachDirective.iterator)
+              );
+
+              this.writer.write(iteratorStr);
 
               this.writer.write(`}`);
             })

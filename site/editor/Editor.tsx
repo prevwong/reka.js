@@ -141,6 +141,9 @@ export class Editor {
               getScrollTop: () => {
                 return self.getExternalState('scrollTop');
               },
+              getPosts: () => {
+                return self.getExternalState('posts');
+              },
             };
           },
         },
