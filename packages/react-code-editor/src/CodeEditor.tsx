@@ -92,6 +92,8 @@ export const CodeEditor = (props: CodeEditorProps) => {
   const { reka } = useReka();
 
   const domRef = React.useRef<HTMLDivElement | null>(null);
+  const propsRef = React.useRef<CodeEditorProps>(props);
+  propsRef.current = props;
 
   const currentStateRef = React.useRef(t.Schema.fromJSON(reka.program));
   const currentCodeStringRef = React.useRef<string>(
@@ -105,6 +107,8 @@ export const CodeEditor = (props: CodeEditorProps) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const syncCodeToState = React.useCallback(
     debounce((code: string) => {
+      const { current: props } = propsRef;
+
       if (isSynchingFromExternal.current) {
         return;
       }
@@ -142,6 +146,8 @@ export const CodeEditor = (props: CodeEditorProps) => {
     if (!dom) {
       return;
     }
+
+    const { current: props } = propsRef;
 
     setCodemirrorView(
       new EditorView({
@@ -186,7 +192,7 @@ export const CodeEditor = (props: CodeEditorProps) => {
         parent: dom,
       })
     );
-  }, [syncCodeToState, props]);
+  }, [syncCodeToState]);
 
   const onExternalChange = React.useCallback(() => {
     if (isSynchingFromCodeMirror.current || isTypingRef.current) {
