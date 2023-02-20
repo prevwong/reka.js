@@ -142,15 +142,25 @@ const jsToReka = <T extends t.Type = t.Any>(
       case 'BinaryExpression': {
         if (node.operator === 'in' && opts?.isElementEachDirective) {
           let alias: t.Identifier;
+          let index: t.Identifier | undefined;
 
           if (b.isIdentifier(node.left)) {
             alias = _convert(node.left);
+          } else if (b.isSequenceExpression(node.left)) {
+            b.assertIdentifier(node.left.expressions[0]);
+            b.assertIdentifier(node.left.expressions[1]);
+
+            alias = _convert(node.left.expressions[0]);
+            index = _convert(node.left.expressions[1]);
           } else {
-            throw new Error();
+            throw new Error(
+              'Unexpected left hand side input for constructing ElementEach type'
+            );
           }
 
           return t.elementEach({
             alias,
+            index,
             iterator: _convert(node.right),
           });
         }
