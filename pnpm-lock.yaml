@@ -285,6 +285,7 @@ importers:
       mobx: ^6.6.1
       mobx-react-lite: ^3.3.0
       next: 12.2.5
+      next-sitemap: ^3.1.52
       pascal-case: ^3.1.2
       postcss: ^8.4.20
       prop-types: ^15.8.1
@@ -348,6 +349,7 @@ importers:
       mobx: 6.6.1
       mobx-react-lite: 3.4.0_vuaia3cr2ucdrk3q4mauc2kfvi
       next: 12.2.5_sfoxds7t5ydpegc3knd667wn6m
+      next-sitemap: 3.1.52_next@12.2.5
       pascal-case: 3.1.2
       prop-types: 15.8.1
       randomcolor: 0.6.2
@@ -1118,6 +1120,10 @@ packages:
       '@codemirror/text': 0.19.6
       style-mod: 4.0.0
       w3c-keyname: 2.2.6
+    dev: false
+
+  /@corex/deepmerge/4.0.37:
+    resolution: {integrity: sha512-PX90bEnrLdxd5e6rSFWsghExMuSw0Uov3fWJuuaoFuUQIS/446diu/4seExK5b+43L+SOBbd2uBGwYUkG1JfCw==}
     dev: false
 
   /@emotion/is-prop-valid/0.8.8:
@@ -5855,6 +5861,10 @@ packages:
   /minimist/1.2.6:
     resolution: {integrity: sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==}
 
+  /minimist/1.2.8:
+    resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
+    dev: false
+
   /mixme/0.5.5:
     resolution: {integrity: sha512-/6IupbRx32s7jjEwHcycXikJwFD5UujbVNuJFkeKLYje+92OvtuPniF6JhnFm5JCTDUhS+kYK3W/4BWYQYXz7w==}
     engines: {node: '>= 8.0.0'}
@@ -5937,6 +5947,19 @@ packages:
 
   /natural-compare/1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
+
+  /next-sitemap/3.1.52_next@12.2.5:
+    resolution: {integrity: sha512-tY469i4QRV1PwM9BoL+HdKYBCJ83IQl3PmUNapG/Hxp0MIYIw1hINU8E+Edf5Kr8vHXfVzPqDoul/Abu2P0vkw==}
+    engines: {node: '>=14.18'}
+    hasBin: true
+    peerDependencies:
+      '@next/env': '*'
+      next: '*'
+    dependencies:
+      '@corex/deepmerge': 4.0.37
+      minimist: 1.2.8
+      next: 12.2.5_sfoxds7t5ydpegc3knd667wn6m
+    dev: false
 
   /next/12.2.5_sfoxds7t5ydpegc3knd667wn6m:
     resolution: {integrity: sha512-tBdjqX5XC/oFs/6gxrZhjmiq90YWizUYU6qOWAfat7zJwrwapJ+BYgX2PmiacunXMaRpeVT4vz5MSPSLgNkrpA==}
