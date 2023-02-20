@@ -124,25 +124,24 @@ type RenderExternalComponentViewProps = {
   view: t.ExternalComponentView;
 };
 
-const RenderExternalComponentView = (
-  props: RenderExternalComponentViewProps
-) => {
-  const { onConnect } = React.useContext(SelectorContext);
+const RenderExternalComponentView = observer(
+  (props: RenderExternalComponentViewProps) => {
+    const { onConnect } = React.useContext(SelectorContext);
 
-  const element = React.useMemo(() => {
-    return props.view.component.render(props.view.props);
-  }, [props.view.component, props.view.props]);
+    return React.cloneElement(
+      props.view.component.render({ ...props.view.props }),
+      {
+        ref: (dom: HTMLElement) => {
+          if (!dom) {
+            return;
+          }
 
-  return React.cloneElement(element, {
-    ref: (dom: HTMLElement) => {
-      if (!dom) {
-        return;
+          return onConnect(dom, props.view);
+        },
       }
-
-      return onConnect(dom, props.view);
-    },
-  });
-};
+    );
+  }
+);
 
 type RenderComponentViewProps = {
   view: t.ComponentView;
