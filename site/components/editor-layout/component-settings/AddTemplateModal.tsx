@@ -1,4 +1,8 @@
-import { Parser } from '@rekajs/parser';
+import {
+  EXTERNAL_IDENTIFIER_PREFIX_SYMBOL,
+  getIdentifierFromStr,
+  Parser,
+} from '@rekajs/parser';
 import * as t from '@rekajs/types';
 import { capitalize } from 'lodash';
 import * as React from 'react';
@@ -94,10 +98,16 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
                 onChange={(value) => {
                   setTemplateComponentName(value);
                 }}
-                items={editor.reka.components.map((component) => ({
-                  value: component.name,
-                  title: component.name,
-                }))}
+                items={[
+                  ...editor.reka.components.externals.map((component) => ({
+                    value: `${EXTERNAL_IDENTIFIER_PREFIX_SYMBOL}${component.name}`,
+                    title: `$${component.name}`,
+                  })),
+                  ...editor.reka.components.program.map((component) => ({
+                    value: component.name,
+                    title: component.name,
+                  })),
+                ]}
               />
             </Box>
           </InputItem>
@@ -177,20 +187,13 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
             }
 
             if (templateType === 'component') {
-              if (
-                !templateComponentName ||
-                !editor.reka.components.find(
-                  (component) => component.name === templateComponentName
-                )
-              ) {
+              if (!templateComponentName) {
                 return;
               }
 
               props.onAdd(
                 t.componentTemplate({
-                  component: t.identifier({
-                    name: templateComponentName,
-                  }),
+                  component: getIdentifierFromStr(templateComponentName),
                   props: templateProps,
                   children: [],
                 })

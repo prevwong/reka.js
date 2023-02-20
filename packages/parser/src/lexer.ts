@@ -72,7 +72,7 @@ export class Lexer {
       return this.readNumber();
     }
 
-    if (this.isAlpha(c)) {
+    if (this.isIdentifier(c)) {
       return this.readIdentifier();
     }
 
@@ -202,7 +202,8 @@ export class Lexer {
   }
 
   private readIdentifier() {
-    this.advanceCharWhile((c) => this.isAlphaNumeric(c));
+    this.advanceCharWhile((c) => c === '$' || this.isAlphaNumeric(c));
+
     const word = this.readWord();
 
     const keyword = KEYWORDS[word];
@@ -341,6 +342,10 @@ export class Lexer {
 
   private isAtEnd() {
     return this.state.current === this.source.length;
+  }
+
+  private isIdentifier(c: string) {
+    return this.isAlpha(c) || c === '$';
   }
 
   private isAlpha(c: string) {

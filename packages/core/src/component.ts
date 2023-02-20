@@ -186,7 +186,8 @@ export class ComponentViewEvaluator {
     if (!this.resolveComponentComputation) {
       this.resolveComponentComputation = computed(() => {
         const component = this.env.getByName(
-          this.template.component.name
+          this.template.component.name,
+          this.template.component.external
         ) as t.Component;
 
         if (!component) {

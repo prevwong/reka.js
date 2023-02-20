@@ -68,7 +68,7 @@ const AddComponentModal = (props: AddComponentModalProps) => {
           onClick={() => {
             const safeComponentName = pascalCase(componentName);
 
-            const existingComponent = editor.reka.components.find(
+            const existingComponent = editor.reka.components.program.find(
               (component) => component.name === safeComponentName
             );
 
