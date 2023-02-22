@@ -54,7 +54,7 @@ const reka = Reka.create({
 
 An `Extension` state can be accessed with the `.getExtension` method. Mutations are then made the same way as you would mutate a `Program` in the `State`.
 
-For example, let's leave a comment on a root `template` of one our components in our state.
+For example, let's leave a comment on a root `template` of a component in our state.
 
 ```tsx
 const rootTemplate = reka.state.components[0].template;
@@ -74,7 +74,7 @@ reka.change(() => {
 })
 ```
 
-## Keeping Extension state in-sync
+## Keeping the Extension state in-sync
 
 In our Comment Extension example, you may have noticed that a `Comment` has a reference to a `templateId` (which is the `id` of a `Template` node in the `Program` AST).
 

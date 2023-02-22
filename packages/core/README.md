@@ -6,7 +6,7 @@ Reka is a state management system for building no-code editors.
 
 A large part of the complexity of building no-code editors comes from the architecting of the state management system to power such editors (ie: how should the end user designs be stored and edited in a page editor?)
 
-Reka solves this by providing an AST-powered state system to enable end-users to create UI components that are nearly as complex as ones developers could write in code; along with an interpreter to efficiently compute an output that could be rendered on the browser.
+Reka solves this by providing an AST-powered state system to enable end-users to create UI components that are nearly as complex as ones that developers could write in code; along with an interpreter to efficiently compute an output that could be rendered on the browser.
 
 It's primarily built to serve as the new state management system to power Craft.js and its page builders.
 
@@ -70,7 +70,7 @@ This essentially means that you could build page editors where your end-users ar
 
 ### Portable :car:
 
-Reka computes a component instance from its State by outputing a simple JSON structure called the `View`:
+Reka computes a component instance from its State by outputting a simple JSON structure called the `View`:
 
 ```tsx
 // Compute a View for the Counter component
@@ -94,11 +94,11 @@ console.log(reka.createFrame('Counter').view);
 
 Whenever there's a change made to the State (eg: adding a new child to a parent template), Reka efficiently recomputes the updated `View`.
 
-The `View` is a simple serialisable JSON structure. So regardless of what UI framework you're working with to build your page builder, whether it's React, Vue or Svelte - building a renderer for Reka simply means taking this JSON structure and rendering it in your preferred UI framework.
+The `View` is a simple serializable JSON structure. So regardless of what UI framework you're working with to build your page builder, whether it's React, Vue or Svelte - building a renderer for Reka simply means taking this JSON structure and rendering it in your preferred UI framework.
 
 ### Extensible State :hammer:
 
-Of course, page builders often times may require additional data to be stored as part of the `State`. For example, let's say you want your end-users to be able to leave a comment on a template element; you can store these comments directly as part of the `State`:
+Of course, page builders oftentimes may require additional data to be stored as part of the `State`. For example, let's say you want your end-users to be able to leave a comment on a template element; you can store these comments directly as part of the `State`:
 
 ```tsx
 import { createExtension } from '@rekajs/core';
@@ -181,7 +181,7 @@ reka.load(
 
 ### Realtime Collaboration :tada:
 
-Oh, you need multiplayer in your page editor too? No problem, Reka provides an external package that allows realtime collaboration via a fully-featured CRDT backed by Yjs
+Oh, you need multiplayer in your page editor too? No problem, Reka provides an external package that allows real-time collaboration via a fully-featured CRDT backed by Yjs
 
 ```tsx
 import { Reka } from '@rekajs/core';
@@ -211,6 +211,6 @@ reka.load(t.unflatten(type.getMap('document')));
 const provider = new WebrtcProvider('collab-room', doc);
 ```
 
-## Acknowledgements :raised_hands:
+## Acknowledgments :raised_hands:
 
 Reka is inspired by [Plasmic](https://www.plasmic.app/), [Builder.io](https://builder.io) and [Mitosis](https://github.com/BuilderIO/mitosis)

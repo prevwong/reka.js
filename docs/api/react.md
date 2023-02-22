@@ -2,8 +2,7 @@
 
 Contains React-specific APIs for Reka.
 
-> Work in progress 
-
+> Work in progress
 
 ## Usage
 
@@ -28,7 +27,7 @@ export const App = () => {
 }
 ```
 
-The reka instance can be accessed anywhere within the provider via the `useReka` hook:
+The Reka instance can be accessed anywhere within the provider via the `useReka` hook:
 
 ```tsx
 const Editor = () => {
@@ -44,14 +43,18 @@ The `useReka` hook optionally accepts a callback to collect values from Reka dat
 
 ```tsx
 const Editor = () => {
-    const { componentNames } = useReka(reka => ({
-        componentNames: reka.state.program.components.map(component => component.name)
-    }))
+  const { componentNames } = useReka((reka) => ({
+    componentNames: reka.state.program.components.map(
+      (component) => component.name
+    ),
+  }));
 
-    return (
-        <div>
-            {componentNames.map(name => <h2 key={name}>{name}</h2>)}
-        </div>
-    )
-}
+  return (
+    <div>
+      {componentNames.map((name) => (
+        <h2 key={name}>{name}</h2>
+      ))}
+    </div>
+  );
+};
 ```

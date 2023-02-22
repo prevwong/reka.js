@@ -6,7 +6,7 @@ An external is anything that is exposed to the end-user but is not defined in th
 
 ## External Component
 
-The first type of externals are External Components, which is simply any component that exists outside of the `State`. These components are typically useful when you need to expose some predefined components that your end-users could reuse.
+The first type of externals is External Components, which is simply any component that exists outside of the `State`. These components are typically useful when you need to expose some predefined components that your end users could reuse.
 
 For example, let's imagine we have the following `Icon` React component:
 
@@ -61,7 +61,7 @@ const reka = Reka.create({
 
 ## External Globals
 
-The next type of externals are External Globals. These are useful for when you need to expose some variables that could provide additional functionality for the end-users. For example, you could expose an external global that returns a random number:
+The next type of externals is External Globals. These are useful when you need to expose some variables that could provide additional functionality for the end users. For example, you could expose an external global that returns a random number:
 
 ```tsx
 const reka = Reka.create({
@@ -129,9 +129,9 @@ const reka = Reka.create({
 
 ## External State
 
-Finally, the last type of externals are External States. These're useful if you need to store a temporary stateful value that your end-users could reference.
+Finally, the last type of externals is External States. These're useful if you need to store a temporary stateful value that your end-users could reference.
 
-For example, lets say you want your end-users to be able to do something with the current `scrollTop` position of the page:
+For example, let's say you want your end-users to be able to do something with the current `scrollTop` position of the page:
 
 ```tsx
 const reka = Reka.create({

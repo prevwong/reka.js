@@ -1,6 +1,6 @@
 # Integration with React
 
-In this guide, we'll build a simple React app to interact/manipulate the state of a Reka instance along with a renderer for Reka components. 
+In this guide, we'll build a simple React app to interact with/manipulate the state of a Reka instance along with a renderer for Reka components.
 
 > The source code for the end result can be found [here](https://github.com/prevwong/reka.js/tree/main/example)
 
@@ -12,12 +12,11 @@ We'll be using `next` to scaffold a React application. We'll also be using some 
 npm install next @rekajs/core @rekajs/types @rekajs/react
 ```
 
-> The `@rekajs/react` package is still a work in progress is subject to change and improvements 
-
+> The `@rekajs/react` package is still a work in progress is subject to change and improvements
 
 ## Basic setup
 
-First we'll create a Reka instance and load it with some components.
+First, we'll create a Reka instance and load it with some components.
 
 We will expose this Reka instance so we can access it throughout our React application with the `RekaProvider` context provider.
 
@@ -151,13 +150,13 @@ export default function Home() {
 }
 ```
 
-## Preview 
+## Preview
 
 Let's first start building the `<Preview />` component, which will essentially contain our renderer for the components we have in our Reka instance.
 
 In order to render a `RekaComponent`, we need to first have a `Frame`, which is essentially an instance of the component that computes a `View`, the render tree of that component's instance.
 
-To keep this guide simple, we will just create some frames manually right after initialising our Reka instance:
+To keep this guide simple, we will just create some frames manually right after initializing our Reka instance:
 
 ```tsx
 // src/pages/index.tsx
@@ -249,7 +248,7 @@ export const Preview = observer(() => {
 
 ## Renderer
 
-Next, lets create a Renderer for a `View` from a given `Frame`:
+Next, let's create a Renderer for a `View` from a given `Frame`:
 
 All we've to do here is go through each type of `View`, and return a corresponding React element:
 
@@ -314,17 +313,13 @@ export const RenderFrame = observer((props: RenderFrameProps) => {
 
   return <Renderer view={props.frame.view} />;
 });
-
 ```
-
 
 <video src="https://user-images.githubusercontent.com/16416929/216907135-521f96c7-c1c2-4bc8-ac2c-d20696f91785.mov" controls></video>
 
-
-
 ## Editor
 
-Now, lets create a simple Editor component that interacts with our `Reka` instance. We'll simply add a button that adds a new text template into our App `RekaComponent`:
+Now, let's create a simple Editor component that interacts with our `Reka` instance. We'll simply add a button that adds a new text template to our App `RekaComponent`:
 
 ```tsx
 // src/components/Editor.tsx
@@ -370,12 +365,11 @@ export const Editor = () => {
 
 <video src="https://user-images.githubusercontent.com/16416929/216907145-d158a1ac-a3e1-4bdb-9345-abecf281d109.mov" controls></video>
 
-
 ### Parser
 
-Let's edit our previous example to create the text template with a value from a text input. 
+Let's edit our previous example to create the text template with a value from text input.
 
-Since the text value is a prop of a template; and template props are expressions, we will need to first add the the `@rekajs/parser` package to our project so we can parse user inputs into an expression AST Node.
+Since the text value is a prop of a template, and template props are expressions, we will need to first add the `@rekajs/parser` package to our project so we can parse user inputs into an expression AST Node.
 
 ```
 npm install @rekajs/parser
@@ -440,10 +434,10 @@ export const Editor = () => {
     )
 }
 ```
+
 <video src="https://user-images.githubusercontent.com/16416929/216907178-df3e2140-4f39-4633-8e62-02c1a83fd406.mov" controls></video>
 
-
-Hence, to create a proper page editor with Reka, all we need to do is to create UI elements that mutate the Reka state like we did above. 
+Hence, to create a proper page editor with Reka, all we need to do is to create UI elements that mutate the Reka state as we did above.
 
 Of course, we could probably spend hours in this guide if we were to go through building every single UI element to edit the Reka state. Instead, we will end this guide by replacing the basic UI elements we made above with a code editor:
 
@@ -469,4 +463,3 @@ export const Editor = () => {
 ```
 
 <video src="https://user-images.githubusercontent.com/16416929/216907150-9ad75d22-a5a8-464c-8b29-db472c1eafac.mov" controls></video>
-

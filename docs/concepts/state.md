@@ -1,6 +1,6 @@
 # State
 
-At the core of Reka is its `State` which is a data structure used to store :-
+At the core of Reka is its `State` which is a data structure used to store:-
 
 - Components and global variables that the end user has created; this part of the state is called the `Program`
 - Any additional state data stored by an Extension.

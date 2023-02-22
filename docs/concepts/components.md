@@ -1,8 +1,9 @@
 # Components
 
-There're two types of Components :-
+There're two types of Components:-
+
 - `RekaComponent` - components designed by end-users, these components are stored in `State`
-- `ExternalComponent` - non-editable components exposed by page-builder developers 
+- `ExternalComponent` - non-editable components exposed by page-builder developers
 
 ## RekaComponent
 
@@ -40,13 +41,13 @@ A `RekaComponent` can define the `props` that it exposes, the `state` value it h
         if: null,
         each: null,
     },
-   
+
 }
 ```
 
 ### Template
 
-The `template` of a `RekaComponent` supports all functionalities that you would typically have as a developer in an UI framework (ie: React).
+The `template` of a `RekaComponent` supports all functionalities that you would typically have as a developer in a UI framework (ie: React).
 
 For example, the props of a template can support expressions:
 
@@ -60,13 +61,13 @@ For example, the props of a template can support expressions:
             name: "color"
         }
     },
-    if: null, 
+    if: null,
     each: null,
     children: []
 }
 ```
 
-Conditionally rendering can be achieved by specifing an expression to its `if` property:
+Conditionally rendering can be achieved by specifying an expression to its `if` property:
 
 ```tsx
 {
@@ -84,7 +85,7 @@ Conditionally rendering can be achieved by specifing an expression to its `if` p
 }
 ```
 
-A `template` could be rendered multiple times by specifying an iterable variable in the  `each` property:
+A `template` could be rendered multiple times by specifying an iterable variable in the `each` property:
 
 ```tsx
 {
@@ -110,7 +111,7 @@ A `template` could be rendered multiple times by specifying an iterable variable
 }
 ```
 
-Apart from specifying HTML tags in `template`, other Components can also be referenced like so: 
+Apart from specifying HTML tags in the `template` property, other Components can also be referenced like so:
 
 ```tsx
 {
@@ -132,6 +133,6 @@ Apart from specifying HTML tags in `template`, other Components can also be refe
 
 ## ExternalComponent
 
-An `ExternalComponent` is simply a component that exists outside of the `State`. These components are typically useful when you need to expose some predefined components that your end-users could reuse.
+An `ExternalComponent` is simply a component that exists outside of the `State`. These components are typically useful when you need to expose some predefined components that your end users could reuse.
 
 External Components are discussed further [here](/docs/concepts/externals)
