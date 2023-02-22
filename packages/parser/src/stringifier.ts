@@ -2,6 +2,7 @@ import * as t from '@rekajs/types';
 import { invariant, safeObjKey } from '@rekajs/utils';
 
 import { BinaryPrecedence, Precedence } from './precedence';
+import { EXTERNAL_IDENTIFIER_PREFIX_SYMBOL } from './utils';
 import { Writer, WriterResult } from './writer';
 
 class _Stringifier {
@@ -81,31 +82,17 @@ class _Stringifier {
       CallExpression: (node) => {
         this.stringify(node.identifier);
         this.writer.write('(');
-        node.arguments.forEach((arg, i, arr) => {
-          this.stringify(arg);
+        Object.keys(node.params).forEach((param, i, arr) => {
+          this.writer.write(
+            `${param}: ${this.writer.withTemp(() =>
+              this.stringify(node.params[param])
+            )}`
+          );
+
           if (i !== arr.length - 1) {
             this.writer.write(', ');
           }
         });
-        this.writer.write(')');
-      },
-      ExternalGlobal: (node) => {
-        this.writer.write(`$${node.name}`);
-        this.writer.write('(');
-        const paramsKeys = Object.keys(node.params);
-
-        if (paramsKeys.length > 0) {
-          this.writer.write('{ ');
-          paramsKeys.forEach((key, i, arr) => {
-            this.writer.write(`${key}: `);
-            this.stringify(node.params[key]);
-            if (i !== arr.length - 1) {
-              this.writer.write(', ');
-            }
-          });
-          this.writer.write(' }');
-        }
-
         this.writer.write(')');
       },
       ConditionalExpression: (node) => {
@@ -122,7 +109,11 @@ class _Stringifier {
         this.stringify(node.consequent);
       },
       Identifier: (node) => {
-        this.writer.write(node.name);
+        this.writer.write(
+          node.external
+            ? `${EXTERNAL_IDENTIFIER_PREFIX_SYMBOL}${node.name}`
+            : node.name
+        );
       },
       Assignment: (node) => {
         const left = this.writer.withTemp(() =>
@@ -233,7 +224,7 @@ class _Stringifier {
       Template: (node) => {
         const tag =
           node instanceof t.ComponentTemplate
-            ? node.component.name
+            ? this.writer.withTemp(() => this.stringify(node.component))
             : node instanceof t.TagTemplate
             ? node.tag
             : node instanceof t.SlotTemplate

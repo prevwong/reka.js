@@ -7,7 +7,7 @@ export type StateExternalGlobalAccessor = (opts: Record<string, any>) => any;
 export type StateExternalGlobals = Record<string, StateExternalGlobalAccessor>;
 export type StateExternalGlobalsFactory = (reka: Reka) => StateExternalGlobals;
 
-type StateExternalLocals = Record<string, any>;
+export type StateExternalLocals = Record<string, any>;
 
 export type StateExternals = {
   states: StateExternalLocals;
@@ -15,14 +15,14 @@ export type StateExternals = {
   components: t.Component[];
 };
 
-export type StsteExternalsFactory = {
+export type StateExternalsFactory = {
   states: StateExternalLocals;
   globals: StateExternalGlobalsFactory;
   components: t.Component[];
 };
 
 export type StateOpts = {
-  externals?: Partial<StsteExternalsFactory>;
+  externals?: Partial<StateExternalsFactory>;
   extensions?: ExtensionDefinition<any>[];
 };
 

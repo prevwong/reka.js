@@ -14,13 +14,13 @@ For example, let's imagine we have the following `Icon` React component:
 import * as icons from 'some-icon-library';
 
 const Icon = ({ name, size }) => {
-    return React.createElement(icons[name], {
-        size,
-    })
-}
+  return React.createElement(icons[name], {
+    size,
+  });
+};
 ```
 
-Now, we can expose `Icon` as an `ExternalComponent` so that it can be referenced by a template of a `RekaComponent`: 
+Now, we can expose `Icon` as an `ExternalComponent` so that it can be referenced by a template of a `RekaComponent`:
 
 ```tsx
 const Icon = ({ name, size }) => {...}
@@ -93,8 +93,11 @@ const reka = Reka.create({
                     value: t.binaryExpression({
                         left: t.literal({ value: "Random number (via Math.random): " }),
                         operator: "+",
-                        right: t.externalGlobal({
-                            name: "getRandomNumber", // <-- call external global
+                        right: t.callExpression({
+                            identifier: t.identifier({
+                                name: "getRandomNumber", // <-- call external global
+                                external: true,
+                            }),
                             params: {}
                         })
                     })
@@ -107,8 +110,11 @@ const reka = Reka.create({
                     value: t.binaryExpression({
                         left: t.literal({ value: "Random number (via crypto): " }),
                         operator: "+",
-                        right: t.externalGlobal({
-                            name: "getRandomNumber", // <-- call external global
+                        right: t.callExpression({
+                            identifier: t.identifier({
+                                name: "getRandomNumber", // <-- call external global
+                                external: true,
+                            }),
                             params: {
                                 strong: t.literal({ value: true }) // <- specify "strong" param = true, so we will use crypto.getRandomValues()
                             }
@@ -117,7 +123,7 @@ const reka = Reka.create({
                 }
             }
         ]
-    } 
+    }
 }
 ```
 
@@ -147,7 +153,6 @@ window.addEventListener('scroll', () => {
 });
 
 // Then, the end-user could do something with the "scrollTop" external state:
-// Note that the external state must be accessed via an external global:
 {
     type: "RekaComponent",
     template: {
@@ -156,9 +161,11 @@ window.addEventListener('scroll', () => {
         children: [],
         // show this <div /> only if the scrollTop is more than 200px
         if: t.binaryExpression({
-            left: t.externalGlobal({ name: 'getScrollTop' }),
+            left: t.callExpression({
+                identifier: t.identifier({ name: 'getScrollTop', external: true }),
+            }),
             operator: '>=',
-            right: t.literal({ value: 200 }) 
+            right: t.literal({ value: 200 })
         })
     }
 }

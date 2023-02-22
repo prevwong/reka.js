@@ -43,7 +43,11 @@ export class Environment {
     this.bindings.delete(name);
   }
 
-  getByName(name: string) {
+  getByName(name: string, external?: boolean) {
+    if (external) {
+      return this.reka.externals.get(name);
+    }
+
     const v = this.bindings.get(name);
 
     if (v !== undefined) {
@@ -51,17 +55,21 @@ export class Environment {
     }
 
     if (!this.parent) {
-      return this.reka.externals.states[name] || undefined;
+      return undefined;
     }
 
     return this.parent.getByName(name);
   }
 
   getByIdentifier(identifier: t.Identifier) {
+    if (identifier.external) {
+      return this.reka.externals.get(identifier.name);
+    }
+
     const distance = this.reka.resolver.getDistance(identifier);
 
-    if (distance === undefined || distance === -1) {
-      return this.reka.externals.states[identifier.name];
+    if (distance === undefined) {
+      throw new Error();
     }
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -71,7 +79,7 @@ export class Environment {
       const parent = env.parent;
 
       if (!parent) {
-        throw new Error();
+        return undefined;
       }
 
       env = parent;

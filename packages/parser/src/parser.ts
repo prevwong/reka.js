@@ -7,6 +7,7 @@ import jsx from 'acorn-jsx';
 import { Lexer } from './lexer';
 import { Stringifier } from './stringifier';
 import { TokenType } from './tokens';
+import { getIdentifierFromStr } from './utils';
 
 const parseWithAcorn = (source: string, loc: number) => {
   const JSXParser = AcornParser.extend(jsx());
@@ -61,9 +62,7 @@ const jsToReka = <T extends t.Type = t.Any>(
         });
       }
       case 'Identifier': {
-        return t.identifier({
-          name: node.name,
-        });
+        return getIdentifierFromStr(node.name);
       }
       case 'ExpressionStatement': {
         return _convert(node.expression);
@@ -100,30 +99,23 @@ const jsToReka = <T extends t.Type = t.Any>(
       case 'CallExpression': {
         const identifier = _convert(node.callee) as t.Identifier;
 
-        if (identifier.name.startsWith('$')) {
-          let params: Record<string, t.Expression> = {};
+        let params: Record<string, t.Expression> = {};
 
-          const arg0 = node.arguments[0];
+        const arg0 = node.arguments[0];
 
-          if (arg0) {
-            const objExpr = _convert(arg0);
-            invariant(
-              objExpr instanceof t.ObjectExpression,
-              'Invalid options argument'
-            );
+        if (arg0) {
+          const objExpr = _convert(arg0);
+          invariant(
+            objExpr instanceof t.ObjectExpression,
+            'Invalid options argument'
+          );
 
-            params = objExpr.properties;
-          }
-
-          return t.externalGlobal({
-            name: identifier.name.substring(1),
-            params,
-          });
+          params = objExpr.properties;
         }
 
         return t.callExpression({
           identifier,
-          arguments: node.arguments.map((arg) => _convert(arg)),
+          params,
         });
       }
       case 'IfStatement': {
@@ -498,7 +490,7 @@ class _Parser extends Lexer {
 
     if (isComponent) {
       return t.componentTemplate({
-        component: t.identifier({ name: tag }),
+        component: getIdentifierFromStr(tag),
         props,
         children,
         ...directives,

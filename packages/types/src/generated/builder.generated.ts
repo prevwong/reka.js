@@ -26,9 +26,6 @@ export const func = (...args: ConstructorParameters<typeof t.Func>) =>
 export const callExpression = (
   ...args: ConstructorParameters<typeof t.CallExpression>
 ) => new t.CallExpression(...args);
-export const externalGlobal = (
-  ...args: ConstructorParameters<typeof t.ExternalGlobal>
-) => new t.ExternalGlobal(...args);
 export const conditionalExpression = (
   ...args: ConstructorParameters<typeof t.ConditionalExpression>
 ) => new t.ConditionalExpression(...args);

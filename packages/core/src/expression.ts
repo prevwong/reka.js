@@ -76,18 +76,6 @@ export const computeExpression = (
     return env.getByIdentifier(expr);
   }
 
-  if (expr instanceof t.ExternalGlobal) {
-    const opts = Object.keys(expr.params).reduce(
-      (accum, key) => ({
-        ...accum,
-        [key]: computeExpression(expr.params[key], reka, env),
-      }),
-      {}
-    );
-
-    return reka.externals.globals[expr.name](opts);
-  }
-
   if (expr instanceof t.Assignment) {
     const right = computeExpression(expr.right, reka, env);
 
@@ -121,14 +109,14 @@ export const computeExpression = (
   }
 
   if (expr instanceof t.Func) {
-    const fn = action((...args) => {
+    const fn = action((...args: any[]) => {
       const blockEnv = env.inherit();
 
       expr.params.forEach((param, i) => {
         env.set(param.name, args[i]);
       });
 
-      let returnValue;
+      let returnValue: any;
 
       reka.change(() => {
         returnValue = computeExpression(expr.body, reka, blockEnv);
@@ -143,11 +131,17 @@ export const computeExpression = (
   }
 
   if (expr instanceof t.CallExpression) {
-    reka.change(() => {
-      const fn = env.getByIdentifier(expr.identifier);
+    const fn = env.getByIdentifier(expr.identifier);
 
-      fn(...expr.arguments.map((arg) => computeExpression(arg, reka, env)));
-    });
+    const params = Object.keys(expr.params).reduce(
+      (accum, key) => ({
+        ...accum,
+        [key]: computeExpression(expr.params[key], reka, env),
+      }),
+      {}
+    );
+
+    return fn(params);
   }
 
   if (expr instanceof t.IfStatement) {

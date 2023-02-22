@@ -88,7 +88,7 @@ component App() {
      noPadding={true}
      description={"Expose Javascript functions or React components from your codebase for your end-users to use in their pages"}
     >
-     <Animation/>
+     <$Animation />
     </Feature>
     <Feature
      title={"Realtime Collaboration"}
@@ -215,7 +215,7 @@ component Modal(title="Modal",isOpen,onClose) => (
      }}
      className={"opacity-20 hover:opacity-100"}
     >
-     <Icon name={"Cross1Icon"}/>
+     <$Icon name={"Cross1Icon"}/>
     </button>
    </header>
    <div>
@@ -240,7 +240,7 @@ component Button(
   <span @if={text}>
    <text value={text}/>
   </span>
-  <Icon
+  <$Icon
    name={icon}
    @if={icon}
   />

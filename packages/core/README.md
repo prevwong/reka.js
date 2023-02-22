@@ -162,9 +162,12 @@ reka.load(
               value: t.binaryExpression({
                 left: t.literal({ value: 'Current date time is: ' }),
                 operator: '+',
-                right: t.externalGlobal({
-                  name: 'getDateTime', // <-- access global to return current time
-                  params: [],
+                right: t.callExpression({
+                  identifier: {
+                    name: 'getDateTime', // <-- access global to return current time
+                    external: true,
+                  },
+                  params: {},
                 }),
               }),
             },

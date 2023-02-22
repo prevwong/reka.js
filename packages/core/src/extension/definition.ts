@@ -10,8 +10,6 @@ export interface ExtensionConfig<
   S extends ExtensionStateDefinition | any = undefined
 > {
   key: string;
-  globals: Record<string, any>;
-  components: t.Component[];
   state: S;
   init: (extension: Extension<ExtensionDefinition<S>>) => void;
   dispose: (extension: Extension<ExtensionDefinition<S>>) => void;
@@ -32,8 +30,6 @@ export class ExtensionDefinition<
 
   constructor(config: Require<Partial<ExtensionConfig<S>>, 'key'>) {
     this.key = config.key;
-    this.globals = config.globals || {};
-    this.components = config.components || [];
     this.state = config.state as S;
     this.fromJSON =
       config.fromJSON ||

@@ -65,10 +65,12 @@ Schema.register('Literal', Literal);
 
 type IdentifierParameters = {
   name: string;
+  external?: boolean;
 };
 
 export class Identifier extends Expression {
   declare name: string;
+  declare external: boolean;
   constructor(value: IdentifierParameters) {
     super('Identifier', value);
   }
@@ -190,33 +192,18 @@ Schema.register('Func', Func);
 
 type CallExpressionParameters = {
   identifier: Identifier;
-  arguments: Expression[];
+  params?: Record<string, Expression>;
 };
 
 export class CallExpression extends Expression {
   declare identifier: Identifier;
-  declare arguments: Expression[];
+  declare params: Record<string, Expression>;
   constructor(value: CallExpressionParameters) {
     super('CallExpression', value);
   }
 }
 
 Schema.register('CallExpression', CallExpression);
-
-type ExternalGlobalParameters = {
-  name: string;
-  params: Record<string, Expression>;
-};
-
-export class ExternalGlobal extends Expression {
-  declare name: string;
-  declare params: Record<string, Expression>;
-  constructor(value: ExternalGlobalParameters) {
-    super('ExternalGlobal', value);
-  }
-}
-
-Schema.register('ExternalGlobal', ExternalGlobal);
 
 type ConditionalExpressionParameters = {
   condition: Expression;
@@ -600,7 +587,6 @@ export type Any =
   | Block
   | Func
   | CallExpression
-  | ExternalGlobal
   | ConditionalExpression
   | IfStatement
   | Assignment
@@ -638,7 +624,6 @@ export type Visitor = {
   Block: (node: Block) => any;
   Func: (node: Func) => any;
   CallExpression: (node: CallExpression) => any;
-  ExternalGlobal: (node: ExternalGlobal) => any;
   ConditionalExpression: (node: ConditionalExpression) => any;
   IfStatement: (node: IfStatement) => any;
   Assignment: (node: Assignment) => any;

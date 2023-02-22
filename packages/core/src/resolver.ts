@@ -57,6 +57,10 @@ export class Resolver {
   }
 
   private setDistance(identifier: t.Identifier, distance: number) {
+    if (identifier.external) {
+      return;
+    }
+
     runInAction(() => {
       this.identifiersToVariableDistance.set(identifier, distance);
     });
@@ -64,6 +68,10 @@ export class Resolver {
 
   resolveExpr(expr: t.Any, scope: Scope) {
     if (expr instanceof t.Identifier) {
+      if (expr.external) {
+        return;
+      }
+
       this.setDistance(expr, scope.getDistance(expr.name));
     }
 
@@ -105,14 +113,8 @@ export class Resolver {
     if (expr instanceof t.CallExpression) {
       this.resolveExpr(expr.identifier, scope);
 
-      expr.arguments.forEach((arg) => {
-        this.resolveExpr(arg, scope);
-      });
-    }
-
-    if (expr instanceof t.ExternalGlobal) {
-      Object.values(expr.params).forEach((param) => {
-        this.resolveExpr(param, scope);
+      Object.keys(expr.params).forEach((param) => {
+        this.resolveExpr(expr.params[param], scope);
       });
     }
 
@@ -176,10 +178,7 @@ export class Resolver {
         computed: computed(
           () => {
             if (template instanceof t.ComponentTemplate) {
-              this.setDistance(
-                template.component,
-                templateScope.getDistance(template.component.name)
-              );
+              this.resolveExpr(template.component, templateScope);
             }
 
             if (template.each) {

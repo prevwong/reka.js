@@ -21,7 +21,6 @@ export class ExtensionRegistry {
 
       runInAction(() => {
         Object.assign(this.reka.externals.states, extension.definition.globals);
-        this.reka.externals.components.push(...extension.definition.components);
       });
     });
   }

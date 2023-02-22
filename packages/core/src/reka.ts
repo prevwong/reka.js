@@ -11,14 +11,9 @@ import {
 import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { ExtensionDefinition, ExtensionRegistry } from './extension';
+import { Externals } from './externals';
 import { Frame, FrameOpts } from './frame';
-import {
-  StateExternalGlobalsFactory,
-  StateExternals,
-  StateOpts,
-  StateSubscriberOpts,
-  StateWatcherOpts,
-} from './interfaces';
+import { StateOpts, StateSubscriberOpts, StateWatcherOpts } from './interfaces';
 import { ChangeListenerSubscriber, Observer } from './observer';
 import { Resolver } from './resolver';
 import { toJS } from './utils';
@@ -50,44 +45,26 @@ export class Reka {
 
   private init = false;
 
-  externals: StateExternals;
+  externals: Externals;
 
   constructor(private readonly opts?: StateOpts) {
     this.frames = [];
 
-    this.externals = {
-      components: opts?.externals?.components ?? [],
-      states: opts?.externals?.states ?? {},
-      globals: opts?.externals?.globals
-        ? this.setupExternalGlobals(opts.externals?.globals)
-        : {},
-    };
+    this.externals = new Externals(this, opts?.externals);
 
     makeObservable(this, {
       frames: observable,
-      externals: observable,
       components: computed,
     });
   }
 
-  private setupExternalGlobals(createGlobals: StateExternalGlobalsFactory) {
-    const _globals = createGlobals(this);
-
-    return Object.entries(_globals).reduce((accum, [key, accessor]) => {
-      return {
-        ...accum,
-        [key]: accessor,
-      };
-    }, {});
-  }
-
   getExternalState(key: string) {
-    return this.externals.states[key];
+    return this.externals.getState(key);
   }
 
   updateExternalState(key: string, value: any) {
     this.change(() => {
-      this.externals.states[key] = value;
+      this.externals.updateState(key, value);
     });
   }
 
@@ -102,7 +79,10 @@ export class Reka {
    * All components that exists in the instance. Includes RekaComponents in the Program AST and ExternalComponents that was passed to the instance in the constructor.
    */
   get components() {
-    return [...(this.externals.components ?? []), ...this.program.components];
+    return {
+      externals: Object.values(this.externals.components),
+      program: this.program.components,
+    };
   }
 
   /**
@@ -163,7 +143,7 @@ export class Reka {
     if (!this.syncComponents) {
       this.syncComponents = computed(
         () => {
-          this.components.forEach((component) => {
+          this.program.components.forEach((component) => {
             this.env.set(component.name, component);
           });
         },
@@ -176,11 +156,11 @@ export class Reka {
     if (!this.syncCleanupEnv) {
       this.syncCleanupEnv = computed(
         () => {
-          const globalVarNames = [
-            ...Object.keys(this.externals.states),
-            ...this.program.globals.map((global) => global.name),
-          ];
-          const componentNames = this.components.map(
+          const globalVarNames = this.program.globals.map(
+            (global) => global.name
+          );
+
+          const componentNames = this.program.components.map(
             (component) => component.name
           );
 

@@ -36,6 +36,7 @@ Schema.define('Identifier', {
   extends: 'Expression',
   fields: (t) => ({
     name: t.string,
+    external: t.defaultValue(t.boolean, false),
   }),
 });
 
@@ -110,15 +111,7 @@ Schema.define('CallExpression', {
   extends: 'Expression',
   fields: (t) => ({
     identifier: t.node('Identifier'),
-    arguments: t.array(t.node('Expression')),
-  }),
-});
-
-Schema.define('ExternalGlobal', {
-  extends: 'Expression',
-  fields: (t) => ({
-    name: t.string,
-    params: t.map(t.node('Expression')),
+    params: t.defaultValue(t.map(t.node('Expression')), {}),
   }),
 });
 
