@@ -28,3 +28,7 @@ yarn-error.log*
 
 # turbo
 .turbo
+
+# editors
+.vscode
+.idea
