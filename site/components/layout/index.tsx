@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
-import { useEditor } from '@app/editor';
+import { useMaybeEditor } from '@app/editor';
 import { styled } from '@app/styles';
 import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
@@ -30,7 +30,7 @@ const Content = styled(motion.div, {
 
 export const Layout = observer((props: LayoutProps) => {
   const router = useRouter();
-  const editor = useEditor();
+  const editor = useMaybeEditor();
 
   return (
     <React.Fragment>
@@ -45,7 +45,7 @@ export const Layout = observer((props: LayoutProps) => {
       <Header />
       <Content
         initial="initial"
-        animate={editor.ready ? 'setup' : 'initial'}
+        animate={!editor ? 'setup' : editor.ready ? 'setup' : 'initial'}
         variants={{
           initial: {
             top: 0,

@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import * as React from 'react';
 
 import { Box } from '@app/components/box';
-import { useEditor } from '@app/editor';
+import { useMaybeEditor } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 import { styled } from '@app/styles';
 import { CREATE_BEZIER_TRANSITION } from '@app/utils';
@@ -46,9 +46,13 @@ const Menu = styled('div', {
 });
 
 const AppToolbar = observer(() => {
-  const editor = useEditor();
+  const editor = useMaybeEditor();
 
-  const isCodeModeRef = React.useRef(editor.mode === EditorMode.Code);
+  const isCodeModeRef = React.useRef(editor && editor.mode === EditorMode.Code);
+
+  if (!editor) {
+    return null;
+  }
 
   return (
     <Box css={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -141,12 +145,12 @@ const HeaderToolbars = <T extends Record<string, React.ReactElement>>(
 };
 
 export const Header = observer(() => {
-  const editor = useEditor();
+  const editor = useMaybeEditor();
 
   return (
     <Container
       initial="exit"
-      animate={editor.ready ? 'enter' : 'exit'}
+      animate={!editor ? 'enter' : editor.ready ? 'enter' : 'exit'}
       variants={{
         enter: {
           marginTop: 0,

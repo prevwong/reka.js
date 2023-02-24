@@ -3,7 +3,19 @@ import * as React from 'react';
 
 import { EditorContext } from './EditorContextProvider';
 
-export const useEditor = () => React.useContext(EditorContext);
+export const useMaybeEditor = () => {
+  const { editor } = React.useContext(EditorContext);
+
+  return editor;
+};
+
+export const useEditor = () => {
+  const editor = useMaybeEditor();
+
+  invariant(editor, 'Editor not found');
+
+  return editor;
+};
 
 export const useEditorActiveComponent = () => {
   const editor = useEditor();

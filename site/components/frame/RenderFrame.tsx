@@ -153,7 +153,7 @@ type RenderFrameProps = {
 };
 
 export const RenderFrame = observer((props: RenderFrameProps) => {
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     window.requestAnimationFrame(() => {
       props.frame.state.enableSync();
     });
