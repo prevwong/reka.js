@@ -161,7 +161,7 @@ const DocPostContent = styled('div', {
   },
 });
 
-const DocPostContentHeader = styled('div', {
+const DocPostContentHeader = styled('header', {
   pb: '$6',
   display: 'flex',
   gap: '$4',
@@ -274,20 +274,22 @@ const Docs = (props: any) => {
             <HamburgerMenuIcon />
           </IconButton>
           <Box css={{ width: '100%', overflow: 'scroll' }}>
-            <DocPostContentHeader>
-              <h1>{props.doc.title}</h1>
-            </DocPostContentHeader>
-            <Box
-              className="prose prose-md prose-headings:font-medium prose-h1:mt-8 mb-8 prose-code:bg-"
-              css={{
-                maxWidth: '100%',
-                '> h2 > a': {
-                  textDecoration: 'none',
-                },
-              }}
-              ref={contentDomRef}
-              dangerouslySetInnerHTML={{ __html: props.doc.content }}
-            ></Box>
+            <article className={'content'}>
+              <DocPostContentHeader>
+                <h1>{props.doc.title}</h1>
+              </DocPostContentHeader>
+              <Box
+                className="prose prose-md prose-headings:font-medium prose-h1:mt-8 mb-8 prose-code:bg-"
+                css={{
+                  maxWidth: '100%',
+                  '> h2 > a': {
+                    textDecoration: 'none',
+                  },
+                }}
+                ref={contentDomRef}
+                dangerouslySetInnerHTML={{ __html: props.doc.content }}
+              ></Box>
+            </article>
           </Box>
         </Box>
       </DocPostContent>
