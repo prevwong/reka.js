@@ -1,6 +1,6 @@
 import * as t from '@rekajs/types';
 import { TypeConstructor } from '@rekajs/types';
-import { invariant } from '@rekajs/utils';
+import { getRandomId, invariant } from '@rekajs/utils';
 import {
   IArraySplice,
   IObjectDidChange,
@@ -49,8 +49,9 @@ export type ObserverHooks = {
 };
 
 export type ObserverOptions = {
+  id?: string;
   batch: boolean;
-  shouldIgnoreObservable: (type: t.Type, key: string) => boolean;
+  shouldIgnoreObservable: (parent: t.Type, key: string, value: any) => boolean;
   hooks: Partial<ObserverHooks>;
 };
 
@@ -70,6 +71,8 @@ type ChangeListenerPayload =
 export type ChangeListenerSubscriber = (payload: ChangeListenerPayload) => void;
 
 export class Observer<T extends t.Type = t.Type> {
+  id: string;
+
   root: T;
 
   private declare rootDisposer: () => void;
@@ -83,10 +86,11 @@ export class Observer<T extends t.Type = t.Type> {
   private isDisposing: boolean = false;
   private isMutation: boolean = false;
 
-  private uncomittedValues: Set<Record<string, any> | Array<any> | t.Type> =
+  private uncommittedValues: Set<Record<string, any> | Array<any> | t.Type> =
     new Set();
 
   constructor(type: T, opts?: Partial<ObserverOptions>) {
+    this.id = opts?.id || getRandomId();
     this.valueToParentMap = new WeakMap();
     this.typeToDisposer = new WeakMap();
     this.idToType = new Map();
@@ -201,7 +205,7 @@ export class Observer<T extends t.Type = t.Type> {
       typeof value !== 'function' &&
       value instanceof Object
     ) {
-      this.uncomittedValues.add(value);
+      this.uncommittedValues.add(value);
     }
 
     return this._setupChild(value, parent);
@@ -235,7 +239,11 @@ export class Observer<T extends t.Type = t.Type> {
               }
 
               return (
-                this.opts.shouldIgnoreObservable(value, field.name) === false
+                this.opts.shouldIgnoreObservable(
+                  value,
+                  field.name,
+                  value[field.name]
+                ) === false
               );
             })
             .map((field) => [field.name, observable])
@@ -250,7 +258,13 @@ export class Observer<T extends t.Type = t.Type> {
         return;
       }
 
-      if (this.opts.shouldIgnoreObservable?.(value, field.name) === true) {
+      if (
+        this.opts.shouldIgnoreObservable?.(
+          value,
+          field.name,
+          value[field.name]
+        ) === true
+      ) {
         continue;
       }
 
@@ -283,13 +297,15 @@ export class Observer<T extends t.Type = t.Type> {
         fieldDisposers.get(e.name)();
       }
 
-      fieldDisposers.set(
-        e.name,
-        this.setupChild(e.newValue, {
+      if (
+        this.opts.shouldIgnoreObservable?.(
           value,
-          key: e.name as string,
-        })
-      );
+          String(e.name),
+          value[e.name]
+        ) === true
+      ) {
+        return;
+      }
 
       return e;
     });
@@ -504,6 +520,11 @@ export class Observer<T extends t.Type = t.Type> {
   }
 
   private handleOnChange(value: any, payload: Omit<OnChangePayload, 'path'>) {
+    invariant(
+      this.isMutation,
+      'Mutation not allowed outside of the .change() method'
+    );
+
     const change = {
       ...payload,
       path: this.getPath(value),
@@ -527,7 +548,7 @@ export class Observer<T extends t.Type = t.Type> {
      *   root.someKey.push({})
      * })
      */
-    if (path && this.uncomittedValues.has(path.parent[path.key])) {
+    if (path && this.uncommittedValues.has(path.parent[path.key])) {
       return;
     }
 
@@ -619,16 +640,14 @@ export class Observer<T extends t.Type = t.Type> {
         return;
       }
 
-      this.isMutation = true;
-
       runInAction(() => {
+        this.isMutation = true;
         mutation();
+        this.isMutation = false;
+
+        this.disposeTypes();
+        this.uncommittedValues.clear();
       });
-
-      this.isMutation = false;
-
-      this.disposeTypes();
-      this.uncomittedValues.clear();
     };
 
     if (this.opts.batch) {

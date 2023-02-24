@@ -157,9 +157,10 @@ export class ViewEvaluator {
       this._view.set(view);
 
       this.viewObserver = new Observer(view, {
+        id: `view-${this.rootTemplate.id}`,
         batch: false,
-        shouldIgnoreObservable: (type, key) => {
-          if (type instanceof t.View && key === 'template') {
+        shouldIgnoreObservable: (type, key, value) => {
+          if (value instanceof t.Template || value instanceof t.Component) {
             return true;
           }
 
@@ -435,6 +436,7 @@ export class ViewEvaluator {
         template,
       });
     } catch (error: any) {
+      // TODO: create error handling system
       console.warn('view error', template, error, ctx);
       view = new t.ErrorSystemView({
         key: createKey(ctx.path),
