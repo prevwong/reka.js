@@ -24,6 +24,16 @@ class _Stringifier {
 
         this.writer.write(node.value.toString());
       },
+      ArrayExpression: (node) => {
+        this.writer.write('[');
+        node.elements.forEach((element, i) => {
+          this.stringify(element);
+          if (i !== node.elements.length - 1) {
+            this.writer.write(',');
+          }
+        });
+        this.writer.write(']');
+      },
       BinaryExpression: (node) => {
         let result;
         const currentPrecedence = BinaryPrecedence[node.operator];
