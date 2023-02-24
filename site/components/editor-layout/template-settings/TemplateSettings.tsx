@@ -4,7 +4,6 @@ import * as React from 'react';
 
 import { Box } from '@app/components/box';
 import { Text } from '@app/components/text';
-import { TextField } from '@app/components/text-field';
 import { useEditor } from '@app/editor';
 import { styled } from '@app/styles';
 
@@ -57,8 +56,6 @@ type TemplateHeadingProps = {
 const TemplateHeading = (props: TemplateHeadingProps) => {
   let title: string;
 
-  const editor = useEditor();
-
   if (props.template instanceof t.ComponentTemplate) {
     title = props.template.component.name;
   } else if (props.template instanceof t.TagTemplate) {
@@ -69,36 +66,11 @@ const TemplateHeading = (props: TemplateHeadingProps) => {
     title = 'Template';
   }
 
-  const [newTitleValue, setNewTitleValue] = React.useState(title);
-
   return (
     <StyledTemplateTypeHeading>
-      <TextField
-        css={{ flex: 1 }}
-        value={newTitleValue}
-        transparent
-        onChange={(e) => {
-          setNewTitleValue(e.target.value);
-        }}
-        onKeyUp={(e) => {
-          if (e.key === 'Escape') {
-            setNewTitleValue(title);
-            return;
-          }
-
-          if (e.key !== 'Enter') {
-            return;
-          }
-
-          const template = props.template;
-
-          if (template instanceof t.TagTemplate) {
-            editor.reka.change(() => {
-              template.tag = newTitleValue;
-            });
-          }
-        }}
-      />
+      <Box css={{ flex: 1, fontSize: '$4' }}>
+        <span>{title}</span>
+      </Box>
       <Box
         css={{
           fontSize: '10px',
