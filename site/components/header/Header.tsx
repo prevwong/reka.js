@@ -1,4 +1,3 @@
-import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { AnimatePresence, motion } from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import Image from 'next/image';
@@ -8,13 +7,11 @@ import * as React from 'react';
 
 import { Box } from '@app/components/box';
 import { useMaybeEditor } from '@app/editor';
-import { EditorMode } from '@app/editor/Editor';
 import { styled } from '@app/styles';
 import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
-import { Button, IconButton } from '../button';
-import { Collaborators } from '../editor-panel/Collaborators';
-import { Tooltip } from '../tooltip';
+import { ToolbarApp } from './ToolbarApp';
+import { ToolbarDoc } from './ToolbarDoc';
 
 export const HEADER_HEIGHT = 50;
 
@@ -45,62 +42,6 @@ const Menu = styled('div', {
   },
 });
 
-const AppToolbar = observer(() => {
-  const editor = useMaybeEditor();
-
-  const isCodeModeRef = React.useRef(editor && editor.mode === EditorMode.Code);
-
-  if (!editor) {
-    return null;
-  }
-
-  return (
-    <Box css={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-      <Collaborators />
-      <Tooltip content="Toggle code editor">
-        <Button
-          variant="secondary"
-          css={{ py: '$3', px: '$4' }}
-          onClick={() => {
-            if (editor.mode === EditorMode.Code) {
-              editor.setMode(EditorMode.UI);
-              isCodeModeRef.current = false;
-              return;
-            }
-
-            isCodeModeRef.current = true;
-            editor.setMode(EditorMode.Code);
-          }}
-        >
-          {editor.mode === EditorMode.Code ? 'Exit Code Editor' : 'Edit Code'}
-        </Button>
-      </Tooltip>
-
-      <Tooltip content="Preview">
-        <IconButton
-          css={{ py: '$3', px: '$3' }}
-          onClick={() => {
-            if (editor.mode === EditorMode.Preview) {
-              editor.setMode(
-                isCodeModeRef.current ? EditorMode.Code : EditorMode.UI
-              );
-              return;
-            }
-
-            editor.setMode(EditorMode.Preview);
-          }}
-        >
-          {editor.mode === EditorMode.Preview ? (
-            <EyeClosedIcon />
-          ) : (
-            <EyeOpenIcon />
-          )}
-        </IconButton>
-      </Tooltip>
-    </Box>
-  );
-});
-
 type HeaderToolbarProps<T extends Record<string, React.ReactElement>> = {
   toolbars: T;
   renderToolbar: (path: string) => keyof T | null;
@@ -111,6 +52,7 @@ const HeaderToolbars = <T extends Record<string, React.ReactElement>>(
 ) => {
   const router = useRouter();
   const c = props.renderToolbar(router.asPath);
+
   return (
     <React.Fragment>
       {Object.keys(props.toolbars).map((key) => {
@@ -185,11 +127,16 @@ export const Header = observer(() => {
 
         <HeaderToolbars
           toolbars={{
-            app: <AppToolbar />,
+            app: <ToolbarApp />,
+            doc: <ToolbarDoc />,
           }}
           renderToolbar={(path) => {
             if (path === '/') {
               return 'app';
+            }
+
+            if (path.match(/^\/docs\/(.*)$/)) {
+              return 'doc';
             }
 
             return null;
