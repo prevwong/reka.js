@@ -1,4 +1,5 @@
 import * as t from '@rekajs/types';
+import { invariant } from '@rekajs/utils';
 import { action } from 'mobx';
 
 import { Environment } from './environment';
@@ -77,6 +78,8 @@ export const computeExpression = (
   }
 
   if (expr instanceof t.Assignment) {
+    invariant(!expr.left.external, 'Cannot reassign external value');
+
     const right = computeExpression(expr.right, reka, env);
 
     switch (expr.operator) {
@@ -119,7 +122,12 @@ export const computeExpression = (
       let returnValue: any;
 
       reka.change(() => {
-        returnValue = computeExpression(expr.body, reka, blockEnv);
+        try {
+          returnValue = computeExpression(expr.body, reka, blockEnv);
+        } catch (err) {
+          // TODO: create a error handling system
+          console.warn(err);
+        }
       });
 
       return returnValue;
