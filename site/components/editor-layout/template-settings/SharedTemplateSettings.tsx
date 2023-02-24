@@ -89,7 +89,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
     index: string
   ) => {
     editor.reka.change(() => {
-      if (!iterator) {
+      if (!iterator || !alias) {
         props.template.each = null;
         return;
       }
