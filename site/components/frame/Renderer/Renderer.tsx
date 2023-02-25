@@ -4,6 +4,7 @@ import * as t from '@rekajs/types';
 import { invariant } from '@rekajs/utils';
 import * as React from 'react';
 
+import { SITE_LAYOUT_CLASSNAME } from '@app/constants/css';
 import { useEditor, useEditorActiveComponent } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 import { requestAnimationSequence } from '@app/utils';
@@ -249,6 +250,20 @@ export const Renderer = observer((props: RendererProps) => {
 
     requestAnimationSequence([
       [() => editor.setReady(true), 200],
+      [
+        () => {
+          const siteLayoutDom = document.querySelector(
+            `.${SITE_LAYOUT_CLASSNAME}`
+          );
+
+          if (!siteLayoutDom) {
+            return;
+          }
+
+          siteLayoutDom.classList.remove('hidden-header');
+        },
+        200,
+      ],
       [() => editor.setMode(EditorMode.UI), 400],
     ]);
   }, [editor]);

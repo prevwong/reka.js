@@ -3,6 +3,8 @@ import { RekaProvider } from '@rekajs/react';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
+import { HeaderToolbar } from '@app/components/header/HeaderToolbar';
+import { ToolbarApp } from '@app/components/toolbar-app';
 import { EditorContext } from '@app/editor';
 import { Editor } from '@app/editor/Editor';
 
@@ -39,9 +41,17 @@ const App = () => {
 
   return (
     <RekaProvider state={editor.reka}>
+      <HeaderToolbar>
+        <ToolbarApp />
+      </HeaderToolbar>
       <EditorLayout />
     </RekaProvider>
   );
+};
+
+App.pageOptions = {
+  hideHeaderOnInitial: true,
+  footer: false,
 };
 
 export default App;

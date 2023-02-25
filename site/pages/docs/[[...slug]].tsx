@@ -6,7 +6,9 @@ import * as React from 'react';
 
 import { Box } from '@app/components/box';
 import { IconButton } from '@app/components/button';
+import { HeaderToolbar } from '@app/components/header/HeaderToolbar';
 import { Text } from '@app/components/text';
+import { ToolbarDoc } from '@app/components/toolbar-doc';
 import { DOCS_SIDEBAR } from '@app/constants/docs-sidebar';
 import { styled } from '@app/styles';
 import { getAllDocs, getDocBySlug } from '@app/utils/docs';
@@ -215,6 +217,9 @@ const Docs = (props: any) => {
 
   return (
     <Box css={{ display: 'flex', gap: '$3', position: 'relative' }}>
+      <HeaderToolbar>
+        <ToolbarDoc />
+      </HeaderToolbar>
       <DocNav active={mobileNavActive}>
         <Box
           className="mobile-nav-header"
