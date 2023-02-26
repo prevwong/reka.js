@@ -38,8 +38,6 @@ A `RekaComponent` can define the `props` that it exposes, the `state` value it h
         tag: "div",
         props: {},
         children: [],
-        if: null,
-        each: null,
     },
 
 }
@@ -61,8 +59,6 @@ For example, the props of a template can support expressions:
             name: "color"
         }
     },
-    if: null,
-    each: null,
     children: []
 }
 ```
@@ -73,7 +69,8 @@ Conditionally rendering can be achieved by specifying an expression to its `if` 
 {
     type: "TagTemplate",
     name: "div",
-    props: {...},
+    props: {},
+    children: []
     if: {
         type: "BinaryExpression",
         left: "counter",
@@ -81,7 +78,6 @@ Conditionally rendering can be achieved by specifying an expression to its `if` 
         right: 0
     },
     each: null,
-    children: []
 }
 ```
 
@@ -91,8 +87,13 @@ A `template` could be rendered multiple times by specifying an iterable variable
 {
     type: "TagTemplate",
     name: "div",
-    props: {...},
-    if: {...},
+    props: {
+        className: {
+            type: "Identifier",
+            name: "color",
+        },
+    }
+    children: [],
     each: {
         iterator: {
             type: "Identifier",
@@ -101,13 +102,6 @@ A `template` could be rendered multiple times by specifying an iterable variable
         alias: "color",
         index: "i"
     },
-    props: {
-        className: {
-            type: "Identifier",
-            name: "color",
-        },
-    }
-    children: []
 }
 ```
 
@@ -117,9 +111,6 @@ Apart from specifying HTML tags in the `template` property, other Components can
 {
     type: "TagTemplate",
     name: "div",
-    props: {...},
-    if: null,
-    each: null,
     children: [
         {
             type: "ComponentTemplate",

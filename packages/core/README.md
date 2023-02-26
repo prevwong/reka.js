@@ -54,7 +54,7 @@ At the core of Reka is the State data structure which is an Abstract Syntax Tree
 const Counter = () => {
     const [counter, setCounter] = useState(0);
 
-    return ( <p>My Counter: {counter}</p>)
+    return (<p>My Counter: {counter}</p>)
 }
 
 const App = () => {
