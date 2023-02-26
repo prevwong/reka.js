@@ -140,6 +140,7 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
         ) : (
           <React.Fragment>
             {comments
+              .slice()
               .sort((a, b) => (a.date < b.date ? 1 : -1))
               .map((comment, i) => {
                 return (
@@ -181,10 +182,6 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
           value=""
           onCommit={(content) => {
             editor.reka.change(() => {
-              const extension = editor.reka.getExtension(CommentExtension);
-
-              console.log('comments push', extension);
-
               const comments =
                 editor.reka.getExtension(CommentExtension).state
                   .templateToComments;
