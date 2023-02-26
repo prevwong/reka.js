@@ -7,6 +7,7 @@ import * as React from 'react';
 import { Box } from '@app/components/box';
 import { IconButton } from '@app/components/button';
 import { HeaderToolbar } from '@app/components/header/HeaderToolbar';
+import { SEO } from '@app/components/seo';
 import { Text } from '@app/components/text';
 import { ToolbarDoc } from '@app/components/toolbar-doc';
 import { DOCS_SIDEBAR } from '@app/constants/docs-sidebar';
@@ -217,6 +218,7 @@ const Docs = (props: any) => {
 
   return (
     <Box css={{ display: 'flex', gap: '$3', position: 'relative' }}>
+      <SEO title={props.doc.title} />
       <HeaderToolbar>
         <ToolbarDoc />
       </HeaderToolbar>

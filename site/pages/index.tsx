@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import * as React from 'react';
 
 import { HeaderToolbar } from '@app/components/header/HeaderToolbar';
+import { SEO } from '@app/components/seo';
 import { ToolbarApp } from '@app/components/toolbar-app';
 import { EditorContext } from '@app/editor';
 import { Editor } from '@app/editor/Editor';
@@ -41,6 +42,10 @@ const App = () => {
 
   return (
     <RekaProvider state={editor.reka}>
+      <SEO
+        title="Build powerful no-code editors"
+        description="The state management system to power your next no-code editor"
+      />
       <HeaderToolbar>
         <ToolbarApp />
       </HeaderToolbar>

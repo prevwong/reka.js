@@ -1,4 +1,5 @@
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import * as React from 'react';
 
 import { Footer } from '@app/components/footer';
@@ -64,6 +65,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <EditorContextProvider>
+      <Head>
+        <meta content="/social-banner.png" property="og:image" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/png" href="/favicon.ico" />
+      </Head>
       <div ref={layoutDomRef} className={SITE_LAYOUT_CLASSNAME}>
         <Header />
         <div className={SITE_LAYOUT_CONTENT_CLASSNAME}>
