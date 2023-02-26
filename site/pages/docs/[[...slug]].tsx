@@ -286,9 +286,8 @@ const Docs = (props: any) => {
                 <h1>{props.doc.title}</h1>
               </DocPostContentHeader>
               <Box
-                className="prose prose-md prose-headings:font-medium prose-h1:mt-8 mb-8 prose-code:bg-"
+                className="prose max-w-full prose-md prose-headings:font-medium prose-h1:mt-8 mb-8 prose-code:bg-"
                 css={{
-                  maxWidth: '100%',
                   '> h2 > a': {
                     textDecoration: 'none',
                   },
