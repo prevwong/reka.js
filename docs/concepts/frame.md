@@ -4,7 +4,7 @@ The `State` defines a list of user-defined components, but we need a way to rend
 
 `Frame` is essentially an instance of a component defined in the `State` and it outputs a `View`
 
-For example, let's say we created a `Frame` for the Button component above with its `enabled` prop set to true. Then, its output `View`` would be the following:
+For example, let's say we created a `Frame` for the Button component above with its `enabled` prop set to true. Then, its output `View` would be the following:
 
 ```tsx
 {
