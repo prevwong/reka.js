@@ -17,7 +17,7 @@ type Binding = {
   readonly: boolean;
 };
 
-type BindingKey = string;
+type BindingKey = string | Symbol;
 
 export class Environment {
   id = getRandomId();
@@ -89,6 +89,8 @@ export class Environment {
 
   getByName(name: BindingKey, external?: boolean) {
     if (external) {
+      invariant(typeof name === 'string', 'Invalid external binding key');
+
       return this.reka.externals.get(name);
     }
 

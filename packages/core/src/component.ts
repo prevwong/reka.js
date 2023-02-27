@@ -10,6 +10,8 @@ type ComponentViewTreeComputationCache = {
   computed: IComputedValue<t.RekaComponentView[] | t.ExternalComponentView[]>;
 };
 
+export const ComponentSlotBindingKey = Symbol('$$children');
+
 export class ComponentViewEvaluator {
   private declare resolveComponentComputation: IComputedValue<
     t.RekaComponentView[] | t.ErrorSystemView[] | t.ExternalComponentView[]
@@ -93,7 +95,7 @@ export class ComponentViewEvaluator {
                 })
               );
 
-              this.env.set('$$children', {
+              this.env.set(ComponentSlotBindingKey, {
                 value: slot,
                 readonly: true,
               });

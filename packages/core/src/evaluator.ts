@@ -9,7 +9,7 @@ import {
   runInAction,
 } from 'mobx';
 
-import { ComponentViewEvaluator } from './component';
+import { ComponentSlotBindingKey, ComponentViewEvaluator } from './component';
 import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { Frame } from './frame';
@@ -401,7 +401,7 @@ export class ViewEvaluator {
       t.slotView({
         key: createKey(ctx.path),
         template,
-        children: ctx.env.getByName('$$children'),
+        children: ctx.env.getByName(ComponentSlotBindingKey),
       }),
     ];
   }
