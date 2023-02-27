@@ -1,3 +1,6 @@
+import { Parser } from '@rekajs/parser';
+import * as t from '@rekajs/types';
+import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 
@@ -44,19 +47,28 @@ const StyledTextarea = styled(TextareaAutosize, {
   fontFamily: 'JetBrains Mono',
 });
 
-type TextareaEditorProps = React.ComponentProps<typeof StyledTextarea> & {
+type TextareaEditorProps = {
+  initialValue?: t.Expression | null;
   onClose: () => void;
-  onCommit: () => void;
+  onCommit: (value: t.Expression) => void;
 };
 
 const TextareaEditor = ({
   onClose,
   onCommit,
-  value,
+  initialValue,
   ...props
 }: TextareaEditorProps) => {
+  const prevInitialValueRef = React.useRef(initialValue);
+
+  const [value, setValue] = React.useState(
+    initialValue ? Parser.stringify(initialValue) : ''
+  );
   const [hasError, setHasError] = React.useState('');
   const domRef = React.useRef<HTMLTextAreaElement | null>(null);
+
+  const valueRef = React.useRef(value);
+  valueRef.current = value;
 
   const onCommitRef = React.useRef(onCommit);
   onCommitRef.current = onCommit;
@@ -64,12 +76,30 @@ const TextareaEditor = ({
   const onCloseRef = React.useRef(onClose);
   onCloseRef.current = onClose;
 
+  React.useEffect(() => {
+    const { current: prevInitialValue } = prevInitialValueRef;
+
+    if (prevInitialValue === initialValue) {
+      return;
+    }
+
+    prevInitialValueRef.current = initialValue;
+    setValue(initialValue ? Parser.stringify(initialValue) : '');
+  }, [setValue, initialValue]);
+
   const commit = React.useCallback(() => {
     const { current: onCommit } = onCommitRef;
     const { current: onClose } = onCloseRef;
+    const { current: value } = valueRef;
+
+    if (!value) {
+      onClose();
+
+      return;
+    }
 
     try {
-      onCommit();
+      onCommit(Parser.parseExpression(value));
       onClose();
     } catch (err) {
       setHasError(String(err));
@@ -110,7 +140,7 @@ const TextareaEditor = ({
         value={value}
         ref={domRef}
         onChange={(e) => {
-          props.onChange?.(e);
+          setValue(e.target.value);
           setHasError('');
         }}
         onKeyDown={(e) => {
@@ -162,75 +192,54 @@ const TextareaEditor = ({
 };
 
 type ExpressionInputProps = {
-  value: any;
+  value: t.Expression | null | undefined;
   placeholder?: string;
   disable?: boolean;
-  onChange?: (value: string) => void;
-  onCommit?: (value: string) => void;
+  onCommit?: (value: t.Expression) => void;
   onCancel?: () => void;
 };
 
-export const ExpressionInput = ({
-  value,
-  disable,
-  placeholder,
-  onChange,
-  onCommit,
-  onCancel,
-}: ExpressionInputProps) => {
-  const [showTextareaEditor, setShowTextareaEditor] = React.useState(false);
+export const ExpressionInput = observer(
+  ({
+    value,
+    disable,
+    placeholder,
+    onCommit,
+    onCancel,
+  }: ExpressionInputProps) => {
+    const [showTextareaEditor, setShowTextareaEditor] = React.useState(false);
 
-  const commit = () => {
-    if (!value || !onCommit) {
-      return;
-    }
-
-    onCommit(value);
-  };
-
-  return (
-    <StyledValueField>
-      <TextField
-        value={value}
-        onChange={() => {
-          return;
-        }}
-        onKeyUp={(e) => {
-          if (e.key !== 'Enter') {
+    return (
+      <StyledValueField>
+        <TextField
+          value={value ? Parser.stringify(value) : ''}
+          onChange={() => {
             return;
-          }
-
-          commit();
-        }}
-        onBlur={() => {
-          commit();
-        }}
-        onFocus={() => {
-          setShowTextareaEditor(true);
-        }}
-        onCancel={onCancel}
-        disabled={disable}
-        placeholder={placeholder}
-      />
-
-      {showTextareaEditor && (
-        <TextareaEditor
-          value={value}
-          onChange={(e) => {
-            if (!onChange) {
-              return;
-            }
-
-            onChange(e.target.value);
           }}
-          onCommit={() => {
-            commit();
+          onFocus={() => {
+            setShowTextareaEditor(true);
           }}
-          onClose={() => {
-            setShowTextareaEditor(false);
-          }}
+          onCancel={onCancel}
+          disabled={disable}
+          placeholder={placeholder}
         />
-      )}
-    </StyledValueField>
-  );
-};
+
+        {showTextareaEditor && (
+          <TextareaEditor
+            initialValue={value}
+            onCommit={(value) => {
+              if (!value || !onCommit) {
+                return;
+              }
+
+              onCommit(value);
+            }}
+            onClose={() => {
+              setShowTextareaEditor(false);
+            }}
+          />
+        )}
+      </StyledValueField>
+    );
+  }
+);

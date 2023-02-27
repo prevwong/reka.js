@@ -1,4 +1,5 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
+import * as t from '@rekajs/types';
 import * as React from 'react';
 
 import { styled } from '@app/styles';
@@ -70,47 +71,67 @@ const StyledValueFieldContainer = styled('div', {
 
 type PairInputFieldProps = {
   id: string;
-  value: string;
+  value: t.Expression | null;
   disableEditId?: boolean;
   disableEditValue?: boolean;
   onRemove?: () => void;
-  onChange?: (id: string, value: string, clear: () => void) => void;
+  onChange?: (id: string, value: t.Expression, clear: () => void) => void;
   valuePlaceholder?: string;
 };
 
 type PairInputValue = {
   id: string;
-  value: string;
+  value: t.Expression | null;
 };
 
 type PairInputProps = {
   values: PairInputValue[];
   valuePlaceholder?: string;
-  onChange?: (id: string, value: string, type: 'update' | 'new') => void;
-  onRemove?: (id: string, value: string) => void;
+  onChange?: (id: string, value: t.Expression, type: 'update' | 'new') => void;
+  onRemove?: (id: string, value: t.Expression | null) => void;
   onCancelAdding?: () => void;
   addingNewField?: boolean;
   emptyValuesText?: string;
 };
 
 type AddNewPairInputFieldProps = {
-  onAdd: (id: string, value: string) => void;
+  onAdd: (id: string, value: t.Expression) => void;
   onCancel: () => void;
 };
 
 const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
-  const commit = (id: string, value: string) => {
+  const domRef = React.useRef<HTMLDivElement | null>(null);
+
+  const commit = (id: string, value: t.Expression) => {
     if (!id || !value) {
       return;
     }
 
     props.onAdd(id, value);
+
+    const { current: dom } = domRef;
+
+    if (!dom) {
+      return;
+    }
+
+    const idFieldDom = dom.querySelector(
+      '.pair-input-id-field input'
+    ) as HTMLInputElement;
+
+    if (!idFieldDom) {
+      return;
+    }
+
+    idFieldDom.focus();
+    idFieldDom.setSelectionRange(0, 0);
   };
 
   return (
     <PairInputField
+      ref={domRef}
       id={''}
-      value={''}
+      value={null}
       onRemove={() => {
         props.onCancel();
       }}
@@ -123,77 +144,83 @@ const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
   );
 };
 
-const PairInputField = ({
-  id,
-  value,
-  disableEditId,
-  disableEditValue,
-  onRemove,
-  onChange,
-  valuePlaceholder,
-}: PairInputFieldProps) => {
-  const [newId, setNewId] = React.useState(id);
-  const [newValue, setNewValue] = React.useState(value);
+const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
+  (
+    {
+      id,
+      value,
+      disableEditId,
+      disableEditValue,
+      onRemove,
+      onChange,
+      valuePlaceholder,
+    },
+    ref
+  ) => {
+    const [newId, setNewId] = React.useState(id);
+    const [newValue, setNewValue] = React.useState(value);
 
-  const commit = () => {
-    if (!newId || !newValue || !onChange) {
-      return;
-    }
-
-    onChange(newId, newValue, () => {
+    const clear = React.useCallback(() => {
       setNewId('');
-      setNewValue('');
-    });
-  };
+      setNewValue(null);
+    }, [setNewId, setNewValue]);
 
-  return (
-    <StyledPairInputField>
-      <TextField
-        value={newId}
-        onChange={(e) => {
-          if (disableEditId) {
-            return;
-          }
+    React.useEffect(() => {
+      setNewValue(value);
+    }, [value]);
 
-          setNewId(e.target.value);
-        }}
-        onKeyUp={(e) => {
-          if (e.key !== 'Enter') {
-            return;
-          }
-
-          commit();
-        }}
-        disabled={disableEditId}
-      />
-      <StyledValueFieldContainer>
-        <ExpressionInput
-          value={newValue}
-          placeholder={valuePlaceholder}
-          onChange={(newValue) => {
-            setNewValue(newValue);
+    return (
+      <StyledPairInputField ref={ref}>
+        <TextField
+          className="pair-input-id-field"
+          value={newId}
+          onChange={(e) => {
+            setNewId(e.target.value);
           }}
-          onCommit={() => {
-            commit();
-          }}
-          disable={disableEditValue}
-        />
-        <IconButton
-          transparent
-          onClick={() => {
-            if (!onRemove) {
+          onKeyUp={(e) => {
+            if (e.key !== 'Enter') {
               return;
             }
 
-            onRemove();
+            if (!newId || !value || !onChange) {
+              return;
+            }
+
+            onChange(newId, value, clear);
           }}
-        >
-          <Cross2Icon />
-        </IconButton>
-      </StyledValueFieldContainer>
-    </StyledPairInputField>
-  );
-};
+          disabled={disableEditId}
+        />
+        <StyledValueFieldContainer>
+          <ExpressionInput
+            value={newValue}
+            placeholder={valuePlaceholder}
+            onCommit={(value) => {
+              if (!onChange) {
+                return;
+              }
+
+              setNewValue(value);
+              onChange(newId, value, clear);
+            }}
+            disable={disableEditValue}
+          />
+          <IconButton
+            transparent
+            onClick={() => {
+              if (!onRemove) {
+                return;
+              }
+
+              onRemove();
+            }}
+          >
+            <Cross2Icon />
+          </IconButton>
+        </StyledValueFieldContainer>
+      </StyledPairInputField>
+    );
+  }
+);
 
 export const PairInput = (props: PairInputProps) => {
   return (

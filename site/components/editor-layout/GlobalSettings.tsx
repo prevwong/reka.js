@@ -1,4 +1,3 @@
-import { Parser } from '@rekajs/parser';
 import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
@@ -23,9 +22,7 @@ export const GlobalSettings = observer(() => {
         addingNewField={isAddingNewGlobal}
         onCancelAdding={() => setIsAddingNewGlobal(false)}
         onChange={(id, value) => {
-          const parsedValue = Parser.parseExpression(value, t.Expression);
-
-          if (!id || !parsedValue) {
+          if (!id) {
             return;
           }
 
@@ -39,19 +36,19 @@ export const GlobalSettings = observer(() => {
               editor.reka.state.program.globals.push(
                 t.val({
                   name: id,
-                  init: parsedValue,
+                  init: value,
                 })
               );
 
               return;
             }
 
-            existingGlobalStateName.init = parsedValue;
+            existingGlobalStateName.init = value;
           });
         }}
         values={editor.reka.state.program.globals.map((global) => ({
           id: global.name,
-          value: Parser.stringify(global.init),
+          value: global.init,
         }))}
       />
     </SettingSection>

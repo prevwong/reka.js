@@ -1,4 +1,3 @@
-import { Parser } from '@rekajs/parser';
 import * as t from '@rekajs/types';
 import * as React from 'react';
 
@@ -100,12 +99,10 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
             <PairInput
               addingNewField={true}
               onChange={(id, value) => {
-                const parsedValue = Parser.parseExpression(value, t.Expression);
-
                 setComponentProps((props) => {
                   return {
                     ...props,
-                    [id]: parsedValue,
+                    [id]: value,
                   };
                 });
               }}
@@ -115,7 +112,7 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
                   {
                     id: propKey,
                     value: componentProps[propKey]
-                      ? Parser.stringify(componentProps[propKey])
+                      ? componentProps[propKey]
                       : '',
                   },
                 ];

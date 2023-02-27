@@ -18,9 +18,6 @@ type SharedTemplateSettingsProps = {
 const ConditionalTemplateSetting = observer(
   (props: SharedTemplateSettingsProps) => {
     const editor = useEditor();
-    const [condition, setCondition] = React.useState<string>(
-      props.template.if ? Parser.stringify(props.template.if) : ''
-    );
 
     return (
       <SettingSection
@@ -30,29 +27,17 @@ const ConditionalTemplateSetting = observer(
       >
         <Box>
           <ExpressionInput
-            value={condition}
+            value={props.template.if}
             placeholder="counter > 0"
-            onChange={(value) => setCondition(value)}
-            onCommit={() => {
-              const parsedValue = Parser.parseExpression(
-                condition || '',
-                t.Expression
-              );
-
-              if (!parsedValue) {
-                return;
-              }
-
+            onCommit={(expression) => {
               editor.reka.change(() => {
-                props.template.if = parsedValue;
+                props.template.if = expression;
               });
             }}
             onCancel={() => {
               editor.reka.change(() => {
                 props.template.if = null;
               });
-
-              setCondition('');
             }}
           />
         </Box>
@@ -61,14 +46,29 @@ const ConditionalTemplateSetting = observer(
   }
 );
 
-const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
+const generateAliasNameFromIterator = (iterator: t.Expression) => {
+  if (iterator instanceof t.ArrayExpression) {
+    return `item_${iterator.id}`;
+  }
+
+  if (iterator instanceof t.Identifier) {
+    return `item_${iterator.name}`;
+  }
+
+  if (iterator instanceof t.CallExpression) {
+    return `item_${iterator.identifier.name}`;
+  }
+
+  return 'item';
+};
+
+const EachTemplateSettings = observer((props: SharedTemplateSettingsProps) => {
   const editor = useEditor();
 
-  const [isExposingIndex, setIsExposingIndex] = React.useState(false);
-
-  const [iterator, setIteratorValue] = React.useState<t.Expression | null>(
-    () => props.template.each?.iterator ?? null
+  const [isExposingIndex, setIsExposingIndex] = React.useState(
+    props.template.each?.index ?? false
   );
+
   const [alias, setAliasValue] = React.useState(
     () => props.template.each?.alias.name ?? ''
   );
@@ -77,27 +77,27 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
     () => props.template.each?.index?.name ?? ''
   );
 
-  const resetValue = React.useCallback(() => {
-    setIteratorValue(null);
-    setAliasValue('');
-    setIndexValue('');
-  }, [setIteratorValue, setAliasValue, setIndexValue]);
-
   const commitValue = (
     iterator: t.Expression | null,
     alias: string,
     index: string
   ) => {
     editor.reka.change(() => {
-      if (!iterator || !alias) {
+      if (!iterator) {
         props.template.each = null;
         return;
+      }
+
+      const aliasName = alias || generateAliasNameFromIterator(iterator);
+
+      if (!alias) {
+        setAliasValue(aliasName);
       }
 
       props.template.each = t.elementEach({
         iterator,
         alias: t.identifier({
-          name: alias,
+          name: aliasName,
         }),
         index: index ? t.identifier({ name: index }) : null,
       });
@@ -111,21 +111,19 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
       collapsedOnInitial={false}
     >
       <Box css={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-        <TextField
-          css={{ flex: 1 }}
+        <ExpressionInput
           placeholder="array"
-          value={iterator ? Parser.stringify(iterator) : ''}
+          value={props.template.each?.iterator}
           onCancel={() => {
-            resetValue();
-
             editor.reka.change(() => {
               props.template.each = null;
             });
+
+            setAliasValue('');
+            setIndexValue('');
           }}
-          onCommit={(value) => {
-            const expr = Parser.parseExpression(value, t.Expression);
-            setIteratorValue(expr);
-            commitValue(expr, alias, index);
+          onCommit={(iterator) => {
+            commitValue(iterator, alias, index);
           }}
         />
       </Box>
@@ -160,7 +158,11 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
             onCommit={(value) => {
               const expr = Parser.parseExpression(value, t.Identifier);
               setAliasValue(expr.name);
-              commitValue(iterator, expr.name, index);
+              commitValue(
+                props.template.each?.iterator ?? null,
+                expr.name,
+                index
+              );
             }}
           />
           {isExposingIndex && (
@@ -168,6 +170,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
               <Text css={{ color: '$grayA9', fontSize: '$1' }}>at</Text>
               <TextField
                 placeholder="index"
+                value={index}
                 onCancel={() => {
                   setIsExposingIndex(false);
                   setIndexValue('');
@@ -187,7 +190,11 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
                 onCommit={(value) => {
                   const expr = Parser.parseExpression(value, t.Identifier);
                   setIndexValue(expr.name);
-                  commitValue(iterator, alias, expr.name);
+                  commitValue(
+                    props.template.each?.iterator ?? null,
+                    alias,
+                    expr.name
+                  );
                 }}
               />
             </React.Fragment>
@@ -196,7 +203,7 @@ const EachTemplateSettings = (props: SharedTemplateSettingsProps) => {
       </Box>
     </SettingSection>
   );
-};
+});
 
 export const SharedTemplateSettings = (props: SharedTemplateSettingsProps) => {
   return (

@@ -7,7 +7,7 @@ import { useMaybeEditor } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 
 import { Button, IconButton } from '../button';
-import { Collaborators } from '../editor-panel/Collaborators';
+import { Collaborators } from '../collaborators';
 import { Tooltip } from '../tooltip';
 
 export const ToolbarApp = observer(() => {

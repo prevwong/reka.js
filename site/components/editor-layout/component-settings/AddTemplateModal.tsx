@@ -1,7 +1,6 @@
 import {
   EXTERNAL_IDENTIFIER_PREFIX_SYMBOL,
   getIdentifierFromStr,
-  Parser,
 } from '@rekajs/parser';
 import * as t from '@rekajs/types';
 import { capitalize } from 'lodash';
@@ -120,6 +119,15 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
             <Box>
               <PairInput
                 addingNewField={true}
+                onRemove={(id) => {
+                  setTemplateProps((props) => {
+                    delete props[id];
+
+                    return {
+                      ...props,
+                    };
+                  });
+                }}
                 onChange={(id, value) => {
                   setTemplateProps((props) => {
                     return {
@@ -155,19 +163,6 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
               return;
             }
 
-            const parsedTemplateProps = Object.keys(templateProps).reduce(
-              (accum, prop) => {
-                return {
-                  ...accum,
-                  [prop]: Parser.parseExpression(
-                    templateProps[prop],
-                    t.Expression
-                  ),
-                };
-              },
-              {}
-            );
-
             if (templateType === 'tag') {
               if (!templateTag) {
                 return;
@@ -176,7 +171,7 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
               props.onAdd(
                 t.tagTemplate({
                   tag: templateTag,
-                  props: parsedTemplateProps,
+                  props: templateProps,
                   children: [],
                   each: undefined,
                   if: undefined,

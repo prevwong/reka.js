@@ -1,4 +1,3 @@
-import { Parser } from '@rekajs/parser';
 import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
@@ -34,7 +33,7 @@ export const PropEditorSection = observer(
               classList
                 ? Object.keys(classList.properties).map((key) => ({
                     id: key,
-                    value: Parser.stringify(classList.properties[key]),
+                    value: classList.properties[key],
                   }))
                 : []
             }
@@ -44,8 +43,6 @@ export const PropEditorSection = observer(
               });
             }}
             onChange={(id, value) => {
-              const parsedValue = Parser.parseExpression(value, t.Expression);
-              //   console.log("parsedValue", parsedValue);
               editor.reka.change(() => {
                 if (!template.classList) {
                   template.classList = t.objectExpression({
@@ -53,7 +50,7 @@ export const PropEditorSection = observer(
                   });
                 }
 
-                template.classList.properties[id] = parsedValue;
+                template.classList.properties[id] = value;
               });
             }}
           ></PairInput>
@@ -68,10 +65,8 @@ export const PropEditorSection = observer(
             onCancelAdding={() => setAddNewProp(false)}
             emptyValuesText={'No props set for this template'}
             onChange={(id, value) => {
-              const parsedValue = Parser.parseExpression(value, t.Expression);
-
               editor.reka.change(() => {
-                template.props[id] = parsedValue;
+                template.props[id] = value;
               });
             }}
             onRemove={(id) => {
@@ -81,7 +76,7 @@ export const PropEditorSection = observer(
             }}
             values={Object.keys(template.props).map((prop) => ({
               id: prop,
-              value: Parser.stringify(template.props[prop]),
+              value: template.props[prop],
             }))}
           />
         </SettingSection>

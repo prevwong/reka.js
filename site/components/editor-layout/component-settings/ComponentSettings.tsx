@@ -1,4 +1,3 @@
-import { Parser } from '@rekajs/parser';
 import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
@@ -57,7 +56,7 @@ export const ComponentSettings = observer(() => {
         <PairInput
           values={component.props.map((prop) => ({
             id: prop.name,
-            value: prop.init ? Parser.stringify(prop.init) : '',
+            value: prop.init,
           }))}
           emptyValuesText={'No props set'}
           valuePlaceholder="No default value"
@@ -73,14 +72,8 @@ export const ComponentSettings = observer(() => {
                 return;
               }
 
-              const parsedValue = Parser.parseExpression(value, t.Expression);
-
-              if (!parsedValue) {
-                return;
-              }
-
               editor.reka.change(() => {
-                existingPropWithSameName.init = parsedValue;
+                existingPropWithSameName.init = value;
               });
 
               return;
@@ -90,17 +83,11 @@ export const ComponentSettings = observer(() => {
               return;
             }
 
-            const parsedValue = Parser.parseExpression(value, t.Expression);
-
-            if (!parsedValue) {
-              return;
-            }
-
             editor.reka.change(() => {
               component.props.push(
                 t.componentProp({
                   name: id,
-                  init: parsedValue,
+                  init: value,
                 })
               );
             });
@@ -115,7 +102,7 @@ export const ComponentSettings = observer(() => {
         <PairInput
           values={component.state.map((state) => ({
             id: state.name,
-            value: Parser.stringify(state.init),
+            value: state.init,
           }))}
           emptyValuesText="No state values"
           addingNewField={isAddingNewState}
@@ -130,14 +117,8 @@ export const ComponentSettings = observer(() => {
                 return;
               }
 
-              const parsedValue = Parser.parseExpression(value, t.Expression);
-
-              if (!parsedValue) {
-                return;
-              }
-
               editor.reka.change(() => {
-                existingStateWithSameName.init = parsedValue;
+                existingStateWithSameName.init = value;
               });
 
               return;
@@ -147,17 +128,11 @@ export const ComponentSettings = observer(() => {
               return;
             }
 
-            const parsedValue = Parser.parseExpression(value, t.Expression);
-
-            if (!parsedValue) {
-              return;
-            }
-
             editor.reka.change(() => {
               component.state.push(
                 t.val({
                   name: id,
-                  init: parsedValue,
+                  init: value,
                 })
               );
             });
