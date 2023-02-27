@@ -15,7 +15,7 @@ if (typeof window !== 'undefined') {
   (window as any).parser = new Parser();
 }
 
-const App = () => {
+const AppEditor = () => {
   const router = useRouter();
 
   const { editor, setEditor } = React.useContext(EditorContext);
@@ -42,15 +42,23 @@ const App = () => {
 
   return (
     <RekaProvider state={editor.reka}>
-      <SEO
-        title="Build powerful no-code editors"
-        description="The state management system to power your next no-code editor"
-      />
       <HeaderToolbar>
         <ToolbarApp />
       </HeaderToolbar>
       <EditorLayout />
     </RekaProvider>
+  );
+};
+
+const App = () => {
+  return (
+    <React.Fragment>
+      <SEO
+        title="Build powerful no-code editors"
+        description="The state management system to power your next no-code editor"
+      />
+      <AppEditor />
+    </React.Fragment>
   );
 };
 

@@ -94,15 +94,15 @@ const InternalTemplateSettings = ({ template }: any) => {
   return (
     <Box>
       <Topbar>
-        <TemplateHeading key={template.id} template={template} />
+        <TemplateHeading template={template} />
       </Topbar>
       <Box css={{ mt: '$3' }}>
-        <SharedTemplateSettings key={template.id} template={template} />
+        <SharedTemplateSettings template={template} />
         {template instanceof t.TagTemplate && (
-          <TagTemplateSettings key={template.id} template={template} />
+          <TagTemplateSettings template={template} />
         )}
         {template instanceof t.ComponentTemplate && (
-          <ComponentTemplateSettings key={template.id} template={template} />
+          <ComponentTemplateSettings template={template} />
         )}
       </Box>
     </Box>

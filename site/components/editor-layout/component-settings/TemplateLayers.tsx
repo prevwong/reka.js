@@ -16,7 +16,10 @@ type AddTemplateButtonProps = {
   target: t.Template;
 };
 
-const AddTemplateButton = (props: AddTemplateButtonProps) => {
+const AddTemplateButton = React.forwardRef<
+  HTMLButtonElement,
+  AddTemplateButtonProps
+>((props, ref) => {
   const [option, setOption] = React.useState<
     'before' | 'after' | 'child' | null
   >(null);
@@ -47,7 +50,7 @@ const AddTemplateButton = (props: AddTemplateButtonProps) => {
           },
         ]}
       >
-        <IconButton transparent>
+        <IconButton transparent ref={ref}>
           <PlusIcon />
         </IconButton>
       </Dropdown>
@@ -92,7 +95,7 @@ const AddTemplateButton = (props: AddTemplateButtonProps) => {
       />
     </React.Fragment>
   );
-};
+});
 
 const getTemplateName = (template: t.Template) => {
   if (template instanceof t.TagTemplate) {

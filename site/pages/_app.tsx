@@ -66,6 +66,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <EditorContextProvider>
       <Head>
+        <title>Reka.js</title>
         <meta content="/social-banner.png" property="og:image" />
         <meta name="viewport" content="width=device-width" />
         <link rel="icon" type="image/png" href="/favicon.ico" />

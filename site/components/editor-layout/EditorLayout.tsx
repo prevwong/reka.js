@@ -95,7 +95,7 @@ export const EditorLayout = observer(
     React.useEffect(() => {
       const { current: dom } = leftSidebarDomRef;
 
-      if (!document.body || !dom) {
+      if (!window || !dom) {
         return;
       }
 
@@ -113,10 +113,10 @@ export const EditorLayout = observer(
         editor.showCompactSidebar(false);
       };
 
-      document.body.addEventListener('click', onClickOutside);
+      window.addEventListener('click', onClickOutside);
 
       return () => {
-        document.body.removeEventListener('click', onClickOutside);
+        window.removeEventListener('click', onClickOutside);
       };
     }, [editor]);
 

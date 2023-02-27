@@ -56,29 +56,31 @@ type DropdownProps = {
   children: React.ReactNode;
 };
 
-export const Dropdown = (props: DropdownProps) => {
-  return (
-    <DropdownMenuPrimitive.Root>
-      <DropdownMenuPrimitive.Trigger asChild>
-        {props.children}
-      </DropdownMenuPrimitive.Trigger>
-      <DropdownMenuPrimitive.Portal>
-        <StyledContent {...props}>
-          {props.items.map((item) => (
-            <StyledItem
-              key={item.title}
-              onSelect={() => {
-                Promise.resolve().then(() => {
-                  item.onSelect();
-                });
-              }}
-            >
-              {item.title}
-            </StyledItem>
-          ))}
-          <StyledArrow />
-        </StyledContent>
-      </DropdownMenuPrimitive.Portal>
-    </DropdownMenuPrimitive.Root>
-  );
-};
+export const Dropdown = React.forwardRef<HTMLButtonElement, DropdownProps>(
+  (props, ref) => {
+    return (
+      <DropdownMenuPrimitive.Root>
+        <DropdownMenuPrimitive.Trigger asChild ref={ref}>
+          {props.children}
+        </DropdownMenuPrimitive.Trigger>
+        <DropdownMenuPrimitive.Portal>
+          <StyledContent {...props}>
+            {props.items.map((item) => (
+              <StyledItem
+                key={item.title}
+                onSelect={() => {
+                  Promise.resolve().then(() => {
+                    item.onSelect();
+                  });
+                }}
+              >
+                {item.title}
+              </StyledItem>
+            ))}
+            <StyledArrow />
+          </StyledContent>
+        </DropdownMenuPrimitive.Portal>
+      </DropdownMenuPrimitive.Root>
+    );
+  }
+);

@@ -41,6 +41,11 @@ export enum EditorMode {
   Code = 'code',
 }
 
+type IframEventListeners = Array<{
+  type: string;
+  handler: EventListenerOrEventListenerObject;
+}>;
+
 export class Editor {
   compactSidebar: boolean = false;
   compactSidebarVisible: boolean = false;
@@ -58,8 +63,8 @@ export class Editor {
   reka: Reka;
 
   private declare provider: WebrtcProvider;
-  private declare iframeScrollTopListener;
   private declare windowResizeHandler: () => void;
+  private iframeEventHandlers: IframEventListeners = [];
 
   constructor(readonly router: NextRouter) {
     this.activeFrame = null;
@@ -208,6 +213,8 @@ export class Editor {
       return;
     }
 
+    this.removeIframeEventListeners();
+
     this.reka.dispose();
     this.provider.disconnect();
     this.provider.destroy();
@@ -215,21 +222,33 @@ export class Editor {
     window.removeEventListener('resize', this.windowResizeHandler);
   }
 
+  private addIframeEventListeners() {
+    this.iframeEventHandlers.forEach((listener) => {
+      this.iframe?.contentWindow?.addEventListener(
+        listener.type,
+        listener.handler
+      );
+    });
+  }
+
+  private removeIframeEventListeners() {
+    this.iframeEventHandlers.forEach((h) => {
+      this.iframe?.contentWindow?.removeEventListener(h.type, h.handler);
+    });
+  }
+
   registerIframe(iframe: HTMLIFrameElement) {
     if (!iframe) {
       return;
     }
 
-    if (this.iframe && this.iframeScrollTopListener) {
-      this.iframe.contentWindow?.removeEventListener(
-        'scroll',
-        this.iframeScrollTopListener
-      );
+    if (this.iframe) {
+      this.removeIframeEventListeners();
     }
 
     this.iframe = iframe;
 
-    this.iframeScrollTopListener = () => {
+    const iframeScrollTopListener = () => {
       if (!this.iframe) {
         return;
       }
@@ -239,10 +258,17 @@ export class Editor {
       this.reka.updateExternalState('scrollTop', scrollY);
     };
 
-    this.iframe.contentWindow?.addEventListener(
-      'scroll',
-      this.iframeScrollTopListener
-    );
+    const iframePropagateEventHandler = (e: any) => {
+      window.dispatchEvent(new e.constructor(e.type, e));
+    };
+
+    this.iframeEventHandlers = [
+      { type: 'scroll', handler: iframeScrollTopListener },
+      { type: 'mousedown', handler: iframePropagateEventHandler },
+      { type: 'click', handler: iframePropagateEventHandler },
+    ];
+
+    this.addIframeEventListeners();
   }
 
   private broadcastLocalUser() {

@@ -31,12 +31,14 @@ export const Header = observer(() => {
         <Box css={{ display: 'flex', flex: 1, ai: 'center' }}>
           <Box css={{ ml: '$2' }}>
             <Link href="/">
-              <Image
-                src="/logo.svg"
-                width={30}
-                height={30}
-                style={{ cursor: 'pointer' }}
-              />
+              <a>
+                <Image
+                  src="/logo.svg"
+                  width={30}
+                  height={30}
+                  style={{ cursor: 'pointer' }}
+                />
+              </a>
             </Link>
           </Box>
           <Menu>

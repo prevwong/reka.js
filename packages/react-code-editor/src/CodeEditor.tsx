@@ -81,19 +81,23 @@ type SuccessStatus = {
 
 export type ParserStatus = ParsingStatus | ErrorStatus | SuccessStatus;
 
+type onStatusChangeCb = (status: ParserStatus) => void;
+
 type CodeEditorProps = React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLDivElement>,
   HTMLDivElement
 > & {
-  onStatusChange?: (status: ParserStatus) => void;
+  onStatusChange?: onStatusChangeCb;
 };
 
-export const CodeEditor = (props: CodeEditorProps) => {
+export const CodeEditor = ({ onStatusChange, ...props }: CodeEditorProps) => {
   const { reka } = useReka();
 
   const domRef = React.useRef<HTMLDivElement | null>(null);
-  const propsRef = React.useRef<CodeEditorProps>(props);
-  propsRef.current = props;
+  const onStatusChangeRef = React.useRef<onStatusChangeCb | undefined>(
+    onStatusChange
+  );
+  onStatusChangeRef.current = onStatusChange;
 
   const currentStateRef = React.useRef(t.Schema.fromJSON(reka.program));
   const currentCodeStringRef = React.useRef<string>(
@@ -107,7 +111,7 @@ export const CodeEditor = (props: CodeEditorProps) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const syncCodeToState = React.useCallback(
     debounce((code: string) => {
-      const { current: props } = propsRef;
+      const { current: onStatusChange } = onStatusChangeRef;
 
       if (isSynchingFromExternal.current) {
         return;
@@ -121,11 +125,11 @@ export const CodeEditor = (props: CodeEditorProps) => {
           diffAST(reka.program, currentStateRef.current);
         });
 
-        props.onStatusChange?.({
+        onStatusChange?.({
           type: 'success',
         });
       } catch (error) {
-        props.onStatusChange?.({
+        onStatusChange?.({
           type: 'error',
           error: (error as unknown as any).message as string,
         });
@@ -147,7 +151,7 @@ export const CodeEditor = (props: CodeEditorProps) => {
       return;
     }
 
-    const { current: props } = propsRef;
+    const { current: onStatusChange } = onStatusChangeRef;
 
     setCodemirrorView(
       new EditorView({
@@ -181,7 +185,7 @@ export const CodeEditor = (props: CodeEditorProps) => {
 
               currentCodeStringRef.current = view.state.doc.toString();
 
-              props.onStatusChange?.({
+              onStatusChange?.({
                 type: 'parsing',
               });
 

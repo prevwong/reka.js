@@ -13,8 +13,8 @@ component App() {
   <Header/>
   <div
    style={{
-    "background-image": "linear-gradient(180deg, #FFB7B7 0%, #727272 100%), radial-gradient(60.91% 100% at 50% 0%, #FFD1D1 0%, #260000 100%), linear-gradient(127.43deg, #00FFFF 0%, #FFFFFF 100%), radial-gradient(100.22% 100% at 70.57% 0%, #FF0000 0%, #00FFE0 100%), linear-gradient(64.82deg, #DBFF00 0%, #3300FF 100%)",
-    "background-blend-mode": "screen, overlay, color-burn, color-dodge, normal"
+    "backgroundImage": "linear-gradient(180deg, #FFB7B7 0%, #727272 100%), radial-gradient(60.91% 100% at 50% 0%, #FFD1D1 0%, #260000 100%), linear-gradient(127.43deg, #00FFFF 0%, #FFFFFF 100%), radial-gradient(100.22% 100% at 70.57% 0%, #FF0000 0%, #00FFE0 100%), linear-gradient(64.82deg, #DBFF00 0%, #3300FF 100%)",
+    "backgroundBlendMode": "screen, overlay, color-burn, color-dodge, normal"
    }}
    className={"text-neutral-800 w-full h-full flex flex-col justify-center"}
   >

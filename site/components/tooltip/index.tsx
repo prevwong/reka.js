@@ -58,7 +58,9 @@ export const Tooltip = ({ children, content }: TooltipProps) => {
       delayDuration={100}
       open={content === '' ? false : undefined}
     >
-      <TooltipPrimitive.Trigger>{children}</TooltipPrimitive.Trigger>
+      <TooltipPrimitive.Trigger asChild>
+        <span>{children}</span>
+      </TooltipPrimitive.Trigger>
       <StyledContent sideOffset={5}>{content}</StyledContent>
     </TooltipPrimitive.Root>
   );
