@@ -10,6 +10,8 @@ type ComponentViewTreeComputationCache = {
   computed: IComputedValue<t.RekaComponentView[] | t.ExternalComponentView[]>;
 };
 
+export const ComponentSlotBindingKey = Symbol('$$children');
+
 export class ComponentViewEvaluator {
   private declare resolveComponentComputation: IComputedValue<
     t.RekaComponentView[] | t.ErrorSystemView[] | t.ExternalComponentView[]
@@ -93,7 +95,10 @@ export class ComponentViewEvaluator {
                 })
               );
 
-              this.env.set('$$children', slot);
+              this.env.set(ComponentSlotBindingKey, {
+                value: slot,
+                readonly: true,
+              });
 
               component.props.forEach((prop) => {
                 const getPropValue = () => {
@@ -124,7 +129,10 @@ export class ComponentViewEvaluator {
                     .join(' ');
                 }
 
-                this.env.set(prop.name, propValue);
+                this.env.set(prop.name, {
+                  value: propValue,
+                  readonly: true,
+                });
               });
             });
           }
@@ -132,10 +140,10 @@ export class ComponentViewEvaluator {
           if (!this.rekaComponentStateComputation) {
             this.rekaComponentStateComputation = computed(() => {
               component.state.forEach((val) => {
-                this.env.set(
-                  val.name,
-                  this.tree.computeExpr(val.init, this.env)
-                );
+                this.env.set(val.name, {
+                  value: this.tree.computeExpr(val.init, this.env),
+                  readonly: false,
+                });
               });
             });
           }

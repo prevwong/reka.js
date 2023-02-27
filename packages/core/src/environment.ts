@@ -1,10 +1,28 @@
 import * as t from '@rekajs/types';
+import { getRandomId, invariant } from '@rekajs/utils';
 import { action, makeObservable, observable } from 'mobx';
 
 import { Reka } from './reka';
 
+type EnvironmentValue =
+  | string
+  | number
+  | boolean
+  | Record<string, any>
+  | Array<any>
+  | t.Component;
+
+type Binding = {
+  value: EnvironmentValue;
+  readonly: boolean;
+};
+
+type BindingKey = string | Symbol;
+
 export class Environment {
-  bindings: Map<string, any>;
+  id = getRandomId();
+
+  bindings: Map<BindingKey, Binding>;
 
   constructor(readonly reka: Reka, readonly parent?: Environment) {
     this.bindings = new Map();
@@ -16,25 +34,51 @@ export class Environment {
     });
   }
 
-  set(name: string, value: any, reassignment?: boolean) {
-    if (!reassignment) {
-      this.bindings.set(name, value);
+  reassign(identifier: t.Identifier, value: any) {
+    const distance = this.reka.resolver.getDistance(identifier);
+
+    if (distance === undefined) {
+      throw new Error();
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let env: Environment = this;
+
+    for (let i = 0; i < distance; i++) {
+      const parent = env.parent;
+
+      if (!parent) {
+        return undefined;
+      }
+
+      env = parent;
+    }
+
+    const binding = env.bindings.get(identifier.name);
+
+    if (!binding) {
+      throw new Error();
+    }
+
+    if (binding.readonly) {
+      // TODO: handle error
+      console.warn(
+        `Cannot reassign readonly value "${identifier.name}" (${identifier.id})`
+      );
       return;
     }
 
-    if (this.bindings.get(name) !== undefined) {
-      this.bindings.set(name, value);
-      return;
-    }
-
-    if (!this.parent) {
-      return;
-    }
-
-    return this.parent.set(name, value, reassignment);
+    return env.bindings.set(identifier.name, {
+      ...binding,
+      value,
+    });
   }
 
-  delete(name: string) {
+  set(name: BindingKey, binding: Binding) {
+    this.bindings.set(name, binding);
+  }
+
+  delete(name: BindingKey) {
     const binding = this.bindings.get(name);
     if (!binding) {
       return;
@@ -43,12 +87,14 @@ export class Environment {
     this.bindings.delete(name);
   }
 
-  getByName(name: string, external?: boolean) {
+  getByName(name: BindingKey, external?: boolean) {
     if (external) {
+      invariant(typeof name === 'string', 'Invalid external binding key');
+
       return this.reka.externals.get(name);
     }
 
-    const v = this.bindings.get(name);
+    const v = this.bindings.get(name)?.value;
 
     if (v !== undefined) {
       return v;
@@ -85,7 +131,7 @@ export class Environment {
       env = parent;
     }
 
-    return env.getByName(identifier.name);
+    return env.bindings.get(identifier.name)?.value;
   }
 
   inherit() {

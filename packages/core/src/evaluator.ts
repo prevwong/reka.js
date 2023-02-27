@@ -9,7 +9,7 @@ import {
   runInAction,
 } from 'mobx';
 
-import { ComponentViewEvaluator } from './component';
+import { ComponentSlotBindingKey, ComponentViewEvaluator } from './component';
 import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { Frame } from './frame';
@@ -333,10 +333,16 @@ export class ViewEvaluator {
 
             iteratorCache = {
               computed: computed(() => {
-                inheritedEnv.set(eachExpr.alias.name, value);
+                inheritedEnv.set(eachExpr.alias.name, {
+                  value,
+                  readonly: true,
+                });
 
                 if (eachExpr.index) {
-                  inheritedEnv.set(eachExpr.index.name, i);
+                  inheritedEnv.set(eachExpr.index.name, {
+                    value: i,
+                    readonly: true,
+                  });
                 }
 
                 return renderTemplate(template, {
@@ -395,7 +401,7 @@ export class ViewEvaluator {
       t.slotView({
         key: createKey(ctx.path),
         template,
-        children: ctx.env.getByName('$$children'),
+        children: ctx.env.getByName(ComponentSlotBindingKey),
       }),
     ];
   }

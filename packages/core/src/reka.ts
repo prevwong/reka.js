@@ -128,10 +128,10 @@ export class Reka {
       this.syncGlobals = computed(
         () => {
           this.program.globals.forEach((global) => {
-            this.env.set(
-              global.name,
-              computeExpression(global.init, this as any, this.env)
-            );
+            this.env.set(global.name, {
+              value: computeExpression(global.init, this as any, this.env),
+              readonly: false,
+            });
           });
         },
         {
@@ -144,7 +144,7 @@ export class Reka {
       this.syncComponents = computed(
         () => {
           this.program.components.forEach((component) => {
-            this.env.set(component.name, component);
+            this.env.set(component.name, { value: component, readonly: true });
           });
         },
         {
