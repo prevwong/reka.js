@@ -5,6 +5,10 @@ export class Scope {
     this.variableNames = new Set();
   }
 
+  inherit(key: string) {
+    return new Scope(key, this);
+  }
+
   defineVariableName(name: string) {
     this.variableNames.add(name);
   }

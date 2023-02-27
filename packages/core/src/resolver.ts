@@ -103,11 +103,13 @@ export class Resolver {
     }
 
     if (expr instanceof t.Func) {
+      const funcScope = scope.inherit(`func<${expr.id}>`);
+
       expr.params.forEach((param) => {
-        this.resolveExpr(param, scope);
+        this.resolveExpr(param, funcScope);
       });
 
-      this.resolveExpr(expr.body, scope);
+      this.resolveExpr(expr.body, funcScope);
     }
 
     if (expr instanceof t.CallExpression) {
@@ -139,7 +141,7 @@ export class Resolver {
       if (!cache || (cache && cache.key !== key)) {
         cache = {
           computed: computed(() => {
-            const componentScope = new Scope(component.name, scope);
+            const componentScope = scope.inherit(component.name);
 
             component.props.forEach((prop) => {
               componentScope.defineVariableName(prop.name);
@@ -169,7 +171,7 @@ export class Resolver {
     const key = scope.toString();
 
     if (!cache || (cache && cache.key !== key)) {
-      const templateScope = new Scope(template.id, scope);
+      const templateScope = scope.inherit(template.id);
 
       let eachIndex: string | null = null;
 
