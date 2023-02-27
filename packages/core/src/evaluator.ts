@@ -333,10 +333,16 @@ export class ViewEvaluator {
 
             iteratorCache = {
               computed: computed(() => {
-                inheritedEnv.set(eachExpr.alias.name, value);
+                inheritedEnv.set(eachExpr.alias.name, {
+                  value,
+                  readonly: true,
+                });
 
                 if (eachExpr.index) {
-                  inheritedEnv.set(eachExpr.index.name, i);
+                  inheritedEnv.set(eachExpr.index.name, {
+                    value: i,
+                    readonly: true,
+                  });
                 }
 
                 return renderTemplate(template, {

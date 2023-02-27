@@ -69,7 +69,10 @@ export const computeExpression = (
   }
 
   if (expr instanceof t.Val) {
-    env.set(expr.name, computeExpression(expr.init, reka, env));
+    env.set(expr.name, {
+      value: computeExpression(expr.init, reka, env),
+      readonly: false,
+    });
     return;
   }
 
@@ -84,21 +87,13 @@ export const computeExpression = (
 
     switch (expr.operator) {
       case '=': {
-        return env.set(expr.left.name, right, true);
+        return env.reassign(expr.left, right);
       }
       case '+=': {
-        return env.set(
-          expr.left.name,
-          env.getByIdentifier(expr.left) + right,
-          true
-        );
+        return env.reassign(expr.left, env.getByIdentifier(expr.left) + right);
       }
       case '-=': {
-        return env.set(
-          expr.left.name,
-          env.getByIdentifier(expr.left) - right,
-          true
-        );
+        return env.reassign(expr.left, env.getByIdentifier(expr.left) - right);
       }
     }
   }
@@ -116,7 +111,7 @@ export const computeExpression = (
       const blockEnv = env.inherit();
 
       expr.params.forEach((param, i) => {
-        env.set(param.name, args[i]);
+        env.set(param.name, { value: args[i], readonly: true });
       });
 
       let returnValue: any;
