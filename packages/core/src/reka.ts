@@ -167,6 +167,10 @@ export class Reka {
           const envBindingNames = [...globalVarNames, ...componentNames];
 
           for (const key of this.env.bindings.keys()) {
+            if (typeof key !== 'string') {
+              continue;
+            }
+
             if (envBindingNames.indexOf(key) > -1) {
               continue;
             }
