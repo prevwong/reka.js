@@ -96,6 +96,10 @@ export class ViewEvaluator {
     return this.viewObserver.getTypeFromId(id, expectedType);
   }
 
+  private changeRootTemplate(cb: () => void) {
+    return this.rootTemplateObserver.change(cb);
+  }
+
   private diff(key: string, newView: t.View) {
     const existingView = this.tplKeyToView.get(key);
 
@@ -527,7 +531,7 @@ export class ViewEvaluator {
   }
 
   setProps(props: Record<string, any>) {
-    runInAction(() => {
+    this.changeRootTemplate(() => {
       this.rootTemplate.props = omit(props, ['children']);
 
       if (props['children']) {
