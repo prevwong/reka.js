@@ -73,35 +73,6 @@ export const UserFrameExtensionFactory = () =>
         },
       ],
     },
-    globals: {},
-    components: [
-      t.rekaComponent({
-        name: 'ExtensionComponent',
-        props: [],
-        state: [],
-        template: t.tagTemplate({
-          tag: 'div',
-          props: {},
-          children: [
-            t.tagTemplate({
-              tag: 'button',
-              props: {},
-              children: [
-                t.tagTemplate({
-                  tag: 'text',
-                  props: {
-                    text: t.literal({
-                      value: 'Hello World From extension',
-                    }),
-                  },
-                  children: [],
-                }),
-              ],
-            }),
-          ],
-        }),
-      }),
-    ],
     init: (ext) => {
       ext.subscribe(
         (state) => {
