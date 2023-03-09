@@ -1,5 +1,12 @@
 # @rekajs/types
 
+## 0.2.0
+
+### Minor Changes
+
+- 87cd8c3: feat: add type assert util (#2)
+  fix: improve type error
+
 ## 0.1.0
 
 ### Patch Changes
