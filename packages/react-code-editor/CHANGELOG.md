@@ -1,5 +1,18 @@
 # @rekajs/react-code-editor
 
+## 1.0.0
+
+### Patch Changes
+
+- 788ec9a: fix: code editor lag
+- Updated dependencies [788ec9a]
+- Updated dependencies [788ec9a]
+- Updated dependencies [788ec9a]
+  - @rekajs/core@1.0.0
+  - @rekajs/parser@1.0.0
+  - @rekajs/types@0.2.0
+  - @rekajs/react@1.0.0
+
 ## 0.1.0
 
 ### Patch Changes
