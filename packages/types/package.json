@@ -1,6 +1,6 @@
 {
   "name": "@rekajs/types",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Create and manage Reka data types",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -15,6 +15,6 @@
   "author": "Prev Wong",
   "license": "MIT",
   "dependencies": {
-    "@rekajs/utils": "^0.1.0"
+    "@rekajs/utils": "^0.2.0"
   }
 }

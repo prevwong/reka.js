@@ -1,6 +1,6 @@
 {
   "name": "@rekajs/codemirror",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Reka Grammer for Codemirror",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
