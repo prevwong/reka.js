@@ -202,7 +202,7 @@ describe('Reka Types', () => {
   });
 
   describe('assert', () => {
-    it.only('should assert Type of value', () => {
+    it('should assert Type of value', () => {
       const literalValue = t.literal({ value: 0 });
       expect(t.assert(literalValue, t.Literal)).toEqual(literalValue);
 

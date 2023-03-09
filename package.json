@@ -17,7 +17,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prettier": "prettier --write .",
     "generate-api-docs": "node ./scripts/generate-api-docs.js",
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
     "release": "semantic-release"
   },
   "devDependencies": {
@@ -47,7 +48,7 @@
     "tslib": "^2.4.0",
     "turbo": "latest",
     "typescript": "4.9.4",
-    "vitest": "^0.27.2"
+    "vitest": "^0.29.2"
   },
   "engines": {
     "node": ">=14.0.0"
