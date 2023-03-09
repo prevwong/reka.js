@@ -17,8 +17,8 @@
     "yjs": "^13.5.27"
   },
   "peerDependencies": {
-    "@rekajs/core": "0.1.0",
-    "@rekajs/types": "0.1.0"
+    "@rekajs/core": "^0.1.0",
+    "@rekajs/types": "^0.1.0"
   },
   "devDependencies": {
     "@rekajs/core": "workspace:*",
