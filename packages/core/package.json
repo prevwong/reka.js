@@ -17,7 +17,7 @@
     "@types/lodash": "^4.14.185"
   },
   "peerDependencies": {
-    "@rekajs/types": "0.1.0"
+    "@rekajs/types": ">=0.1.0"
   },
   "dependencies": {
     "@rekajs/utils": "^0.1.0",

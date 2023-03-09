@@ -15,7 +15,7 @@
     "@rekajs/types": "workspace:*"
   },
   "peerDependencies": {
-    "@rekajs/types": "0.1.0"
+    "@rekajs/types": ">=0.1.0"
   },
   "dependencies": {
     "@babel/types": "^7.18.13",

@@ -12,11 +12,11 @@
   "author": "Prev Wong",
   "license": "MIT",
   "peerDependencies": {
-    "@rekajs/codemirror": "0.1.0",
-    "@rekajs/parser": "0.1.0",
-    "@rekajs/react": "0.1.0",
-    "@rekajs/core": "0.1.0",
-    "@rekajs/types": "0.1.0",
+    "@rekajs/codemirror": ">=0.1.0",
+    "@rekajs/parser": ">=0.1.0",
+    "@rekajs/react": ">=0.1.0",
+    "@rekajs/core": ">=0.1.0",
+    "@rekajs/types": ">=0.1.0",
     "react": "^16.8.0 || ^17 || ^18"
   },
   "dependencies": {
