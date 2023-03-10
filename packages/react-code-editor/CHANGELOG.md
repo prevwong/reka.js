@@ -1,5 +1,12 @@
 # @rekajs/react-code-editor
 
+## 0.1.1
+
+### Patch Changes
+
+- da3c4c8: fix: peer deps
+- da3c4c8: fix: code editor lag
+
 ## 0.1.0
 
 ### Patch Changes
