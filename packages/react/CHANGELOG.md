@@ -1,5 +1,11 @@
 # @rekajs/react
 
+## 0.1.1
+
+### Patch Changes
+
+- da3c4c8: fix: peer deps
+
 ## 0.1.0
 
 ### Patch Changes
