@@ -9,9 +9,13 @@ component App() {
  val text = "Bye";
  val counter = 0;
 } => (
- <div className={"w-full h-full"}>
-  <Header/>
-  <div
+ <section className={"w-full h-full"}>
+  <Header @classList={{
+    "bg-white/25": $getScrollTop() > 100,
+    "py-10": $getScrollTop() <= 100,
+    "py-5": $getScrollTop() > 100
+   }}/>
+   <div
    style={{
     "backgroundImage": "linear-gradient(180deg, #FFB7B7 0%, #727272 100%), radial-gradient(60.91% 100% at 50% 0%, #FFD1D1 0%, #260000 100%), linear-gradient(127.43deg, #00FFFF 0%, #FFFFFF 100%), radial-gradient(100.22% 100% at 70.57% 0%, #FF0000 0%, #00FFE0 100%), linear-gradient(64.82deg, #DBFF00 0%, #3300FF 100%)",
     "backgroundBlendMode": "screen, overlay, color-burn, color-dodge, normal"
@@ -43,7 +47,7 @@ component App() {
    <div className={"flex"}>
     <div className={"px-8 w-1/3"}>
      <h2 className={"text-3xl font-semibold tracking-tighter"}>
-      <text value={"Powered by code, unlimited flexibility"}/>
+      <text value={"Powered by code for unlimited flexibility"}/>
      </h2>
     </div>
     <div className={"flex-1 px-10 text-slate-600"}>
@@ -144,7 +148,7 @@ component App() {
     }}
    />
   </Modal>
- </div>
+ </section>
 )
 
 component Feature(title="Feature",description,noPadding=false) => (
@@ -172,14 +176,10 @@ component Feature(title="Feature",description,noPadding=false) => (
  </div>
 )
 
-component Header() => (
+component Header(className) => (
  <div
-  className={"w-full fixed z-10 ease-in-out duration-200 backdrop-blur-md"}
-  @classList={{
-   "bg-white/25": $getScrollTop() > 100,
-   "py-10": $getScrollTop() <= 100,
-   "py-5": $getScrollTop() > 100
-  }}
+  className={"w-full fixed z-10 ease-in-out duration-200 backdrop-blur-md " + className}
+  
  >
   <div className={"flex items-center w-full px-8 max-w-4xl m-auto"}>
    <div className={"flex-1"}>

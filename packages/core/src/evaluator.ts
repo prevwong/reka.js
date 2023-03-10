@@ -9,18 +9,18 @@ import {
   runInAction,
 } from 'mobx';
 
-import { ComponentSlotBindingKey, ComponentViewEvaluator } from './component';
+import { ComponentViewEvaluator } from './component';
 import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { Frame } from './frame';
 import { Observer } from './observer';
 import { Reka } from './reka';
+import { ClassListBindingKey, ComponentSlotBindingKey } from './symbols';
 import { createKey, isPrimitive, valueToHash } from './utils';
 
 export type TemplateEvaluateContext = {
   env: Environment;
   path: string[];
-  classList: string[];
 };
 
 export type TemplateViewComputationCache = {
@@ -163,7 +163,7 @@ export class ViewEvaluator {
       this.viewObserver = new Observer(view, {
         id: `view-${this.rootTemplate.id}`,
         batch: false,
-        shouldIgnoreObservable: (type, key, value) => {
+        shouldIgnoreObservable: (_, __, value) => {
           if (value instanceof t.Template || value instanceof t.Component) {
             return true;
           }
@@ -189,11 +189,6 @@ export class ViewEvaluator {
   }
 
   computeTemplate(template: t.Template, ctx: TemplateEvaluateContext) {
-    ctx = {
-      ...ctx,
-      classList: [],
-    };
-
     const baseKey = createKey(ctx.path);
 
     const renderTemplate = (
@@ -234,7 +229,7 @@ export class ViewEvaluator {
           const classList = template.classList;
 
           if (classList) {
-            ctx.classList = Object.keys(classList.properties).reduce(
+            const classListValue = Object.keys(classList.properties).reduce(
               (accum, key) => {
                 const bool = this.computeExpr(
                   classList.properties[key],
@@ -249,6 +244,16 @@ export class ViewEvaluator {
               },
               [] as string[]
             );
+
+            ctx.env.set(ClassListBindingKey, {
+              readonly: true,
+              value: classListValue,
+            });
+          } else {
+            ctx.env.set(ClassListBindingKey, {
+              readonly: true,
+              value: {},
+            });
           }
 
           let view: t.View[] = [];
@@ -270,6 +275,7 @@ export class ViewEvaluator {
           return view;
         },
         {
+          name: `template-${template.id}-root-evaluation`,
           keepAlive: true,
         }
       );
@@ -432,8 +438,10 @@ export class ViewEvaluator {
         };
       }, {});
 
-      if (ctx.classList.length > 0) {
-        props['className'] = [props['className'], ...ctx.classList]
+      const classListBinding = ctx.env.getByName(ClassListBindingKey);
+
+      if (classListBinding && Object.keys(classListBinding).length > 0) {
+        props['className'] = [props['className'], ...classListBinding]
           .filter(Boolean)
           .join(' ');
       }
@@ -497,7 +505,6 @@ export class ViewEvaluator {
       const view = this.computeTemplate(this.rootTemplate, {
         path: ['frame'],
         env: this.reka.env,
-        classList: [],
       })[0];
 
       return view;
