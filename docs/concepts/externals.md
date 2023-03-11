@@ -61,7 +61,7 @@ const reka = Reka.create({
 
 ## External Functions
 
-The next type of externals is External Functions. These are useful when you need to expose functions that provides additional functionalities for your users. For example, you could expose an external function that your users could use to return a random number:
+The next type of externals is External Functions. These are useful when you need to expose functions that your end-users could call. For example, you could expose an external function that your users could use to return a random number:
 
 ```tsx
 const reka = Reka.create({
