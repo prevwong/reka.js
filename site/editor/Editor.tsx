@@ -138,7 +138,7 @@ export class Editor {
           states: {
             scrollTop: 0,
           },
-          globals: (self) => {
+          functions: (self) => {
             return {
               confetti: () => {
                 confetti();

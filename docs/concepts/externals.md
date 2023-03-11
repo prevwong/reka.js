@@ -59,9 +59,9 @@ const reka = Reka.create({
 }
 ```
 
-## External Globals
+## External Functions
 
-The next type of externals is External Globals. These are useful when you need to expose some variables that could provide additional functionality for the end users. For example, you could expose an external global that returns a random number:
+The next type of externals is External Functions. These are useful when you need to expose functions that provides additional functionalities for your users. For example, you could expose an external function that your users could use to return a random number:
 
 ```tsx
 const reka = Reka.create({
@@ -78,7 +78,7 @@ const reka = Reka.create({
     }
 });
 
-// Then the external global can be accessed within the Program AST like so:
+// Then the external function can be accessed within the Program AST like so:
 {
     type: "RekaComponent",
     template: {

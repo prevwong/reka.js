@@ -3,17 +3,17 @@ import { invariant } from '@rekajs/utils';
 import { action, makeObservable, observable } from 'mobx';
 
 import {
-  StateExternalGlobals,
-  StateExternalLocals,
+  StateExternalFunctions,
+  StateExternalStates,
   StateExternalsFactory,
 } from './interfaces';
 import { Reka } from './reka';
 
-type ExternalSource = 'states' | 'globals' | 'components';
+type ExternalSource = 'states' | 'functions' | 'components';
 
 export class Externals {
-  states: StateExternalLocals;
-  globals: StateExternalGlobals;
+  states: StateExternalStates;
+  functions: StateExternalFunctions;
   components: Record<string, t.Component>;
 
   private lookup: Record<string, ExternalSource> = {};
@@ -23,7 +23,7 @@ export class Externals {
     opts?: Partial<StateExternalsFactory>
   ) {
     this.states = opts?.states || {};
-    this.globals = opts?.globals?.(this.reka) || {};
+    this.functions = opts?.functions?.(this.reka) || {};
     this.components =
       opts?.components?.reduce(
         (accum, component) => ({
@@ -55,8 +55,8 @@ export class Externals {
       this.insertLookup(state, 'states');
     }
 
-    for (const global in this.globals) {
-      this.insertLookup(global, 'globals');
+    for (const fn in this.functions) {
+      this.insertLookup(fn, 'functions');
     }
 
     for (const component in this.components) {
@@ -77,7 +77,7 @@ export class Externals {
   }
 
   getGlobal(name: string) {
-    return this.globals[name];
+    return this.functions[name];
   }
 
   get(name: string) {
@@ -87,8 +87,8 @@ export class Externals {
       return this.states[name];
     }
 
-    if (source === 'globals') {
-      return this.globals[name];
+    if (source === 'functions') {
+      return this.functions[name];
     }
 
     if (source === 'components') {

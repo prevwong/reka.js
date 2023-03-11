@@ -31,6 +31,6 @@ export const createSharedStateGlobals = (
       ],
       ...(config.externals?.states ?? {}),
     },
-    globals: config.externals?.globals,
+    functions: config.externals?.functions,
   },
 });
