@@ -1,2 +1,2 @@
-export const ClassListBindingKey = Symbol('Classlist');
+export const ClassListBindingKey = Symbol('$$classlist');
 export const ComponentSlotBindingKey = Symbol('$$children');
