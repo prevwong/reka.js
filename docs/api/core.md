@@ -1,6 +1,6 @@
 # @rekajs/core
 
-The core package of Reka. 
+The core package of Reka.
 
 ## API
 
@@ -12,31 +12,31 @@ The core package of Reka.
 import { Reka } from '@rekajs/core';
 import * as t from '@rekajs/types';
 
-import confetti from 'canvas-confetti'
+import confetti from 'canvas-confetti';
 import { Header } from './path-to-header-component.tsx';
 
 const reka = Reka.create({
-   extensions: {
-        states: {
-            myGlobalVariable: 0
+  externals: {
+    states: {
+      myGlobalVariable: 0,
+    },
+    functions: (reka) => ({
+      getGlobalVariable: () => {
+        return reka.getExternalState('myGlobalVariable');
+      },
+      confetti: () => {
+        return confetti();
+      },
+    }),
+    components: [
+      t.externalComponent({
+        name: 'MyReactHeader',
+        render: (props) => {
+          return <Header {...props} />;
         },
-        globals: reka => ({
-            getGlobalVariable: () => {
-                return reka.getExternalState('myGlobalVariable')
-            },
-            confetti: () => {
-                return confetti();
-            },
-        }),
-        components: [
-            t.externalComponent({
-                name: 'MyReactHeader',
-                render: (props) => {
-                    return <Header {...props} />
-                }
-            })
-        ]
-    } 
+      }),
+    ],
+  },
 });
 ```
 
@@ -51,4 +51,3 @@ const reka = Reka.create({
 !start-typedoc core/index.ts Extension
 
 !end-typedoc
-

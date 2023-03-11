@@ -3,21 +3,23 @@ import * as t from '@rekajs/types';
 import { ExtensionDefinition } from './extension';
 import { Reka } from './reka';
 
-export type StateExternalGlobalAccessor = (opts: Record<string, any>) => any;
-export type StateExternalGlobals = Record<string, StateExternalGlobalAccessor>;
-export type StateExternalGlobalsFactory = (reka: Reka) => StateExternalGlobals;
+export type StateExternalFunction = (opts: Record<string, any>) => any;
+export type StateExternalFunctions = Record<string, StateExternalFunction>;
+export type StateExternalFunctionsFactory = (
+  reka: Reka
+) => StateExternalFunctions;
 
-export type StateExternalLocals = Record<string, any>;
+export type StateExternalStates = Record<string, any>;
 
 export type StateExternals = {
-  states: StateExternalLocals;
-  globals: StateExternalGlobals;
+  states: StateExternalStates;
+  functions: StateExternalFunctions;
   components: t.Component[];
 };
 
 export type StateExternalsFactory = {
-  states: StateExternalLocals;
-  globals: StateExternalGlobalsFactory;
+  states: StateExternalStates;
+  functions: StateExternalFunctionsFactory;
   components: t.Component[];
 };
 
