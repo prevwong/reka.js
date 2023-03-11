@@ -71,6 +71,16 @@ export const UserFrameExtensionFactory = () =>
           width: '300px',
           height: '300px',
         },
+        {
+          id: 'Button with Icon',
+          name: 'Button',
+          props: {
+            text: t.literal({ value: 'Icon' }),
+            icon: t.literal({ value: 'ArrowRightIcon' }),
+          },
+          width: '300px',
+          height: '300px',
+        },
       ],
     },
     init: (ext) => {
