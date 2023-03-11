@@ -144,7 +144,7 @@ export class ComponentViewEvaluator {
                   });
                 },
                 {
-                  name: `Component-${this.template.component.name}-${this.template.id}-props-evaluation`,
+                  name: `component-${this.template.component.name}<${this.template.id}>-props-evaluation`,
                 }
               );
             }
@@ -192,7 +192,7 @@ export class ComponentViewEvaluator {
             return componentViewTree;
           },
           {
-            name: `component-${this.template.component.name}-root-computation`,
+            name: `component-${this.template.component.name}<${this.template.id}>-reka-root-computation`,
             keepAlive: true,
           }
         );
@@ -226,6 +226,8 @@ export class ComponentViewEvaluator {
           ) as t.Component;
 
           if (!component) {
+            this.componentViewTreeComputation = null;
+
             return [
               new t.ErrorSystemView({
                 error: `Component "${this.template.component.name}" not found`,
@@ -247,7 +249,7 @@ export class ComponentViewEvaluator {
             computed: computed(
               () => this.computeViewTreeForComponent(component),
               {
-                name: `component-${this.template.component.name}-tree-computation`,
+                name: `component-${this.template.component.name}<${this.template.id}>-resolved-view-computation`,
               }
             ),
           };
@@ -255,7 +257,7 @@ export class ComponentViewEvaluator {
           return this.componentViewTreeComputation.computed.get();
         },
         {
-          name: `component-${this.template.component.name}-resolve-computation`,
+          name: `component-${this.template.component.name}<${this.template.id}>-resolve-computation`,
         }
       );
     }
