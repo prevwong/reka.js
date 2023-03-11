@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { Box } from '@app/components/box';
-import { IconButton } from '@app/components/button';
+import { Button, IconButton } from '@app/components/button';
 import { Dropdown } from '@app/components/dropdown';
 import { Text } from '@app/components/text';
 import { Tooltip } from '@app/components/tooltip';
@@ -178,9 +178,42 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
           }}
         >
           <Box
-            css={{ flex: 1, display: 'flex', gap: '$2', alignItems: 'center' }}
+            css={{
+              flex: 1,
+              display: 'flex',
+              gap: '$2',
+              alignItems: 'center',
+              '> .component-edit-btn': { display: 'none' },
+              '&:hover > .component-edit-btn': { display: 'block' },
+            }}
           >
             <Text size="1">{getTemplateName(template)}</Text>
+            {template instanceof t.ComponentTemplate && (
+              <Button
+                disabled={template.component.external}
+                className="component-edit-btn"
+                onClick={() => {
+                  if (template.component.external) {
+                    return;
+                  }
+
+                  const component = editor.reka.components.program.find(
+                    (component) => component.name === template.component.name
+                  );
+
+                  if (!component) {
+                    return;
+                  }
+
+                  editor.setActiveComponentEditor(component);
+                }}
+                css={{ ml: '$2' }}
+                transparent
+              >
+                Edit
+              </Button>
+            )}
+
             {activeComponentEditor.getCommentCount(template) > 0 && (
               <Tooltip content="View comments">
                 <IconButton

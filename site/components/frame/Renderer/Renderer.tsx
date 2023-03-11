@@ -129,16 +129,22 @@ const RenderExternalComponentView = observer(
   (props: RenderExternalComponentViewProps) => {
     const { onConnect } = React.useContext(SelectorContext);
 
+    const domRef = React.useRef<HTMLElement | null>(null);
+
+    React.useEffect(() => {
+      const { current: dom } = domRef;
+
+      if (!dom) {
+        return;
+      }
+
+      return onConnect(dom, props.view);
+    }, [onConnect, props.view]);
+
     return React.cloneElement(
       props.view.component.render({ ...props.view.props }),
       {
-        ref: (dom: HTMLElement) => {
-          if (!dom) {
-            return;
-          }
-
-          return onConnect(dom, props.view);
-        },
+        ref: domRef,
       }
     );
   }

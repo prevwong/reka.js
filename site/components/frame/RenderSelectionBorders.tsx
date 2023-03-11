@@ -1,4 +1,4 @@
-import { ChatBubbleIcon } from '@radix-ui/react-icons';
+import { ChatBubbleIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
@@ -9,6 +9,7 @@ import { EditorMode } from '@app/editor/Editor';
 import { Box } from '../box';
 import { IconButton } from '../button';
 import { Text } from '../text';
+import { Tooltip } from '../tooltip';
 
 type SelectionBorderProps = {
   dom: HTMLElement;
@@ -63,8 +64,10 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
       ) {
         containerDom.classList.add('overflow');
 
-        if (props.dom.offsetTop >= iframe.clientHeight + iframe.offsetTop) {
+        if (!(top === 0 && left === 0)) {
           containerDom.classList.add('overflow-border-hidden');
+        } else {
+          containerDom.classList.remove('overflow-border-hidden');
         }
 
         if (top <= iframe.offsetTop) {
@@ -84,22 +87,19 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
       );
     };
 
-    let animationReq: null | number = null;
+    setPos();
 
-    const animationLoop = () => {
+    const observer = new ResizeObserver(() => {
       setPos();
+    });
+    const observedEl = props.dom.parentElement ?? props.dom;
+    observer.observe(observedEl);
 
-      window.requestAnimationFrame(() => {
-        animationLoop();
-      });
-    };
-
-    animationReq = window.requestAnimationFrame(() => animationLoop());
+    iframe.contentWindow?.addEventListener('scroll', setPos);
 
     return () => {
-      if (animationReq !== null) {
-        window.cancelAnimationFrame(animationReq);
-      }
+      observer.unobserve(observedEl);
+      iframe.contentWindow?.removeEventListener('scroll', setPos);
     };
   }, [iframe, props.dom, props.template]);
 
@@ -190,28 +190,75 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
             </Text>
           </Box>
 
-          <Box css={{ pl: '$3', display: 'flex', alignItems: 'center' }}>
-            <IconButton
-              transparent
-              css={{
-                color: '#fff',
-                '&:hover': {
-                  background: '$slateA5',
-                },
-              }}
-              onClick={() => {
-                activeComponentEditor.showComments(props.template);
-              }}
-            >
-              <ChatBubbleIcon />
-              {activeComponentEditor.getCommentCount(props.template) > 0 && (
-                <Box css={{ ml: '$3', fontSize: '9px' }}>
-                  {editor.activeComponentEditor?.getCommentCount(
-                    props.template
-                  )}
-                </Box>
-              )}
-            </IconButton>
+          <Box
+            css={{ pl: '$3', display: 'flex', alignItems: 'center', gap: '$2' }}
+          >
+            {props.template instanceof t.ComponentTemplate && (
+              <Tooltip
+                content={
+                  props.template.component.external
+                    ? 'This is an external React component, it cannot be edited.'
+                    : 'Edit component'
+                }
+              >
+                <IconButton
+                  disabled={props.template.component.external}
+                  transparent
+                  css={{
+                    color: '#fff',
+                    '&:hover': {
+                      background: '$slateA5',
+                    },
+                  }}
+                  onClick={() => {
+                    const template = props.template;
+
+                    if (!(template instanceof t.ComponentTemplate)) {
+                      return;
+                    }
+
+                    if (template.component.external) {
+                      return;
+                    }
+
+                    const component = editor.reka.components.program.find(
+                      (component) => component.name === template.component.name
+                    );
+
+                    if (!component) {
+                      return;
+                    }
+
+                    editor.setActiveComponentEditor(component);
+                  }}
+                >
+                  <Pencil1Icon />
+                </IconButton>
+              </Tooltip>
+            )}
+            <Tooltip content="View comments">
+              <IconButton
+                transparent
+                css={{
+                  color: '#fff',
+                  '&:hover': {
+                    background: '$slateA5',
+                  },
+                }}
+                onClick={() => {
+                  activeComponentEditor.showComments(props.template);
+                }}
+              >
+                <ChatBubbleIcon />
+                {activeComponentEditor.getCommentCount(props.template) > 0 && (
+                  <Box css={{ ml: '$3', fontSize: '9px' }}>
+                    {editor.activeComponentEditor?.getCommentCount(
+                      props.template
+                    )}
+                  </Box>
+                )}
+              </IconButton>
+            </Tooltip>
           </Box>
         </Box>
       </Box>
