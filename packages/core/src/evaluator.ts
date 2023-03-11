@@ -519,7 +519,7 @@ export class ViewEvaluator {
       _compute();
 
       this.tplKeyToComponentEvaluator.forEach((componentEvaluator) => {
-        componentEvaluator.compute();
+        componentEvaluator.recompute();
       });
     });
   }

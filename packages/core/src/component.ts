@@ -193,6 +193,7 @@ export class ComponentViewEvaluator {
           },
           {
             name: `component-${this.template.component.name}-root-computation`,
+            keepAlive: true,
           }
         );
 
@@ -203,6 +204,16 @@ export class ComponentViewEvaluator {
     }
 
     throw new Error('Invalid Component Template');
+  }
+
+  recompute() {
+    if (this.rekaComponentRootComputation) {
+      this.rekaComponentRootComputation.get();
+
+      return;
+    }
+
+    this.compute();
   }
 
   compute() {
@@ -249,14 +260,6 @@ export class ComponentViewEvaluator {
       );
     }
 
-    const componentView = this.resolveComponentComputation.get();
-
-    untracked(() => {
-      if (this.rekaComponentRootComputation) {
-        this.rekaComponentRootComputation.get();
-      }
-    });
-
-    return componentView;
+    return this.resolveComponentComputation.get();
   }
 }
