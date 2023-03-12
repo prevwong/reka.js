@@ -46,8 +46,8 @@ export class ViewEvaluator {
   private rootTemplateObserver: Observer;
 
   private tplToView: WeakMap<t.Template, t.View[]> = new WeakMap();
-  private tplToClassListComputation: WeakMap<t.Template, IComputedValue<void>> =
-    new WeakMap();
+  private tplKeyToClassListComputationCache: Map<string, IComputedValue<void>> =
+    new Map();
   private tplToEachComputationCache: WeakMap<
     t.Template,
     TemplateEachComputationCache
@@ -180,6 +180,7 @@ export class ViewEvaluator {
               disposedType instanceof t.View &&
               disposedType.key !== 'frame'
             ) {
+              this.tplKeyToClassListComputationCache.delete(disposedType.key);
               this.tplKeyToViewComputationCache.delete(disposedType.key);
               this.tplKeyToComponentEvaluator.delete(disposedType.key);
               this.tplKeyToView.delete(disposedType.key);
@@ -229,7 +230,7 @@ export class ViewEvaluator {
           }
 
           let classListComputation =
-            this.tplToClassListComputation.get(template);
+            this.tplKeyToClassListComputationCache.get(key);
 
           if (!classListComputation) {
             classListComputation = computed(() => {
@@ -264,7 +265,10 @@ export class ViewEvaluator {
               }
             });
 
-            this.tplToClassListComputation.set(template, classListComputation);
+            this.tplKeyToClassListComputationCache.set(
+              key,
+              classListComputation
+            );
           }
 
           classListComputation.get();
