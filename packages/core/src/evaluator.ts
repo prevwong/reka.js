@@ -98,6 +98,12 @@ export class ViewEvaluator {
     return this.viewObserver.getTypeFromId(id, expectedType);
   }
 
+  private disposeComponentEvaluators() {
+    this.tplKeyToComponentEvaluator.forEach((componentEvaluator) => {
+      componentEvaluator.dispose();
+    });
+  }
+
   private changeRootTemplate(cb: () => void) {
     return this.rootTemplateObserver.change(cb);
   }
@@ -180,6 +186,14 @@ export class ViewEvaluator {
               disposedType instanceof t.View &&
               disposedType.key !== 'frame'
             ) {
+              const componentCache = this.tplKeyToComponentEvaluator.get(
+                disposedType.key
+              );
+
+              if (componentCache) {
+                componentCache.dispose();
+              }
+
               this.tplKeyToClassListComputationCache.delete(disposedType.key);
               this.tplKeyToViewComputationCache.delete(disposedType.key);
               this.tplKeyToComponentEvaluator.delete(disposedType.key);
@@ -292,8 +306,7 @@ export class ViewEvaluator {
           return view;
         },
         {
-          name: `template-${template.id}-root-evaluation`,
-          keepAlive: true,
+          name: `template-${template.id}<${key}>-root-evaluation`,
         }
       );
 
@@ -544,13 +557,13 @@ export class ViewEvaluator {
   dispose() {
     this.rootTemplateObserver.dispose();
     this.viewObserver.dispose();
+    this.disposeComponentEvaluators();
 
+    this.tplKeyToComponentEvaluator = new Map();
     this.tplToView = new Map();
     this.tplToEachComputationCache = new WeakMap();
     this.viewToParentView = new WeakMap();
-
     this.tplKeyToViewComputationCache = new Map();
-    this.tplKeyToComponentEvaluator = new Map();
     this.tplKeyToView = new Map();
   }
 

@@ -1,6 +1,7 @@
 import * as t from '@rekajs/types';
 import { computed, IComputedValue, runInAction, untracked } from 'mobx';
 
+import { DisposableComputation } from './computation';
 import { Environment } from './environment';
 import { TemplateEvaluateContext, ViewEvaluator } from './evaluator';
 import { ClassListBindingKey, ComponentSlotBindingKey } from './symbols';
@@ -17,7 +18,7 @@ export class ComponentViewEvaluator {
   >;
   private declare componentViewTreeComputation: ComponentViewTreeComputationCache | null;
 
-  private declare rekaComponentRootComputation: IComputedValue<t.View> | null;
+  private declare rekaComponentRootComputation: DisposableComputation<t.View> | null;
   private declare rekaComponentPropsComputation: IComputedValue<void> | null;
   private declare rekaComponentStateComputation: IComputedValue<void> | null;
 
@@ -83,7 +84,7 @@ export class ComponentViewEvaluator {
           return this.rekaComponentRootComputation.get();
         }
 
-        this.rekaComponentRootComputation = computed(
+        this.rekaComponentRootComputation = new DisposableComputation(
           () => {
             let render: t.View[] = [];
             if (!this.rekaComponentPropsComputation) {
@@ -263,5 +264,13 @@ export class ComponentViewEvaluator {
     }
 
     return this.resolveComponentComputation.get();
+  }
+
+  dispose() {
+    if (!this.rekaComponentRootComputation) {
+      return;
+    }
+
+    this.rekaComponentRootComputation.dispose();
   }
 }
