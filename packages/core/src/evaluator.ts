@@ -46,6 +46,8 @@ export class ViewEvaluator {
   private rootTemplateObserver: Observer;
 
   private tplToView: WeakMap<t.Template, t.View[]> = new WeakMap();
+  private tplToClassListComputation: WeakMap<t.Template, IComputedValue<void>> =
+    new WeakMap();
   private tplToEachComputationCache: WeakMap<
     t.Template,
     TemplateEachComputationCache
@@ -226,35 +228,46 @@ export class ViewEvaluator {
             }
           }
 
-          const classList = template.classList;
+          let classListComputation =
+            this.tplToClassListComputation.get(template);
 
-          if (classList) {
-            const classListValue = Object.keys(classList.properties).reduce(
-              (accum, key) => {
-                const bool = this.computeExpr(
-                  classList.properties[key],
-                  ctx.env
+          if (!classListComputation) {
+            classListComputation = computed(() => {
+              const classList = template.classList;
+
+              if (classList) {
+                const classListValue = Object.keys(classList.properties).reduce(
+                  (accum, key) => {
+                    const bool = this.computeExpr(
+                      classList.properties[key],
+                      ctx.env
+                    );
+
+                    if (bool) {
+                      accum.push(safeObjKey(key));
+                    }
+
+                    return accum;
+                  },
+                  [] as string[]
                 );
 
-                if (bool) {
-                  accum.push(safeObjKey(key));
-                }
-
-                return accum;
-              },
-              [] as string[]
-            );
-
-            ctx.env.set(ClassListBindingKey, {
-              readonly: true,
-              value: classListValue,
+                ctx.env.set(ClassListBindingKey, {
+                  readonly: true,
+                  value: classListValue,
+                });
+              } else {
+                ctx.env.set(ClassListBindingKey, {
+                  readonly: true,
+                  value: {},
+                });
+              }
             });
-          } else {
-            ctx.env.set(ClassListBindingKey, {
-              readonly: true,
-              value: {},
-            });
+
+            this.tplToClassListComputation.set(template, classListComputation);
           }
+
+          classListComputation.get();
 
           let view: t.View[] = [];
 
