@@ -24,7 +24,7 @@ export class Reka {
   declare head: Head;
 
   private declare observer: Observer<t.State>;
-  private declare extensionRegistry: ExtensionRegistry;
+  private declare extensions: ExtensionRegistry;
 
   private idToFrame: Map<string, Frame> = new Map();
 
@@ -94,12 +94,9 @@ export class Reka {
 
     this.frames = [];
 
-    this.extensionRegistry = new ExtensionRegistry(
-      this,
-      this.opts?.extensions ?? []
-    );
+    this.extensions = new ExtensionRegistry(this, this.opts?.extensions ?? []);
 
-    this.extensionRegistry.init();
+    this.extensions.init();
 
     if (syncImmediately) {
       this.sync();
@@ -181,7 +178,7 @@ export class Reka {
    * Get an Extension's state from its definition
    */
   getExtension<D extends ExtensionDefinition<any>>(definition: D) {
-    return this.extensionRegistry.getExtensionFromDefinition(definition);
+    return this.extensions.getExtensionFromDefinition(definition);
   }
 
   /**
@@ -255,7 +252,7 @@ export class Reka {
   dispose() {
     this.head.dispose();
     this.observer.dispose();
-    this.extensionRegistry.dispose();
+    this.extensions.dispose();
   }
 
   toJSON() {
