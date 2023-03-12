@@ -1,5 +1,5 @@
 ---
-"@rekajs/core": patch
+'@rekajs/core': patch
 ---
 
-fix: classlist and component cache
+Fix classlist not cascading to components
