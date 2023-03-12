@@ -35,7 +35,7 @@ export class Environment {
   }
 
   reassign(identifier: t.Identifier, value: any) {
-    const distance = this.reka.resolver.getDistance(identifier);
+    const distance = this.reka.head.resolver.getDistance(identifier);
 
     if (distance === undefined) {
       throw new Error();
@@ -112,7 +112,7 @@ export class Environment {
       return this.reka.externals.get(identifier.name);
     }
 
-    const distance = this.reka.resolver.getDistance(identifier);
+    const distance = this.reka.head.resolver.getDistance(identifier);
 
     if (distance === undefined) {
       throw new Error();

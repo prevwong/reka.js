@@ -510,7 +510,7 @@ export class ViewEvaluator {
     let componentEvaluator = this.tplKeyToComponentEvaluator.get(key);
 
     if (!componentEvaluator) {
-      const componentEnv = this.reka.env.inherit();
+      const componentEnv = this.reka.head.env.inherit();
 
       componentEvaluator = new ComponentViewEvaluator(
         this,
@@ -531,12 +531,12 @@ export class ViewEvaluator {
 
   computeTree() {
     const _compute = () => {
-      const view = this.computeTemplate(this.rootTemplate, {
+      const views = this.computeTemplate(this.rootTemplate, {
         path: ['frame'],
-        env: this.reka.env,
-      })[0];
+        env: this.reka.head.env,
+      });
 
-      return view;
+      return views[0];
     };
 
     if (!this.viewObserver) {

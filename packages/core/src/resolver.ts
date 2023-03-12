@@ -6,6 +6,7 @@ import {
   observable,
   runInAction,
 } from 'mobx';
+import { DisposableComputation } from './computation';
 
 import { Reka } from './reka';
 import { Scope } from './scope';
@@ -34,12 +35,23 @@ export class Resolver {
   declare cachedComponentsComputation: IComputedValue<void>;
   declare cleanupRootScopeComputation: IComputedValue<void>;
 
+  declare rootResolverComputation: DisposableComputation<void>;
+
   constructor(readonly reka: Reka) {
     this.scope = new Scope('root');
     this.identifiersToVariableDistance = new Map();
 
     this.cachedComponentResolver = new WeakMap();
     this.cachedTemplateResolver = new WeakMap();
+
+    this.rootResolverComputation = new DisposableComputation(
+      () => {
+        this.resolveProgram();
+      },
+      {
+        keepAlive: true,
+      }
+    );
 
     makeObservable(this, {
       identifiersToVariableDistance: observable,
@@ -66,7 +78,7 @@ export class Resolver {
     });
   }
 
-  resolveExpr(expr: t.Any, scope: Scope) {
+  private resolveExpr(expr: t.Any, scope: Scope) {
     if (expr instanceof t.Identifier) {
       if (expr.external) {
         return;
@@ -132,7 +144,7 @@ export class Resolver {
     }
   }
 
-  resolveComponent(component: t.Component, scope: Scope) {
+  private resolveComponent(component: t.Component, scope: Scope) {
     if (component instanceof t.RekaComponent) {
       let cache = this.cachedComponentResolver.get(component);
 
@@ -166,7 +178,7 @@ export class Resolver {
     }
   }
 
-  resolveTemplate(template: t.Template, scope: Scope) {
+  private resolveTemplate(template: t.Template, scope: Scope) {
     let cache = this.cachedTemplateResolver.get(template);
     const key = scope.toString();
 
@@ -177,50 +189,45 @@ export class Resolver {
 
       cache = {
         key,
-        computed: computed(
-          () => {
-            if (template instanceof t.ComponentTemplate) {
-              this.resolveExpr(template.component, templateScope);
-            }
-
-            if (template.each) {
-              this.resolveExpr(template.each.iterator, templateScope);
-
-              if (template.each.alias) {
-                templateScope.defineVariableName(template.each.alias.name);
-              }
-
-              if (template.each.index) {
-                eachIndex = template.each.index.name;
-                templateScope.defineVariableName(template.each.index.name);
-              } else {
-                if (eachIndex) {
-                  templateScope.removeVariableName(eachIndex);
-                  eachIndex = null;
-                }
-              }
-            }
-
-            if (template.if) {
-              this.resolveExpr(template.if, templateScope);
-            }
-
-            if (template.classList) {
-              this.resolveExpr(template.classList, templateScope);
-            }
-
-            Object.values(template.props).forEach((propValue) => {
-              this.resolveExpr(propValue, templateScope);
-            });
-
-            template.children.forEach((child) => {
-              this.resolveTemplate(child, templateScope);
-            });
-          },
-          {
-            keepAlive: true,
+        computed: computed(() => {
+          if (template instanceof t.ComponentTemplate) {
+            this.resolveExpr(template.component, templateScope);
           }
-        ),
+
+          if (template.each) {
+            this.resolveExpr(template.each.iterator, templateScope);
+
+            if (template.each.alias) {
+              templateScope.defineVariableName(template.each.alias.name);
+            }
+
+            if (template.each.index) {
+              eachIndex = template.each.index.name;
+              templateScope.defineVariableName(template.each.index.name);
+            } else {
+              if (eachIndex) {
+                templateScope.removeVariableName(eachIndex);
+                eachIndex = null;
+              }
+            }
+          }
+
+          if (template.if) {
+            this.resolveExpr(template.if, templateScope);
+          }
+
+          if (template.classList) {
+            this.resolveExpr(template.classList, templateScope);
+          }
+
+          Object.values(template.props).forEach((propValue) => {
+            this.resolveExpr(propValue, templateScope);
+          });
+
+          template.children.forEach((child) => {
+            this.resolveTemplate(child, templateScope);
+          });
+        }),
       };
 
       this.cachedTemplateResolver.set(template, cache);
@@ -229,62 +236,47 @@ export class Resolver {
     cache.computed.get();
   }
 
-  resolveVal(val: t.Val, scope: Scope) {
+  private resolveVal(val: t.Val, scope: Scope) {
     this.resolveExpr(val.init, scope);
     scope.defineVariableName(val.name);
   }
 
-  resolveProgram() {
+  private resolveProgram() {
     const program = this.reka.program;
 
     if (!this.cachedGlobalsComputation) {
-      this.cachedGlobalsComputation = computed(
-        () => {
-          program.globals.forEach((global) => {
-            this.resolveVal(global, this.scope);
-          });
-        },
-        {
-          keepAlive: true,
-        }
-      );
+      this.cachedGlobalsComputation = computed(() => {
+        program.globals.forEach((global) => {
+          this.resolveVal(global, this.scope);
+        });
+      });
     }
 
     if (!this.cachedComponentsComputation) {
-      this.cachedComponentsComputation = computed(
-        () => {
-          program.components.forEach((component) => {
-            this.scope.defineVariableName(component.name);
-          });
-        },
-        {
-          keepAlive: true,
-        }
-      );
+      this.cachedComponentsComputation = computed(() => {
+        program.components.forEach((component) => {
+          this.scope.defineVariableName(component.name);
+        });
+      });
     }
 
     this.cachedGlobalsComputation.get();
     this.cachedComponentsComputation.get();
 
     if (!this.cleanupRootScopeComputation) {
-      this.cleanupRootScopeComputation = computed(
-        () => {
-          const globalNames = [...program.globals, ...program.components].map(
-            (globalOrComponent) => globalOrComponent.name
-          );
+      this.cleanupRootScopeComputation = computed(() => {
+        const globalNames = [...program.globals, ...program.components].map(
+          (globalOrComponent) => globalOrComponent.name
+        );
 
-          this.scope.forEach((name) => {
-            if (globalNames.includes(name)) {
-              return;
-            }
+        this.scope.forEach((name) => {
+          if (globalNames.includes(name)) {
+            return;
+          }
 
-            this.scope.removeVariableName(name);
-          });
-        },
-        {
-          keepAlive: true,
-        }
-      );
+          this.scope.removeVariableName(name);
+        });
+      });
     }
 
     this.cleanupRootScopeComputation.get();
@@ -292,5 +284,13 @@ export class Resolver {
     program.components.forEach((component) => {
       this.resolveComponent(component, this.scope);
     });
+  }
+
+  resolve() {
+    this.rootResolverComputation.get();
+  }
+
+  dispose() {
+    this.rootResolverComputation.dispose();
   }
 }

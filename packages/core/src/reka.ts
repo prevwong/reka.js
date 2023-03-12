@@ -1,18 +1,10 @@
 import * as t from '@rekajs/types';
-import {
-  autorun,
-  computed,
-  IComputedValue,
-  makeObservable,
-  observable,
-  reaction,
-} from 'mobx';
+import { autorun, computed, makeObservable, observable, reaction } from 'mobx';
 
-import { Environment } from './environment';
-import { computeExpression } from './expression';
 import { ExtensionDefinition, ExtensionRegistry } from './extension';
 import { Externals } from './externals';
 import { Frame, FrameOpts } from './frame';
+import { Head } from './head';
 import { StateOpts, StateSubscriberOpts, StateWatcherOpts } from './interfaces';
 import { ChangeListenerSubscriber, Observer } from './observer';
 import { Resolver } from './resolver';
@@ -30,20 +22,15 @@ export class Reka {
   declare state: t.State;
 
   /// @internal
-  declare env: Environment;
-
-  /// @internal
-  declare resolver: Resolver;
+  declare head: Head;
 
   private declare observer: Observer<t.State>;
   private declare extensionRegistry: ExtensionRegistry;
 
-  private syncGlobals: IComputedValue<void> | null = null;
-  private syncComponents: IComputedValue<void> | null = null;
-  private syncCleanupEnv: IComputedValue<void> | null = null;
   private idToFrame: Map<string, Frame> = new Map();
 
   private init = false;
+  private loaded = false;
 
   externals: Externals;
 
@@ -89,21 +76,24 @@ export class Reka {
    * Load a new State data type
    */
   load(state: t.State, syncImmediately: boolean = true) {
+    if (this.loaded) {
+      this.dispose();
+    }
+
     this.init = true;
     this.state = t.state(state);
-    this.env = new Environment(this);
-    this.resolver = new Resolver(this);
-    this.frames = [];
-
+    this.head = new Head(this);
     this.observer = new Observer(this.state, {
       hooks: {
         onDispose: (payload) => {
           if (payload.type instanceof t.Identifier) {
-            this.resolver.removeDistance(payload.type);
+            this.head.resolver.removeDistance(payload.type);
           }
         },
       },
     });
+
+    this.frames = [];
 
     this.extensionRegistry = new ExtensionRegistry(
       this,
@@ -115,85 +105,18 @@ export class Reka {
     if (syncImmediately) {
       this.sync();
     } else {
-      this.syncHead();
+      this.head.sync();
     }
 
     this.init = false;
-  }
-
-  private syncHead() {
-    this.resolver.resolveProgram();
-
-    if (!this.syncGlobals) {
-      this.syncGlobals = computed(
-        () => {
-          this.program.globals.forEach((global) => {
-            this.env.set(global.name, {
-              value: computeExpression(global.init, this as any, this.env),
-              readonly: false,
-            });
-          });
-        },
-        {
-          keepAlive: true,
-        }
-      );
-    }
-
-    if (!this.syncComponents) {
-      this.syncComponents = computed(
-        () => {
-          this.program.components.forEach((component) => {
-            this.env.set(component.name, { value: component, readonly: true });
-          });
-        },
-        {
-          keepAlive: true,
-        }
-      );
-    }
-
-    if (!this.syncCleanupEnv) {
-      this.syncCleanupEnv = computed(
-        () => {
-          const globalVarNames = this.program.globals.map(
-            (global) => global.name
-          );
-
-          const componentNames = this.program.components.map(
-            (component) => component.name
-          );
-
-          const envBindingNames = [...globalVarNames, ...componentNames];
-
-          for (const key of this.env.bindings.keys()) {
-            if (typeof key !== 'string') {
-              continue;
-            }
-
-            if (envBindingNames.indexOf(key) > -1) {
-              continue;
-            }
-
-            this.env.delete(key);
-          }
-        },
-        {
-          keepAlive: true,
-        }
-      );
-    }
-
-    this.syncGlobals.get();
-    this.syncComponents.get();
-    this.syncCleanupEnv.get();
+    this.loaded = true;
   }
 
   /**
    * Sync changes made to the State to all active Frames. You usually do not need to call this manually
    */
   sync() {
-    this.syncHead();
+    this.head.sync();
 
     return Promise.all(
       this.frames.map((frame) => {
@@ -331,6 +254,7 @@ export class Reka {
    * Dispose instance, stops all future computations
    */
   dispose() {
+    this.head.dispose();
     this.observer.dispose();
     this.extensionRegistry.dispose();
   }
