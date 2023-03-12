@@ -12,13 +12,13 @@ type DisposableComputationOpts = {
   keepAlive?: boolean;
 };
 
-export class DisposableComputation<R extends any> {
+export class DisposableComputation<V> {
   private _disposed: IObservableValue<boolean>;
-  private declare _computation: IComputedValue<R | void>;
+  private declare _computation: IComputedValue<V | void>;
   private opts: DisposableComputationOpts;
 
   constructor(
-    private readonly compute: () => R,
+    private readonly compute: () => V,
     opts?: DisposableComputationOpts
   ) {
     this._disposed = observable.box(false);
@@ -56,7 +56,7 @@ export class DisposableComputation<R extends any> {
       return this.compute();
     }
 
-    return this._computation.get() as R;
+    return this._computation.get() as V;
   }
 
   dispose() {
@@ -66,9 +66,5 @@ export class DisposableComputation<R extends any> {
 
     this._disposed.set(true);
     this._computation.get();
-  }
-
-  static new(computation: () => void, opts?: DisposableComputationOpts) {
-    return new DisposableComputation(computation, opts);
   }
 }

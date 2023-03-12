@@ -7,7 +7,6 @@ import { Frame, FrameOpts } from './frame';
 import { Head } from './head';
 import { StateOpts, StateSubscriberOpts, StateWatcherOpts } from './interfaces';
 import { ChangeListenerSubscriber, Observer } from './observer';
-import { Resolver } from './resolver';
 import { toJS } from './utils';
 
 export class Reka {

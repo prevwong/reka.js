@@ -6,8 +6,8 @@ import {
   observable,
   runInAction,
 } from 'mobx';
-import { DisposableComputation } from './computation';
 
+import { DisposableComputation } from './computation';
 import { Reka } from './reka';
 import { Scope } from './scope';
 
