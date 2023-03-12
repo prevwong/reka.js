@@ -170,7 +170,6 @@ export class ViewEvaluator {
 
       this.viewObserver = new Observer(view, {
         id: `view-${this.rootTemplate.id}`,
-        batch: false,
         shouldIgnoreObservable: (_, __, value) => {
           if (value instanceof t.Template || value instanceof t.Component) {
             return true;
