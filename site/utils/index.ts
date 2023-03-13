@@ -1,3 +1,5 @@
+import cx from 'classnames';
+import { twMerge } from 'tailwind-merge';
 import { uniqueNamesGenerator, colors, animals } from 'unique-names-generator';
 
 export * from './collaboration';
@@ -51,3 +53,7 @@ export const CREATE_BEZIER_TRANSITION = (
   duration: opts.duration,
   delay: opts.delay,
 });
+
+export function cn(...inputs: cx.ArgumentArray) {
+  return twMerge(cx(inputs));
+}

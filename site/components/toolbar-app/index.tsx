@@ -24,8 +24,7 @@ export const ToolbarApp = observer(() => {
       <Collaborators />
       <Tooltip content="Toggle code editor">
         <Button
-          variant="secondary"
-          css={{ py: '$3', px: '$4' }}
+          variant={'primary'}
           onClick={() => {
             if (editor.mode === EditorMode.Code) {
               editor.setMode(EditorMode.UI);
@@ -43,7 +42,8 @@ export const ToolbarApp = observer(() => {
 
       <Tooltip content="Preview">
         <IconButton
-          css={{ py: '$3', px: '$3' }}
+          size="default"
+          variant="outline"
           onClick={() => {
             if (editor.mode === EditorMode.Preview) {
               editor.setMode(

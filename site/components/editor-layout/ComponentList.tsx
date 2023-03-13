@@ -58,13 +58,7 @@ const AddComponentModal = (props: AddComponentModalProps) => {
           />
         </InputItem>
         <Button
-          variant="primary"
-          css={{
-            mt: '$3',
-            justifyContent: 'center',
-            fontSize: '$2',
-            padding: '$2 $4',
-          }}
+          size="xs"
           onClick={() => {
             const safeComponentName = pascalCase(componentName);
 
@@ -140,11 +134,12 @@ export const ComponentList = (props: ComponentListProps) => {
         >
           {components.map((component) => (
             <Box
+              onClick={() => {
+                props.onComponentSelected(component);
+              }}
               key={component.id}
+              className="py-3 px-4"
               css={{
-                py: '$2',
-                px: '$4',
-
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -172,30 +167,6 @@ export const ComponentList = (props: ComponentListProps) => {
               <Text size="2" css={{ flex: 1, color: 'rgba(0,0,0,0.8)' }}>
                 {component.name}
               </Text>
-              <Tooltip
-                content={
-                  component instanceof t.RekaComponent
-                    ? ''
-                    : 'This is an external component, we cannot edit it'
-                }
-              >
-                <Box>
-                  <Button
-                    disabled={component instanceof t.RekaComponent !== true}
-                    onClick={() => {
-                      props.onComponentSelected(component);
-                    }}
-                    css={{
-                      cursor:
-                        component instanceof t.RekaComponent
-                          ? 'auto'
-                          : 'not-allowed',
-                    }}
-                  >
-                    Edit Component
-                  </Button>
-                </Box>
-              </Tooltip>
             </Box>
           ))}
         </Box>

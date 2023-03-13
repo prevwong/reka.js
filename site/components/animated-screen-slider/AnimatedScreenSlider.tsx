@@ -126,9 +126,7 @@ export const AnimatedScreenSlider = (props: AnimatedScreenSliderProps) => {
                 {paths.length > 0 && i > 0 && screen.hideBackButton !== true && (
                   <Box css={{ py: '$4', px: '$4' }}>
                     <Button
-                      css={{ ml: '-$3' }}
-                      transparent
-                      variant={'primary'}
+                      variant="link"
                       onClick={() => {
                         callbacks.goBack();
                       }}

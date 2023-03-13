@@ -128,19 +128,14 @@ const EachTemplateSettings = observer((props: SharedTemplateSettingsProps) => {
         />
       </Box>
       <Box css={{ mt: '$4' }}>
-        <Box css={{ display: 'flex', alignItems: 'center' }}>
-          <Text css={{ flex: 1, fontSize: '$1', color: '$grayA11' }}>
-            Expose Variables
-          </Text>
+        <Box className="mb-4" css={{ display: 'flex', alignItems: 'center' }}>
+          <span className="text-xs flex-1 text-gray-500">Expose Variables</span>
           {isExposingIndex === false && (
             <Button
-              tiny
-              transparent
-              variant="primary"
+              variant={'link'}
               onClick={() => {
                 setIsExposingIndex(true);
               }}
-              css={{ my: '-$1' }}
             >
               Add index variable
             </Button>

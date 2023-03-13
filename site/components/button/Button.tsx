@@ -1,127 +1,74 @@
+import { VariantProps, cva, cx } from 'class-variance-authority';
 import * as React from 'react';
 
-import { styled } from '@app/styles';
+import { cn } from '@app/utils';
 
-const StyledButton = styled('button', {
-  display: 'inline-flex',
-  alignItems: 'center',
-  backgroundColor: '$whiteA12',
-  borderRadius: '3px',
-  fontSize: '10px',
-  border: '1px solid $gray6',
-  outline: 'none',
-  padding: '$2 $3',
-  color: '$blackA11',
-  cursor: 'pointer',
-  fontWeight: '500',
-  '&:hover': {
-    backgroundColor: '$grayA2',
-  },
-  '&[disabled]': {
-    cursor: 'not-allowed',
-    boxShadow: 'none',
-  },
-  svg: {
-    width: '10px',
-    height: '10px',
-  },
-  variants: {
-    tiny: {
-      true: {
-        padding: '$1, $1',
+const buttonVariants = cva(
+  'inline-flex items-center border border-solid border-transparent justify-center rounded-md transition-colors focus:outline-none disabled:opacity-50  disabled:pointer-events-none ',
+  {
+    variants: {
+      variant: {
+        default: 'bg-transparent text-neutral-600 hover:bg-gray-100',
+        primary: 'bg-purple-100 text-purple-600 hover:bg-purple-200',
+        neutral: 'bg-neutral-100 text-neutral-500 hover:bg-neutral-400',
+        destructive:
+          'bg-red-500 text-white hover:bg-red-600 dark:hover:bg-red-600',
+        outline:
+          'bg-transparent border border-solid border-slate-200 hover:bg-slate-100 text-slate-500',
+        subtle: 'bg-transparent text-blue-600 hover:bg-blue-100',
+        ghost:
+          'bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-100 dark:hover:text-slate-100 data-[state=open]:bg-transparent dark:data-[state=open]:bg-transparent',
+        link: 'bg-transparent text-blue-600 hover:text-blue-500',
+      },
+      size: {
+        default: 'text-xs py-3 px-3 [&>svg]:w-3.5 [&>svg]:h-3.5',
+        xs: 'text-xs py-2 px-2 rounded-md [&>svg]:w-3.5 [&>svg]:h-3.5',
+        xxs: 'text-xs px-1 py-1 rounded-md [&>svg]:w-3 [&>svg]:h-3',
+        lg: 'h-11 px-8 rounded-md',
       },
     },
-    variant: {
-      primary: {
-        backgroundColor: '$indigoA9',
-        borderColor: '$indigoA7',
-        color: '$whiteA12',
-        '&:hover': {
-          backgroundColor: '$indigoA10',
-        },
+    compoundVariants: [
+      {
+        variant: 'link',
+        className: 'p-0',
       },
-      secondary: {
-        backgroundColor: '$secondary2',
-        borderColor: '$secondary2',
-        color: '$secondary5',
-        '&:hover': {
-          backgroundColor: '$secondary3',
-        },
-      },
-      danger: {
-        backgroundColor: '$red10',
-        borderColor: '$red10',
-        '&:hover': {
-          backgroundColor: '$red11',
-        },
-      },
-      bw: {
-        backgroundColor: '#000',
-        color: '#fff',
-        '&:hover': {
-          backgroundColor: '#222',
-        },
-      },
+    ],
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
     },
-    transparent: {
-      true: {
-        borderColor: 'transparent',
-        boxShadow: 'none',
-        backgroundColor: 'transparent',
-      },
-    },
-  },
-  compoundVariants: [
-    {
-      transparent: true,
-      variant: 'primary',
-      css: {
-        color: '$indigoA9',
-        backgroundColor: 'transparent',
-        borderColor: 'transparent',
-        '&:hover': {
-          backgroundColor: '$indigoA3',
-        },
-      },
-    },
-    {
-      transparent: true,
-      variant: 'danger',
-      css: {
-        color: '$redA10',
-        backgroundColor: 'transparent',
-        borderColor: 'transparent',
-        '&:hover': {
-          backgroundColor: '$redA3',
-        },
-      },
-    },
-  ],
-});
+  }
+);
 
-const StyledIconButton = styled(StyledButton, {
-  padding: '$2 $2',
-  boxShadow: 'none',
-});
-
-type ButtonProps = React.ComponentProps<typeof StyledButton>;
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {}
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, variant, size, className, ...props }, ref) => {
     return (
-      <StyledButton ref={ref} className="btn" {...props}>
+      <button
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      >
         {children}
-      </StyledButton>
+      </button>
     );
   }
 );
 
 export const IconButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, size, className, ...props }, ref) => {
     return (
-      <StyledIconButton ref={ref} className={'icon-btn'} {...props}>
+      <Button
+        ref={ref}
+        className={cx(className, 'padding-2 shadow-none')}
+        size={size || 'xs'}
+        {...props}
+      >
         {children}
-      </StyledIconButton>
+      </Button>
     );
   }
 );

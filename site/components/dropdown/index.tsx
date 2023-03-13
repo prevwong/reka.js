@@ -1,50 +1,6 @@
-import { mauve } from '@radix-ui/colors';
+import { cn } from '@app/utils';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import * as React from 'react';
-
-import { styled } from '@app/styles';
-
-const StyledContent = styled(DropdownMenuPrimitive.Content, {
-  minWidth: '140px',
-  backgroundColor: 'rgba(255,255,255,0.8)',
-  backdropFilter: 'blur(10px)',
-  borderRadius: '$1',
-  border: '1px solid $grayA2',
-  boxShadow:
-    'hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px',
-  zIndex: '$max',
-  '@media (prefers-reduced-motion: no-preference)': {
-    animationDuration: '400ms',
-    animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-    willChange: 'transform, opacity',
-  },
-});
-
-const StyledArrow = styled(DropdownMenuPrimitive.Arrow, {
-  fill: 'white',
-});
-
-const StyledItem = styled(DropdownMenuPrimitive.Item, {
-  all: 'unset',
-  fontSize: 10,
-  lineHeight: 1,
-  color: '$grayA12',
-  borderRadius: 0,
-  display: 'flex',
-  alignItems: 'center',
-  padding: '$3 $3',
-  position: 'relative',
-  cursor: 'pointer',
-
-  '&[data-disabled]': {
-    color: mauve.mauve8,
-    pointerEvents: 'none',
-  },
-
-  '&[data-highlighted]': {
-    backgroundColor: '$grayA2',
-  },
-});
 
 type DropdownItem = {
   title: string;
@@ -54,6 +10,7 @@ type DropdownItem = {
 type DropdownProps = {
   items: DropdownItem[];
   children: React.ReactNode;
+  className?: string;
 };
 
 export const Dropdown = React.forwardRef<HTMLButtonElement, DropdownProps>(
@@ -64,9 +21,22 @@ export const Dropdown = React.forwardRef<HTMLButtonElement, DropdownProps>(
           {props.children}
         </DropdownMenuPrimitive.Trigger>
         <DropdownMenuPrimitive.Portal>
-          <StyledContent {...props}>
+          <DropdownMenuPrimitive.Content
+            className={cn(
+              'animate-in data-[side=right]:slide-in-from-left-2 data-[side=left]:slide-in-from-right-2 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2 z-50 min-w-[8rem] overflow-hidden rounded-md border border-slate-100 bg-white p-1 text-slate-700 shadow-md',
+              props.className
+            )}
+          >
             {props.items.map((item) => (
-              <StyledItem
+              <DropdownMenuPrimitive.DropdownMenuItem
+                className={cn(
+                  `
+                  relative flex items-center rounded-md py-3 px-3
+                  cursor-pointer outline-none text-xs
+                  focus:bg-primary/90  focus:text-white
+                  data-[disabled]:pointer-events-none data-[disabled]:opacity-50
+                  `
+                )}
                 key={item.title}
                 onSelect={() => {
                   Promise.resolve().then(() => {
@@ -75,10 +45,10 @@ export const Dropdown = React.forwardRef<HTMLButtonElement, DropdownProps>(
                 }}
               >
                 {item.title}
-              </StyledItem>
+              </DropdownMenuPrimitive.DropdownMenuItem>
             ))}
-            <StyledArrow />
-          </StyledContent>
+            {/* <StyledArrow /> */}
+          </DropdownMenuPrimitive.Content>
         </DropdownMenuPrimitive.Portal>
       </DropdownMenuPrimitive.Root>
     );

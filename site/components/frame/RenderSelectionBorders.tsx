@@ -203,13 +203,7 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
               >
                 <IconButton
                   disabled={props.template.component.external}
-                  transparent
-                  css={{
-                    color: '#fff',
-                    '&:hover': {
-                      background: '$slateA5',
-                    },
-                  }}
+                  className="text-white hover:bg-slate-500"
                   onClick={() => {
                     const template = props.template;
 
@@ -238,13 +232,7 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
             )}
             <Tooltip content="View comments">
               <IconButton
-                transparent
-                css={{
-                  color: '#fff',
-                  '&:hover': {
-                    background: '$slateA5',
-                  },
-                }}
+                className="text-white hover:bg-slate-500"
                 onClick={() => {
                   activeComponentEditor.showComments(props.template);
                 }}

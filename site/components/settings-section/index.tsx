@@ -74,14 +74,13 @@ export const SettingSection = (props: SettingSectionProps) => {
             {props.info && <Info info={props.info} />}
           </span>
 
-          <IconButton transparent css={{ ml: '$2' }}>
+          <IconButton className="ml-1">
             <ChevronDownIcon />
           </IconButton>
         </header>
 
         {props.onAdd && (
           <IconButton
-            transparent
             onClick={(e) => {
               if (!props.onAdd) {
                 return;

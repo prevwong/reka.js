@@ -193,7 +193,8 @@ export const ComponentEditorView = observer(() => {
           {(editor.compactSidebar || editor.mode === EditorMode.Code) && (
             <Tooltip content="Toggle sidebar">
               <IconButton
-                css={{ mr: '$4' }}
+                className="mr-3"
+                variant={'outline'}
                 onClick={(e) => {
                   e.stopPropagation();
 
@@ -228,9 +229,9 @@ export const ComponentEditorView = observer(() => {
           )}
 
           <Button
-            css={{ ml: '$3', px: '$2' }}
-            transparent
-            variant="primary"
+            size="xs"
+            className="ml-2"
+            variant="subtle"
             onClick={() => {
               setShowAddFrameModal(true);
             }}
@@ -401,8 +402,7 @@ export const ComponentEditorView = observer(() => {
               render={
                 <React.Fragment>
                   <Button
-                    transparent
-                    variant="primary"
+                    size="xs"
                     onClick={() => {
                       setEditFrame(true);
                     }}
@@ -410,15 +410,18 @@ export const ComponentEditorView = observer(() => {
                     Edit Frame Props
                   </Button>
                   <Button
-                    transparent
-                    variant="danger"
+                    size="xs"
                     onClick={() => {
                       removeFrame();
                     }}
                   >
                     Remove Frame
                   </Button>
-                  <Button onClick={() => setShowViewTree(!showViewTree)}>
+                  <Button
+                    size="xs"
+                    variant="outline"
+                    onClick={() => setShowViewTree(!showViewTree)}
+                  >
                     Toggle View
                   </Button>
                 </React.Fragment>

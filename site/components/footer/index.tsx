@@ -1,48 +1,12 @@
 import * as React from 'react';
 
-import { styled } from '@app/styles';
-
-import { Box } from '../box';
-import { Text } from '../text';
-
-const StyledFooter = styled('div', {
-  px: '$4',
-  py: '$6',
-  borderTop: '1px solid $grayA5',
-  color: '$slate11',
-  fontSize: '$1',
-  display: 'flex',
-  a: {
-    textDecoration: 'underline',
-  },
-});
 export const Footer = () => {
   return (
-    <StyledFooter>
-      <Box
-        css={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '$3',
-          margin: '0 auto',
-          width: 'auto',
-          flex: 1,
-        }}
-      >
-        <Box>
+    <div className="px-4 py-6 border-t border-solid border-t-gray-200 text-xs text-slate-900 flex [&>a]:text-decoration-none">
+      <div className="flex flex-col gap-3 m-auto w-auto flex-1">
+        <div>
           Made with{' '}
-          <Text
-            css={{
-              fontSize: 'inherit',
-              color: '$primary',
-              display: 'inline',
-              lineHeight: 'inherit',
-              margin: 0,
-            }}
-          >
-            ♥︎
-          </Text>{' '}
-          by{' '}
+          <span className="text-inherit text-primary inline m-0">♥︎</span> by{' '}
           <a
             href="https://twitter.com/prevwong"
             target="_blank"
@@ -50,8 +14,8 @@ export const Footer = () => {
           >
             @prevwong
           </a>
-        </Box>
-        <Box>
+        </div>
+        <div>
           Reka is released under the{' '}
           <a
             href="https://github.com/prevwong/reka.js/blob/main/LICENSE"
@@ -60,8 +24,8 @@ export const Footer = () => {
           >
             MIT license
           </a>
-        </Box>
-      </Box>
-    </StyledFooter>
+        </div>
+      </div>
+    </div>
   );
 };
