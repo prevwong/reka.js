@@ -2,6 +2,7 @@ import {
   DotsHorizontalIcon,
   DoubleArrowRightIcon,
 } from '@radix-ui/react-icons';
+import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
@@ -9,13 +10,11 @@ import * as React from 'react';
 import { useEditor, useEditorActiveComponent } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
-import { styled } from '@app/styles';
 import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
 import { AddFrameModal } from './AddFrameModal';
 import { EditPreviewSize } from './EditPreviewSize';
 
-import { Box } from '../box';
 import { Button, IconButton } from '../button';
 import { Dropdown } from '../dropdown';
 import { RenderFrame } from '../frame/RenderFrame';
@@ -24,79 +23,22 @@ import { MobileFallback } from '../mobile-fallback';
 import { Popover } from '../popover';
 import { Select } from '../select';
 import { Switch } from '../switch';
-import { Text } from '../text';
 import { Tooltip } from '../tooltip';
 import { Tree } from '../tree';
 
-const StyledFrameContainer = styled('div', {
-  width: '100%',
-  height: '100%',
-  overflow: 'hidden',
-  display: 'flex',
-  alignItems: 'center',
-  backgroundColor: '$grayA5',
-});
-
 const TOOLBAR_HEIGHT = 40;
-
-const Toolbar = styled(motion.div, {
-  display: 'flex',
-  px: '$4',
-  py: '$3',
-  borderBottom: '1px solid $grayA5',
-  width: '100%',
-  height: TOOLBAR_HEIGHT,
-  alignItems: 'center',
-  position: 'relative',
-  zIndex: '$4',
-  background: '#fff',
-});
 
 const BOTTOM_TOOLBAR_HEIGHT = 40;
 
-const BottomToolbar = styled(motion.div, {
-  display: 'flex',
-  alignItems: 'center',
-  borderTop: '1px solid $grayA5',
-  px: '$4',
-  py: '$3',
-  position: 'relative',
-  zIndex: '$2',
-  background: '#fff',
-  height: `${BOTTOM_TOOLBAR_HEIGHT}px`,
-});
-
-const StyledViewContainer = styled('div', {
-  position: 'relative',
-  background: 'rgba(255,255,255,0.9)',
-  width: '350px',
-  '> div': {
-    px: '$2',
-    py: '$4',
-    overflow: 'auto',
-    width: '100%',
-    height: '100%',
-  },
-});
-
 const NoFrameSelectedMessage = () => {
   return (
-    <Box
-      css={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-        height: '100%',
-        width: '100%',
-      }}
-    >
-      <Text css={{ color: '$grayA9', lineHeight: '1.5rem' }}>
+    <div className="flex items-center justify-center text-center h-full w-full">
+      <span className="text-neutral-900">
         No frame selected.
         <br />
         Click &quot;Add new Frame&quot; to create one.
-      </Text>
-    </Box>
+      </span>
+    </div>
   );
 };
 
@@ -145,30 +87,15 @@ export const ComponentEditorView = observer(() => {
 
   if (!componentEditor) {
     return (
-      <Box
-        css={{
-          height: '100%',
-          textAlign: 'center',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Text css={{ color: '$grayA9' }}>No component selected</Text>
-      </Box>
+      <div className="h-full text-center flex items-center justify-center">
+        <span className="text-neutral-900">No component selected</span>
+      </div>
     );
   }
   return (
-    <Box
-      css={{
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-      }}
-      ref={containerDOMRef}
-    >
-      <Toolbar
+    <div className="relative flex flex-col h-full" ref={containerDOMRef}>
+      <motion.div
+        className={`flex items-center px-4 py-3 border-b border-solid border-outline w-full relative z-40 bg-white h-[${TOOLBAR_HEIGHT}px]`}
         initial={false}
         animate={editor.mode === EditorMode.Preview ? 'exit' : 'enter'}
         variants={{
@@ -183,13 +110,7 @@ export const ComponentEditorView = observer(() => {
         }}
         transition={CREATE_BEZIER_TRANSITION()}
       >
-        <Box
-          css={{
-            flex: 1,
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
+        <div className="flex flex-1 items-center">
           {(editor.compactSidebar || editor.mode === EditorMode.Code) && (
             <Tooltip content="Toggle sidebar">
               <IconButton
@@ -213,7 +134,7 @@ export const ComponentEditorView = observer(() => {
             </Tooltip>
           )}
 
-          <Text css={{ mr: '$4' }}>{componentEditor.component.name}</Text>
+          <span className="mr-4">{componentEditor.component.name}</span>
           {frames.length > 0 && (
             <Select
               placeholder="Select a frame"
@@ -239,8 +160,8 @@ export const ComponentEditorView = observer(() => {
             Add Frame
           </Button>
           <Info info="A Frame is an instance of a Reka Component" />
-        </Box>
-        <Box css={{ display: 'flex', alignItems: 'center' }}>
+        </div>
+        <div className="flex items-center">
           <MobileFallback
             fallback={
               <Popover
@@ -250,57 +171,48 @@ export const ComponentEditorView = observer(() => {
                   </IconButton>
                 }
               >
-                <Box
-                  css={{ display: 'flex', flexDirection: 'column', gap: '$3' }}
-                >
+                <div className="flex flex-col gap-3">
                   <EditPreviewSize frames={frames} />
-                </Box>
+                </div>
               </Popover>
             }
             render={<EditPreviewSize frames={frames} />}
           />
-        </Box>
-      </Toolbar>
+        </div>
+      </motion.div>
 
-      <Box
-        css={{
-          position: 'relative',
-          flex: 1,
-          height: '100%',
-          display: 'flex',
-          minHeight: 0,
-        }}
-      >
+      <div className="relative flex flex-1 h-full min-h-0">
         {!componentEditor.activeFrame ? (
           <NoFrameSelectedMessage />
         ) : (
           <React.Fragment>
-            <StyledFrameContainer
+            <div
+              className={classNames(
+                `w-full h-full overflow-hidden flex items-center bg-outline transition-ease`,
+                {
+                  'filter-grayscale': componentEditor.activeFrame.state.sync,
+                }
+              )}
               ref={frameContainerDOMRef}
-              css={{
-                filter: `grayscale(${
-                  componentEditor.activeFrame.state.sync ? 0 : 1
-                })`,
-                transition: '0.2s ease-in',
-              }}
             >
               <RenderFrame
                 width={componentEditor.activeFrame.user.width}
                 height={componentEditor.activeFrame.user.height}
                 frame={componentEditor.activeFrame}
               />
-            </StyledFrameContainer>
+            </div>
 
             {componentEditor.activeFrame.state.view && showViewTree && (
-              <StyledViewContainer>
+              <div className="relative bg-white w-${350px} [&>div]:px-2 [&>div]:py-4 [&>div]:overflow-auto [&>div]:w-full [&>div]:h-full">
                 <Tree root={componentEditor.activeFrame.state.view} />
-              </StyledViewContainer>
+              </div>
             )}
           </React.Fragment>
         )}
-      </Box>
+      </div>
       {componentEditor.activeFrame && (
-        <BottomToolbar
+        <motion.div
+          className={`flex items-center border-t border-solid border-black/5 px-4 py-3 relative z-20 bg-white h-[${BOTTOM_TOOLBAR_HEIGHT}]px`}
           initial={false}
           animate={editor.mode === EditorMode.Preview ? 'exit' : 'enter'}
           variants={{
@@ -315,14 +227,8 @@ export const ComponentEditorView = observer(() => {
           }}
           transition={CREATE_BEZIER_TRANSITION()}
         >
-          <Box
-            css={{
-              display: 'flex',
-              alignItems: 'center',
-              flex: 1,
-            }}
-          >
-            <Box css={{ display: 'flex', alignItems: 'center', gap: '$3' }}>
+          <div className="flex items-center flex-1">
+            <div className="flex items-center gap-3">
               <Switch
                 onChange={() => {
                   if (componentEditor.activeFrame?.state.sync) {
@@ -335,40 +241,21 @@ export const ComponentEditorView = observer(() => {
                 checked={componentEditor.activeFrame.state.sync}
               />
 
-              <Text
-                size={1}
-                css={{
-                  display: 'flex',
-                  gap: '$2',
-                  fontSize: '10px',
-                  color: '$slate10',
-                  alignItems: 'center',
-                }}
-              >
+              <span className="text-[10px] flex gap-2 text-neutral-600 items-center">
                 {componentEditor.activeFrame?.state.sync
                   ? 'Synching'
                   : 'Not synching'}
-                <Box>
-                  <Info
-                    info={
-                      componentEditor.activeFrame.state.sync
-                        ? "The Frame's View tree will be updated when there's a change made to State"
-                        : 'Frame will not recompute its View tree'
-                    }
-                  />
-                </Box>
-              </Text>
-            </Box>
-          </Box>
-          <Box
-            css={{
-              display: 'flex',
-              alignItems: 'center',
-              alignSelf: 'flex-end',
-              justifySelf: 'flex-end',
-              gap: '$2',
-            }}
-          >
+                <Info
+                  info={
+                    componentEditor.activeFrame.state.sync
+                      ? "The Frame's View tree will be updated when there's a change made to State"
+                      : 'Frame will not recompute its View tree'
+                  }
+                />
+              </span>
+            </div>
+          </div>
+          <div className="flex gap-2 items-center self-end justify-self-end">
             <MobileFallback
               size={1200}
               fallback={
@@ -427,8 +314,8 @@ export const ComponentEditorView = observer(() => {
                 </React.Fragment>
               }
             />
-          </Box>
-        </BottomToolbar>
+          </div>
+        </motion.div>
       )}
 
       <AddFrameModal
@@ -444,6 +331,6 @@ export const ComponentEditorView = observer(() => {
           setEditFrame(false);
         }}
       />
-    </Box>
+    </div>
   );
 });

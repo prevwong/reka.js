@@ -5,68 +5,7 @@ import { IObservable, IObservableArray, isObservable, observe } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { styled } from '@app/styles';
-
-const TreeVisualizationContainer = styled('div', {
-  lineHeight: '20px',
-  '.property-name': {
-    color: '$grayA11',
-  },
-  '.value-container': {
-    color: '#93a1a1',
-  },
-  '.primitive-value': {
-    color: '#323232',
-    fontWeight: '500',
-  },
-  ul: {
-    margin: 0,
-    paddingLeft: '10px',
-  },
-  '> ul': {
-    cursor: 'default',
-    boxSizing: 'border-box',
-    flex: 1,
-  },
-  '.value-body': {
-    minWidth: '300px',
-  },
-  'li.entry': {
-    margin: 0,
-    listStyle: 'none',
-    padding: '2px 4px',
-
-    transition: '0.2s ease-in-out',
-    '&.change': {
-      background: '#ccc',
-    },
-    '.entry > .value': {
-      whiteSpace: 'pre-wrap',
-    },
-    '.entry > .value .s': {
-      cursor: 'text',
-    },
-    '.tokenName': {
-      color: '$indigoA9',
-    },
-    '.tokenName, .entry.toggable > span > .key': {
-      cursor: 'pointer',
-      position: 'relative',
-      '&:after': {
-        position: 'absolute',
-        content: '',
-        width: '100%',
-        height: '1px',
-        borderTOp: '1px dotted rgba(0,0,0,0.2)',
-        left: 0,
-        bottom: 0,
-      },
-    },
-    '.tokenName:hover, .entry.toggable > span > .key:hover': {
-      textDecoration: 'underline',
-    },
-  },
-});
+import { cn } from '@app/utils';
 
 const PropertyName = ({ name, onClick }: any) => {
   return (
@@ -334,23 +273,24 @@ const Element = observer(
 type TreeProps = {
   root: t.Type | undefined;
   shouldCollapseOnInitial?: boolean;
-} & React.ComponentProps<typeof TreeVisualizationContainer>;
+  className?: string;
+};
 
 export const Tree = observer(
-  ({ root, shouldCollapseOnInitial, ...props }: TreeProps) => {
+  ({ root, shouldCollapseOnInitial, className }: TreeProps) => {
     if (!root) {
       return null;
     }
 
     return (
-      <TreeVisualizationContainer {...props}>
+      <div className={cn('tree-viewer', className)}>
         <ul>
           <Element
             value={root}
             shouldCollapseOnInitial={shouldCollapseOnInitial}
           />
         </ul>
-      </TreeVisualizationContainer>
+      </div>
     );
   }
 );

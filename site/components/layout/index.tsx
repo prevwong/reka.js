@@ -4,10 +4,8 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
-import { styled } from '@app/styles';
-
 import { Footer } from '../footer';
-import { Header } from '../header';
+import { Header, HEADER_HEIGHT } from '../header';
 
 type MetaProps = {
   title: string;
@@ -19,12 +17,6 @@ type LayoutProps = {
 };
 
 const SITE_TITLE = 'Reka.js';
-
-const Content = styled(motion.div, {
-  position: 'relative',
-  top: '50px',
-  height: 'calc(100vh - 50px)',
-});
 
 export const Layout = observer((props: LayoutProps) => {
   const router = useRouter();
@@ -40,10 +32,12 @@ export const Layout = observer((props: LayoutProps) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <Header />
-      <Content>
+      <motion.div
+        className={`relative top-${HEADER_HEIGHT}px h-[calc(100vh-${HEADER_HEIGHT}px)]`}
+      >
         {props.children}
         {router.pathname !== '/' && <Footer />}
-      </Content>
+      </motion.div>
     </React.Fragment>
   );
 });

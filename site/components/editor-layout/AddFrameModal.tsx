@@ -3,13 +3,10 @@ import * as React from 'react';
 
 import { useEditor } from '@app/editor';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
-import { styled } from '@app/styles';
 
-import { Box } from '../box';
 import { Button } from '../button';
 import { Modal } from '../modal';
 import { PairInput } from '../pair-input';
-import { Text } from '../text';
 import { TextField } from '../text-field';
 
 type AddFrameModalProps = {
@@ -18,13 +15,6 @@ type AddFrameModalProps = {
   isOpen?: boolean;
   onClose: () => void;
 };
-
-const InputItem = styled(Box, {
-  display: 'grid',
-  alignItems: 'center',
-  gridTemplateColumns: '80px 1fr',
-  width: '100%',
-});
 
 const getInitialComponentProps = (
   component: t.Component,
@@ -72,17 +62,10 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
       isOpen={props.isOpen}
       onClose={() => props.onClose()}
     >
-      <Box
-        css={{
-          display: 'flex',
-          mt: '$5',
-          flexDirection: 'column',
-          gap: '20px',
-        }}
-      >
+      <div className="flex flex-col mt-5 gap-5">
         {!props.frameId && (
-          <InputItem>
-            <Text size="1">Name</Text>
+          <div className="grid w-full items-center grid-cols-pair-input">
+            <span className="text-xs">Name</span>
             <TextField
               placeholder="Frame #1"
               value={frameName}
@@ -90,12 +73,12 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
                 setFrameName(e.target.value);
               }}
             />
-          </InputItem>
+          </div>
         )}
 
-        <InputItem>
-          <Text size="1">Props</Text>
-          <Box>
+        <div className="grid grid-cols-pair-input items-center w-full">
+          <span className="text-xs">Props</span>
+          <div>
             <PairInput
               addingNewField={true}
               onChange={(id, value) => {
@@ -118,8 +101,8 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
                 ];
               }, [] as any[])}
             />
-          </Box>
-        </InputItem>
+          </div>
+        </div>
         <Button
           variant="primary"
           css={{
@@ -150,7 +133,7 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
         >
           {props.frameId ? 'Update' : 'Create'} Frame
         </Button>
-      </Box>
+      </div>
     </Modal>
   );
 };

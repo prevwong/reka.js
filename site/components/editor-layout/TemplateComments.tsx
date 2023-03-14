@@ -5,9 +5,7 @@ import * as React from 'react';
 import { useEditor } from '@app/editor';
 import { ActiveFrame } from '@app/editor/ComponentEditor';
 import { Comment, CommentExtension } from '@app/extensions/CommentExtension';
-import { styled } from '@app/styles';
 
-import { Box } from '../box';
 import { Text } from '../text';
 import { TextField } from '../text-field';
 import { UserAvatar } from '../user-avatar';
@@ -15,24 +13,6 @@ import { UserAvatar } from '../user-avatar';
 type TemplateCommentsProps = {
   activeFrame: ActiveFrame;
 };
-
-const StyledContainer = styled('div', {
-  background: 'rgba(255,255,255,0.8)',
-  backdropFilter: 'blur(10px)',
-  display: 'flex',
-  flexDirection: 'column',
-  position: 'fixed',
-  width: '250px',
-  zIndex: '$4',
-  borderRadius: '$2',
-  boxShadow: '0px 0px 30px 10px rgb(0 0 0 / 12%)',
-});
-
-const StyledCommentItem = styled('div', {
-  py: '$3',
-  display: 'flex',
-  gap: '$3',
-});
 
 type InternalTemplateCommentsProps = {
   iframeDOM: HTMLIFrameElement;
@@ -131,8 +111,11 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
   }, [editor, props.iframeDOM]);
 
   return (
-    <StyledContainer ref={containerRef}>
-      <Box css={{ maxHeight: '200px', overflow: 'auto', px: '$4', py: '$4' }}>
+    <div
+      className="bg-white/80 backdrop-blur-md flex flex-col fixed w-54 z-20 rounded-sm shadow-md"
+      ref={containerRef}
+    >
+      <div className="overflow-auto px-4 py-4 max-h-52">
         {comments.length === 0 ? (
           <Text size={1} css={{ color: '$gray10' }}>
             No comments yet
@@ -144,17 +127,11 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
               .sort((a, b) => (a.date < b.date ? 1 : -1))
               .map((comment, i) => {
                 return (
-                  <StyledCommentItem key={i}>
-                    <Box css={{ mt: '$1' }}>
+                  <div className="py-3 gap-2 flex" key={i}>
+                    <div className="mt-1">
                       <UserAvatar user={comment.user} />
-                    </Box>
-                    <Box
-                      css={{
-                        flex: 1,
-                        display: 'flex',
-                        flexDirection: 'column',
-                      }}
-                    >
+                    </div>
+                    <div className="flex flex-col flex-1">
                       <Text
                         size={2}
                         css={{ mb: '$2', fontWeight: 500, color: '$slate11' }}
@@ -169,14 +146,14 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
                           addSuffix: true,
                         })}
                       </Text>
-                    </Box>
-                  </StyledCommentItem>
+                    </div>
+                  </div>
                 );
               })}
           </React.Fragment>
         )}
-      </Box>
-      <Box css={{ px: '$4', pb: '$4' }}>
+      </div>
+      <div className="px-4 pb-4">
         <TextField
           placeholder="Add a new comment"
           value=""
@@ -198,8 +175,8 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
             });
           }}
         />
-      </Box>
-    </StyledContainer>
+      </div>
+    </div>
   );
 };
 

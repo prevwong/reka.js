@@ -5,8 +5,7 @@ import * as React from 'react';
 
 import { useEditor } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
-import { styled } from '@app/styles';
-import { CREATE_BEZIER_TRANSITION } from '@app/utils';
+import { cn, CREATE_BEZIER_TRANSITION } from '@app/utils';
 
 import { ComponentEditorView } from './ComponentEditorView';
 import { ComponentList } from './ComponentList';
@@ -15,74 +14,19 @@ import { ComponentSettings } from './component-settings';
 import { TemplateSettings } from './template-settings';
 
 import { AnimatedScreenSlider } from '../animated-screen-slider/AnimatedScreenSlider';
-import { Box } from '../box';
 import { CodeEditor } from '../code-editor';
-
-const StyledScreen = styled('div', {
-  display: 'flex',
-  flexDirection: 'row',
-  overflow: 'hidden',
-  background: '#fff',
-  height: '100%',
-  position: 'relative',
-  flex: 1,
-});
 
 const LEFT_SIDEBAR_WIDTH = 250;
 const RIGHT_SIDEBAR_UI_WIDTH = 300;
 const RIGHT_SIDEBAR_CODE_WIDTH = 500;
 
-const StyledLeftSidebarContainer = styled(motion.div, {
-  overflow: 'auto',
-  position: 'relative',
-  height: '100%',
-  width: `${LEFT_SIDEBAR_WIDTH}px`,
-  display: 'flex',
-  flexDirection: 'column',
-  borderRight: '1px solid $grayA5',
-  background: 'rgba(255,255,255,0.8)',
-  backdropFilter: 'blur(10px)',
-  marginLeft: 0,
-});
-
-const StyledRightSidebarContainer = styled(motion.div, {
-  width: `${RIGHT_SIDEBAR_UI_WIDTH}px`,
-  background: '#fff',
-  borderLeft: '1px solid $grayA5',
-  position: 'relative',
-  height: '100%',
-});
-
-const StyledCodeContainer = styled(motion.div, {
-  position: 'absolute',
-  top: 0,
-  right: 0,
-  background: '#fff',
-  width: '100%',
-  height: '100%',
-});
-
-const StyledSettingsEditor = styled(motion.div, {
-  overflow: 'auto',
-  position: 'absolute',
-  background: '#fff',
-  height: '100%',
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  top: 0,
-  right: 0,
-});
-
-const StyledFrameView = styled(motion.div, {
-  background: '#fff',
-  height: '100%',
-  transition: '0.2s ease-in',
-  flex: 1,
-});
-
 export const EditorLayout = observer(
-  (props: React.ComponentProps<typeof StyledScreen>) => {
+  (
+    props: React.DetailedHTMLProps<
+      React.HTMLAttributes<HTMLDivElement>,
+      HTMLDivElement
+    >
+  ) => {
     const editor = useEditor();
 
     const leftSidebarDomRef = React.useRef<HTMLDivElement | null>(null);
@@ -121,8 +65,15 @@ export const EditorLayout = observer(
     }, [editor]);
 
     return (
-      <StyledScreen {...props}>
-        <StyledLeftSidebarContainer
+      <div
+        {...props}
+        className={cn(
+          props.className,
+          'flex overflow-hidden bg-white h-full relative flex-1'
+        )}
+      >
+        <motion.div
+          className={`overflow-auto relative h-full flex flex-col border-r border-solid border-outline bg-white/80 backdrop-blur-md ml-0 w-[${LEFT_SIDEBAR_WIDTH}px]`}
           initial={false}
           animate={[
             leftSidebarAnimate,
@@ -134,7 +85,7 @@ export const EditorLayout = observer(
           variants={{
             compact: {
               position: 'absolute',
-              zIndex: '100',
+              zIndex: '30',
             },
             standard: {
               position: 'relative',
@@ -148,9 +99,9 @@ export const EditorLayout = observer(
           }}
           transition={CREATE_BEZIER_TRANSITION({ delay: 0.2 })}
         >
-          <Box css={{ position: 'relative', minWidth: LEFT_SIDEBAR_WIDTH }}>
+          <div className="relative" style={{ minWidth: LEFT_SIDEBAR_WIDTH }}>
             <GlobalSettings />
-            <Box css={{ position: 'relative', flex: 1 }}>
+            <div className="relative flex-1">
               <AnimatedScreenSlider
                 goBackText="Components"
                 active={'component-list'}
@@ -194,10 +145,11 @@ export const EditorLayout = observer(
                   },
                 ]}
               />
-            </Box>
-          </Box>
-        </StyledLeftSidebarContainer>
-        <StyledFrameView
+            </div>
+          </div>
+        </motion.div>
+        <motion.div
+          className="bg-white h-full transition flex-1"
           style={{
             width: `calc(100vw - ${
               LEFT_SIDEBAR_WIDTH +
@@ -206,8 +158,9 @@ export const EditorLayout = observer(
           }}
         >
           <ComponentEditorView />
-        </StyledFrameView>
-        <StyledRightSidebarContainer
+        </motion.div>
+        <motion.div
+          className={`bg-white border-l border-solid border-outline relative h-full w-[${RIGHT_SIDEBAR_UI_WIDTH}px]`}
           initial={false}
           animate={editor.mode}
           variants={{
@@ -219,7 +172,8 @@ export const EditorLayout = observer(
         >
           <AnimatePresence initial={false}>
             {editor.mode === EditorMode.Code && (
-              <StyledCodeContainer
+              <motion.div
+                className="absolute top-0 left-0 bg-white w-full h-full"
                 initial="enter"
                 animate="show"
                 exit="hide"
@@ -240,13 +194,14 @@ export const EditorLayout = observer(
                 transition={CREATE_BEZIER_TRANSITION()}
               >
                 <CodeEditor />
-              </StyledCodeContainer>
+              </motion.div>
             )}
           </AnimatePresence>
 
           <AnimatePresence initial={false}>
             {editor.mode === EditorMode.UI && (
-              <StyledSettingsEditor
+              <motion.div
+                className="overflow-auto absolute bg-white w-full h-full flex flex-col top-0 right-0"
                 initial="enter"
                 animate="show"
                 exit="hide"
@@ -264,11 +219,11 @@ export const EditorLayout = observer(
                 transition={CREATE_BEZIER_TRANSITION()}
               >
                 <TemplateSettings />
-              </StyledSettingsEditor>
+              </motion.div>
             )}
           </AnimatePresence>
-        </StyledRightSidebarContainer>
-      </StyledScreen>
+        </motion.div>
+      </div>
     );
   }
 );

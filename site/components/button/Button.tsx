@@ -9,15 +9,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: 'bg-transparent text-neutral-600 hover:bg-gray-100',
-        primary: 'bg-purple-100 text-purple-600 hover:bg-purple-200',
-        neutral: 'bg-neutral-100 text-neutral-500 hover:bg-neutral-400',
-        destructive:
-          'bg-red-500 text-white hover:bg-red-600 dark:hover:bg-red-600',
+        primary: 'bg-primary/10 text-primary hover:bg-primary/20',
+        secondary: 'bg-purple-100 text-purple-600 hover:bg-purple-200',
         outline:
-          'bg-transparent border border-solid border-slate-200 hover:bg-slate-100 text-slate-500',
+          'bg-transparent border border-solid border-slate-200 hover:bg-slate-100 text-slate-500 shadow-sm',
         subtle: 'bg-transparent text-blue-600 hover:bg-blue-100',
-        ghost:
-          'bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-100 dark:hover:text-slate-100 data-[state=open]:bg-transparent dark:data-[state=open]:bg-transparent',
         link: 'bg-transparent text-blue-600 hover:text-blue-500',
       },
       size: {
@@ -48,7 +44,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ children, variant, size, className, ...props }, ref) => {
     return (
       <button
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(buttonVariants({ variant, size }), className)}
         ref={ref}
         {...props}
       >
@@ -63,7 +59,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Button
         ref={ref}
-        className={cx(className, 'padding-2 shadow-none')}
+        className={cx(className, 'padding-2')}
         size={size || 'xs'}
         {...props}
       >

@@ -3,7 +3,6 @@ import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { Box } from '@app/components/box';
 import { Button } from '@app/components/button';
 import { ExpressionInput } from '@app/components/expression-input';
 import { SettingSection } from '@app/components/settings-section';
@@ -25,7 +24,7 @@ const ConditionalTemplateSetting = observer(
         info={'Render this template conditionally'}
         collapsedOnInitial={false}
       >
-        <Box>
+        <div>
           <ExpressionInput
             value={props.template.if}
             placeholder="counter > 0"
@@ -40,7 +39,7 @@ const ConditionalTemplateSetting = observer(
               });
             }}
           />
-        </Box>
+        </div>
       </SettingSection>
     );
   }
@@ -110,7 +109,7 @@ const EachTemplateSettings = observer((props: SharedTemplateSettingsProps) => {
       info={'Render this template for each item in an array/list'}
       collapsedOnInitial={false}
     >
-      <Box css={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+      <div className="flex gap-2.5 items-center">
         <ExpressionInput
           placeholder="array"
           value={props.template.each?.iterator}
@@ -126,9 +125,9 @@ const EachTemplateSettings = observer((props: SharedTemplateSettingsProps) => {
             commitValue(iterator, alias, index);
           }}
         />
-      </Box>
-      <Box css={{ mt: '$4' }}>
-        <Box className="mb-4" css={{ display: 'flex', alignItems: 'center' }}>
+      </div>
+      <div className="mt-4">
+        <div className="mb-4 flex items-center">
           <span className="text-xs flex-1 text-gray-500">Expose Variables</span>
           {isExposingIndex === false && (
             <Button
@@ -140,11 +139,9 @@ const EachTemplateSettings = observer((props: SharedTemplateSettingsProps) => {
               Add index variable
             </Button>
           )}
-        </Box>
+        </div>
 
-        <Box
-          css={{ mt: '$3', display: 'flex', gap: '10px', alignItems: 'center' }}
-        >
+        <div className="mt-3 flex gap-2.5 items-center">
           <Text css={{ color: '$grayA9', fontSize: '$1' }}>For</Text>
           <TextField
             placeholder="item"
@@ -194,8 +191,8 @@ const EachTemplateSettings = observer((props: SharedTemplateSettingsProps) => {
               />
             </React.Fragment>
           )}
-        </Box>
-      </Box>
+        </div>
+      </div>
     </SettingSection>
   );
 });

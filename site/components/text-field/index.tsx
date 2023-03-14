@@ -1,85 +1,14 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
-import cx from 'classnames';
 import * as React from 'react';
 
-import { styled } from '@app/styles';
+import { cn } from '@app/utils';
 
-import { Box } from '../box';
 import { IconButton } from '../button';
-import { Text } from '../text';
 
-const StyledInputField = styled('input', {
-  background: 'transparent',
-
-  outline: 'none',
-  boxShadow: 'none',
-  padding: '$2 $3',
-  color: 'rgba(0,0,0,0.8)',
-  transition: '0.2s ease-in',
-  border: 'none',
-  position: 'relative',
-  width: '100%',
-  fontSize: '$1',
-
-  [`& ${IconButton}`]: {
-    opacity: 0,
-  },
-  [`&:hover`]: {
-    [`& ${IconButton}`]: {
-      opacity: 1,
-    },
-  },
-});
-
-const StyledBadge = styled('div', {
-  padding: '$1 $2',
-  borderRadius: '100px',
-  background: 'rgb(0 0 0 / 11%)',
-  color: 'rgba(0 0 0 / 80%)',
-});
-
-const StyledInputFieldContainer = styled('div', {
-  position: 'relative',
-  border: '1px solid $grayA5',
-  display: 'flex',
-  alignItems: 'center',
-  borderRadius: '$1',
-  '&.error': {
-    borderColor: '$red8',
-  },
-
-  variants: {
-    transparent: {
-      true: {
-        border: 'none',
-      },
-    },
-    badge: {
-      true: {
-        [`& ${StyledBadge}`]: {
-          position: 'absolute',
-          right: '5px',
-          fontSize: '9px',
-          transform: 'translateY(-50%)',
-          top: '50%',
-          opacity: 0,
-          transition: '0.2s ease-in',
-        },
-        [`& ${StyledInputField}`]: {
-          width: '100%',
-          paddingRight: '80px',
-        },
-        [`&:hover`]: {
-          [`& ${StyledBadge}`]: {
-            opacity: 1,
-          },
-        },
-      },
-    },
-  },
-});
-
-type InputFieldProps = React.ComponentProps<typeof StyledInputField> & {
+type InputFieldProps = React.DetailedHTMLProps<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  HTMLInputElement
+> & {
   badge?: string;
   transparent?: boolean;
   children?: React.ReactNode;
@@ -95,7 +24,6 @@ export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
       transparent,
       badge,
       children,
-      css,
       onCancel,
       onCommit,
       onChange,
@@ -143,16 +71,19 @@ export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
     };
 
     return (
-      <StyledInputFieldContainer
-        badge={!!badge}
-        transparent={transparent}
-        css={css}
-        className={cx('text-field', className, {
-          error: !!hasError,
-        })}
+      <div
+        className={cn(
+          'group flex-1 relative border border-solid border-outline flex items-center rounded-sm',
+          {
+            'border-red-400': !!hasError,
+            'border-none': transparent,
+          },
+          className
+        )}
       >
-        <StyledInputField
+        <input
           {...props}
+          className="bg-transparent outline-none shadow-none py-2 px-3 text-black/80 transition border-none relative w-full text-xs"
           value={onCommit ? uncommittedValue : value}
           onChange={(e) => {
             setHasError('');
@@ -181,15 +112,15 @@ export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           }}
           ref={ref}
         />
-        {badge && <StyledBadge>{badge}</StyledBadge>}
+        {badge && (
+          <div className="absolute right-[5px] top-[50%] -translate-y-[50%] transition text-xss opacity-0 group-hover:opacity-1 px-2 py-1 rounded-full bg-black/10 text-black/80">
+            {badge}
+          </div>
+        )}
         {children}
         {onCancel && (
           <IconButton
-            css={{
-              background: 'none',
-              border: 'none',
-              mr: '$2',
-            }}
+            className="bg-none border-none  opacity-0 group-hover:opacity-100"
             onClick={() => {
               cancel();
             }}
@@ -198,22 +129,11 @@ export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           </IconButton>
         )}
         {hasError && (
-          <Box
-            css={{
-              position: 'absolute',
-              left: 'calc(0% - 1px)',
-              top: 'calc(100% - 2px)',
-              width: 'calc(100% + 2px)',
-              padding: '$2 $4',
-              background: '$red8',
-            }}
-          >
-            <Text size={1} css={{ color: 'white' }}>
-              {hasError}
-            </Text>
-          </Box>
+          <div className="absolute left-0 top-full w-full text-xs px-3 py-3 bg-red-300 text-white z-2">
+            {hasError}
+          </div>
         )}
-      </StyledInputFieldContainer>
+      </div>
     );
   }
 );

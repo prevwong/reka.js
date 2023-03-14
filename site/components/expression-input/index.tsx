@@ -1,51 +1,12 @@
 import { Parser } from '@rekajs/parser';
 import * as t from '@rekajs/types';
+import classNames from 'classnames';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 
-import { styled } from '@app/styles';
-
-import { Box } from '../box';
 import { Info } from '../info';
-import { Text } from '../text';
 import { TextField } from '../text-field';
-
-const StyledValueField = styled('div', {
-  position: 'relative',
-  width: '100%',
-});
-
-const StyledTextareaContainer = styled('div', {
-  position: 'absolute',
-  top: '-1px',
-  left: '-1px',
-  width: 'calc(100% + 1px)',
-  zIndex: '$4',
-  border: '1px solid transparent',
-  borderRadius: '$2',
-  overflow: 'hidden',
-  boxShadow: '0px 3px 16px 0px rgb(0 0 0 / 16%)',
-  background: '#fff',
-  variants: {
-    error: {
-      true: {
-        borderColor: '$red8',
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
-      },
-    },
-  },
-});
-
-const StyledTextarea = styled(TextareaAutosize, {
-  width: '100%',
-  fontSize: '$1',
-  padding: '$3 $3',
-  outline: 'none',
-  resize: 'none',
-  fontFamily: 'JetBrains Mono',
-});
 
 type TextareaEditorProps = {
   initialValue?: t.Expression | null;
@@ -134,8 +95,16 @@ const TextareaEditor = ({
   }, [commit]);
 
   return (
-    <StyledTextareaContainer error={!!hasError}>
-      <StyledTextarea
+    <div
+      className={classNames(
+        'absolute -top-px -left-px z-40 border border-solid border-transparent rounded overflow-hidden shadow-xl w-[calc(100%+1px)] bg-white',
+        {
+          'border-red-300 rounded-bl-none rounded-br-none': hasError,
+        }
+      )}
+    >
+      <TextareaAutosize
+        className="w-full text-xs p-3 outline-none resize-none"
         {...props}
         value={value}
         ref={domRef}
@@ -150,44 +119,20 @@ const TextareaEditor = ({
           }
         }}
       />
-      <Box css={{ px: '$3', py: '$2', display: 'flex' }}>
-        <Box
-          css={{
-            fontSize: '0.55rem',
-            lineHeight: '1.1rem',
-            py: '$1',
-            px: '$3',
-            border: '1px solid',
-            borderColor: '$purple6',
-            color: '$purple9',
-            display: 'flex',
-            borderRadius: '100px',
-            alignItems: 'center',
-            justifyContent: 'center',
-            alignSelf: 'flex-start',
-          }}
-        >
+      <div className="px-3 py-3 flex">
+        <div className="text-[0.6rem] py-1 px-3 border border-solid border-secondary/20 text-secondary flex rounded-full items-center justify-center self-start">
           Expression
           <Info
             info={`An expression is expected here. Eg: "Some text value" for text literals.`}
           />
-        </Box>
-      </Box>
+        </div>
+      </div>
       {hasError && (
-        <Box
-          css={{
-            position: 'relative',
-            width: '100%',
-            padding: '$2 $3',
-            backgroundColor: '$red8',
-            color: 'white',
-            zIndex: '$2',
-          }}
-        >
-          <Text size={1}>{hasError}</Text>
-        </Box>
+        <div className="text-xs relative w-full px-3 py-3 bg-red-400 text-white z-2">
+          {hasError}
+        </div>
       )}
-    </StyledTextareaContainer>
+    </div>
   );
 };
 
@@ -197,6 +142,7 @@ type ExpressionInputProps = {
   disable?: boolean;
   onCommit?: (value: t.Expression) => void;
   onCancel?: () => void;
+  inputClassName?: string;
 };
 
 export const ExpressionInput = observer(
@@ -206,12 +152,14 @@ export const ExpressionInput = observer(
     placeholder,
     onCommit,
     onCancel,
+    inputClassName,
   }: ExpressionInputProps) => {
     const [showTextareaEditor, setShowTextareaEditor] = React.useState(false);
 
     return (
-      <StyledValueField>
+      <div className="relative w-full">
         <TextField
+          className={inputClassName}
           value={value ? Parser.stringify(value) : ''}
           onChange={() => {
             return;
@@ -239,7 +187,7 @@ export const ExpressionInput = observer(
             }}
           />
         )}
-      </StyledValueField>
+      </div>
     );
   }
 );

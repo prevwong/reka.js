@@ -1,33 +1,7 @@
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 import * as React from 'react';
 
-import { styled } from '@app/styles';
-
-const StyledSwitch = styled(SwitchPrimitive.Root, {
-  width: '35px',
-  height: '15px',
-  borderRadius: '100px',
-  position: 'relative',
-  backgroundColor: '$blackA6',
-  cursor: 'pointer',
-  '&[data-state="checked"]': {
-    background: '$primary',
-  },
-});
-
-const StyledThumb = styled(SwitchPrimitive.Thumb, {
-  width: '12px',
-  height: '12px',
-  display: 'block',
-  borderRadius: '$round',
-  transform: 'translateX(2px)',
-  transition: 'transform 100ms',
-  background: '$whiteA12',
-  '&[data-state="checked"]': {
-    transform: 'translateX(22px)',
-    background: '$whiteA12',
-  },
-});
+import { cn } from '@app/utils';
 
 type SwitchProps = {
   className?: string;
@@ -37,12 +11,14 @@ type SwitchProps = {
 
 export const Switch = (props: SwitchProps) => {
   return (
-    <StyledSwitch
-      className={props.className}
+    <SwitchPrimitive.Root
+      className={cn(
+        'w-10 h-4 rounded-full relative bg-gray-400 cursor-pointer data-[state="checked"]:bg-primary'
+      )}
       checked={props.checked}
       onCheckedChange={() => props.onChange()}
     >
-      <StyledThumb />
-    </StyledSwitch>
+      <SwitchPrimitive.Thumb className='w-3 h-3 block rounded-full translate-x-2 transition-transform bg-white data-[state="checked"]:translate-x-5 data-[state="checked"]:bg-white' />
+    </SwitchPrimitive.Root>
   );
 };

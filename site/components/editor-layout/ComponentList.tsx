@@ -6,14 +6,11 @@ import * as t from '@rekajs/types';
 import { pascalCase } from 'pascal-case';
 import * as React from 'react';
 
-import { Box } from '@app/components/box';
 import { Button } from '@app/components/button';
 import { Modal } from '@app/components/modal';
 import { Text } from '@app/components/text';
 import { TextField } from '@app/components/text-field';
-import { Tooltip } from '@app/components/tooltip';
 import { useEditor } from '@app/editor';
-import { styled } from '@app/styles';
 
 import { SettingSection } from '../settings-section';
 
@@ -21,13 +18,6 @@ type AddComponentModalProps = {
   isOpen: boolean;
   onClose: () => void;
 };
-
-const InputItem = styled(Box, {
-  display: 'grid',
-  alignItems: 'center',
-  gridTemplateColumns: '80px 1fr',
-  width: '100%',
-});
 
 const AddComponentModal = (props: AddComponentModalProps) => {
   const [componentName, setComponentName] = React.useState('');
@@ -39,16 +29,10 @@ const AddComponentModal = (props: AddComponentModalProps) => {
       isOpen={props.isOpen}
       onClose={() => props.onClose()}
     >
-      <Box
-        css={{
-          display: 'flex',
-          mt: '$5',
-          flexDirection: 'column',
-          gap: '20px',
-        }}
-      >
-        <InputItem>
-          <Text size="1">Name</Text>
+      <div className="flex flex-col mt-5 gap-10">
+        <div className="grid grid-cols-pair-input items-center w-full">
+          <span className="text-xs">Name</span>
+
           <TextField
             placeholder="MyComponent"
             value={componentName}
@@ -56,7 +40,7 @@ const AddComponentModal = (props: AddComponentModalProps) => {
               setComponentName(e.target.value);
             }}
           />
-        </InputItem>
+        </div>
         <Button
           size="xs"
           onClick={() => {
@@ -100,7 +84,7 @@ const AddComponentModal = (props: AddComponentModalProps) => {
         >
           Create Component
         </Button>
-      </Box>
+      </div>
     </Modal>
   );
 };
@@ -126,38 +110,14 @@ export const ComponentList = (props: ComponentListProps) => {
           setShowAddCompnonentModal(true);
         }}
       >
-        <Box
-          css={{
-            ml: '-$4',
-            mr: '-$4',
-          }}
-        >
+        <div className="-ml-4 -mr-4">
           {components.map((component) => (
-            <Box
+            <div
               onClick={() => {
                 props.onComponentSelected(component);
               }}
               key={component.id}
-              className="py-3 px-4"
-              css={{
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                svg: {
-                  width: '12px',
-                  height: '12px',
-                  mr: '$3',
-                },
-                [`& ${Button}`]: {
-                  opacity: 0,
-                },
-                '&:hover': {
-                  backgroundColor: '$secondary2',
-                  [`& ${Button}`]: {
-                    opacity: 1,
-                  },
-                },
-              }}
+              className="px-4 py-2.5 group cursor-pointer flex items-center hover:bg-secondary/20 [&>svg]:w-3.5 [&>svg]:h-3.5 [&>svg]:mr-3 [&>button]:opacity-0"
             >
               {component instanceof t.RekaComponent ? (
                 <ComponentBooleanIcon />
@@ -167,9 +127,9 @@ export const ComponentList = (props: ComponentListProps) => {
               <Text size="2" css={{ flex: 1, color: 'rgba(0,0,0,0.8)' }}>
                 {component.name}
               </Text>
-            </Box>
+            </div>
           ))}
-        </Box>
+        </div>
       </SettingSection>
       <AddComponentModal
         isOpen={showAddComponentModal}

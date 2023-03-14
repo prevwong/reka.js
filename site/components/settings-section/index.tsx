@@ -3,50 +3,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 import * as React from 'react';
 
 import { IconButton } from '@app/components/button';
-import { styled } from '@app/styles';
 import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
-import { Box } from '../box';
 import { Info } from '../info';
-
-const StyledSettingSectionHeader = styled(motion.div, {
-  display: 'flex',
-  position: 'relative',
-  alignItems: 'center',
-  cursor: 'pointer',
-  mt: '2px',
-  mb: '1px',
-
-  '> header': {
-    flex: 1,
-
-    display: 'flex',
-    '> span': {
-      mb: '-$1',
-      color: '$grayA12',
-      fontSize: '$2',
-      fontWeight: '500',
-      display: 'flex',
-      alignItems: 'center',
-    },
-  },
-});
-
-const StyledSettingSection = styled('div', {
-  display: 'flex',
-  px: '$4',
-  py: '$3',
-  flexDirection: 'column',
-  borderBottom: '1px solid $grayA5',
-  '&:last-child': {
-    borderBottomColor: 'transparent',
-  },
-});
-
-const StyledSettingSectionContent = styled(motion.section, {
-  marginLeft: '-$4',
-  marginRight: '-$4',
-});
 
 type SettingSectionProps = {
   title: string;
@@ -62,14 +21,15 @@ export const SettingSection = (props: SettingSectionProps) => {
   );
 
   return (
-    <StyledSettingSection className="setting-section">
-      <StyledSettingSectionHeader
+    <div className="flex px-4 py-2.5 flex-col border-b border-solid border-outline setting-section">
+      <motion.div
+        className="flex relative items-center cursor-pointer mt-2 mb-1"
         initial={false}
         animate={{ paddingBottom: isOpen ? '10px' : 0 }}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <header>
-          <span>
+        <header className="flex flex-1">
+          <span className="-mb-1 text-gray-900 text-sm font-medium flex items-center">
             {props.title}
             {props.info && <Info info={props.info} />}
           </span>
@@ -95,10 +55,11 @@ export const SettingSection = (props: SettingSectionProps) => {
             <PlusIcon />
           </IconButton>
         )}
-      </StyledSettingSectionHeader>
+      </motion.div>
       <AnimatePresence initial={false}>
         {isOpen && (
-          <StyledSettingSectionContent
+          <motion.section
+            className="-mx-4"
             key="content"
             initial="collapsed"
             animate="open"
@@ -114,11 +75,11 @@ export const SettingSection = (props: SettingSectionProps) => {
             }}
             transition={CREATE_BEZIER_TRANSITION()}
           >
-            <Box css={{ py: '$2', pb: '$4', px: '$4' }}>{props.children}</Box>
-          </StyledSettingSectionContent>
+            <div className="py-2 pb-4 px-4">{props.children}</div>
+          </motion.section>
         )}
       </AnimatePresence>
-    </StyledSettingSection>
+    </div>
   );
 };
 

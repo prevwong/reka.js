@@ -1,10 +1,10 @@
 import { ChatBubbleIcon, PlusIcon, TrashIcon } from '@radix-ui/react-icons';
 import * as t from '@rekajs/types';
+import cx from 'classnames';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { Box } from '@app/components/box';
-import { Button, IconButton } from '@app/components/button';
+import { IconButton } from '@app/components/button';
 import { Dropdown } from '@app/components/dropdown';
 import { Text } from '@app/components/text';
 import { Tooltip } from '@app/components/tooltip';
@@ -16,10 +16,7 @@ type AddTemplateButtonProps = {
   target: t.Template;
 };
 
-const AddTemplateButton = React.forwardRef<
-  HTMLButtonElement,
-  AddTemplateButtonProps
->((props, ref) => {
+const AddTemplateButton = (props: AddTemplateButtonProps) => {
   const [option, setOption] = React.useState<
     'before' | 'after' | 'child' | null
   >(null);
@@ -50,7 +47,7 @@ const AddTemplateButton = React.forwardRef<
           },
         ]}
       >
-        <IconButton transparent ref={ref}>
+        <IconButton>
           <PlusIcon />
         </IconButton>
       </Dropdown>
@@ -95,7 +92,7 @@ const AddTemplateButton = React.forwardRef<
       />
     </React.Fragment>
   );
-});
+};
 
 const getTemplateName = (template: t.Template) => {
   if (template instanceof t.TagTemplate) {
@@ -139,24 +136,16 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
     activeComponentEditor.tplEvent.selected?.id === props.templateId;
 
   return (
-    <Box>
-      <Box
-        css={{
-          px: '$4',
-          py: '$2',
-          cursor: 'pointer',
-          '&:hover': {
-            backgroundColor: '$secondary2',
-          },
-          backgroundColor: isSelected ? '$indigoA3!important' : 'transparent',
-        }}
+    <div>
+      <div
+        className={cx('px-4 py-2 cursor-pointer', {
+          'bg-primary/10': isSelected,
+          'hover:bg-secondary/20': !isSelected,
+        })}
       >
-        <Box
-          css={{
-            display: 'flex',
-            marginLeft: depth * 10 + 'px',
-            alignItems: 'center',
-          }}
+        <div
+          className="flex items-center"
+          style={{ marginLeft: `${depth * 10}px` }}
           onMouseDown={(e) => {
             e.stopPropagation();
 
@@ -177,47 +166,11 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
             activeComponentEditor.setTplEvent('hovered', null);
           }}
         >
-          <Box
-            css={{
-              flex: 1,
-              display: 'flex',
-              gap: '$2',
-              alignItems: 'center',
-              '> .component-edit-btn': { display: 'none' },
-              '&:hover > .component-edit-btn': { display: 'block' },
-            }}
-          >
+          <div className="flex flex-1 gap-2 items-center">
             <Text size="1">{getTemplateName(template)}</Text>
-            {template instanceof t.ComponentTemplate && (
-              <Button
-                disabled={template.component.external}
-                className="component-edit-btn"
-                onClick={() => {
-                  if (template.component.external) {
-                    return;
-                  }
-
-                  const component = editor.reka.components.program.find(
-                    (component) => component.name === template.component.name
-                  );
-
-                  if (!component) {
-                    return;
-                  }
-
-                  editor.setActiveComponentEditor(component);
-                }}
-                css={{ ml: '$2' }}
-                transparent
-              >
-                Edit
-              </Button>
-            )}
-
             {activeComponentEditor.getCommentCount(template) > 0 && (
               <Tooltip content="View comments">
                 <IconButton
-                  transparent
                   onClick={() => {
                     activeComponentEditor.showComments(template);
                   }}
@@ -229,15 +182,14 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
                 </IconButton>
               </Tooltip>
             )}
-          </Box>
-          <Box>
+          </div>
+          <div>
             <Tooltip content="Add new template">
               <AddTemplateButton target={template} />
             </Tooltip>
 
             <Tooltip content="Remove template">
               <IconButton
-                transparent
                 onClick={(e) => {
                   e.stopPropagation();
                   editor.reka.change(() => {
@@ -265,9 +217,9 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
                 <TrashIcon />
               </IconButton>
             </Tooltip>
-          </Box>
-        </Box>
-      </Box>
+          </div>
+        </div>
+      </div>
       {template.children.map((child) => (
         <RenderTemplateNode
           key={child.id}
@@ -275,7 +227,7 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
           depth={depth + 1}
         />
       ))}
-    </Box>
+    </div>
   );
 });
 
@@ -296,10 +248,10 @@ export const TemplateLayers = (props: TemplateLayersProps) => {
   }
 
   return (
-    <Box css={{ mt: '$3', ml: '-$4', mr: '-$4' }}>
+    <div className="mt-3 -ml-4 -mr-4">
       {component.template && (
         <RenderTemplateNode templateId={component.template.id} />
       )}
-    </Box>
+    </div>
   );
 };

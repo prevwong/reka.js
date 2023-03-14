@@ -2,8 +2,6 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import * as React from 'react';
 
-import { styled, keyframes } from '@app/styles';
-
 import { IconButton } from '../button';
 
 export type ModalProps = {
@@ -14,65 +12,6 @@ export type ModalProps = {
   title?: string;
   description?: string;
 };
-
-const overlayShow = keyframes({
-  '0%': { opacity: 0 },
-  '100%': { opacity: 1 },
-});
-
-const contentShow = keyframes({
-  '0%': { opacity: 0, transform: 'translate(-50%, -48%) scale(.96)' },
-  '100%': { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
-});
-
-const StyledOverlay = styled(DialogPrimitive.Overlay, {
-  backgroundColor: '$blackA9',
-  position: 'fixed',
-  inset: 0,
-  backdropFilter: 'blur(10px)',
-  '@media (prefers-reduced-motion: no-preference)': {
-    animation: `${overlayShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
-  },
-  zIndex: '$max',
-});
-
-const StyledContent = styled(DialogPrimitive.Content, {
-  backgroundColor: 'white',
-  borderRadius: 6,
-  boxShadow:
-    'hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px',
-  position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '90vw',
-  maxWidth: '450px',
-  maxHeight: '85vh',
-  padding: 25,
-  '@media (prefers-reduced-motion: no-preference)': {
-    animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
-  },
-  '&:focus': { outline: 'none' },
-  zIndex: '$max',
-});
-
-const StyledTitle = styled(DialogPrimitive.Title, {
-  fontWeight: 500,
-  fontSize: 17,
-  marginBottom: '$4',
-});
-
-const StyledDescription = styled(DialogPrimitive.Description, {
-  margin: '10px 0 20px',
-  fontSize: 15,
-  lineHeight: 1.5,
-});
-
-const CloseIconButton = styled(IconButton, {
-  position: 'absolute',
-  top: 10,
-  right: 10,
-});
 
 export const Modal = (props: ModalProps) => {
   return (
@@ -90,19 +29,36 @@ export const Modal = (props: ModalProps) => {
         </DialogPrimitive.DialogTrigger>
       )}
       <DialogPrimitive.Portal>
-        <StyledOverlay onClick={(e) => e.stopPropagation()} />
-        <StyledContent onClick={(e) => e.stopPropagation()}>
-          {props.title && <StyledTitle>{props.title}</StyledTitle>}
-          {props.description && (
-            <StyledDescription>{props.description}</StyledDescription>
-          )}
+        <DialogPrimitive.Overlay
+          className="w-full h-full left-0 top-0 bg-black/60 fixed backdrop-blur-md animate-show z-50"
+          onClick={(e) => e.stopPropagation()}
+        />
+        <div
+          className="bg-white rounded-md shadow-xl fixed top-[50%] left-[50%] [transform:translate(-50%,-50%)] w-[90vw] max-w-[450px] max-h-[85vh] px-4 py-5 z-50 focus:outline-none animate-modalShow"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="mb-6">
+            {props.title && (
+              <DialogPrimitive.Title className="font-medium text-lg">
+                {props.title}
+              </DialogPrimitive.Title>
+            )}
+            {props.description && (
+              <DialogPrimitive.Description className="text-md my-4 leading-md">
+                {props.description}
+              </DialogPrimitive.Description>
+            )}
+          </div>
           {props.children}
           <DialogPrimitive.DialogClose asChild>
-            <CloseIconButton transparent>
+            <IconButton
+              size="default"
+              className="absolute top-3.5 right-3 [&>svg]:w-4 [&>svg]:h-4"
+            >
               <Cross2Icon />
-            </CloseIconButton>
+            </IconButton>
           </DialogPrimitive.DialogClose>
-        </StyledContent>
+        </div>
       </DialogPrimitive.Portal>
     </DialogPrimitive.Root>
   );

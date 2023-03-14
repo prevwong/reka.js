@@ -6,7 +6,6 @@ import * as t from '@rekajs/types';
 import { capitalize } from 'lodash';
 import * as React from 'react';
 
-import { Box } from '@app/components/box';
 import { Button } from '@app/components/button';
 import { Modal } from '@app/components/modal';
 import { PairInput } from '@app/components/pair-input';
@@ -15,7 +14,6 @@ import { Text } from '@app/components/text';
 import { TextField } from '@app/components/text-field';
 import { ToggleGroup, ToggleGroupItem } from '@app/components/toggle-group';
 import { useEditor } from '@app/editor';
-import { styled } from '@app/styles';
 
 type AddTemplateModalProps = {
   isOpen?: boolean;
@@ -23,13 +21,6 @@ type AddTemplateModalProps = {
   onAdd?: (template: t.Template) => void;
   allowedTplTypes?: Array<'tag' | 'slot' | 'component'>;
 };
-
-const InputItem = styled(Box, {
-  display: 'grid',
-  alignItems: 'center',
-  gridTemplateColumns: '80px 1fr',
-  width: '100%',
-});
 
 export const AddTemplateModal = (props: AddTemplateModalProps) => {
   const allowedTplTypes = props.allowedTplTypes || ['tag', 'component', 'slot'];
@@ -49,17 +40,10 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
 
   return (
     <Modal title="Add template" isOpen={props.isOpen} onClose={props.onClose}>
-      <Box
-        css={{
-          display: 'flex',
-          mt: '$5',
-          flexDirection: 'column',
-          gap: '20px',
-        }}
-      >
-        <InputItem>
+      <div className="flex flex-col gap-5 mt-5">
+        <div className="grid items-center w-full grid-cols-pair-input">
           <Text size="1">Type</Text>
-          <Box>
+          <div>
             <ToggleGroup
               type="single"
               value={templateType}
@@ -73,11 +57,11 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
                 </ToggleGroupItem>
               ))}
             </ToggleGroup>
-          </Box>
-        </InputItem>
+          </div>
+        </div>
         {templateType === 'tag' && (
           <React.Fragment>
-            <InputItem>
+            <div className="grid items-center w-full grid-cols-pair-input">
               <Text size="1">Tag</Text>
               <TextField
                 placeholder="div"
@@ -85,13 +69,13 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
                   setTemplateTag(e.target.value);
                 }}
               />
-            </InputItem>
+            </div>
           </React.Fragment>
         )}
         {templateType === 'component' && (
-          <InputItem>
+          <div className="grid items-center w-full grid-cols-pair-input">
             <Text size="1">Component</Text>
-            <Box>
+            <div>
               <Select
                 value={templateComponentName}
                 onChange={(value) => {
@@ -108,15 +92,15 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
                   })),
                 ]}
               />
-            </Box>
-          </InputItem>
+            </div>
+          </div>
         )}
         {(templateType === 'tag' || templateType === 'component') && (
-          <InputItem css={{ alignItems: 'flex-start' }}>
+          <div className="grid items-start w-full grid-cols-pair-input">
             <Text size="1" css={{ mt: '$3' }}>
               Props
             </Text>
-            <Box>
+            <div>
               <PairInput
                 addingNewField={true}
                 onRemove={(id) => {
@@ -144,18 +128,13 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
                   return accum;
                 }, [] as any)}
               />
-            </Box>
-          </InputItem>
+            </div>
+          </div>
         )}
 
         <Button
           variant="primary"
-          css={{
-            mt: '$3',
-            justifyContent: 'center',
-            fontSize: '$2',
-            padding: '$2 $4',
-          }}
+          className="mt-3 justify-center text-sm"
           onClick={(e) => {
             e.stopPropagation();
 
@@ -207,7 +186,7 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
         >
           Add template
         </Button>
-      </Box>
+      </div>
     </Modal>
   );
 };

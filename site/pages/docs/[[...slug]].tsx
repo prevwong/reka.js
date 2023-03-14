@@ -4,176 +4,42 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
-import { Box } from '@app/components/box';
 import { IconButton } from '@app/components/button';
 import { HeaderToolbar } from '@app/components/header/HeaderToolbar';
 import { SEO } from '@app/components/seo';
-import { Text } from '@app/components/text';
 import { ToolbarDoc } from '@app/components/toolbar-doc';
 import { DOCS_SIDEBAR } from '@app/constants/docs-sidebar';
-import { styled } from '@app/styles';
+import { cn } from '@app/utils';
 import { getAllDocs, getDocBySlug } from '@app/utils/docs';
 import markdownToHtml from '@app/utils/markdown';
 
-const DocNav = styled(motion.nav, {
-  width: '15rem',
-  position: 'relative',
-  display: 'flex',
-  flexDirection: 'column',
-  '.mobile-nav-header': {
-    width: '100%',
-    px: '$4',
-    mt: '$5',
-    display: 'none',
-  },
-  '.doc-nav-content': {
-    display: 'flex',
-    flexDirection: 'column',
-    px: '$4',
-    overflow: 'auto',
-    height: 'calc(100vh - 50px)',
-    position: 'sticky',
-    top: '5rem',
-  },
+type DocLinkProps = React.DetailedHTMLProps<
+  React.AnchorHTMLAttributes<HTMLAnchorElement>,
+  HTMLAnchorElement
+> & {
+  active?: boolean;
+  children?: React.ReactNode;
+};
 
-  '@mobile': {
-    width: '20rem',
-    position: 'fixed',
-    left: '-100%',
-    top: '50px',
-    height: 'calc(100vh - 50px)',
-    background: 'rgba(255,255,255,0.5)',
-    zIndex: '$4',
-    backdropFilter: 'blur(10px)',
-    overflow: 'hidden',
-    transition: '0.4s cubic-bezier(0.19, 1, 0.22, 1)',
-    '> .mobile-nav-header': {
-      display: 'flex',
-    },
-    '> .doc-nav-content': {
-      height: '100%',
-      position: 'relative',
-      overflow: 'scroll',
-      top: 0,
-      py: '$4',
-    },
-  },
-  variants: {
-    active: {
-      true: {
-        '@mobile': {
-          left: 0,
-        },
-      },
-    },
-  },
-});
-
-const DocLink = styled('a', {
-  px: '$3',
-  py: '$3',
-  my: '$2',
-  color: '$slate12',
-  fontWeight: 300,
-  textDecoration: 'none',
-  display: 'block',
-  width: '100%',
-  borderRadius: '$2',
-  fontSize: '$2',
-  '&:hover': {
-    backgroundColor: '$gray2',
-    color: '$primary',
-  },
-  variants: {
-    primary: {
-      true: {
-        color: '$slate11',
-        fontWeight: 400,
-      },
-    },
-    active: {
-      true: {
-        backgroundColor: '$primary1!important',
-        color: '$primary!important',
-        fontWeight: 400,
-      },
-    },
-  },
-});
-
-const DocPostContent = styled('div', {
-  flex: 1,
-  overflowX: 'hidden',
-  '> div': {
-    py: '$5',
-    px: '$8',
-    margin: '0 auto',
-    display: 'flex',
-    gap: '$5',
-    alignItems: 'flex-start',
-    maxWidth: '1000px',
-    [`> ${IconButton}`]: {
-      display: 'none',
-      px: '$3',
-      py: '$3',
-      svg: {
-        width: '15px',
-        height: '15px',
-      },
-    },
-
-    '@mobile': {
-      margin: 0,
-      px: '$4',
-      py: '$5',
-      maxWidth: '100%',
-      [`> ${IconButton}`]: {
-        display: 'block',
-      },
-    },
-  },
-
-  'code:not(pre code)': {
-    backgroundColor: '$secondary',
-    padding: '5px',
-    borderRadius: '$2',
-    fontWeight: 500,
-    '&::after': {
-      content: '',
-    },
-    '&::before': {
-      content: '',
-    },
-  },
-  'p > img': {
-    objectFit: 'contain',
-    margin: 'auto',
-    border: '1px solid #ddd',
-  },
-  blockquote: {
-    fontStyle: 'normal',
-    fontSize: '$2',
-    fontWeight: 400,
-    border: '1px solid $gray5',
-    color: '$gray11',
-    '> p': {
-      '&::after, &::before': {
-        content: '',
-      },
-    },
-  },
-});
-
-const DocPostContentHeader = styled('header', {
-  pb: '$6',
-  display: 'flex',
-  gap: '$4',
-  alignItems: 'center',
-  '> h1': {
-    fontSize: '$5',
-    fontWeight: 600,
-  },
-});
+const DocLink = React.forwardRef<HTMLAnchorElement, DocLinkProps>(
+  ({ active, children, ...props }, ref) => {
+    return (
+      <a
+        {...props}
+        ref={ref}
+        className={cn(
+          'px-3 py-3 my-2 cursor-pointer text-slate-600 underline-none block w-full rounded-md text-sm',
+          {
+            'bg-primary/10 text-primary font-normal': active,
+            'hover:bg-primary/10 hover:text-primary font-light': !active,
+          }
+        )}
+      >
+        {children}
+      </a>
+    );
+  }
+);
 
 const Docs = (props: any) => {
   const contentDomRef = React.useRef<HTMLDivElement | null>(null);
@@ -217,46 +83,47 @@ const Docs = (props: any) => {
   }, [router]);
 
   return (
-    <Box css={{ display: 'flex', gap: '$3', position: 'relative' }}>
+    <div className="flex gap-3 relative">
       <SEO title={props.doc.title} />
       <HeaderToolbar>
         <ToolbarDoc />
       </HeaderToolbar>
-      <DocNav active={mobileNavActive}>
-        <Box
-          className="mobile-nav-header"
-          css={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            mb: '$4',
-          }}
-        >
+      <motion.nav
+        className={cn(
+          `group
+          w-72 relative flex flex-col
+          transition bezier duration-400
+          max-sm:z-50
+          max-sm:w-86 max-sm:fixed max-sm:-left-full max-sm:top-[50px] max-sm:h-[calc(100vh-50px)]
+          max-sm:bg-white/60 max-sm:backdrop-blur-md max-sm:overflow-hidden`,
+          {
+            'max-sm:left-0': mobileNavActive,
+          }
+        )}
+      >
+        <div className="mobile-nav-header flex justify-end mb-4">
           <IconButton
-            transparent
+            className="absolute z-50 hidden max-sm:block right-2 top-2"
+            size="default"
             onClick={() => {
               setMobileNavActive(false);
             }}
           >
-            <Cross1Icon style={{ width: '15px', height: '15px' }} />
+            <Cross1Icon />
           </IconButton>
-        </Box>
-        <Box className="doc-nav-content">
+        </div>
+        <div className="doc-nav-content flex flex-col overflow-auto h-[calc(100vh-50px)] sticky top-[calc(50px+30px)] px-4 max-sm:h-full max-sm:relative max-sm:overflow-scroll max-sm:top-10 max-sm:py-4 ">
           {DOCS_SIDEBAR.main.map((link, i) => (
             <Link key={i} href={`/docs/${link.href}`} passHref legacyBehavior>
-              <DocLink primary active={props.slug === link.href}>
-                {link.title}
-              </DocLink>
+              <DocLink active={props.slug === link.href}>{link.title}</DocLink>
             </Link>
           ))}
           {DOCS_SIDEBAR.categories.map((category, i) => (
-            <Box key={i} css={{ pt: '$5' }}>
-              <Text
-                size={2}
-                css={{ py: '$2', px: '$3', fontWeight: 500, color: '$slate12' }}
-              >
+            <div className="pt-5" key={i}>
+              <span className="block text-sm py-3 px-3 font-medium text-neutral-800">
                 {category.title}
-              </Text>
-              <Box>
+              </span>
+              <div>
                 {category.children.map((child, i) => {
                   return (
                     <Link key={i} href={child.href} passHref legacyBehavior>
@@ -266,40 +133,40 @@ const Docs = (props: any) => {
                     </Link>
                   );
                 })}
-              </Box>
-            </Box>
+              </div>
+            </div>
           ))}
-        </Box>
-      </DocNav>
-      <DocPostContent>
-        <Box css={{ width: '100%' }}>
+        </div>
+      </motion.nav>
+      <div className="flex overflow-x-hidden w-full">
+        <div
+          className={cn(`
+          w-full py-5 px-8 mx-auto flex gap-2.5 items-start max-w-[1000px] max-sm:m-0 max-sm:px-4 max-sm:px-5 max-sm:max-w-full
+          `)}
+        >
           <IconButton
+            className="hidden max-sm:block"
             onClick={() => {
               setMobileNavActive(!mobileNavActive);
             }}
           >
             <HamburgerMenuIcon />
           </IconButton>
-          <Box css={{ width: '100%', overflow: 'scroll' }}>
+          <div className="w-full overflow-scroll">
             <article className={'content'}>
-              <DocPostContentHeader>
-                <h1>{props.doc.title}</h1>
-              </DocPostContentHeader>
-              <Box
-                className="prose max-w-full prose-md prose-headings:font-medium prose-h1:mt-8 mb-8 prose-code:bg-"
-                css={{
-                  '> h2 > a': {
-                    textDecoration: 'none',
-                  },
-                }}
+              <header className="pb-6 flex gap-2 items-center">
+                <h1 className="text-4xl font-medium">{props.doc.title}</h1>
+              </header>
+              <div
+                className="prose prose-md prose-headings:font-medium prose-h1:mt-8 mb-8 max-w-full [&>h2>a]:no-underline [&_p>img]:object-contain [&_p>img]:m-auto [&_p>img]:border [&_p>img]:border-solid [&_p>img]:border-outline"
                 ref={contentDomRef}
                 dangerouslySetInnerHTML={{ __html: props.doc.content }}
-              ></Box>
+              ></div>
             </article>
-          </Box>
-        </Box>
-      </DocPostContent>
-    </Box>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

@@ -2,43 +2,19 @@ import {
   CodeEditor as ReactCodeEditor,
   ParserStatus,
 } from '@rekajs/react-code-editor';
+import cx from 'classnames';
 import { motion } from 'framer-motion';
 import * as React from 'react';
 
 import { useEditor } from '@app/editor';
-import { styled } from '@app/styles';
 
 import { ParserStatusBadge } from './ParserStatusBadge';
 
-import { Box } from '../box';
 import { Tree } from '../tree';
 
-const StyledReactCodeEditor = styled(ReactCodeEditor, {
-  height: '100%',
-  flex: 1,
-});
-
-const StyledTabItem = styled('button', {
-  px: '$4',
-  py: '$3',
-  position: 'relative',
-  cursor: 'pointer',
-  fontSize: '$1',
-  '&:hover': {
-    backgroundColor: '$grayA2',
-  },
-});
-
-const StyledTabItemUnderline = styled(motion.div, {
-  position: 'absolute',
-  bottom: '-1px',
-  left: 0,
-  width: '100%',
-  height: '1px',
-  background: '#000',
-});
-
-type CodeEditorProps = React.ComponentProps<typeof StyledReactCodeEditor>;
+type CodeEditorProps = {
+  className?: string;
+};
 
 const tabs = [
   {
@@ -51,7 +27,7 @@ const tabs = [
   },
 ] as const;
 
-export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
+export const CodeEditor = ({ className, ...props }: CodeEditorProps) => {
   const [currentTab, setCurrentTab] =
     React.useState<typeof tabs[number]['id']>('code');
 
@@ -61,18 +37,13 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
   const editor = useEditor();
 
   return (
-    <Box css={{ ...css, height: '100%' }} {...props}>
-      <Box css={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <Box
-          css={{
-            display: 'flex',
-            alignItems: 'center',
-            borderBottom: '1px solid $grayA5',
-          }}
-        >
-          <Box css={{ flex: 1 }}>
+    <div className={cx(className, 'h-full')} {...props}>
+      <div className="flex flex-col h-full">
+        <div className="flex items-center border-b border-solid border-b-neutral-200">
+          <div className="flex-1">
             {tabs.map((tab) => (
-              <StyledTabItem
+              <button
+                className="cursor-pointer relative text-xs px-4 py-3 hover:bg-neutral-200"
                 key={tab.id}
                 onClick={() => {
                   setCurrentTab(tab.id);
@@ -80,54 +51,42 @@ export const CodeEditor = ({ css, ...props }: CodeEditorProps) => {
               >
                 {tab.title}
                 {currentTab === tab.id && (
-                  <StyledTabItemUnderline layoutId="underline"></StyledTabItemUnderline>
+                  <motion.div
+                    className="absolute left-0 -bottom-px w-full h-px bg-black"
+                    layoutId="underline"
+                  ></motion.div>
                 )}
-              </StyledTabItem>
+              </button>
             ))}
-          </Box>
-          <Box
-            css={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              px: '$4',
-              py: '$2',
-            }}
-          >
+          </div>
+          <div className="flex items-center gap-2.5 px-4 py-2">
             <ParserStatusBadge status={status} />
-          </Box>
-        </Box>
-        <Box
-          css={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden',
-          }}
-        >
-          <Box
-            css={{
-              height: '100%',
-              display: currentTab === 'code' ? 'block' : 'none',
-            }}
+          </div>
+        </div>
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div
+            className={cx('h-full', {
+              block: currentTab === 'code',
+              hidden: currentTab !== 'code',
+            })}
           >
-            <StyledReactCodeEditor
+            <ReactCodeEditor
+              className="h-full flex-1"
               onStatusChange={(status) => {
                 setStatus(status);
               }}
             />
-          </Box>
-          <Box
-            css={{
-              overflow: 'auto',
-              py: '$4',
-              display: currentTab === 'ast' ? 'block' : 'none',
-            }}
+          </div>
+          <div
+            className={cx('overflow-auto py-4', {
+              block: currentTab === 'ast',
+              hidden: currentTab !== 'ast',
+            })}
           >
             <Tree root={editor.reka.program} />
-          </Box>
-        </Box>
-      </Box>
-    </Box>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };

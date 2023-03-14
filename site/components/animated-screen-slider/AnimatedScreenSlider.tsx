@@ -3,7 +3,6 @@ import * as React from 'react';
 
 import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
-import { Box } from '../box';
 import { Button } from '../button';
 
 type Callbacks = {
@@ -124,7 +123,7 @@ export const AnimatedScreenSlider = (props: AnimatedScreenSliderProps) => {
                 transition={CREATE_BEZIER_TRANSITION()}
               >
                 {paths.length > 0 && i > 0 && screen.hideBackButton !== true && (
-                  <Box css={{ py: '$4', px: '$4' }}>
+                  <div className="px-4 py-4">
                     <Button
                       variant="link"
                       onClick={() => {
@@ -133,7 +132,7 @@ export const AnimatedScreenSlider = (props: AnimatedScreenSliderProps) => {
                     >
                       {props.goBackText ?? 'Go Back'}
                     </Button>
-                  </Box>
+                  </div>
                 )}
 
                 {screen.render(callbacks)}

@@ -3,48 +3,7 @@ import * as React from 'react';
 
 import { useEditor } from '@app/editor';
 import { User } from '@app/editor/Editor';
-import { styled } from '@app/styles';
-
-const StyledUserIcon = styled(motion.span, {
-  width: '25px',
-  height: '25px',
-  backgroundColor: 'transparent',
-  borderRadius: '100%',
-  fontSize: '0.6rem',
-  color: '#fff',
-  fontWeight: '600',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  textAlign: 'center',
-  border: '1px solid transparent',
-  position: 'relative',
-  overflow: 'hidden',
-  cursor: 'pointer',
-  '&:before': {
-    content: ' ',
-    display: 'block',
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    width: '100%',
-    height: '100%',
-    background: 'rgba(0,0,0,0.2)',
-  },
-  '> b': {
-    fontWeight: 500,
-    position: 'relative',
-    color: '#fff',
-  },
-  variants: {
-    active: {
-      true: {
-        borderColor: '#09f',
-        boxShadow: '0px 3px 11px -5px #00ecb9',
-      },
-    },
-  },
-});
+import { cn } from '@app/utils';
 
 const getInitials = (name: string) => {
   const [first, last] = name.split(' ');
@@ -60,13 +19,20 @@ export const UserAvatar = React.forwardRef<HTMLSpanElement, UserAvatarProps>(
     const editor = useEditor();
 
     return (
-      <StyledUserIcon
-        active={props.user.id === editor.user.id}
-        css={{ backgroundColor: props.user.color }}
+      <motion.span
+        className={cn(
+          'w-5 h-5 bg-transparent rounded-full text-[0.6rem] text-white font-medium flex flex-col justify-center text-center border border-solid border-transparent relative cursor-pointer',
+          {
+            'border-blue-500 shadow-lg': props.user.id === editor.user.id,
+          }
+        )}
+        style={{ backgroundColor: props.user.color }}
         ref={ref}
       >
-        <b>{getInitials(props.user.name)}</b>
-      </StyledUserIcon>
+        <b className="font-medium relative text-white">
+          {getInitials(props.user.name)}
+        </b>
+      </motion.span>
     );
   }
 );

@@ -2,70 +2,6 @@ import { CheckIcon, ChevronDownIcon } from '@radix-ui/react-icons';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import * as React from 'react';
 
-import { styled } from '@app/styles';
-
-const StyledTrigger = styled(SelectPrimitive.SelectTrigger, {
-  all: 'unset',
-  display: 'inline-flex',
-  alignItems: 'center',
-  borderRadius: 4,
-  padding: '$2 $3',
-  fontSize: '$1',
-  lineHeight: 1,
-  gap: 5,
-  color: '$grayA12',
-  border: '1px solid $grayA6',
-  cursor: 'pointer',
-  boxShadow: `0 2px 10px $blackA7`,
-  '&:hover': { backgroundColor: '$mauve3' },
-  '&[data-placeholder]': { color: '$grayA12' },
-});
-
-const StyledContent = styled(SelectPrimitive.Content, {
-  overflow: 'hidden',
-  backgroundColor: 'white',
-  borderRadius: 6,
-  boxShadow:
-    '0px 10px 38px -10px rgba(22, 23, 24, 1), 0px 10px 20px -15px rgba(22, 23, 24, 0.6)',
-  zIndex: '$max',
-});
-
-const StyledViewport = styled(SelectPrimitive.Viewport, {
-  padding: 4,
-});
-
-const StyledItem = styled(SelectPrimitive.Item, {
-  all: 'unset',
-  fontSize: '$1',
-  lineHeight: 1,
-  color: '$grayA12',
-  borderRadius: 3,
-  display: 'flex',
-  alignItems: 'center',
-  padding: '$2 $4 $2 25px',
-  position: 'relative',
-  userSelect: 'none',
-
-  '&[data-disabled]': {
-    color: '$mauve8',
-    pointerEvents: 'none',
-  },
-
-  '&[data-highlighted]': {
-    backgroundColor: '$primary5',
-    color: '#fff',
-  },
-});
-
-const StyledItemIndicator = styled(SelectPrimitive.ItemIndicator, {
-  position: 'absolute',
-  left: 0,
-  width: 25,
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-});
-
 type SelectItem = {
   value: string;
   title: string;
@@ -84,29 +20,33 @@ export const Select = (props: SelectProps) => {
       value={props.value || undefined}
       onValueChange={(value) => props.onChange(value)}
     >
-      <StyledTrigger aria-label="Food">
+      <SelectPrimitive.SelectTrigger className="inline-flex items-center rounded-md px-3 py-3 text-xs gap-2 text-gray-600 border border-solid border-outline pointer shadow-sm hover:bg-gray-100">
         <SelectPrimitive.Value
           placeholder={props.placeholder || 'Select a value'}
         />
         <SelectPrimitive.SelectIcon>
           <ChevronDownIcon width={12} height={12} />
         </SelectPrimitive.SelectIcon>
-      </StyledTrigger>
+      </SelectPrimitive.SelectTrigger>
       <SelectPrimitive.Portal>
-        <StyledContent>
-          <StyledViewport>
+        <SelectPrimitive.Content className="overflow-hidden bg-white rounded-md shadow-xl z-50">
+          <SelectPrimitive.Viewport className="p-2">
             {props.items.map((item) => (
-              <StyledItem key={item.value} value={item.value}>
+              <SelectPrimitive.Item
+                className="cursor-pointer text-xs text-gray-900 rounded-md relative select-none flex items-center pt-2 pr-4 pb-2 pl-5 data-[highlighted]:bg-primary data-[highlighted]:text-white group"
+                key={item.value}
+                value={item.value}
+              >
                 <SelectPrimitive.ItemText>
                   {item.title}
                 </SelectPrimitive.ItemText>
-                <StyledItemIndicator>
-                  <CheckIcon />
-                </StyledItemIndicator>
-              </StyledItem>
+                <SelectPrimitive.ItemIndicator className="absolute left-3 items-center justify-center inline-flex">
+                  <span className="animate-pulse w-3 h-3 rounded-full bg-primary group-hover:bg-white" />
+                </SelectPrimitive.ItemIndicator>
+              </SelectPrimitive.Item>
             ))}
-          </StyledViewport>
-        </StyledContent>
+          </SelectPrimitive.Viewport>
+        </SelectPrimitive.Content>
       </SelectPrimitive.Portal>
     </SelectPrimitive.Root>
   );

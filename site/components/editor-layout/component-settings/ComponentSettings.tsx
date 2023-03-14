@@ -2,31 +2,11 @@ import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { Box } from '@app/components/box';
 import { PairInput } from '@app/components/pair-input';
 import { SettingSection } from '@app/components/settings-section';
-import { TextField } from '@app/components/text-field';
 import { useEditor } from '@app/editor';
-import { styled } from '@app/styles';
 
 import { TemplateLayers } from './TemplateLayers';
-
-const ComponentHeader = styled('div', {
-  px: '$4',
-  py: '$2',
-  display: 'flex',
-  alignItems: 'center',
-  input: {
-    padding: '2px 4px',
-    marginLeft: '-4px',
-    marginRight: '-4px',
-    fontSize: '$4',
-
-    '&:hover': {
-      background: '$grayA5',
-    },
-  },
-});
 
 export const ComponentSettings = observer(() => {
   const editor = useEditor();
@@ -44,10 +24,10 @@ export const ComponentSettings = observer(() => {
   }
 
   return (
-    <Box css={{ display: 'flex', flexDirection: 'column' }}>
-      <ComponentHeader>
-        <TextField css={{ flex: 1 }} transparent value={component.name} />
-      </ComponentHeader>
+    <div className="flex flex-col">
+      <div className="px-4 py-2 flex items-center [&>input]:px-2 [&>input]:py-3 text-md [&>input]:hover:bg-gray-500">
+        <h1 className="flex-1 text-lg mb-4">{component.name}</h1>
+      </div>
       <SettingSection
         title="Props"
         onAdd={() => setIsAddingNewProp(true)}
@@ -139,11 +119,11 @@ export const ComponentSettings = observer(() => {
           }}
         />
       </SettingSection>
-      <Box css={{ position: 'relative', flex: 1 }}>
+      <div className="relative flex-1">
         <SettingSection title="Template" collapsedOnInitial={false}>
           <TemplateLayers componentId={component.id} />
         </SettingSection>
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 });

@@ -1,73 +1,12 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
 import * as t from '@rekajs/types';
+import dedent from 'dedent';
 import * as React from 'react';
 
-import { styled } from '@app/styles';
-
-import { Box } from '../box';
 import { IconButton } from '../button';
 import { ExpressionInput } from '../expression-input';
 import { Text } from '../text';
 import { TextField } from '../text-field';
-
-export const StyledPairInputField = styled('div', {
-  display: 'grid',
-  gridTemplateColumns: '80px 1fr',
-  position: 'relative',
-  gap: '0px',
-  border: '1px solid $grayA5',
-  '&.error': {
-    borderColor: '$red8',
-  },
-  '&:first-child': {
-    borderTopRightRadius: '$1',
-    borderTopLeftRadius: '$1',
-  },
-  '&:last-child': {
-    borderBottomRightRadius: '$1',
-    borderBottomLeftRadius: '$1',
-  },
-  '&:not(:last-child)': {
-    borderBottomColor: 'transparent',
-  },
-  [`& ${TextField}`]: {
-    borderRadius: 0,
-    border: 'none',
-  },
-  [`> ${TextField}`]: {
-    borderRight: '1px solid $grayA5',
-  },
-
-  mb: '-1px',
-  [`& ${IconButton}`]: {
-    opacity: 0,
-    marginRight: '0px',
-  },
-  '&:hover': {
-    [`& ${IconButton}`]: {
-      opacity: 1,
-    },
-  },
-});
-
-const StyledPairInputList = styled('div', {
-  borderRadius: '$1',
-  border: 'none',
-  variants: {
-    hidden: {
-      true: {
-        borderColor: 'transparent',
-      },
-    },
-  },
-});
-
-const StyledValueFieldContainer = styled('div', {
-  width: '100%',
-  display: 'grid',
-  gridTemplateColumns: '1fr auto',
-  position: 'relative',
-});
 
 type PairInputFieldProps = {
   id: string;
@@ -170,9 +109,19 @@ const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
     }, [value]);
 
     return (
-      <StyledPairInputField ref={ref}>
+      <div
+        className={dedent`
+        group
+        grid grid-cols-[80px_1fr] relative gap-0 border-solid border border-outline -mb-px
+        first:rounded-tr-sm first:rounded-tl-sm
+        last:rounded-br-sm last:rounded-bl-sm
+        [&:not:last-child]:border-b-transparent
+        [&_input]:rounded-none [&_input]:border-none [&_input]:border-r [&_input]:border-r-solid
+      `}
+        ref={ref}
+      >
         <TextField
-          className="pair-input-id-field"
+          className={`pair-input-id-field rounded-none border-l-0 border-t-0 border-b-0 border-r-solid border-r border-r-outline`}
           value={newId}
           onChange={(e) => {
             setNewId(e.target.value);
@@ -190,8 +139,9 @@ const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
           }}
           disabled={disableEditId}
         />
-        <StyledValueFieldContainer>
+        <div className="w-full grid grid-cols-[1fr_auto] relative">
           <ExpressionInput
+            inputClassName="rounded-none border-none"
             value={newValue}
             placeholder={valuePlaceholder}
             onCommit={(value) => {
@@ -205,7 +155,7 @@ const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
             disable={disableEditValue}
           />
           <IconButton
-            transparent
+            className="opacity-0 m-0 group-hover:opacity-100"
             onClick={() => {
               if (!onRemove) {
                 return;
@@ -216,17 +166,15 @@ const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
           >
             <Cross2Icon />
           </IconButton>
-        </StyledValueFieldContainer>
-      </StyledPairInputField>
+        </div>
+      </div>
     );
   }
 );
 
 export const PairInput = (props: PairInputProps) => {
   return (
-    <StyledPairInputList
-      hidden={props.values.length === 0 && !props.addingNewField}
-    >
+    <div>
       {props.values.map(({ id, value }) => {
         return (
           <PairInputField
@@ -245,11 +193,11 @@ export const PairInput = (props: PairInputProps) => {
         );
       })}
       {!props.addingNewField && props.values.length === 0 && (
-        <Box>
+        <div>
           <Text size={1} css={{ color: '$gray11' }}>
             {props.emptyValuesText || 'No values yet'}
           </Text>
-        </Box>
+        </div>
       )}
       {props.addingNewField && (
         <AddNewPairInputField
@@ -262,6 +210,6 @@ export const PairInput = (props: PairInputProps) => {
           }}
         />
       )}
-    </StyledPairInputList>
+    </div>
   );
 };

@@ -2,8 +2,6 @@ import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { Box } from '@app/components/box';
-
 import { PropEditorSection } from './shared/PropEditorSection';
 
 type ComponentTemplateSettingsProps = {
@@ -13,9 +11,9 @@ type ComponentTemplateSettingsProps = {
 export const ComponentTemplateSettings = observer(
   ({ template }: ComponentTemplateSettingsProps) => {
     return (
-      <Box css={{ display: 'grid', gap: '10px' }}>
+      <div className="grid gap-5">
         <PropEditorSection template={template} />
-      </Box>
+      </div>
     );
   }
 );

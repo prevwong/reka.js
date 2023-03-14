@@ -3,8 +3,6 @@ import * as React from 'react';
 import { useEditor, useEditorActiveComponent } from '@app/editor';
 import { UserFrame } from '@app/extensions/UserFrameExtension';
 
-import { Box } from '../box';
-import { Text } from '../text';
 import { TextField } from '../text-field';
 
 type EditPreviewSizeProps = {
@@ -17,10 +15,8 @@ export const EditPreviewSize = (props: EditPreviewSizeProps) => {
 
   return (
     <React.Fragment>
-      <Text size={1} css={{ mr: '$3', color: '$grayA11' }}>
-        Preview size
-      </Text>
-      <Box css={{ display: 'flex', alignItems: 'center' }}>
+      <span className="text-xs mr-3 text-neutral-900">Preview size</span>
+      <div className="flex items-center">
         <TextField
           placeholder="100%"
           size={5}
@@ -39,9 +35,7 @@ export const EditPreviewSize = (props: EditPreviewSizeProps) => {
             });
           }}
         />
-        <Text size={1} css={{ mx: '$2', color: '$grayA10' }}>
-          x
-        </Text>
+        <span className="text-xs mx-3 text-neutral-400">x</span>
         <TextField
           placeholder="100%"
           size={5}
@@ -60,7 +54,7 @@ export const EditPreviewSize = (props: EditPreviewSizeProps) => {
             });
           }}
         />
-      </Box>
+      </div>
     </React.Fragment>
   );
 };

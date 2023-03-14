@@ -1,4 +1,5 @@
 import * as t from '@rekajs/types';
+import classNames from 'classnames';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import IFrame from 'react-frame-component';
@@ -6,13 +7,11 @@ import { ThreeDots } from 'react-loader-spinner';
 
 import { useEditor, useEditorActiveComponent } from '@app/editor';
 import { ActiveFrame } from '@app/editor/ComponentEditor';
-import { styled } from '@app/styles';
 
 import { FrameContext } from './FrameContext';
 import { RenderSelectionBorders } from './RenderSelectionBorders';
 import { Renderer } from './Renderer';
 
-import { Box } from '../box';
 import { TemplateComments } from '../editor-layout/TemplateComments';
 
 const isNotFullWidth = (
@@ -26,39 +25,6 @@ const isNotFullWidth = (
 
   return isNotFullWidth;
 };
-
-const StyledFrameContainer = styled('div', {
-  width: '100%',
-  height: '100%',
-  position: 'relative',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  transformOrigin: '0px 0px',
-  minHeight: '100%',
-  maxHeight: '100%',
-  '> iframe': {
-    display: 'block',
-    margin: '0 auto',
-    width: '100%',
-    height: '100%',
-    boxShadow: 'none',
-    border: '1px solid transparent',
-    borderRadius: 0,
-    background: '#fff',
-  },
-  variants: {
-    isNotFullWidth: {
-      true: {
-        padding: '$4',
-        '> iframe': {
-          borderColor: 'rgb(0 0 0 / 7%)',
-          borderRadius: '$1',
-        },
-      },
-    },
-  },
-});
 
 type RenderFrameViewProps = {
   view: t.View;
@@ -116,18 +82,27 @@ const RenderFrameView = observer((props: RenderFrameViewProps) => {
   }, [props.width]);
 
   return (
-    <Box css={{ width: '100%', height: '100%' }} ref={containerDomRef}>
-      <StyledFrameContainer
+    <div className="w-full h-full" ref={containerDomRef}>
+      <div
+        className={classNames(
+          'w-full h-full relative flex flex-col justify-center min-h-full max-h-full origin-[0px_0px]',
+          {
+            'p-4': !isNotFullWidth,
+          }
+        )}
         ref={frameDomRef}
-        isNotFullWidth={isNotFullWidth(props.width, props.height)}
-        css={{
-          '> iframe': {
-            maxWidth: props.width,
-            maxHeight: props.height,
-          },
-        }}
       >
         <IFrame
+          style={{
+            maxWidth: props.width,
+            maxHeight: props.height,
+          }}
+          className={classNames(
+            'block m-auto w-full h-full shadow-none border border-transparent rounded-none bg-white',
+            {
+              'border-outline rounded-xs': !isNotFullWidth,
+            }
+          )}
           initialContent='<!DOCTYPE html><html><head><link href="/frame.css" rel="stylesheet" /></head><body><div id="root"></div></body></html>'
           mountTarget="#root"
           ref={(dom: any) => {
@@ -141,8 +116,8 @@ const RenderFrameView = observer((props: RenderFrameViewProps) => {
         {activeComponentEditor.activeFrame?.templateToShowComments && (
           <TemplateComments activeFrame={activeComponentEditor.activeFrame} />
         )}
-      </StyledFrameContainer>
-    </Box>
+      </div>
+    </div>
   );
 });
 
@@ -162,19 +137,7 @@ export const RenderFrame = observer((props: RenderFrameProps) => {
   return (
     <React.Fragment>
       {!props.frame.state.view ? (
-        <Box
-          css={{
-            position: 'absolute',
-            left: 0,
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            background: '#fff',
-          }}
-        >
+        <div className="absolute left-0 w-full h-full flex flex-col justify-center items-center bg-white">
           <ThreeDots
             height="50"
             width="50"
@@ -184,7 +147,7 @@ export const RenderFrame = observer((props: RenderFrameProps) => {
             wrapperClass=""
             visible={true}
           />
-        </Box>
+        </div>
       ) : (
         <FrameContext.Provider value={props.frame.state}>
           <RenderFrameView

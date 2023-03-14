@@ -2,7 +2,6 @@ import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { Box } from '@app/components/box';
 import { useMaybeEditor } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 
@@ -20,11 +19,11 @@ export const ToolbarApp = observer(() => {
   }
 
   return (
-    <Box css={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+    <div className="flex items-center gap-2.5">
       <Collaborators />
       <Tooltip content="Toggle code editor">
         <Button
-          variant={'primary'}
+          variant={'secondary'}
           onClick={() => {
             if (editor.mode === EditorMode.Code) {
               editor.setMode(EditorMode.UI);
@@ -62,6 +61,6 @@ export const ToolbarApp = observer(() => {
           )}
         </IconButton>
       </Tooltip>
-    </Box>
+    </div>
   );
 });

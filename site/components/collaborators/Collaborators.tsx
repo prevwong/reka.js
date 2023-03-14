@@ -3,17 +3,10 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { useEditor } from '@app/editor';
-import { styled } from '@app/styles';
 import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
 import { Tooltip } from '../tooltip';
 import { UserAvatar } from '../user-avatar';
-
-const StyledCollaboratorsContainers = styled('div', {
-  ml: '$2',
-  display: 'flex',
-  gap: '2px',
-});
 
 const CollabUser = React.forwardRef<HTMLSpanElement, any>(
   ({ active, user }, ref) => {
@@ -35,7 +28,7 @@ export const Collaborators = observer(() => {
   }
 
   return (
-    <StyledCollaboratorsContainers>
+    <div className="ml-2 flex gap-1.5">
       <AnimatePresence>
         {editor.peers.map((user, i) => (
           <MotionCollabUser
@@ -60,6 +53,6 @@ export const Collaborators = observer(() => {
           transition={CREATE_BEZIER_TRANSITION()}
         />
       </AnimatePresence>
-    </StyledCollaboratorsContainers>
+    </div>
   );
 });

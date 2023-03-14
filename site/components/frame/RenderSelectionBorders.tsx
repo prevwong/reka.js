@@ -1,12 +1,12 @@
 import { ChatBubbleIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import * as t from '@rekajs/types';
+import classNames from 'classnames';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { useEditor } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 
-import { Box } from '../box';
 import { IconButton } from '../button';
 import { Text } from '../text';
 import { Tooltip } from '../tooltip';
@@ -140,59 +140,30 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
   }
 
   return (
-    <Box
-      css={{
-        position: 'absolute',
-        zIndex: '2',
-        border: '1px solid $indigoA9',
-        pointerEvents: 'none',
-        opacity: 0,
-        '&.overflow': {
-          '&.overflow-border-hidden': {
-            borderColor: 'transparent',
-          },
-          '&.overflow-top': {
-            '> div': {
-              top: 0,
-            },
-          },
-          '&.overflow-bottom': {
-            '> div': {
-              bottom: 0,
-            },
-          },
-        },
-      }}
+    <div
+      className="absolute z-max border border-solid border-primary pointer-events-none [&\.overflow\-border\-hidden]:border-transparent [&\.overflow\-top > div]:top-0 [&\.overflow\-bottom > div]:bottom-0"
       ref={containerDomRef}
     >
-      <Box
-        css={{
-          position: 'relative',
-          top: '-30px',
-          background: props.type === 'selected' ? '$indigo9' : '$purple9',
-          color: '#fff',
-          px: '$3',
-          py: '$2',
-          fontSize: '$1',
-          height: '30px',
-          left: '-1px',
-          display: 'inline-block',
-          pointerEvents: 'all',
-        }}
+      <div
+        className={classNames(
+          'relative text-white px-3 py-1.5 text-sm h-6 -top-6 -left-px inline-block',
+          {
+            'bg-primary': props.type === 'selected',
+            'bg-secondary': props.type === 'hovered',
+          }
+        )}
       >
-        <Box css={{ display: 'flex', alignItems: 'center' }}>
-          <Box css={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+        <div className="flex items-center">
+          <div className="flex-1 flex items-center">
             <Text size={2}>{templateName}</Text>
             <Text css={{ ml: '$2', opacity: 0.7 }} size={1}>
               {'<'}
               {templateType}
               {'>'}
             </Text>
-          </Box>
+          </div>
 
-          <Box
-            css={{ pl: '$3', display: 'flex', alignItems: 'center', gap: '$2' }}
-          >
+          <div className="pl-3 flex items-center">
             {props.template instanceof t.ComponentTemplate && (
               <Tooltip
                 content={
@@ -239,18 +210,18 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
               >
                 <ChatBubbleIcon />
                 {activeComponentEditor.getCommentCount(props.template) > 0 && (
-                  <Box css={{ ml: '$3', fontSize: '9px' }}>
+                  <div className="ml-3 text-xs">
                     {editor.activeComponentEditor?.getCommentCount(
                       props.template
                     )}
-                  </Box>
+                  </div>
                 )}
               </IconButton>
             </Tooltip>
-          </Box>
-        </Box>
-      </Box>
-    </Box>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 });
 

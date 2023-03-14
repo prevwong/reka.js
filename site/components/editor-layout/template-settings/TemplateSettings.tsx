@@ -2,52 +2,12 @@ import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { Box } from '@app/components/box';
 import { Text } from '@app/components/text';
 import { useEditor } from '@app/editor';
-import { styled } from '@app/styles';
 
 import { ComponentTemplateSettings } from './ComponentTemplateSettings';
 import { SharedTemplateSettings } from './SharedTemplateSettings';
 import { TagTemplateSettings } from './TagTemplateSettings';
-
-const Topbar = styled('div', {
-  display: 'flex',
-  px: '$4',
-  py: '$3',
-  mt: '$4',
-});
-
-const StyledTemplateTypeHeading = styled('div', {
-  display: 'flex',
-  alignItems: 'center',
-  flex: 1,
-  input: {
-    padding: '2px 4px',
-    marginLeft: '-4px',
-    marginRight: '-4px',
-    fontSize: '$4',
-
-    '&:hover': {
-      background: '$grayA5',
-    },
-  },
-  '> span': {
-    fontSize: '10px',
-    color: 'rgba(0,0,0,0.8)',
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    mt: '2px',
-    cursor: 'pointer',
-    svg: {
-      display: 'inline-block',
-      width: '10px',
-      height: '10px',
-      ml: '$1',
-    },
-  },
-});
 
 type TemplateHeadingProps = {
   template: t.Template;
@@ -67,36 +27,26 @@ const TemplateHeading = (props: TemplateHeadingProps) => {
   }
 
   return (
-    <StyledTemplateTypeHeading>
-      <Box css={{ flex: 1, fontSize: '$4' }}>
-        <span>{title}</span>
-      </Box>
-      <Box
-        css={{
-          fontSize: '10px',
-          backgroundColor: '$primary2',
-          color: '$primary5',
-          display: 'inline-block',
-          width: 'auto',
-          px: '$3',
-          py: '$2',
-          borderRadius: '$4',
-          alignSelf: 'flex-end',
-        }}
-      >
+    <div className="flex items-center flex-1">
+      <div className="flex-1 text-sm">
+        <span className="text-lg color-gray-800 w-full flex items-center mt-1 cursor-pointer">
+          {title}
+        </span>
+      </div>
+      <div className="text-xs bg-primary/10 text-primary/90 inline-block w-auto px-4 py-3 rounded-full align-end">
         {props.template.type}
-      </Box>
-    </StyledTemplateTypeHeading>
+      </div>
+    </div>
   );
 };
 
 const InternalTemplateSettings = ({ template }: any) => {
   return (
-    <Box>
-      <Topbar>
+    <div>
+      <div className="flex px-4 py-3 mt-4">
         <TemplateHeading template={template} />
-      </Topbar>
-      <Box css={{ mt: '$3' }}>
+      </div>
+      <div className="mt-3">
         <SharedTemplateSettings template={template} />
         {template instanceof t.TagTemplate && (
           <TagTemplateSettings template={template} />
@@ -104,8 +54,8 @@ const InternalTemplateSettings = ({ template }: any) => {
         {template instanceof t.ComponentTemplate && (
           <ComponentTemplateSettings template={template} />
         )}
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };
 
@@ -116,23 +66,11 @@ export const TemplateSettings = observer(() => {
 
   if (!template) {
     return (
-      <Box
-        css={{
-          px: '$8',
-          py: '$4',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%',
-          textAlign: 'center',
-          gap: '$2',
-        }}
-      >
+      <div className="px-8 py-4 flex flex-col justify-center items-center h-full text-center gap-2">
         <Text size={2} css={{ color: '$slate10', lineHeight: '1.2rem' }}>
           Click on an element on the screen to start editing a template.
         </Text>
-      </Box>
+      </div>
     );
   }
 
