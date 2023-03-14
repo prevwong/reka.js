@@ -104,7 +104,7 @@ const TextareaEditor = ({
       )}
     >
       <TextareaAutosize
-        className="w-full text-xs p-3 outline-none resize-none"
+        className="w-full text-xs p-2.5 outline-none resize-none font-code"
         {...props}
         value={value}
         ref={domRef}
@@ -119,7 +119,7 @@ const TextareaEditor = ({
           }
         }}
       />
-      <div className="px-3 py-3 flex">
+      <div className="px-2.5 py-2 flex">
         <div className="text-[0.6rem] py-1 px-3 border border-solid border-secondary/20 text-secondary flex rounded-full items-center justify-center self-start">
           Expression
           <Info

@@ -2,8 +2,8 @@ import * as React from 'react';
 
 export const Footer = () => {
   return (
-    <div className="px-4 py-6 border-t border-solid border-t-gray-200 text-sm text-slate-600 flex [&>a]:text-decoration-none">
-      <div className="flex flex-col gap-3 m-auto w-auto flex-1">
+    <div className="px-4 py-6 border-t border-solid border-t-gray-200 text-xs  text-slate-600 flex [&>a]:text-decoration-none">
+      <div className="flex flex-col gap-2 m-auto w-auto flex-1">
         <div>
           Made with <span className=" text-primary inline m-0">♥︎</span> by{' '}
           <a

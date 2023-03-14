@@ -113,8 +113,8 @@ const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
         className={dedent`
         group
         grid grid-cols-[80px_1fr] relative gap-0 border-solid border border-outline -mb-px
-        first:rounded-tr-sm first:rounded-tl-sm
-        last:rounded-br-sm last:rounded-bl-sm
+        first:rounded-tr-md first:rounded-tl-md
+        last:rounded-br-md last:rounded-bl-md
         [&:not:last-child]:border-b-transparent
         [&_input]:rounded-none [&_input]:border-none [&_input]:border-r [&_input]:border-r-solid
       `}

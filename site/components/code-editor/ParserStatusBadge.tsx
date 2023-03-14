@@ -46,7 +46,7 @@ export const ParserStatusBadge = (props: ParserStatusBadgeProps) => {
     <Tooltip content={payload.content}>
       <div
         className={classNames(
-          'flex items-center px-3 py-2 rounded-full border border-solid border-outline text-xs [&>svg]:inline-block [&>svg]:mr-2 [&>svg]:w-5 [&>svg]:h-5',
+          'flex items-center px-2 py-0.5 rounded-full border border-solid border-outline text-xs [&>svg]:inline-block [&>svg]:mr-2 [&>svg]:w-5 [&>svg]:h-5',
           {
             'text-green-600 border-green-400': props.status.type === 'success',
             'text-red-600 border-red-400': props.status.type === 'error',

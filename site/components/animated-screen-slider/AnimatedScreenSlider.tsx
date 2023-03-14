@@ -4,6 +4,7 @@ import * as React from 'react';
 import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
 import { Button } from '../button';
+import { ArrowLeftIcon, ChevronLeftIcon } from '@radix-ui/react-icons';
 
 type Callbacks = {
   goTo: (id: string) => void;
@@ -126,11 +127,15 @@ export const AnimatedScreenSlider = (props: AnimatedScreenSliderProps) => {
                   <div className="px-4 py-4">
                     <Button
                       variant="link"
+                      className="gap-2 group"
                       onClick={() => {
                         callbacks.goBack();
                       }}
                     >
-                      {props.goBackText ?? 'Go Back'}
+                      <ArrowLeftIcon className="transition bezier duration-400 translate-x-0 group-hover:-translate-x-0.5" />
+                      <span className="transition bezier duration-400 translate-x-0">
+                        {props.goBackText ?? 'Go Back'}
+                      </span>
                     </Button>
                   </div>
                 )}

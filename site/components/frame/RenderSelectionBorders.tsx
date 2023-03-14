@@ -141,86 +141,88 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
 
   return (
     <div
-      className="absolute z-max border border-solid border-primary pointer-events-none [&\.overflow\-border\-hidden]:border-transparent [&\.overflow\-top > div]:top-0 [&\.overflow\-bottom > div]:bottom-0"
+      className={classNames(
+        'absolute z-50 border border-solid border-primary pointer-events-none [&.overflow-border-hidden]:border-transparent [&.overflow-top > div]:top-0 [&.overflow-bottom > div]:bottom-0'
+      )}
       ref={containerDomRef}
     >
-      <div
-        className={classNames(
-          'relative text-white px-3 py-1.5 text-sm h-6 -top-6 -left-px inline-block',
-          {
-            'bg-primary': props.type === 'selected',
-            'bg-secondary': props.type === 'hovered',
-          }
-        )}
-      >
-        <div className="flex items-center">
-          <div className="flex-1 flex items-center">
-            <Text size={2}>{templateName}</Text>
-            <Text css={{ ml: '$2', opacity: 0.7 }} size={1}>
-              {'<'}
-              {templateType}
-              {'>'}
-            </Text>
-          </div>
+      {props.type === 'selected' && (
+        <div
+          className={classNames(
+            'relative z-max pointer-events-auto text-white bg-primary text-white px-2.5 text-sm h-8 -top-8 -left-px inline-flex items-center'
+          )}
+        >
+          <div className="flex items-center">
+            <div className="flex-1 flex items-center">
+              <Text size={2}>{templateName}</Text>
+              <Text css={{ ml: '$2', opacity: 0.7 }} size={1}>
+                {'<'}
+                {templateType}
+                {'>'}
+              </Text>
+            </div>
 
-          <div className="pl-3 flex items-center">
-            {props.template instanceof t.ComponentTemplate && (
-              <Tooltip
-                content={
-                  props.template.component.external
-                    ? 'This is an external React component, it cannot be edited.'
-                    : 'Edit component'
-                }
-              >
+            <div className="pl-3 flex items-center">
+              {props.template instanceof t.ComponentTemplate && (
+                <Tooltip
+                  content={
+                    props.template.component.external
+                      ? 'This is an external React component, it cannot be edited.'
+                      : 'Edit component'
+                  }
+                >
+                  <IconButton
+                    disabled={props.template.component.external}
+                    className="text-white/80 hover:bg-black/10 hover:text-white"
+                    onClick={() => {
+                      const template = props.template;
+
+                      if (!(template instanceof t.ComponentTemplate)) {
+                        return;
+                      }
+
+                      if (template.component.external) {
+                        return;
+                      }
+
+                      const component = editor.reka.components.program.find(
+                        (component) =>
+                          component.name === template.component.name
+                      );
+
+                      if (!component) {
+                        return;
+                      }
+
+                      editor.setActiveComponentEditor(component);
+                    }}
+                  >
+                    <Pencil1Icon />
+                  </IconButton>
+                </Tooltip>
+              )}
+              <Tooltip content="View comments">
                 <IconButton
-                  disabled={props.template.component.external}
-                  className="text-white hover:bg-slate-500"
+                  className="text-white/80 hover:bg-black/10 hover:text-white items-center flex"
                   onClick={() => {
-                    const template = props.template;
-
-                    if (!(template instanceof t.ComponentTemplate)) {
-                      return;
-                    }
-
-                    if (template.component.external) {
-                      return;
-                    }
-
-                    const component = editor.reka.components.program.find(
-                      (component) => component.name === template.component.name
-                    );
-
-                    if (!component) {
-                      return;
-                    }
-
-                    editor.setActiveComponentEditor(component);
+                    activeComponentEditor.showComments(props.template);
                   }}
                 >
-                  <Pencil1Icon />
+                  <ChatBubbleIcon />
+                  {activeComponentEditor.getCommentCount(props.template) >
+                    0 && (
+                    <div className="ml-3 [fontSize:0.6rem]">
+                      {editor.activeComponentEditor?.getCommentCount(
+                        props.template
+                      )}
+                    </div>
+                  )}
                 </IconButton>
               </Tooltip>
-            )}
-            <Tooltip content="View comments">
-              <IconButton
-                className="text-white hover:bg-slate-500"
-                onClick={() => {
-                  activeComponentEditor.showComments(props.template);
-                }}
-              >
-                <ChatBubbleIcon />
-                {activeComponentEditor.getCommentCount(props.template) > 0 && (
-                  <div className="ml-3 text-xs">
-                    {editor.activeComponentEditor?.getCommentCount(
-                      props.template
-                    )}
-                  </div>
-                )}
-              </IconButton>
-            </Tooltip>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 });

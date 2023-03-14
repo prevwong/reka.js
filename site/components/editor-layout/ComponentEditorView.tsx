@@ -32,8 +32,8 @@ const BOTTOM_TOOLBAR_HEIGHT = 40;
 
 const NoFrameSelectedMessage = () => {
   return (
-    <div className="flex items-center justify-center text-center h-full w-full">
-      <span className="text-neutral-900">
+    <div className="flex items-center leading-6 justify-center text-center h-full w-full">
+      <span className="text-gray-500">
         No frame selected.
         <br />
         Click &quot;Add new Frame&quot; to create one.
@@ -95,7 +95,7 @@ export const ComponentEditorView = observer(() => {
   return (
     <div className="relative flex flex-col h-full" ref={containerDOMRef}>
       <motion.div
-        className={`flex items-center px-4 py-3 border-b border-solid border-outline w-full relative z-40 bg-white h-[${TOOLBAR_HEIGHT}px]`}
+        className={`flex items-center px-4 py-2.5 border-b border-solid border-outline w-full relative z-40 bg-white h-[${TOOLBAR_HEIGHT}px]`}
         initial={false}
         animate={editor.mode === EditorMode.Preview ? 'exit' : 'enter'}
         variants={{
@@ -212,7 +212,7 @@ export const ComponentEditorView = observer(() => {
       </div>
       {componentEditor.activeFrame && (
         <motion.div
-          className={`flex items-center border-t border-solid border-black/5 px-4 py-3 relative z-20 bg-white h-[${BOTTOM_TOOLBAR_HEIGHT}]px`}
+          className={`flex items-center border-t border-solid border-outline px-4 py-1.5 relative z-20 bg-white h-[${BOTTOM_TOOLBAR_HEIGHT}]px`}
           initial={false}
           animate={editor.mode === EditorMode.Preview ? 'exit' : 'enter'}
           variants={{
@@ -241,10 +241,10 @@ export const ComponentEditorView = observer(() => {
                 checked={componentEditor.activeFrame.state.sync}
               />
 
-              <span className="text-[10px] flex gap-2 text-neutral-600 items-center">
+              <span className="text-xs flex text-neutral-600 items-center">
                 {componentEditor.activeFrame?.state.sync
-                  ? 'Synching'
-                  : 'Not synching'}
+                  ? 'Syncing'
+                  : 'Not syncing'}
                 <Info
                   info={
                     componentEditor.activeFrame.state.sync
@@ -291,18 +291,19 @@ export const ComponentEditorView = observer(() => {
                   <Button
                     size="xs"
                     onClick={() => {
-                      setEditFrame(true);
-                    }}
-                  >
-                    Edit Frame Props
-                  </Button>
-                  <Button
-                    size="xs"
-                    onClick={() => {
                       removeFrame();
                     }}
                   >
                     Remove Frame
+                  </Button>
+                  <Button
+                    size="xs"
+                    variant={'subtle'}
+                    onClick={() => {
+                      setEditFrame(true);
+                    }}
+                  >
+                    Edit Frame Props
                   </Button>
                   <Button
                     size="xs"

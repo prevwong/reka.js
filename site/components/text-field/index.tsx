@@ -73,7 +73,7 @@ export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
     return (
       <div
         className={cn(
-          'group flex-1 relative border border-solid border-outline flex items-center rounded-sm',
+          'group flex-1 relative border border-solid border-outline flex items-center rounded-md shadow-sm',
           {
             'border-red-400': !!hasError,
             'border-none': transparent,
@@ -83,7 +83,7 @@ export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
       >
         <input
           {...props}
-          className="bg-transparent outline-none shadow-none py-2 px-3 text-black/80 transition border-none relative w-full text-xs"
+          className="bg-transparent outline-none shadow-none py-1.5 px-3 text-black/80 transition border-none relative w-full text-xs"
           value={onCommit ? uncommittedValue : value}
           onChange={(e) => {
             setHasError('');
@@ -120,7 +120,7 @@ export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
         {children}
         {onCancel && (
           <IconButton
-            className="bg-none border-none  opacity-0 group-hover:opacity-100"
+            className="bg-none border-none mr-px opacity-0 group-hover:opacity-100"
             onClick={() => {
               cancel();
             }}

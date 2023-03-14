@@ -40,7 +40,7 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
 
   return (
     <Modal title="Add template" isOpen={props.isOpen} onClose={props.onClose}>
-      <div className="flex flex-col gap-5 mt-5">
+      <div className="flex flex-col gap-4 mt-5">
         <div className="grid items-center w-full grid-cols-pair-input">
           <Text size="1">Type</Text>
           <div>

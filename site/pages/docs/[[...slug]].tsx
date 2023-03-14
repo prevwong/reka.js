@@ -28,7 +28,7 @@ const DocLink = React.forwardRef<HTMLAnchorElement, DocLinkProps>(
         {...props}
         ref={ref}
         className={cn(
-          'px-3 py-3 my-2 cursor-pointer text-slate-600 underline-none block w-full rounded-md text-sm',
+          'px-3 py-1.5 my-1 cursor-pointer text-slate-600 underline-none block w-full rounded-md text-sm',
           {
             'bg-primary/10 text-primary font-normal': active,
             'hover:bg-primary/10 hover:text-primary font-light': !active,
@@ -91,7 +91,7 @@ const Docs = (props: any) => {
       <motion.nav
         className={cn(
           `group
-          w-72 relative flex flex-col
+          w-80 relative flex flex-col
           transition bezier duration-400
           max-sm:z-50
           max-sm:w-86 max-sm:fixed max-sm:-left-full max-sm:top-[50px] max-sm:h-[calc(100vh-50px)]
@@ -141,11 +141,13 @@ const Docs = (props: any) => {
       <div className="flex overflow-x-hidden w-full">
         <div
           className={cn(`
-          w-full py-5 px-8 mx-auto flex gap-2.5 items-start max-w-[1000px] max-sm:m-0 max-sm:px-4 max-sm:px-5 max-sm:max-w-full
+          w-full py-10 px-8 mx-auto flex gap-4 items-start max-w-[1000px] max-sm:m-0 max-sm:px-4 max-sm:px-5 max-sm:max-w-full
           `)}
         >
           <IconButton
-            className="hidden max-sm:block"
+            variant={'outline'}
+            size={'default'}
+            className="hidden -ml-1 max-sm:block"
             onClick={() => {
               setMobileNavActive(!mobileNavActive);
             }}

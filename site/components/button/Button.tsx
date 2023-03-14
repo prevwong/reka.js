@@ -8,19 +8,20 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-transparent text-neutral-600 hover:bg-gray-100',
+        default:
+          'bg-transparent text-gray-500 hover:bg-black/5 hover:text-neutral-900',
         primary: 'bg-primary/10 text-primary hover:bg-primary/20',
         secondary: 'bg-purple-100 text-purple-600 hover:bg-purple-200',
         outline:
-          'bg-transparent border border-solid border-slate-200 hover:bg-slate-100 text-slate-500 shadow-sm',
-        subtle: 'bg-transparent text-blue-600 hover:bg-blue-100',
+          'bg-transparent border border-solid border-outline text-neutral-500 hover:bg-primary/10 hover:text-primary shadow-sm',
+        subtle: 'bg-transparent text-primary hover:bg-primary-100',
         link: 'bg-transparent text-blue-600 hover:text-blue-500',
       },
       size: {
-        default: 'text-xs py-3 px-3 [&>svg]:w-3.5 [&>svg]:h-3.5',
-        xs: 'text-xs py-2 px-2 rounded-md [&>svg]:w-3.5 [&>svg]:h-3.5',
+        default: 'text-xs py-2.5 px-2.5 [&>svg]:w-3.5 [&>svg]:h-3.5',
+        xs: 'text-xs py-1.5 px-1.5 rounded-md [&>svg]:w-3 [&>svg]:h-3',
         xxs: 'text-xs px-1 py-1 rounded-md [&>svg]:w-3 [&>svg]:h-3',
-        lg: 'h-11 px-8 rounded-md',
+        lg: 'text-md px-4 py-4 rounded-md [&>svg]:w-4 [&>svg]:h-4',
       },
     },
     compoundVariants: [
@@ -59,7 +60,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Button
         ref={ref}
-        className={cx(className, 'padding-2')}
+        className={cx(className)}
         size={size || 'xs'}
         {...props}
       >

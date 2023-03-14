@@ -21,15 +21,15 @@ export const SettingSection = (props: SettingSectionProps) => {
   );
 
   return (
-    <div className="flex px-4 py-2.5 flex-col border-b border-solid border-outline setting-section">
+    <div className="flex px-5 py-1.5 flex-col border-b border-solid border-outline setting-section last:border-none">
       <motion.div
         className="flex relative items-center cursor-pointer mt-2 mb-1"
         initial={false}
         animate={{ paddingBottom: isOpen ? '10px' : 0 }}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <header className="flex flex-1">
-          <span className="-mb-1 text-gray-900 text-sm font-medium flex items-center">
+        <header className="flex flex-1 items-center">
+          <span className="text-gray-900 text-sm font-medium flex items-center">
             {props.title}
             {props.info && <Info info={props.info} />}
           </span>

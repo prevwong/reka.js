@@ -1,3 +1,5 @@
+const colors = require('@radix-ui/colors');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -8,37 +10,82 @@ module.exports = {
 
   theme: {
     extend: {
+      fontFamily: {
+        code: ['JetBrains Mono'],
+      },
+      keyframes: {
+        show: {
+          '0%': { opacity: 0, transform: 'translate(-50%, -48%) scale(.96)' },
+          '100%': { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
+        },
+        modalShow: {
+          '0%': { opacity: 0, transform: 'translate(-50%, -48%) scale(.96)' },
+          '100%': { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
+        },
+      },
+      animation: {
+        show: 'show 150ms cubic-bezier(0.16, 1, 0.3, 1)`',
+        modalShow: 'modalShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+        fade: 'cubic-bezier(0.16, 1, 0.3, 1)',
+      },
+      transitionTimingFunction: {
+        bezier: 'cubic-bezier(0.19, 1, 0.22, 1)',
+      },
       colors: {
-        primary: '#0066de',
         secondary: '#9334e9',
+        outline: '#e8e7e7',
+        primary: {
+          DEFAULT: '#0066DE',
+          50: '#E8F3FF',
+          100: '#D4E8FF',
+          200: '#ABD2FF',
+          300: '#82BCFF',
+          400: '#59A5FF',
+          500: '#318FFF',
+          600: '#0879FF',
+          700: '#0066DE',
+          800: '#004CA6',
+          900: '#00326E',
+        },
       },
-      spacing: {
-        1: '1px',
-        2: '4px',
-        3: '8px',
-        4: '16px',
-        5: '24px',
-        6: '32px',
-        7: '40px',
-        8: '48px',
-        9: '56px',
-      },
+
       zIndex: {
         max: '9999',
       },
-      fontSize: {
-        xss: '0.55rem',
-        xs: '11px',
-        sm: '0.8125rem',
-        md: '0.9375rem',
-        lg: '1.125rem',
-        xl: '2.25rem',
-        '2xl': '1.5rem',
-        '3xl': '1.25rem',
-      },
+
       gridTemplateColumns: {
         'pair-input': '80px 1fr',
       },
+      typography: ({ theme }) => ({
+        DEFAULT: {
+          css: {
+            '--tw-prose-quotes': theme('colors.gray[800]'),
+            pre: {
+              color: 'var(--tw-prose-pre-code)',
+              backgroundColor: 'var(--tw-prose-pre-bg)',
+              overflowX: 'auto',
+              fontWeight: '400',
+            },
+            blockquote: {
+              fontWeight: '400',
+              fontStyle: 'normal',
+              fontSize: theme('fontSize.sm'),
+              border: '1px solid',
+              borderColor: theme('colors.outline'),
+              borderRadius: theme('borderRadius.md'),
+              quotes: 'none',
+              color: theme('colors.gray[900]'),
+              boxShadow: theme('boxShadow.sm'),
+            },
+            'blockquote p:first-of-type::before': {
+              content: '',
+            },
+            'blockquote p:last-of-type::after': {
+              content: '',
+            },
+          },
+        },
+      }),
     },
   },
   plugins: [require('@tailwindcss/typography')],

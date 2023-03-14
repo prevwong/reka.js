@@ -1,6 +1,12 @@
 import {
+  ArrowRightIcon,
+  ChevronRightIcon,
+  ColorWheelIcon,
+  Component1Icon,
   ComponentBooleanIcon,
   ComponentPlaceholderIcon,
+  CubeIcon,
+  ShadowInnerIcon,
 } from '@radix-ui/react-icons';
 import * as t from '@rekajs/types';
 import { pascalCase } from 'pascal-case';
@@ -13,6 +19,7 @@ import { TextField } from '@app/components/text-field';
 import { useEditor } from '@app/editor';
 
 import { SettingSection } from '../settings-section';
+import { cn } from '@app/utils';
 
 type AddComponentModalProps = {
   isOpen: boolean;
@@ -25,7 +32,7 @@ const AddComponentModal = (props: AddComponentModalProps) => {
 
   return (
     <Modal
-      title="Create new Component"
+      title="Create Component"
       isOpen={props.isOpen}
       onClose={() => props.onClose()}
     >
@@ -42,7 +49,7 @@ const AddComponentModal = (props: AddComponentModalProps) => {
           />
         </div>
         <Button
-          size="xs"
+          variant="primary"
           onClick={() => {
             const safeComponentName = pascalCase(componentName);
 
@@ -101,6 +108,8 @@ export const ComponentList = (props: ComponentListProps) => {
 
   const components = editor.reka.state.program.components;
 
+  const activeComponent = editor.activeComponentEditor?.component;
+
   return (
     <React.Fragment>
       <SettingSection
@@ -110,23 +119,29 @@ export const ComponentList = (props: ComponentListProps) => {
           setShowAddCompnonentModal(true);
         }}
       >
-        <div className="-ml-4 -mr-4">
+        <div>
           {components.map((component) => (
             <div
               onClick={() => {
                 props.onComponentSelected(component);
               }}
               key={component.id}
-              className="px-4 py-2.5 group cursor-pointer flex items-center hover:bg-secondary/20 [&>svg]:w-3.5 [&>svg]:h-3.5 [&>svg]:mr-3 [&>button]:opacity-0"
+              className={cn(
+                'group px-3 py-2 my-0.5 rounded-md text-xs leading-1 group cursor-pointer flex items-center [&>svg]:w-3.5 [&>svg]:h-3.5 [&>button]:opacity-0',
+                {
+                  'bg-primary/10 text-primary': activeComponent === component,
+                  'text-gray-700 hover:bg-gray-100 hover:text-gray-900':
+                    activeComponent !== component,
+                }
+              )}
             >
               {component instanceof t.RekaComponent ? (
-                <ComponentBooleanIcon />
+                <Component1Icon className="mr-3.5" />
               ) : (
-                <ComponentPlaceholderIcon />
+                <ComponentPlaceholderIcon className="mr-3.5" />
               )}
-              <Text size="2" css={{ flex: 1, color: 'rgba(0,0,0,0.8)' }}>
-                {component.name}
-              </Text>
+              <span className="flex-1">{component.name}</span>
+              <ChevronRightIcon className="opacity-0 relative translate-x-5 transition ease-bezier duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
             </div>
           ))}
         </div>

@@ -25,8 +25,8 @@ export const ComponentSettings = observer(() => {
 
   return (
     <div className="flex flex-col">
-      <div className="px-4 py-2 flex items-center [&>input]:px-2 [&>input]:py-3 text-md [&>input]:hover:bg-gray-500">
-        <h1 className="flex-1 text-lg mb-4">{component.name}</h1>
+      <div className="px-5 py-2 flex items-center [&>input]:px-2 [&>input]:py-3 text-md [&>input]:hover:bg-gray-500">
+        <h1 className="flex-1 text-lg mb-2">{component.name}</h1>
       </div>
       <SettingSection
         title="Props"

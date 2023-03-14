@@ -112,7 +112,7 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
 
   return (
     <div
-      className="bg-white/80 backdrop-blur-md flex flex-col fixed w-54 z-20 rounded-sm shadow-md"
+      className="bg-white/80 backdrop-blur-md flex flex-col fixed w-72 z-max rounded-md shadow-xl"
       ref={containerRef}
     >
       <div className="overflow-auto px-4 py-4 max-h-52">
@@ -127,25 +127,22 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
               .sort((a, b) => (a.date < b.date ? 1 : -1))
               .map((comment, i) => {
                 return (
-                  <div className="py-3 gap-2 flex" key={i}>
+                  <div className="py-3 gap-4 flex" key={i}>
                     <div className="mt-1">
                       <UserAvatar user={comment.user} />
                     </div>
                     <div className="flex flex-col flex-1">
-                      <Text
-                        size={2}
-                        css={{ mb: '$2', fontWeight: 500, color: '$slate11' }}
-                      >
+                      <span className="text-gray-700 text-sm">
                         {comment.user.name}
-                      </Text>
-                      <Text size={1} css={{ mb: '$2', color: '$slate11' }}>
+                      </span>
+                      <span className="text-gray-600 text-xs">
                         {comment.content}
-                      </Text>
-                      <Text size={1} css={{ color: '$slate10' }}>
+                      </span>
+                      <span className="text-gray-500 text-xs mt-0.5">
                         {formatDistance(comment.date, Date.now(), {
                           addSuffix: true,
                         })}
-                      </Text>
+                      </span>
                     </div>
                   </div>
                 );

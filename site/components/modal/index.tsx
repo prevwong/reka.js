@@ -34,12 +34,12 @@ export const Modal = (props: ModalProps) => {
           onClick={(e) => e.stopPropagation()}
         />
         <div
-          className="bg-white rounded-md shadow-xl fixed top-[50%] left-[50%] [transform:translate(-50%,-50%)] w-[90vw] max-w-[450px] max-h-[85vh] px-4 py-5 z-50 focus:outline-none animate-modalShow"
+          className="bg-white rounded-md shadow-xl fixed top-[50%] left-[50%] [transform:translate(-50%,-50%)] w-[90vw] max-w-[450px] max-h-[85vh] px-5 py-5 z-50 focus:outline-none animate-modalShow"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="mb-6">
+          <div className="mb-8">
             {props.title && (
-              <DialogPrimitive.Title className="font-medium text-lg">
+              <DialogPrimitive.Title className="font-medium text-xl">
                 {props.title}
               </DialogPrimitive.Title>
             )}

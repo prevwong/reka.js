@@ -13,12 +13,12 @@ export const Switch = (props: SwitchProps) => {
   return (
     <SwitchPrimitive.Root
       className={cn(
-        'w-10 h-4 rounded-full relative bg-gray-400 cursor-pointer data-[state="checked"]:bg-primary'
+        'w-10 h-5 rounded-full relative bg-gray-400 cursor-pointer data-[state="checked"]:bg-primary'
       )}
       checked={props.checked}
       onCheckedChange={() => props.onChange()}
     >
-      <SwitchPrimitive.Thumb className='w-3 h-3 block rounded-full translate-x-2 transition-transform bg-white data-[state="checked"]:translate-x-5 data-[state="checked"]:bg-white' />
+      <SwitchPrimitive.Thumb className='w-3 h-3 block rounded-full translate-x-1 transition-transform bg-white data-[state="checked"]:translate-x-6 data-[state="checked"]:bg-white' />
     </SwitchPrimitive.Root>
   );
 };

@@ -11,6 +11,7 @@ import { Tooltip } from '@app/components/tooltip';
 import { useEditor } from '@app/editor';
 
 import { AddTemplateModal } from './AddTemplateModal';
+import { cn } from '@app/utils';
 
 type AddTemplateButtonProps = {
   target: t.Template;
@@ -138,10 +139,13 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
   return (
     <div>
       <div
-        className={cx('px-4 py-2 cursor-pointer', {
-          'bg-primary/10': isSelected,
-          'hover:bg-secondary/20': !isSelected,
-        })}
+        className={cx(
+          'template-layer-name px-4 py-0.5 cursor-pointer rounded-md my-1',
+          {
+            'bg-primary/10 text-primary': isSelected,
+            'hover:bg-gray-100': !isSelected,
+          }
+        )}
       >
         <div
           className="flex items-center"
@@ -248,7 +252,7 @@ export const TemplateLayers = (props: TemplateLayersProps) => {
   }
 
   return (
-    <div className="mt-3 -ml-4 -mr-4">
+    <div className="mt-3">
       {component.template && (
         <RenderTemplateNode templateId={component.template.id} />
       )}
