@@ -43,7 +43,7 @@ export const CodeEditor = ({ className, ...props }: CodeEditorProps) => {
           <div className="flex-1">
             {tabs.map((tab) => (
               <button
-                className="cursor-pointer relative text-xs px-4 py-2.5 hover:bg-neutral-200"
+                className="cursor-pointer my-px leading-6 relative text-sm px-4 py-3 hover:bg-neutral-200"
                 key={tab.id}
                 onClick={() => {
                   setCurrentTab(tab.id);

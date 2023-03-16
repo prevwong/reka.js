@@ -218,7 +218,7 @@ export const ComponentEditorView = observer(() => {
             </div>
 
             {componentEditor.activeFrame.state.view && showViewTree && (
-              <div className="relative bg-white w-${350px} [&>div]:px-2 [&>div]:py-4 [&>div]:overflow-auto [&>div]:w-full [&>div]:h-full">
+              <div className="relative bg-white w-[350px] [&>div]:px-2 [&>div]:py-4 [&>div]:overflow-auto [&>div]:w-full [&>div]:h-full border-l border-solid border-outline">
                 <Tree root={componentEditor.activeFrame.state.view} />
               </div>
             )}
@@ -306,6 +306,7 @@ export const ComponentEditorView = observer(() => {
                 <React.Fragment>
                   <Button
                     size="xs"
+                    className="hover:bg-red-100 hover:text-red-600"
                     onClick={() => {
                       removeFrame();
                     }}

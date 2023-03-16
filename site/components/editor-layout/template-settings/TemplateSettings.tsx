@@ -33,7 +33,7 @@ const TemplateHeading = (props: TemplateHeadingProps) => {
           {title}
         </span>
       </div>
-      <div className="text-xs bg-primary/10 text-primary/90 inline-block w-auto px-4 py-2 rounded-full align-end">
+      <div className="text-xs border border-solid border-primary-200 text-primary inline-block w-auto px-3 py-1 rounded-full align-end">
         {props.template.type}
       </div>
     </div>
@@ -66,7 +66,7 @@ export const TemplateSettings = observer(() => {
 
   if (!template) {
     return (
-      <div className="px-8 py-4 flex flex-col justify-center items-center h-full text-center gap-2">
+      <div className="px-8 max-w-8 py-4 flex flex-col justify-center items-center h-full text-center gap-2">
         <Text size={2} css={{ color: '$slate10', lineHeight: '1.2rem' }}>
           Click on an element on the screen to start editing a template.
         </Text>

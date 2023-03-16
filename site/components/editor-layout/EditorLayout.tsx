@@ -82,7 +82,7 @@ export const EditorLayout = observer(
           variants={{
             compact: {
               position: 'absolute',
-              zIndex: '30',
+              zIndex: '99',
             },
             standard: {
               position: 'relative',
