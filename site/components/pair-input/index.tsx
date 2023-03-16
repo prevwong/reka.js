@@ -4,7 +4,6 @@ import * as React from 'react';
 
 import { IconButton } from '../button';
 import { ExpressionInput } from '../expression-input';
-
 import { TextField } from '../text-field';
 
 type PairInputFieldProps = {

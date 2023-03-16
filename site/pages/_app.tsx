@@ -12,6 +12,7 @@ import {
 import { EditorContextProvider } from '@app/editor';
 
 import '../styles/globals.css';
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 
 type PageOptions = {
   hideHeaderOnInitial: boolean;
@@ -65,21 +66,23 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <EditorContextProvider>
-      <Head>
-        <title>Reka.js</title>
-        <meta content="/social-banner.png" property="og:image" />
-        <meta name="viewport" content="width=device-width" />
-        <link rel="icon" type="image/png" href="/favicon.ico" />
-      </Head>
-      <div ref={layoutDomRef} className={SITE_LAYOUT_CLASSNAME}>
-        <Header />
-        <div className={SITE_LAYOUT_CONTENT_CLASSNAME}>
-          <Component {...pageProps} />
-          {options.footer && <Footer />}
+    <TooltipProvider delayDuration={600}>
+      <EditorContextProvider>
+        <Head>
+          <title>Reka.js</title>
+          <meta content="/social-banner.png" property="og:image" />
+          <meta name="viewport" content="width=device-width" />
+          <link rel="icon" type="image/png" href="/favicon.ico" />
+        </Head>
+        <div ref={layoutDomRef} className={SITE_LAYOUT_CLASSNAME}>
+          <Header />
+          <div className={SITE_LAYOUT_CONTENT_CLASSNAME}>
+            <Component {...pageProps} />
+            {options.footer && <Footer />}
+          </div>
         </div>
-      </div>
-    </EditorContextProvider>
+      </EditorContextProvider>
+    </TooltipProvider>
   );
 }
 

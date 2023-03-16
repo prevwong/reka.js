@@ -46,9 +46,13 @@ const AddTemplateButton = (props: AddTemplateButtonProps) => {
           },
         ]}
       >
-        <IconButton>
-          <PlusIcon />
-        </IconButton>
+        <span>
+          <Tooltip content="Add new template">
+            <IconButton>
+              <PlusIcon />
+            </IconButton>
+          </Tooltip>
+        </span>
       </Dropdown>
       <AddTemplateModal
         isOpen={!!option}
@@ -186,9 +190,7 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
             )}
           </div>
           <div>
-            <Tooltip content="Add new template">
-              <AddTemplateButton target={template} />
-            </Tooltip>
+            <AddTemplateButton target={template} />
 
             <Tooltip content="Remove template">
               <IconButton
