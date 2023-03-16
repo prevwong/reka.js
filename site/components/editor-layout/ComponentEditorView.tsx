@@ -5,6 +5,7 @@ import {
 import { motion } from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
+import useIsomorphicLayoutEffect from 'react-use/lib/useIsomorphicLayoutEffect';
 
 import { useEditor, useEditorActiveComponent } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
@@ -54,7 +55,7 @@ export const ComponentEditorView = observer(() => {
   const [TOOLBAR_HEIGHT, setToolbarHeight] = React.useState(0);
   const [BOTTOM_TOOLBAR_HEIGHT, setBottomToolbarHeight] = React.useState(0);
 
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const { current: toolbarDOM } = toolbarDOMRef;
     const { current: bottomToolbarDOM } = bottomToolbarDOMRef;
 

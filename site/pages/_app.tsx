@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import * as React from 'react';
+import useIsomorphicLayoutEffect from 'react-use/lib/useIsomorphicLayoutEffect';
 
 import { Footer } from '@app/components/footer';
 import { Header } from '@app/components/header';
@@ -42,7 +43,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const loadedRef = React.useRef(false);
 
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const { current: loaded } = loadedRef;
     const { current: options } = optionsRef;
     const { current: layoutDom } = layoutDomRef;

@@ -144,7 +144,7 @@ export const CodeEditor = ({ onStatusChange, ...props }: CodeEditorProps) => {
     null
   );
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     const dom = domRef.current;
 
     if (!dom) {

@@ -61,6 +61,7 @@
     "react-frame-component": "^5.2.3",
     "react-loader-spinner": "^5.3.4",
     "react-textarea-autosize": "^8.4.0",
+    "react-use": "^17.4.0",
     "rehype-stringify": "^9.0.3",
     "remark": "^14.0.2",
     "remark-emoji": "^3.0.2",
