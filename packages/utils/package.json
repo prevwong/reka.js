@@ -5,10 +5,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "generate-ast": "./scripts/generate-ast.js",
-    "generate-ast:watch": "nodemon --watch src/types.definition.ts -x ./scripts/generate-ast.js",
-    "rollup:watch": "rollup -w -c rollup.config.js",
-    "dev": "run-p rollup:watch generate-ast:watch",
+    "dev": "rollup -w -c rollup.config.js",
     "build": "rollup -c rollup.config.js"
   },
   "keywords": [],

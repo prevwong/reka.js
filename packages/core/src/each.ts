@@ -2,7 +2,6 @@ import * as t from '@rekajs/types';
 import { invariant } from '@rekajs/utils';
 import { computed, IComputedValue, untracked } from 'mobx';
 
-import { Environment } from './environment';
 import { TemplateEvaluateContext, ViewEvaluator } from './evaluator';
 import { isPrimitive, valueToHash } from './utils';
 
