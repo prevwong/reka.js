@@ -1,6 +1,5 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
 import * as t from '@rekajs/types';
-import dedent from 'dedent';
 import * as React from 'react';
 
 import { IconButton } from '../button';
@@ -110,7 +109,7 @@ const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
 
     return (
       <div
-        className={dedent`
+        className={`
         group
         grid grid-cols-[80px_1fr] relative gap-0 border-solid border border-outline -mb-px
         first:rounded-tr-md first:rounded-tl-md

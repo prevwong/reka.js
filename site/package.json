@@ -4,12 +4,15 @@
   "private": true,
   "scripts": {
     "build:frame-styles": "tailwindcss -c tailwind-frame.config.js -i ./styles/frame.css -o ./public/frame.css",
-    "dev": "next dev -p 3001",
+    "next:dev": "next dev -p 3001",
+    "dev": "run-p next:dev generate-theme:watch",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "encode-dummy-program": "tsx ./scripts/encodeInitialContent.ts",
-    "postinstall": "run-s build:frame-styles",
+    "encode-dummy-program": "tsx ./scripts/encode-initial-content.ts",
+    "generate-theme": "tsx ./scripts/generate-theme.ts",
+    "generate-theme:watch": "nodemon --watch ./tailwind.config.js -x tsx ./scripts/generate-theme.ts",
+    "postinstall": "run-s generate-theme build:frame-styles",
     "postbuild": "next-sitemap"
   },
   "dependencies": {
@@ -82,6 +85,7 @@
     "@types/canvas-confetti": "^1.6.0",
     "@types/lodash": "^4.14.185",
     "@types/node": "18.7.15",
+    "@types/prettier": "^2.7.2",
     "@types/randomcolor": "^0.5.6",
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",

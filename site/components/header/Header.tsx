@@ -8,8 +8,6 @@ import {
   SITE_LAYOUT_HEADER_TOOLBAR_CLASSNAME,
 } from '@app/constants/css';
 
-export const HEADER_HEIGHT = 50;
-
 export const Header = observer(() => {
   return (
     <div className={SITE_LAYOUT_HEADER_CLASSNAME}>

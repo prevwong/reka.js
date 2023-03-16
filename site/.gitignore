@@ -38,3 +38,5 @@ next-env.d.ts
 /public/frame.css
 /public/robots.txt
 /public/sitemap.xml
+
+/constants/theme.ts

@@ -29,6 +29,14 @@ module.exports = {
       transitionTimingFunction: {
         bezier: 'cubic-bezier(0.19, 1, 0.22, 1)',
       },
+      width: {
+        'editor-left-sidebar': 250,
+        'editor-right-sidebar-ui': 300,
+        'editor-right-sidebar-code': 500,
+      },
+      height: {
+        header: 50,
+      },
       colors: {
         secondary: '#9334e9',
         outline: '#e8e7e7',
@@ -46,7 +54,6 @@ module.exports = {
           900: '#00326E',
         },
       },
-
       zIndex: {
         max: '9999',
       },

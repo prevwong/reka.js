@@ -242,10 +242,6 @@ importers:
 
   site:
     specifiers:
-      '@babel/core': ^7.20.5
-      '@babel/parser': ^7.21.1
-      '@babel/plugin-syntax-jsx': ^7.18.6
-      '@babel/preset-react': ^7.18.6
       '@codemirror/basic-setup': ^0.19.1
       '@codemirror/commands': ^0.19.8
       '@codemirror/theme-one-dark': ^0.19.1
@@ -273,12 +269,10 @@ importers:
       '@rekajs/utils': workspace:*
       '@stitches/react': ^1.2.7
       '@tailwindcss/typography': ^0.5.8
-      '@types/babel-core': ^6.25.7
-      '@types/babel__core': ^7.20.0
       '@types/canvas-confetti': ^1.6.0
       '@types/lodash': ^4.14.185
       '@types/node': 18.7.15
-      '@types/postcss-js': ^4.0.0
+      '@types/prettier': ^2.7.2
       '@types/randomcolor': ^0.5.6
       '@types/react': ^17.0.33
       '@types/react-dom': ^17.0.10
@@ -286,7 +280,6 @@ importers:
       canvas-confetti: ^1.6.0
       class-variance-authority: ^0.4.0
       classnames: ^2.3.1
-      css-to-tailwindcss: ^1.0.4
       date-fns: ^2.29.3
       esbuild: ^0.15.7
       eslint: ^8.23.0
@@ -300,7 +293,6 @@ importers:
       next-sitemap: ^3.1.52
       pascal-case: ^3.1.2
       postcss: ^8.4.20
-      postcss-js: ^4.0.1
       prop-types: ^15.8.1
       randomcolor: ^0.6.2
       react: ^17.0.2
@@ -325,7 +317,6 @@ importers:
       unist-util-find-all-after: ^4.0.0
       unist-util-find-all-between: ^2.1.0
       unist-util-select: ^4.0.1
-      windy-radix-palette: ^0.5.0
       y-webrtc: ^10.2.3
       yjs: ^13.5.41
     dependencies:
@@ -365,7 +356,7 @@ importers:
       lodash: 4.17.21
       mobx: 6.6.1
       mobx-react-lite: 3.4.0_vuaia3cr2ucdrk3q4mauc2kfvi
-      next: 12.2.5_oh345hcsaunslvozv24xisnbli
+      next: 12.2.5_sfoxds7t5ydpegc3knd667wn6m
       next-sitemap: 3.1.52_next@12.2.5
       pascal-case: 3.1.2
       prop-types: 15.8.1
@@ -393,29 +384,20 @@ importers:
       y-webrtc: 10.2.3
       yjs: 13.5.41
     devDependencies:
-      '@babel/core': 7.20.5
-      '@babel/parser': 7.21.1
-      '@babel/plugin-syntax-jsx': 7.18.6_@babel+core@7.20.5
-      '@babel/preset-react': 7.18.6_@babel+core@7.20.5
       '@tailwindcss/typography': 0.5.8_tailwindcss@3.2.4
-      '@types/babel-core': 6.25.7
-      '@types/babel__core': 7.20.0
       '@types/canvas-confetti': 1.6.0
       '@types/lodash': 4.14.191
       '@types/node': 18.7.15
-      '@types/postcss-js': 4.0.0
+      '@types/prettier': 2.7.2
       '@types/randomcolor': 0.5.7
       '@types/react': 17.0.49
       '@types/react-dom': 17.0.17
       autoprefixer: 10.4.13_postcss@8.4.20
-      css-to-tailwindcss: 1.0.4
       eslint: 8.23.0
       eslint-config-next: 12.2.5_l4bkc2educzyqw2fxdpzlvrzlm
       postcss: 8.4.20
-      postcss-js: 4.0.1_postcss@8.4.20
       tailwindcss: 3.2.4_postcss@8.4.20
       typescript: 4.9.4
-      windy-radix-palette: 0.5.0_mvcr4ym64jspnkumvjqznijcra
 
 packages:
 
@@ -721,7 +703,7 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
     dependencies:
-      '@babel/types': 7.20.5
+      '@babel/types': 7.21.0
 
   /@babel/plugin-proposal-object-rest-spread/7.12.1_@babel+core@7.12.9:
     resolution: {integrity: sha512-s6SowJIjzlhx8o7lsFx5zmY4At6CTtDvgNQDdPzkBQucle58A6b/TTeEBYtyDgmcXjUTM+vE8YOGHZzzbc/ioA==}
@@ -782,26 +764,6 @@ packages:
       '@babel/helper-plugin-utils': 7.20.2
     dev: false
 
-  /@babel/plugin-transform-react-display-name/7.18.6_@babel+core@7.20.5:
-    resolution: {integrity: sha512-TV4sQ+T013n61uMoygyMRm+xf04Bd5oqFpv2jAEQwSZ8NwQA7zeRPg1LMVg2PWi3zWBz+CLKD+v5bcpZ/BS0aA==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.20.5
-      '@babel/helper-plugin-utils': 7.20.2
-    dev: true
-
-  /@babel/plugin-transform-react-jsx-development/7.18.6_@babel+core@7.20.5:
-    resolution: {integrity: sha512-SA6HEjwYFKF7WDjWcMcMGUimmw/nhNRDWxr+KaLSCrkD/LMDBvWRmHAYgE1HDeF8KUuI8OAu+RT6EOtKxSW2qA==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.20.5
-      '@babel/plugin-transform-react-jsx': 7.19.0_@babel+core@7.20.5
-    dev: true
-
   /@babel/plugin-transform-react-jsx/7.19.0_@babel+core@7.20.5:
     resolution: {integrity: sha512-UVEvX3tXie3Szm3emi1+G63jyw1w5IcMY0FSKM+CRnKRI5Mr1YbCNgsSTwoTwKphQEG9P+QqmuRFneJPZuHNhg==}
     engines: {node: '>=6.9.0'}
@@ -814,32 +776,6 @@ packages:
       '@babel/helper-plugin-utils': 7.20.2
       '@babel/plugin-syntax-jsx': 7.18.6_@babel+core@7.20.5
       '@babel/types': 7.21.0
-    dev: true
-
-  /@babel/plugin-transform-react-pure-annotations/7.18.6_@babel+core@7.20.5:
-    resolution: {integrity: sha512-I8VfEPg9r2TRDdvnHgPepTKvuRomzA8+u+nhY7qSI1fR2hRNebasZEETLyM5mAUr0Ku56OkXJ0I7NHJnO6cJiQ==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.20.5
-      '@babel/helper-annotate-as-pure': 7.18.6
-      '@babel/helper-plugin-utils': 7.20.2
-    dev: true
-
-  /@babel/preset-react/7.18.6_@babel+core@7.20.5:
-    resolution: {integrity: sha512-zXr6atUmyYdiWRVLOZahakYmOBHtWc2WGCkP8PYTgZi0iJXDY2CN180TdrIW4OGOAdLc7TifzDIvtx6izaRIzg==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.20.5
-      '@babel/helper-plugin-utils': 7.20.2
-      '@babel/helper-validator-option': 7.18.6
-      '@babel/plugin-transform-react-display-name': 7.18.6_@babel+core@7.20.5
-      '@babel/plugin-transform-react-jsx': 7.19.0_@babel+core@7.20.5
-      '@babel/plugin-transform-react-jsx-development': 7.18.6_@babel+core@7.20.5
-      '@babel/plugin-transform-react-pure-annotations': 7.18.6_@babel+core@7.20.5
     dev: true
 
   /@babel/runtime-corejs3/7.20.6:
@@ -1994,6 +1930,7 @@ packages:
 
   /@radix-ui/colors/0.1.8:
     resolution: {integrity: sha512-jwRMXYwC0hUo0mv6wGpuw254Pd9p/R6Td5xsRpOmaWkUHlooNWqVcadgyzlRumMq3xfOTXwJReU0Jv+EIy4Jbw==}
+    dev: false
 
   /@radix-ui/number/1.0.0:
     resolution: {integrity: sha512-Ofwh/1HX69ZfJRiRBMTy7rgjAzHmwe4kW9C9Y99HTRUcYLUuVT0KESFj15rPjRgKJs20GPq8Bm5aEDJ8DuA3vA==}
@@ -2994,74 +2931,6 @@ packages:
       tailwindcss: 3.2.4_postcss@8.4.20
     dev: true
 
-  /@types/babel-core/6.25.7:
-    resolution: {integrity: sha512-WPnyzNFVRo6bxpr7bcL27qXtNKNQ3iToziNBpibaXHyKGWQA0+tTLt73QQxC/5zzbM544ih6Ni5L5xrck6rGwg==}
-    dependencies:
-      '@types/babel-generator': 6.25.5
-      '@types/babel-template': 6.25.2
-      '@types/babel-traverse': 6.25.7
-      '@types/babel-types': 7.0.11
-      '@types/babylon': 6.16.6
-    dev: true
-
-  /@types/babel-generator/6.25.5:
-    resolution: {integrity: sha512-lhbwMlAy5rfWG+R6l8aPtJdEFX/kcv6LMFIuvUb0i89ehqgD24je9YcB+0fRspQhgJGlEsUImxpw4pQeKS/+8Q==}
-    dependencies:
-      '@types/babel-types': 7.0.11
-    dev: true
-
-  /@types/babel-template/6.25.2:
-    resolution: {integrity: sha512-QKtDQRJmAz3Y1HSxfMl0syIHebMc/NnOeH/8qeD0zjgU2juD0uyC922biMxCy5xjTNvHinigML2l8kxE8eEBmw==}
-    dependencies:
-      '@types/babel-types': 7.0.11
-      '@types/babylon': 6.16.6
-    dev: true
-
-  /@types/babel-traverse/6.25.7:
-    resolution: {integrity: sha512-BeQiEGLnVzypzBdsexEpZAHUx+WucOMXW6srEWDkl4SegBlaCy+iBvRO+4vz6EZ+BNQg22G4MCdDdvZxf+jW5A==}
-    dependencies:
-      '@types/babel-types': 7.0.11
-    dev: true
-
-  /@types/babel-types/7.0.11:
-    resolution: {integrity: sha512-pkPtJUUY+Vwv6B1inAz55rQvivClHJxc9aVEPPmaq2cbyeMLCiDpbKpcKyX4LAwpNGi+SHBv0tHv6+0gXv0P2A==}
-    dev: true
-
-  /@types/babel__core/7.20.0:
-    resolution: {integrity: sha512-+n8dL/9GWblDO0iU6eZAwEIJVr5DWigtle+Q6HLOrh/pdbXOhOtqzq8VPPE2zvNJzSKY4vH/z3iT3tn0A3ypiQ==}
-    dependencies:
-      '@babel/parser': 7.21.1
-      '@babel/types': 7.21.0
-      '@types/babel__generator': 7.6.4
-      '@types/babel__template': 7.4.1
-      '@types/babel__traverse': 7.18.3
-    dev: true
-
-  /@types/babel__generator/7.6.4:
-    resolution: {integrity: sha512-tFkciB9j2K755yrTALxD44McOrk+gfpIpvC3sxHjRawj6PfnQxrse4Clq5y/Rq+G3mrBurMax/lG8Qn2t9mSsg==}
-    dependencies:
-      '@babel/types': 7.21.0
-    dev: true
-
-  /@types/babel__template/7.4.1:
-    resolution: {integrity: sha512-azBFKemX6kMg5Io+/rdGT0dkGreboUVR0Cdm3fz9QJWpaQGJRQXl7C+6hOTCZcMll7KFyEQpgbYI2lHdsS4U7g==}
-    dependencies:
-      '@babel/parser': 7.21.1
-      '@babel/types': 7.21.0
-    dev: true
-
-  /@types/babel__traverse/7.18.3:
-    resolution: {integrity: sha512-1kbcJ40lLB7MHsj39U4Sh1uTd2E7rLEa79kmDpI6cy+XiXsteB3POdQomoq4FxszMrO3ZYchkhYJw7A2862b3w==}
-    dependencies:
-      '@babel/types': 7.21.0
-    dev: true
-
-  /@types/babylon/6.16.6:
-    resolution: {integrity: sha512-G4yqdVlhr6YhzLXFKy5F7HtRBU8Y23+iWy7UKthMq/OSQnL1hbsoeXESQ2LY8zEDlknipDG3nRGhUC9tkwvy/w==}
-    dependencies:
-      '@types/babel-types': 7.0.11
-    dev: true
-
   /@types/canvas-confetti/1.6.0:
     resolution: {integrity: sha512-Yq6rIccwcco0TLD5SMUrIM7Fk7Fe/C0jmNRxJJCLtAF6gebDkPuUjK5EHedxecm69Pi/aA+It39Ux4OHmFhjRw==}
     dev: true
@@ -3142,10 +3011,8 @@ packages:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
     dev: true
 
-  /@types/postcss-js/4.0.0:
-    resolution: {integrity: sha512-ieu0u7T7jnUCFmXcf8JzoJ3/1U5NI3ZYpfX5zW2td0x/BqVQrpCQ6uOY9Ef/0WJuIjc9OCtdfYF/JE7MGax2TA==}
-    dependencies:
-      postcss: 8.4.20
+  /@types/prettier/2.7.2:
+    resolution: {integrity: sha512-KufADq8uQqo1pYKVIYzfKbJfBAc0sOeXqGbFaSpv8MRmC/zXgowNZmFcbngndGk922QDmOASEXUZCaY48gs4cg==}
     dev: true
 
   /@types/prop-types/15.7.5:
@@ -3889,10 +3756,6 @@ packages:
   /color-name/1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
 
-  /colord/2.9.3:
-    resolution: {integrity: sha512-jeC1axXpnb0/2nn/Y1LPuLdgXBLH7aDcHu4KEKfqw3CUhX7ZpfBSlPKyqXE6btIgEzfWtrX3/tyBCaCvXvMkOw==}
-    dev: true
-
   /comma-separated-tokens/2.0.3:
     resolution: {integrity: sha512-Fu4hJdvzeylCfQPp9SGWidpzrMs7tTrlu6Vb8XGaRGck8QSNZJJp538Wrb60Lax4fPwR64ViY468OIUTbRlGZg==}
     dev: false
@@ -3970,24 +3833,6 @@ packages:
       css-color-keywords: 1.0.0
       postcss-value-parser: 4.2.0
     dev: false
-
-  /css-to-tailwindcss/1.0.4:
-    resolution: {integrity: sha512-u08nj9nDinKQT5PnoINjno2QqowWBhI+UY65wwccS51BYN1TyIJpO3ft7mV/9GUPnjFsJ0Rnd6zYtsji5zDyoA==}
-    engines: {node: '>=12.0'}
-    dependencies:
-      colord: 2.9.3
-      css-what: 6.1.0
-      postcss: 8.4.20
-      postcss-safe-parser: 6.0.0_postcss@8.4.20
-      tailwindcss: 3.2.4_postcss@8.4.20
-    transitivePeerDependencies:
-      - ts-node
-    dev: true
-
-  /css-what/6.1.0:
-    resolution: {integrity: sha512-HTUrgRJ7r4dsZKU6GjmpfRK1O76h97Z8MfS1G0FozR+oF2kG6Vfe8JE6zwrkbxigziPHinCJ+gCPjA9EaBDtRw==}
-    engines: {node: '>= 6'}
-    dev: true
 
   /cssesc/3.0.0:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
@@ -6395,52 +6240,7 @@ packages:
     dependencies:
       '@corex/deepmerge': 4.0.37
       minimist: 1.2.8
-      next: 12.2.5_oh345hcsaunslvozv24xisnbli
-    dev: false
-
-  /next/12.2.5_oh345hcsaunslvozv24xisnbli:
-    resolution: {integrity: sha512-tBdjqX5XC/oFs/6gxrZhjmiq90YWizUYU6qOWAfat7zJwrwapJ+BYgX2PmiacunXMaRpeVT4vz5MSPSLgNkrpA==}
-    engines: {node: '>=12.22.0'}
-    hasBin: true
-    peerDependencies:
-      fibers: '>= 3.1.0'
-      node-sass: ^6.0.0 || ^7.0.0
-      react: ^17.0.2 || ^18.0.0-0
-      react-dom: ^17.0.2 || ^18.0.0-0
-      sass: ^1.3.0
-    peerDependenciesMeta:
-      fibers:
-        optional: true
-      node-sass:
-        optional: true
-      sass:
-        optional: true
-    dependencies:
-      '@next/env': 12.2.5
-      '@swc/helpers': 0.4.3
-      caniuse-lite: 1.0.30001439
-      postcss: 8.4.14
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-      styled-jsx: 5.0.4_syxs5o25hw2dd7n32v6ml2sjku
-      use-sync-external-store: 1.2.0_react@17.0.2
-    optionalDependencies:
-      '@next/swc-android-arm-eabi': 12.2.5
-      '@next/swc-android-arm64': 12.2.5
-      '@next/swc-darwin-arm64': 12.2.5
-      '@next/swc-darwin-x64': 12.2.5
-      '@next/swc-freebsd-x64': 12.2.5
-      '@next/swc-linux-arm-gnueabihf': 12.2.5
-      '@next/swc-linux-arm64-gnu': 12.2.5
-      '@next/swc-linux-arm64-musl': 12.2.5
-      '@next/swc-linux-x64-gnu': 12.2.5
-      '@next/swc-linux-x64-musl': 12.2.5
-      '@next/swc-win32-arm64-msvc': 12.2.5
-      '@next/swc-win32-ia32-msvc': 12.2.5
-      '@next/swc-win32-x64-msvc': 12.2.5
-    transitivePeerDependencies:
-      - '@babel/core'
-      - babel-plugin-macros
+      next: 12.2.5_sfoxds7t5ydpegc3knd667wn6m
     dev: false
 
   /next/12.2.5_sfoxds7t5ydpegc3knd667wn6m:
@@ -6896,15 +6696,6 @@ packages:
     dependencies:
       postcss: 8.4.20
       postcss-selector-parser: 6.0.11
-    dev: true
-
-  /postcss-safe-parser/6.0.0_postcss@8.4.20:
-    resolution: {integrity: sha512-FARHN8pwH+WiS2OPCxJI8FuRJpTVnn6ZNFiqAM2aeW2LwTHWWmWgIyKC6cUo0L8aeKiF/14MNvnpls6R2PBeMQ==}
-    engines: {node: '>=12.0'}
-    peerDependencies:
-      postcss: ^8.3.3
-    dependencies:
-      postcss: 8.4.20
     dev: true
 
   /postcss-selector-parser/6.0.10:
@@ -7904,23 +7695,6 @@ packages:
       react: 17.0.2
     dev: false
 
-  /styled-jsx/5.0.4_syxs5o25hw2dd7n32v6ml2sjku:
-    resolution: {integrity: sha512-sDFWLbg4zR+UkNzfk5lPilyIgtpddfxXEULxhujorr5jtePTUqiPDc5BC0v1NRqTr/WaFBGQQUoYToGlF4B2KQ==}
-    engines: {node: '>= 12.0.0'}
-    peerDependencies:
-      '@babel/core': '*'
-      babel-plugin-macros: '*'
-      react: '>= 16.8.0 || 17.x.x || ^18.0.0-0'
-    peerDependenciesMeta:
-      '@babel/core':
-        optional: true
-      babel-plugin-macros:
-        optional: true
-    dependencies:
-      '@babel/core': 7.20.5
-      react: 17.0.2
-    dev: false
-
   /styled-tools/1.7.2:
     resolution: {integrity: sha512-IjLxzM20RMwAsx8M1QoRlCG/Kmq8lKzCGyospjtSXt/BTIIcvgTonaxQAsKnBrsZNwhpHzO9ADx5te0h76ILVg==}
     dev: false
@@ -8755,16 +8529,6 @@ packages:
     dependencies:
       siginfo: 2.0.0
       stackback: 0.0.2
-    dev: true
-
-  /windy-radix-palette/0.5.0_mvcr4ym64jspnkumvjqznijcra:
-    resolution: {integrity: sha512-rySAAUChIR3qpgJ73HwqpZ5s6ijhfX1mzJpcIn2KRotZv03fj4ppv5GlgQgC1WxijeYtSMsCcaAL0Kr+Bz55zA==}
-    peerDependencies:
-      '@radix-ui/colors': '>=0.1.0'
-      tailwindcss: '>=3.0.0'
-    dependencies:
-      '@radix-ui/colors': 0.1.8
-      tailwindcss: 3.2.4_postcss@8.4.20
     dev: true
 
   /word-wrap/1.2.3:

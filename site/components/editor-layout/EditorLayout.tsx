@@ -3,6 +3,7 @@ import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
+import theme from '@app/constants/theme';
 import { useEditor } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 import { cn, CREATE_BEZIER_TRANSITION } from '@app/utils';
@@ -15,10 +16,6 @@ import { TemplateSettings } from './template-settings';
 
 import { AnimatedScreenSlider } from '../animated-screen-slider/AnimatedScreenSlider';
 import { CodeEditor } from '../code-editor';
-
-const LEFT_SIDEBAR_WIDTH = 250;
-const RIGHT_SIDEBAR_UI_WIDTH = 300;
-const RIGHT_SIDEBAR_CODE_WIDTH = 500;
 
 export const EditorLayout = observer(
   (
@@ -73,7 +70,7 @@ export const EditorLayout = observer(
         )}
       >
         <motion.div
-          className={`overflow-auto relative h-full flex flex-col border-r border-solid border-outline bg-white/80 backdrop-blur-md ml-0 w-[${LEFT_SIDEBAR_WIDTH}px]`}
+          className={`overflow-auto relative h-full flex flex-col border-r border-solid border-outline bg-white/80 backdrop-blur-md ml-0 w-editor-left-sidebar`}
           initial={false}
           animate={[
             leftSidebarAnimate,
@@ -91,7 +88,7 @@ export const EditorLayout = observer(
               position: 'relative',
             },
             hide: {
-              marginLeft: 0 - LEFT_SIDEBAR_WIDTH,
+              marginLeft: 0 - theme.width['editor-left-sidebar'],
             },
             show: {
               marginLeft: 0,
@@ -99,7 +96,10 @@ export const EditorLayout = observer(
           }}
           transition={CREATE_BEZIER_TRANSITION({ delay: 0.2 })}
         >
-          <div className="relative" style={{ minWidth: LEFT_SIDEBAR_WIDTH }}>
+          <div
+            className="relative"
+            style={{ minWidth: theme.width['editor-left-sidebar'] }}
+          >
             <GlobalSettings />
             <div className="relative flex-1">
               <AnimatedScreenSlider
@@ -152,20 +152,23 @@ export const EditorLayout = observer(
           className="bg-white h-full transition flex-1"
           style={{
             width: `calc(100vw - ${
-              LEFT_SIDEBAR_WIDTH +
-              Math.max(RIGHT_SIDEBAR_CODE_WIDTH, RIGHT_SIDEBAR_UI_WIDTH)
+              theme.width['editor-left-sidebar'] +
+              Math.max(
+                theme.width['editor-right-sidebar-code'],
+                theme.width['editor-right-sidebar-ui']
+              )
             }px)`,
           }}
         >
           <ComponentEditorView />
         </motion.div>
         <motion.div
-          className={`bg-white border-l border-solid border-outline relative h-full w-[${RIGHT_SIDEBAR_UI_WIDTH}px]`}
+          className={`bg-white border-l border-solid border-outline relative h-full w-editor-right-sidebar-ui`}
           initial={false}
           animate={editor.mode}
           variants={{
-            ui: { width: RIGHT_SIDEBAR_UI_WIDTH },
-            code: { width: RIGHT_SIDEBAR_CODE_WIDTH },
+            ui: { width: theme.width['editor-right-sidebar-ui'] },
+            code: { width: theme.width['editor-right-sidebar-code'] },
             preview: { width: 0 },
           }}
           transition={CREATE_BEZIER_TRANSITION({ delay: 0.2 })}

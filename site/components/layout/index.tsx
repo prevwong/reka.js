@@ -4,8 +4,10 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
+import theme from '@app/constants/theme';
+
 import { Footer } from '../footer';
-import { Header, HEADER_HEIGHT } from '../header';
+import { Header } from '../header';
 
 type MetaProps = {
   title: string;
@@ -33,7 +35,7 @@ export const Layout = observer((props: LayoutProps) => {
       </Head>
       <Header />
       <motion.div
-        className={`relative top-${HEADER_HEIGHT}px h-[calc(100vh-${HEADER_HEIGHT}px)]`}
+        className={`relative top-${theme.height.header}px h-[calc(100vh-${theme.height.header}px)]`}
       >
         {props.children}
         {router.pathname !== '/' && <Footer />}

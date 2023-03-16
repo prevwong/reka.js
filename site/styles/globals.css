@@ -512,11 +512,10 @@ code:not(pre code)::before {
   backdrop-filter: blur(10px);
   color: unset;
   padding: var(--space-3) var(--space-4);
-  @apply border-b border-solid border-outline;
+  @apply border-b border-solid border-outline h-header;
   position: fixed;
   z-index: 9;
   width: 100%;
-  height: 50px;
   overflow: hidden;
 }
 
