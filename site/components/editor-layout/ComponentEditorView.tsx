@@ -25,10 +25,6 @@ import { Switch } from '../switch';
 import { Tooltip } from '../tooltip';
 import { Tree } from '../tree';
 
-const TOOLBAR_HEIGHT = 40;
-
-const BOTTOM_TOOLBAR_HEIGHT = 40;
-
 const NoFrameSelectedMessage = () => {
   return (
     <div className="flex items-center leading-6 justify-center text-center h-full w-full">
@@ -52,6 +48,24 @@ export const ComponentEditorView = observer(() => {
 
   const containerDOMRef = React.useRef<HTMLDivElement | null>(null);
   const frameContainerDOMRef = React.useRef<HTMLDivElement | null>(null);
+  const toolbarDOMRef = React.useRef<HTMLDivElement | null>(null);
+  const bottomToolbarDOMRef = React.useRef<HTMLDivElement | null>(null);
+
+  const [TOOLBAR_HEIGHT, setToolbarHeight] = React.useState(0);
+  const [BOTTOM_TOOLBAR_HEIGHT, setBottomToolbarHeight] = React.useState(0);
+
+  React.useLayoutEffect(() => {
+    const { current: toolbarDOM } = toolbarDOMRef;
+    const { current: bottomToolbarDOM } = bottomToolbarDOMRef;
+
+    if (toolbarDOM) {
+      setToolbarHeight(toolbarDOM.getBoundingClientRect().height);
+    }
+
+    if (bottomToolbarDOM) {
+      setBottomToolbarHeight(bottomToolbarDOM.getBoundingClientRect().height);
+    }
+  }, [setToolbarHeight, setBottomToolbarHeight]);
 
   const frames = componentEditor
     ? editor.reka
@@ -107,6 +121,7 @@ export const ComponentEditorView = observer(() => {
             opacity: 0,
           },
         }}
+        ref={toolbarDOMRef}
         transition={CREATE_BEZIER_TRANSITION()}
       >
         <div className="flex flex-1 items-center">
@@ -224,6 +239,7 @@ export const ComponentEditorView = observer(() => {
               opacity: 1,
             },
           }}
+          ref={bottomToolbarDOMRef}
           transition={CREATE_BEZIER_TRANSITION()}
         >
           <div className="flex items-center flex-1">
