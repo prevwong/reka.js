@@ -27,7 +27,7 @@ export const Header = observer(() => {
               </a>
             </Link>
           </div>
-          <div className="flex gap-4 ml-5 [&>a]:text-sm [&>a]:cursor-pointer [&>a]:text-decoration-none [&>a]:text-slate-900">
+          <div className="flex gap-4 ml-6 [&>a]:text-sm [&>a]:cursor-pointer [&>a]:text-decoration-none [&>a]:text-slate-900">
             <a href="https://github.com/prevwong/reka.js" target="__blank">
               Github
             </a>

@@ -1,10 +1,10 @@
+import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import { AnimatePresence, motion } from 'framer-motion';
 import * as React from 'react';
 
 import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
 import { Button } from '../button';
-import { ArrowLeftIcon, ChevronLeftIcon } from '@radix-ui/react-icons';
 
 type Callbacks = {
   goTo: (id: string) => void;

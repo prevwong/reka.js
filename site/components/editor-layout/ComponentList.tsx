@@ -1,12 +1,7 @@
 import {
-  ArrowRightIcon,
   ChevronRightIcon,
-  ColorWheelIcon,
   Component1Icon,
-  ComponentBooleanIcon,
   ComponentPlaceholderIcon,
-  CubeIcon,
-  ShadowInnerIcon,
 } from '@radix-ui/react-icons';
 import * as t from '@rekajs/types';
 import { pascalCase } from 'pascal-case';
@@ -14,12 +9,11 @@ import * as React from 'react';
 
 import { Button } from '@app/components/button';
 import { Modal } from '@app/components/modal';
-import { Text } from '@app/components/text';
 import { TextField } from '@app/components/text-field';
 import { useEditor } from '@app/editor';
+import { cn } from '@app/utils';
 
 import { SettingSection } from '../settings-section';
-import { cn } from '@app/utils';
 
 type AddComponentModalProps = {
   isOpen: boolean;

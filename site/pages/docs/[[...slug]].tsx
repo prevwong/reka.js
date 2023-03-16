@@ -92,10 +92,10 @@ const Docs = (props: any) => {
         className={cn(
           `group
           w-80 relative flex flex-col
-          transition bezier duration-400
+          transition-all ease-bezier duration-400
           max-sm:z-50
           max-sm:w-86 max-sm:fixed max-sm:-left-full max-sm:top-[50px] max-sm:h-[calc(100vh-50px)]
-          max-sm:bg-white/60 max-sm:backdrop-blur-md max-sm:overflow-hidden`,
+          max-sm:bg-white/80 max-sm:backdrop-blur-md max-sm:overflow-hidden`,
           {
             'max-sm:left-0': mobileNavActive,
           }

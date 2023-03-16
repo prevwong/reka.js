@@ -1,10 +1,10 @@
+import { Cross1Icon } from '@radix-ui/react-icons';
 import * as React from 'react';
 
 import { useEditor, useEditorActiveComponent } from '@app/editor';
 import { UserFrame } from '@app/extensions/UserFrameExtension';
 
 import { TextField } from '../text-field';
-import { Cross1Icon } from '@radix-ui/react-icons';
 
 type EditPreviewSizeProps = {
   frames: UserFrame[];
