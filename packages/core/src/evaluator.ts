@@ -180,7 +180,6 @@ export class ViewEvaluator {
               disposedType instanceof t.View &&
               disposedType.key !== 'frame'
             ) {
-              console.log('disposing view', payload);
               const componentCache = this.tplKeyToComponentEvaluator.get(
                 disposedType.key
               );

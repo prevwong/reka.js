@@ -85,8 +85,6 @@ export class EachDirectiveEvaluator {
           this.ctx.env
         );
 
-        console.log('iterator', this.eachExpr.iterator, iterator, this.ctx.env);
-
         if (iterator) {
           for (let i = 0; i < iterator.length; i++) {
             const value = iterator[i];
