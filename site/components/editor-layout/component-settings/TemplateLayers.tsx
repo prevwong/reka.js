@@ -1,6 +1,5 @@
 import { ChatBubbleIcon, PlusIcon, TrashIcon } from '@radix-ui/react-icons';
 import * as t from '@rekajs/types';
-import cx from 'classnames';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -9,6 +8,7 @@ import { Dropdown } from '@app/components/dropdown';
 import { Text } from '@app/components/text';
 import { Tooltip } from '@app/components/tooltip';
 import { useEditor } from '@app/editor';
+import { cn } from '@app/utils';
 
 import { AddTemplateModal } from './AddTemplateModal';
 
@@ -138,7 +138,7 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
   return (
     <div>
       <div
-        className={cx(
+        className={cn(
           'template-layer-name px-4 py-0.5 cursor-pointer rounded-md my-1',
           {
             'bg-primary/10 text-primary': isSelected,

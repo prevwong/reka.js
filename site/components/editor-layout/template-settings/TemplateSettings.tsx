@@ -43,7 +43,7 @@ const TemplateHeading = (props: TemplateHeadingProps) => {
 const InternalTemplateSettings = ({ template }: any) => {
   return (
     <div>
-      <div className="flex px-4 py-3 mt-4">
+      <div className="flex px-5 py-3 mt-4">
         <TemplateHeading template={template} />
       </div>
       <div className="mt-3">

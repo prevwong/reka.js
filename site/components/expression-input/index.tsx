@@ -1,9 +1,10 @@
 import { Parser } from '@rekajs/parser';
 import * as t from '@rekajs/types';
-import classNames from 'classnames';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
+
+import { cn } from '@app/utils';
 
 import { Info } from '../info';
 import { TextField } from '../text-field';
@@ -96,7 +97,7 @@ const TextareaEditor = ({
 
   return (
     <div
-      className={classNames(
+      className={cn(
         'absolute -top-px -left-px z-40 border border-solid border-transparent rounded overflow-hidden shadow-xl w-[calc(100%+1px)] bg-white',
         {
           'border-red-300 rounded-bl-none rounded-br-none': hasError,

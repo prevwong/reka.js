@@ -1,5 +1,4 @@
 import * as t from '@rekajs/types';
-import classNames from 'classnames';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import IFrame from 'react-frame-component';
@@ -7,6 +6,7 @@ import { ThreeDots } from 'react-loader-spinner';
 
 import { useEditor, useEditorActiveComponent } from '@app/editor';
 import { ActiveFrame } from '@app/editor/ComponentEditor';
+import { cn } from '@app/utils';
 
 import { FrameContext } from './FrameContext';
 import { RenderSelectionBorders } from './RenderSelectionBorders';
@@ -84,7 +84,7 @@ const RenderFrameView = observer((props: RenderFrameViewProps) => {
   return (
     <div className="w-full h-full" ref={containerDomRef}>
       <div
-        className={classNames(
+        className={cn(
           'w-full h-full relative flex flex-col justify-center min-h-full max-h-full origin-[0px_0px]',
           {
             'p-4': !isNotFullWidth,
@@ -97,7 +97,7 @@ const RenderFrameView = observer((props: RenderFrameViewProps) => {
             maxWidth: props.width,
             maxHeight: props.height,
           }}
-          className={classNames(
+          className={cn(
             'block m-auto w-full h-full shadow-none border border-transparent rounded-none bg-white',
             {
               'border-outline rounded-xs': !isNotFullWidth,

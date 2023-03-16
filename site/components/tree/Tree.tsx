@@ -1,6 +1,5 @@
 import * as t from '@rekajs/types';
 import { safeObjKey } from '@rekajs/utils';
-import cx from 'classnames';
 import { IObservable, IObservableArray, isObservable, observe } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
@@ -26,7 +25,7 @@ type PrimitiveElementProps = {
 const PrimitiveElement = observer(({ name, value }: PrimitiveElementProps) => {
   return (
     <li
-      className={cx('entry', {
+      className={cn('entry', {
         [`property-${name}`]: name !== undefined,
       })}
     >
@@ -243,7 +242,7 @@ const Element = observer(
     return (
       <li
         ref={domRef}
-        className={cx({
+        className={cn({
           entry: true,
           toggable: showToggler,
           open: isOpen,

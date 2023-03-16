@@ -2,11 +2,11 @@ import {
   CodeEditor as ReactCodeEditor,
   ParserStatus,
 } from '@rekajs/react-code-editor';
-import cx from 'classnames';
 import { motion } from 'framer-motion';
 import * as React from 'react';
 
 import { useEditor } from '@app/editor';
+import { cn } from '@app/utils';
 
 import { ParserStatusBadge } from './ParserStatusBadge';
 
@@ -37,7 +37,7 @@ export const CodeEditor = ({ className, ...props }: CodeEditorProps) => {
   const editor = useEditor();
 
   return (
-    <div className={cx(className, 'h-full')} {...props}>
+    <div className={cn(className, 'h-full')} {...props}>
       <div className="flex flex-col h-full">
         <div className="flex items-center border-b border-solid border-b-neutral-200">
           <div className="flex-1">
@@ -65,7 +65,7 @@ export const CodeEditor = ({ className, ...props }: CodeEditorProps) => {
         </div>
         <div className="flex-1 flex flex-col overflow-hidden">
           <div
-            className={cx('h-full', {
+            className={cn('h-full', {
               block: currentTab === 'code',
               hidden: currentTab !== 'code',
             })}
@@ -78,7 +78,7 @@ export const CodeEditor = ({ className, ...props }: CodeEditorProps) => {
             />
           </div>
           <div
-            className={cx('overflow-auto py-4', {
+            className={cn('overflow-auto py-4', {
               block: currentTab === 'ast',
               hidden: currentTab !== 'ast',
             })}

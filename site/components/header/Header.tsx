@@ -13,7 +13,7 @@ export const Header = observer(() => {
     <div className={SITE_LAYOUT_HEADER_CLASSNAME}>
       <div className="flex items-center">
         <div className="flex flex-1 items-center">
-          <div className="ml-2">
+          <div>
             <Link href="/">
               <a>
                 <Image

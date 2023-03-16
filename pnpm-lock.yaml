@@ -278,7 +278,6 @@ importers:
       '@types/react-dom': ^17.0.10
       autoprefixer: ^10.4.13
       canvas-confetti: ^1.6.0
-      class-variance-authority: ^0.4.0
       classnames: ^2.3.1
       date-fns: ^2.29.3
       esbuild: ^0.15.7
@@ -347,7 +346,6 @@ importers:
       '@rekajs/utils': link:../packages/utils
       '@stitches/react': 1.2.8_react@17.0.2
       canvas-confetti: 1.6.0
-      class-variance-authority: 0.4.0_typescript@4.9.4
       classnames: 2.3.2
       date-fns: 2.29.3
       esbuild: 0.15.7
@@ -3689,17 +3687,6 @@ packages:
     resolution: {integrity: sha512-4jYS4MOAaCIStSRwiuxc4B8MYhIe676yO1sYGzARnjXkWpmzZMMYxY6zu8WYWDhSuth5zhrQ1rhNSibyyvv4/w==}
     engines: {node: '>=8'}
     dev: true
-
-  /class-variance-authority/0.4.0_typescript@4.9.4:
-    resolution: {integrity: sha512-74enNN8O9ZNieycac/y8FxqgyzZhZbxmCitAtAeUrLPlxjSd5zA7LfpprmxEcOmQBnaGs5hYhiSGnJ0mqrtBLQ==}
-    peerDependencies:
-      typescript: '>= 4.5.5 < 5'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      typescript: 4.9.4
-    dev: false
 
   /classnames/2.3.2:
     resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}

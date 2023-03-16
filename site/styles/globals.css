@@ -511,8 +511,7 @@ code:not(pre code)::before {
   background-color: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
   color: unset;
-  padding: var(--space-3) var(--space-4);
-  @apply border-b border-solid border-outline h-header;
+  @apply border-b border-solid border-outline h-header px-5 py-2;
   position: fixed;
   z-index: 9;
   width: 100%;

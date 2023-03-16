@@ -2,7 +2,6 @@ import {
   DotsHorizontalIcon,
   DoubleArrowRightIcon,
 } from '@radix-ui/react-icons';
-import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
@@ -10,7 +9,7 @@ import * as React from 'react';
 import { useEditor, useEditorActiveComponent } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
-import { CREATE_BEZIER_TRANSITION } from '@app/utils';
+import { cn, CREATE_BEZIER_TRANSITION } from '@app/utils';
 
 import { AddFrameModal } from './AddFrameModal';
 import { EditPreviewSize } from './EditPreviewSize';
@@ -187,7 +186,7 @@ export const ComponentEditorView = observer(() => {
         ) : (
           <React.Fragment>
             <div
-              className={classNames(
+              className={cn(
                 `w-full h-full overflow-hidden flex items-center bg-outline transition-ease`,
                 {
                   'filter-grayscale': componentEditor.activeFrame.state.sync,

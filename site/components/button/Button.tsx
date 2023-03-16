@@ -1,51 +1,50 @@
-import { VariantProps, cva, cx } from 'class-variance-authority';
 import * as React from 'react';
 
 import { cn } from '@app/utils';
 
-const buttonVariants = cva(
-  'inline-flex items-center border border-solid border-transparent justify-center rounded-md transition-colors focus:outline-none disabled:opacity-50  disabled:pointer-events-none ',
-  {
-    variants: {
-      variant: {
-        default:
-          'bg-transparent text-gray-500 hover:bg-black/5 hover:text-neutral-900',
-        primary: 'bg-primary/10 text-primary hover:bg-primary/20',
-        secondary: 'bg-purple-100 text-purple-600 hover:bg-purple-200',
-        outline:
-          'bg-transparent border border-solid border-outline text-neutral-500 hover:bg-primary/10 hover:text-primary shadow-sm',
-        subtle: 'bg-transparent text-primary hover:bg-primary-100',
-        link: 'bg-transparent text-blue-600 hover:text-blue-500',
-      },
-      size: {
-        default: 'text-xs py-2.5 px-2.5 [&>svg]:w-3.5 [&>svg]:h-3.5',
-        xs: 'text-xs py-1.5 px-1.5 rounded-md [&>svg]:w-3 [&>svg]:h-3',
-        xxs: 'text-xs px-1 py-1 rounded-md [&>svg]:w-3 [&>svg]:h-3',
-        lg: 'text-md px-4 py-4 rounded-md [&>svg]:w-4 [&>svg]:h-4',
-      },
-    },
-    compoundVariants: [
-      {
-        variant: 'link',
-        className: 'p-0',
-      },
-    ],
-    defaultVariants: {
-      variant: 'default',
-      size: 'default',
-    },
-  }
-);
-
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {}
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: 'default' | 'primary' | 'secondary' | 'outline' | 'subtle' | 'link';
+  size?: 'default' | 'xs' | 'xxs' | 'lg';
+};
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, variant, size, className, ...props }, ref) => {
+  (
+    { children, variant = 'default', size = 'default', className, ...props },
+    ref
+  ) => {
     return (
       <button
-        className={cn(buttonVariants({ variant, size }), className)}
+        className={cn(
+          'inline-flex items-center border border-solid border-transparent justify-center rounded-md transition-colors focus:outline-none disabled:opacity-50  disabled:pointer-events-none',
+          {
+            'bg-transparent text-gray-500 hover:bg-black/5 hover:text-neutral-900':
+              variant === 'default',
+            'bg-primary/10 text-primary hover:bg-primary/20':
+              variant === 'primary',
+            'bg-purple-100 text-purple-600 hover:bg-purple-200':
+              variant === 'secondary',
+            'bg-transparent border border-solid border-outline text-neutral-500 hover:bg-primary/10 hover:text-primary shadow-sm':
+              variant === 'outline',
+            'bg-transparent text-primary hover:bg-primary-100':
+              variant === 'subtle',
+            'bg-transparent text-blue-600 hover:text-blue-500':
+              variant === 'link',
+          },
+          {
+            'text-xs py-2.5 px-2.5 [&>svg]:w-3.5 [&>svg]:h-3.5':
+              size == 'default',
+            'text-xs py-1.5 px-1.5 rounded-md [&>svg]:w-3 [&>svg]:h-3':
+              size === 'xs',
+            'text-xs px-1 py-1 rounded-md [&>svg]:w-3 [&>svg]:h-3':
+              size === 'xxs',
+            'text-md px-4 py-4 rounded-md [&>svg]:w-4 [&>svg]:h-4':
+              size === 'lg',
+          },
+          {
+            'p-0': variant === 'link',
+          },
+          className
+        )}
         ref={ref}
         {...props}
       >
@@ -56,11 +55,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 export const IconButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, size, className, ...props }, ref) => {
+  ({ children, size, variant, className, ...props }, ref) => {
     return (
       <Button
         ref={ref}
-        className={cx(className)}
+        className={className}
+        variant={variant}
         size={size || 'xs'}
         {...props}
       >

@@ -1,11 +1,11 @@
 import { ChatBubbleIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import * as t from '@rekajs/types';
-import classNames from 'classnames';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { useEditor } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
+import { cn } from '@app/utils';
 
 import { IconButton } from '../button';
 import { Text } from '../text';
@@ -141,14 +141,14 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
 
   return (
     <div
-      className={classNames(
+      className={cn(
         'absolute z-50 border border-solid border-primary pointer-events-none [&.overflow-border-hidden]:border-transparent [&.overflow-top > div]:top-0 [&.overflow-bottom > div]:bottom-0'
       )}
       ref={containerDomRef}
     >
       {props.type === 'selected' && (
         <div
-          className={classNames(
+          className={cn(
             'relative z-max pointer-events-auto text-white bg-primary text-white px-2.5 text-sm h-8 -top-8 -left-px inline-flex items-center'
           )}
         >

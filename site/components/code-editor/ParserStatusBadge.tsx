@@ -1,8 +1,9 @@
 import { CheckIcon, Cross1Icon, UpdateIcon } from '@radix-ui/react-icons';
 import { ParserStatus } from '@rekajs/react-code-editor';
-import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import * as React from 'react';
+
+import { cn } from '@app/utils';
 
 import { Tooltip } from '../tooltip';
 
@@ -45,7 +46,7 @@ export const ParserStatusBadge = (props: ParserStatusBadgeProps) => {
   return (
     <Tooltip content={payload.content}>
       <div
-        className={classNames(
+        className={cn(
           'flex items-center px-2 py-0.5 rounded-full border border-solid border-outline text-xs [&>svg]:inline-block [&>svg]:mr-2 [&>svg]:w-5 [&>svg]:h-5',
           {
             'text-green-600 border-green-400': props.status.type === 'success',
