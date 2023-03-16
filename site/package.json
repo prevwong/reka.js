@@ -41,7 +41,6 @@
     "@rekajs/react-code-editor": "workspace:*",
     "@rekajs/types": "workspace:*",
     "@rekajs/utils": "workspace:*",
-    "@stitches/react": "^1.2.7",
     "canvas-confetti": "^1.6.0",
     "classnames": "^2.3.1",
     "date-fns": "^2.29.3",

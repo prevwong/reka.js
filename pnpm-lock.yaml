@@ -267,7 +267,6 @@ importers:
       '@rekajs/react-code-editor': workspace:*
       '@rekajs/types': workspace:*
       '@rekajs/utils': workspace:*
-      '@stitches/react': ^1.2.7
       '@tailwindcss/typography': ^0.5.8
       '@types/canvas-confetti': ^1.6.0
       '@types/lodash': ^4.14.185
@@ -346,7 +345,6 @@ importers:
       '@rekajs/react-code-editor': link:../packages/react-code-editor
       '@rekajs/types': link:../packages/types
       '@rekajs/utils': link:../packages/utils
-      '@stitches/react': 1.2.8_react@17.0.2
       canvas-confetti: 1.6.0
       classnames: 2.3.2
       date-fns: 2.29.3
@@ -2787,14 +2785,6 @@ packages:
 
   /@rushstack/eslint-patch/1.2.0:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==}
-
-  /@stitches/react/1.2.8_react@17.0.2:
-    resolution: {integrity: sha512-9g9dWI4gsSVe8bNLlb+lMkBYsnIKCZTmvqvDG+Avnn69XfmHZKiaMrx7cgTaddq7aTPPmXiTsbFcUy0xgI4+wA==}
-    peerDependencies:
-      react: '>= 16.3.0'
-    dependencies:
-      react: 17.0.2
-    dev: false
 
   /@swc/helpers/0.4.3:
     resolution: {integrity: sha512-6JrF+fdUK2zbGpJIlN7G3v966PQjyx/dPt1T9km2wj+EUBqgrxCk3uX4Kct16MIm9gGxfKRcfax2hVf5jvlTzA==}
