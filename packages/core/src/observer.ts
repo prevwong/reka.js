@@ -307,6 +307,14 @@ export class Observer<T extends t.Type = t.Type> {
         return;
       }
 
+      fieldDisposers.set(
+        e.name,
+        this.setupChild(value[e.name], {
+          value,
+          key: String(e.name),
+        })
+      );
+
       return e;
     });
 
