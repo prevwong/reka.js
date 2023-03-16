@@ -186,6 +186,7 @@ export class Resolver {
       const templateScope = scope.inherit(template.id);
 
       let eachIndex: string | null = null;
+      let eachAliasName: string | null = null;
 
       cache = {
         key,
@@ -198,10 +199,19 @@ export class Resolver {
             this.resolveExpr(template.each.iterator, templateScope);
 
             if (template.each.alias) {
+              if (eachAliasName && eachAliasName !== template.each.alias.name) {
+                templateScope.removeVariableName(eachAliasName);
+              }
+
               templateScope.defineVariableName(template.each.alias.name);
+              eachAliasName = template.each.alias.name;
             }
 
             if (template.each.index) {
+              if (eachIndex && eachIndex !== template.each.index.name) {
+                templateScope.removeVariableName(eachIndex);
+              }
+
               eachIndex = template.each.index.name;
               templateScope.defineVariableName(template.each.index.name);
             } else {
