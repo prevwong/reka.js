@@ -22,7 +22,7 @@ type CachedComponentResolver = {
 };
 
 export class Resolver {
-  identifiersToVariableDistance: Map<t.Identifier, number>;
+  identifiersToVariableDistance: Map<string, number>;
 
   private scope: Scope;
   private cachedComponentResolver: WeakMap<
@@ -59,12 +59,12 @@ export class Resolver {
   }
 
   getDistance(identifier: t.Identifier) {
-    return this.identifiersToVariableDistance.get(identifier);
+    return this.identifiersToVariableDistance.get(identifier.id);
   }
 
   removeDistance(identifier: t.Identifier) {
     runInAction(() => {
-      this.identifiersToVariableDistance.delete(identifier);
+      this.identifiersToVariableDistance.delete(identifier.id);
     });
   }
 
@@ -74,7 +74,7 @@ export class Resolver {
     }
 
     runInAction(() => {
-      this.identifiersToVariableDistance.set(identifier, distance);
+      this.identifiersToVariableDistance.set(identifier.id, distance);
     });
   }
 
