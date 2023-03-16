@@ -2,7 +2,6 @@ import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import IFrame from 'react-frame-component';
-import { ThreeDots } from 'react-loader-spinner';
 
 import { useEditor, useEditorActiveComponent } from '@app/editor';
 import { ActiveFrame } from '@app/editor/ComponentEditor';
@@ -134,29 +133,16 @@ export const RenderFrame = observer((props: RenderFrameProps) => {
     });
   }, [props.frame]);
 
+  if (!props.frame.state.view) {
+    return null;
+  }
   return (
-    <React.Fragment>
-      {!props.frame.state.view ? (
-        <div className="absolute left-0 w-full h-full flex flex-col justify-center items-center bg-white">
-          <ThreeDots
-            height="50"
-            width="50"
-            color="#4563df"
-            radius="3"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
-          />
-        </div>
-      ) : (
-        <FrameContext.Provider value={props.frame.state}>
-          <RenderFrameView
-            width={props.width}
-            height={props.height}
-            view={props.frame.state.view}
-          />
-        </FrameContext.Provider>
-      )}
-    </React.Fragment>
+    <FrameContext.Provider value={props.frame.state}>
+      <RenderFrameView
+        width={props.width}
+        height={props.height}
+        view={props.frame.state.view}
+      />
+    </FrameContext.Provider>
   );
 });

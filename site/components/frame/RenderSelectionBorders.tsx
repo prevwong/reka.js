@@ -3,6 +3,7 @@ import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
+import { RENDER_FRAME_CONTAINER_CLASSNAME } from '@app/constants/css';
 import { useEditor } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 import { cn } from '@app/utils';
@@ -91,13 +92,27 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
     const observer = new ResizeObserver(() => {
       setPos();
     });
-    const observedEl = props.dom.parentElement ?? props.dom;
-    observer.observe(observedEl);
+
+    const observedElementDisposers = [
+      props.dom.parentElement ?? props.dom,
+      document.querySelector(`.${RENDER_FRAME_CONTAINER_CLASSNAME}`),
+    ].map((el) => {
+      if (!el) {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        return () => {};
+      }
+
+      observer.observe(el);
+
+      return () => {
+        observer.unobserve(el);
+      };
+    });
 
     iframe.contentWindow?.addEventListener('scroll', setPos);
 
     return () => {
-      observer.unobserve(observedEl);
+      observedElementDisposers.map((dispose) => dispose());
       iframe.contentWindow?.removeEventListener('scroll', setPos);
     };
   }, [iframe, props.dom, props.template]);
@@ -141,7 +156,7 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
   return (
     <div
       className={cn(
-        'absolute z-50 border border-solid border-primary pointer-events-none [&.overflow-border-hidden]:border-transparent [&.overflow-top > div]:top-0 [&.overflow-bottom > div]:bottom-0'
+        'absolute z-50 border border-solid border-primary pointer-events-none [&.overflow-border-hidden]:border-transparent [&.overflow-top>div]:top-0 [&.overflow-bottom>div]:bottom-0'
       )}
       ref={containerDomRef}
     >

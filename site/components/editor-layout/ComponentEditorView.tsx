@@ -7,6 +7,7 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import useIsomorphicLayoutEffect from 'react-use/lib/useIsomorphicLayoutEffect';
 
+import { RENDER_FRAME_CONTAINER_CLASSNAME } from '@app/constants/css';
 import { useEditor, useEditorActiveComponent } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
@@ -203,6 +204,7 @@ export const ComponentEditorView = observer(() => {
           <React.Fragment>
             <div
               className={cn(
+                RENDER_FRAME_CONTAINER_CLASSNAME,
                 `w-full h-full overflow-hidden flex items-center bg-canvas transition-ease`,
                 {
                   'filter-grayscale': componentEditor.activeFrame.state.sync,
