@@ -3,7 +3,6 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { useEditor } from '@app/editor';
-import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
 import { Tooltip } from '../tooltip';
 import { UserAvatar } from '../user-avatar';
@@ -28,29 +27,26 @@ export const Collaborators = observer(() => {
   }
 
   return (
-    <div className="ml-2 flex gap-1.5">
-      <AnimatePresence>
-        {editor.peers.map((user, i) => (
+    <div className="ml-2 flex gap-1">
+      <AnimatePresence initial={false}>
+        {editor.peers.map((user) => (
           <MotionCollabUser
-            key={i}
+            key={user.id}
             user={user}
             active={false}
-            animate={{
-              transform: 'scale(1)',
-            }}
-            exit={{ transform: 'scale(0)' }}
-            transition={CREATE_BEZIER_TRANSITION()}
+            layout
+            initial={{ opacity: 0, x: -100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, transition: { duration: 0.15 } }}
           />
         ))}
         <MotionCollabUser
           user={editor.user}
           active={true}
-          disconnected={editor.connected === false}
-          animate={{
-            transform: 'scale(1)',
-          }}
-          exit={{ transform: 'scale(0)' }}
-          transition={CREATE_BEZIER_TRANSITION()}
+          layout
+          initial={{ opacity: 0, x: -100 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, transition: { duration: 0.15 } }}
         />
       </AnimatePresence>
     </div>

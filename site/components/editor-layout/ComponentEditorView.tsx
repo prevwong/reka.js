@@ -181,7 +181,7 @@ export const ComponentEditorView = observer(() => {
             fallback={
               <Popover
                 trigger={
-                  <IconButton>
+                  <IconButton variant="outline">
                     <DotsHorizontalIcon />
                   </IconButton>
                 }
@@ -203,7 +203,7 @@ export const ComponentEditorView = observer(() => {
           <React.Fragment>
             <div
               className={cn(
-                `w-full h-full overflow-hidden flex items-center bg-outline transition-ease`,
+                `w-full h-full overflow-hidden flex items-center bg-canvas transition-ease`,
                 {
                   'filter-grayscale': componentEditor.activeFrame.state.sync,
                 }
@@ -297,7 +297,7 @@ export const ComponentEditorView = observer(() => {
                     },
                   ]}
                 >
-                  <IconButton>
+                  <IconButton variant="outline">
                     <DotsHorizontalIcon />
                   </IconButton>
                 </Dropdown>

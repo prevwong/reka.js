@@ -98,7 +98,7 @@ const TextareaEditor = ({
   return (
     <div
       className={cn(
-        'absolute -top-px -left-px z-40 border border-solid border-transparent rounded overflow-hidden shadow-xl w-[calc(100%+1px)] bg-white',
+        'absolute -top-px -left-px z-40 border border-solid border-outline rounded overflow-hidden shadow-2xl w-[calc(100%+1px)] bg-white',
         {
           'border-red-300 rounded-bl-none rounded-br-none': hasError,
         }
@@ -120,8 +120,8 @@ const TextareaEditor = ({
           }
         }}
       />
-      <div className="px-2.5 py-2 flex">
-        <div className="text-[0.6rem] py-1 px-3 border border-solid border-secondary/20 text-secondary flex rounded-full items-center justify-center self-start">
+      <div className="px-2.5 py-2 flex items-start">
+        <div className="text-[0.6rem] flex py-1 px-3 border border-solid border-secondary/20 text-secondary rounded-full items-center justify-center">
           Expression
           <Info
             info={`An expression is expected here. Eg: "Some text value" for text literals.`}

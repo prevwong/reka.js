@@ -24,7 +24,12 @@ export const ParserStatusBadge = (props: ParserStatusBadgeProps) => {
         };
       case 'success':
         return {
-          icon: <CheckIcon style={{ width: '15px', height: '15px' }} />,
+          icon: (
+            <CheckIcon
+              className="!mr-0.5"
+              style={{ width: '15px', height: '15px' }}
+            />
+          ),
           message: 'OK',
           content: 'Parsed without errors',
         };
@@ -47,9 +52,9 @@ export const ParserStatusBadge = (props: ParserStatusBadgeProps) => {
     <Tooltip content={payload.content}>
       <div
         className={cn(
-          'flex items-center px-2 py-0.5 rounded-full border border-solid border-outline text-xs [&>svg]:inline-block [&>svg]:mr-2 [&>svg]:w-5 [&>svg]:h-5',
+          'flex items-center px-1.5 py-0.5 rounded-full border border-solid border-outline text-xs [&>svg]:inline-block [&>svg]:mr-2 [&>svg]:w-5 [&>svg]:h-5',
           {
-            'text-green-600 border-green-400': props.status.type === 'success',
+            'text-green-600 border-green-600': props.status.type === 'success',
             'text-red-600 border-red-400': props.status.type === 'error',
           }
         )}

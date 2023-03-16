@@ -506,16 +506,7 @@ code:not(pre code)::before {
 }
 
 .site-layout-header {
-  transition: var(--transition);
-  top: 0;
-  background-color: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  color: unset;
-  @apply border-b border-solid border-outline h-header px-5 py-2;
-  position: fixed;
-  z-index: 9;
-  width: 100%;
-  overflow: hidden;
+  @apply transition-all ease-bezier duration-300 backdrop-blur-xl fixed top-0 z-10 overflow-hidden w-full bg-white/80 border-b border-solid border-outline h-header px-5 py-2;
 }
 
 .site-layout.hidden-header .site-layout-header {

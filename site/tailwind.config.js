@@ -11,6 +11,7 @@ module.exports = {
       fontFamily: {
         code: ['JetBrains Mono'],
       },
+
       keyframes: {
         show: {
           '0%': { opacity: 0, transform: 'translate(-50%, -48%) scale(.96)' },
@@ -40,6 +41,7 @@ module.exports = {
       colors: {
         secondary: '#9334e9',
         outline: '#e8e7e7',
+        canvas: '#efefef',
         primary: {
           DEFAULT: '#0066DE',
           50: '#E8F3FF',

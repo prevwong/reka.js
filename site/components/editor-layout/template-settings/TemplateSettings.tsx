@@ -65,8 +65,8 @@ export const TemplateSettings = observer(() => {
 
   if (!template) {
     return (
-      <div className="px-8 max-w-8 py-4 flex flex-col justify-center items-center h-full text-center gap-2">
-        <span className="text-gray-500 text-sm leading-6">
+      <div className="px-8 py-4 flex flex-col justify-center items-center h-full text-center gap-2">
+        <span className="text-gray-500 text-xs leading-5 max-w-[250px]">
           Click on an element on the screen to start editing a template.
         </span>
       </div>

@@ -29,7 +29,7 @@ export const Select = (props: SelectProps) => {
         </SelectPrimitive.SelectIcon>
       </SelectPrimitive.SelectTrigger>
       <SelectPrimitive.Portal>
-        <SelectPrimitive.Content className="overflow-hidden bg-white rounded-md shadow-xl z-50">
+        <SelectPrimitive.Content className="overflow-hidden bg-white rounded-md shadow-lg border border-solid border-outline z-50">
           <SelectPrimitive.Viewport className="p-1.5">
             {props.items.map((item) => (
               <SelectPrimitive.Item

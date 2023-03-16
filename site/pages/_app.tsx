@@ -1,3 +1,4 @@
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import * as React from 'react';
@@ -12,7 +13,6 @@ import {
 import { EditorContextProvider } from '@app/editor';
 
 import '../styles/globals.css';
-import { TooltipProvider } from '@radix-ui/react-tooltip';
 
 type PageOptions = {
   hideHeaderOnInitial: boolean;
@@ -66,7 +66,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <TooltipProvider delayDuration={600}>
+    <TooltipProvider delayDuration={200}>
       <EditorContextProvider>
         <Head>
           <title>Reka.js</title>
