@@ -10,7 +10,6 @@ import { Button } from '@app/components/button';
 import { Modal } from '@app/components/modal';
 import { PairInput } from '@app/components/pair-input';
 import { Select } from '@app/components/select';
-import { Text } from '@app/components/text';
 import { TextField } from '@app/components/text-field';
 import { ToggleGroup, ToggleGroupItem } from '@app/components/toggle-group';
 import { useEditor } from '@app/editor';
@@ -42,7 +41,7 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
     <Modal title="Add template" isOpen={props.isOpen} onClose={props.onClose}>
       <div className="flex flex-col gap-4 mt-5">
         <div className="grid items-center w-full grid-cols-pair-input">
-          <Text size="1">Type</Text>
+          <span className="text-xs">Type</span>
           <div>
             <ToggleGroup
               type="single"
@@ -62,7 +61,7 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
         {templateType === 'tag' && (
           <React.Fragment>
             <div className="grid items-center w-full grid-cols-pair-input">
-              <Text size="1">Tag</Text>
+              <span className="text-xs">Tag</span>
               <TextField
                 placeholder="div"
                 onChange={(e) => {
@@ -74,7 +73,7 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
         )}
         {templateType === 'component' && (
           <div className="grid items-center w-full grid-cols-pair-input">
-            <Text size="1">Component</Text>
+            <span className="text-xs">Component</span>
             <div>
               <Select
                 value={templateComponentName}
@@ -97,9 +96,7 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
         )}
         {(templateType === 'tag' || templateType === 'component') && (
           <div className="grid items-start w-full grid-cols-pair-input">
-            <Text size="1" css={{ mt: '$3' }}>
-              Props
-            </Text>
+            <span className="mt-2 text-xs">Props</span>
             <div>
               <PairInput
                 addingNewField={true}

@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { IconButton } from '../button';
 import { ExpressionInput } from '../expression-input';
-import { Text } from '../text';
+
 import { TextField } from '../text-field';
 
 type PairInputFieldProps = {
@@ -193,9 +193,9 @@ export const PairInput = (props: PairInputProps) => {
       })}
       {!props.addingNewField && props.values.length === 0 && (
         <div>
-          <Text size={1} css={{ color: '$gray11' }}>
+          <span className="text-gray-500 text-xs">
             {props.emptyValuesText || 'No values yet'}
-          </Text>
+          </span>
         </div>
       )}
       {props.addingNewField && (

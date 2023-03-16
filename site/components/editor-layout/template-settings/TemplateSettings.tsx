@@ -2,7 +2,6 @@ import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { Text } from '@app/components/text';
 import { useEditor } from '@app/editor';
 
 import { ComponentTemplateSettings } from './ComponentTemplateSettings';
@@ -67,9 +66,9 @@ export const TemplateSettings = observer(() => {
   if (!template) {
     return (
       <div className="px-8 max-w-8 py-4 flex flex-col justify-center items-center h-full text-center gap-2">
-        <Text size={2} css={{ color: '$slate10', lineHeight: '1.2rem' }}>
+        <span className="text-gray-500 text-sm leading-6">
           Click on an element on the screen to start editing a template.
-        </Text>
+        </span>
       </div>
     );
   }

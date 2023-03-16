@@ -6,7 +6,6 @@ import { useEditor } from '@app/editor';
 import { ActiveFrame } from '@app/editor/ComponentEditor';
 import { Comment, CommentExtension } from '@app/extensions/CommentExtension';
 
-import { Text } from '../text';
 import { TextField } from '../text-field';
 import { UserAvatar } from '../user-avatar';
 
@@ -117,9 +116,7 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
     >
       <div className="overflow-auto px-4 py-4 max-h-52">
         {comments.length === 0 ? (
-          <Text size={1} css={{ color: '$gray10' }}>
-            No comments yet
-          </Text>
+          <span className="text-xs text-gray-500">No comments yet</span>
         ) : (
           <React.Fragment>
             {comments

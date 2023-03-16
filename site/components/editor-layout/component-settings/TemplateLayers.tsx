@@ -5,7 +5,6 @@ import * as React from 'react';
 
 import { IconButton } from '@app/components/button';
 import { Dropdown } from '@app/components/dropdown';
-import { Text } from '@app/components/text';
 import { Tooltip } from '@app/components/tooltip';
 import { useEditor } from '@app/editor';
 import { cn } from '@app/utils';
@@ -170,7 +169,7 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
           }}
         >
           <div className="flex flex-1 gap-2 items-center">
-            <Text size="1">{getTemplateName(template)}</Text>
+            <span className="text-xs">{getTemplateName(template)}</span>
             {activeComponentEditor.getCommentCount(template) > 0 && (
               <Tooltip content="View comments">
                 <IconButton
@@ -179,9 +178,9 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
                   }}
                 >
                   <ChatBubbleIcon />
-                  <Text size="1" css={{ ml: '$2' }}>
+                  <span className="text-xs ml-1.5">
                     {activeComponentEditor.getCommentCount(template)}
-                  </Text>
+                  </span>
                 </IconButton>
               </Tooltip>
             )}

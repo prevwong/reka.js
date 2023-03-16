@@ -8,7 +8,6 @@ import { EditorMode } from '@app/editor/Editor';
 import { cn } from '@app/utils';
 
 import { IconButton } from '../button';
-import { Text } from '../text';
 import { Tooltip } from '../tooltip';
 
 type SelectionBorderProps = {
@@ -154,12 +153,12 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
         >
           <div className="flex items-center">
             <div className="flex-1 flex items-center">
-              <Text size={2}>{templateName}</Text>
-              <Text css={{ ml: '$2', opacity: 0.7 }} size={1}>
+              <span className="text-sm ">{templateName}</span>
+              <span className="ml-1 opacity-70 text-xs">
                 {'<'}
                 {templateType}
                 {'>'}
-              </Text>
+              </span>
             </div>
 
             <div className="pl-3 flex items-center">

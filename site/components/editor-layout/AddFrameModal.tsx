@@ -105,12 +105,6 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
         </div>
         <Button
           variant="primary"
-          css={{
-            mt: '$3',
-            justifyContent: 'center',
-            fontSize: '$2',
-            padding: '$2 $4',
-          }}
           onClick={() => {
             editor.reka.change(() => {
               if (!existingFrame) {

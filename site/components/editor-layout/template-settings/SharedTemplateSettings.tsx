@@ -6,7 +6,6 @@ import * as React from 'react';
 import { Button } from '@app/components/button';
 import { ExpressionInput } from '@app/components/expression-input';
 import { SettingSection } from '@app/components/settings-section';
-import { Text } from '@app/components/text';
 import { TextField } from '@app/components/text-field';
 import { useEditor } from '@app/editor';
 
@@ -142,10 +141,10 @@ const EachTemplateSettings = observer((props: SharedTemplateSettingsProps) => {
         </div>
 
         <div className="mt-3 flex gap-2.5 items-center">
-          <Text css={{ color: '$grayA9', fontSize: '$1' }}>For</Text>
+          <span className="text-gray-500 text-xs">For</span>
           <TextField
             placeholder="item"
-            css={{ flex: 1 }}
+            className="flex-1"
             value={alias}
             onCommit={(value) => {
               const expr = Parser.parseExpression(value, t.Identifier);
@@ -159,7 +158,7 @@ const EachTemplateSettings = observer((props: SharedTemplateSettingsProps) => {
           />
           {isExposingIndex && (
             <React.Fragment>
-              <Text css={{ color: '$grayA9', fontSize: '$1' }}>at</Text>
+              <span className="text-gray-500 text-xs">at</span>
               <TextField
                 placeholder="index"
                 value={index}
