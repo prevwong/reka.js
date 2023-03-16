@@ -24,10 +24,10 @@ import * as t from '@rekajs/types';
 const reka = Reka.create();
 
 reka.load(
-  t.State({
-    program: t.Program({
+  t.state({
+    program: t.program({
       components: [
-        t.RekaComponent({
+        t.rekaComponent({
           name: 'App',
           props: [],
           state: [],
@@ -68,7 +68,7 @@ Next, let's create a new `Frame` to evaluate an instance of our newly created Ap
 ```tsx
 const reka = Reka.create(...);
 
-const frame = reka.createFrame({
+const frame = await reka.createFrame({
     component: {
         name: 'App',
         props: {}
@@ -147,7 +147,7 @@ Well, its `View` is automatically updated to reflect the changes made in the `St
 
 ```tsx
 // from previous example
-const frame = reka.createFrame(...)
+const frame = await reka.createFrame(...)
 
 reka.change(() => {...});
 
@@ -199,7 +199,7 @@ Oftentimes, it would be pretty useful to know when there's a change to a Reka da
 import * as t from '@rekajs/types';
 
 const reka = Reka.create(...);
-const frame = reka.createFrame(...);
+const frame = await reka.createFrame(...);
 
 const appComponent = reka.state.components[0];
 
@@ -241,7 +241,7 @@ The same can be done in order to watch for changes made to a resulting View:
 import * as t from '@rekajs/types';
 
 const reka = Reka.create(...);
-const frame = reka.createFrame(...);
+const frame = await reka.createFrame(...);
 
 const appComponent = reka.state.components[0];
 
