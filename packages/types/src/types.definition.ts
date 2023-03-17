@@ -3,7 +3,7 @@ import { Schema } from './schema';
 Schema.define('State', {
   fields: (t) => ({
     program: t.node('Program'),
-    extensions: t.map(t.node('ExtensionState')),
+    extensions: t.defaultValue(t.map(t.node('ExtensionState')), {}),
   }),
 });
 
@@ -15,8 +15,8 @@ Schema.define('Program', {
   extends: 'ASTNode',
   scope: true,
   fields: (t) => ({
-    globals: t.array(t.node('Val')),
-    components: t.array(t.node('RekaComponent')),
+    globals: t.defaultValue(t.array(t.node('Val')), []),
+    components: t.defaultValue(t.array(t.node('RekaComponent')), []),
   }),
 });
 
@@ -186,8 +186,8 @@ Schema.define('Template', {
   extends: 'Expression',
   abstract: true,
   fields: (t) => ({
-    props: t.map(t.node('Expression')),
-    children: t.array(t.node('Template')),
+    props: t.defaultValue(t.map(t.node('Expression')), {}),
+    children: t.defaultValue(t.array(t.node('Template')), []),
     if: t.defaultValue(t.union(t.node('Expression'), t.nullish), null),
     each: t.defaultValue(t.union(t.node('ElementEach'), t.nullish), null),
     classList: t.defaultValue(

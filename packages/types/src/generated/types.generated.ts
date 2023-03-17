@@ -2,7 +2,7 @@ import { Schema, Type } from '../schema';
 
 type StateParameters = {
   program: Program;
-  extensions: Record<string, ExtensionState>;
+  extensions?: Record<string, ExtensionState>;
 };
 
 export class State extends Type {
@@ -26,8 +26,8 @@ export abstract class ASTNode extends Type {
 Schema.register('ASTNode', ASTNode);
 
 type ProgramParameters = {
-  globals: Val[];
-  components: RekaComponent[];
+  globals?: Val[];
+  components?: RekaComponent[];
 };
 
 export class Program extends ASTNode {
@@ -330,8 +330,8 @@ export class ExternalComponent extends Component {
 Schema.register('ExternalComponent', ExternalComponent);
 
 type TemplateParameters = {
-  props: Record<string, Expression>;
-  children: Template[];
+  props?: Record<string, Expression>;
+  children?: Template[];
   if?: Expression | null;
   each?: ElementEach | null;
   classList?: ObjectExpression | null;
@@ -351,8 +351,8 @@ export abstract class Template extends Expression {
 Schema.register('Template', Template);
 
 type TagTemplateParameters = {
-  props: Record<string, Expression>;
-  children: Template[];
+  props?: Record<string, Expression>;
+  children?: Template[];
   if?: Expression | null;
   each?: ElementEach | null;
   classList?: ObjectExpression | null;
@@ -369,8 +369,8 @@ export class TagTemplate extends Template {
 Schema.register('TagTemplate', TagTemplate);
 
 type ComponentTemplateParameters = {
-  props: Record<string, Expression>;
-  children: Template[];
+  props?: Record<string, Expression>;
+  children?: Template[];
   if?: Expression | null;
   each?: ElementEach | null;
   classList?: ObjectExpression | null;
@@ -387,8 +387,8 @@ export class ComponentTemplate extends Template {
 Schema.register('ComponentTemplate', ComponentTemplate);
 
 type SlotTemplateParameters = {
-  props: Record<string, Expression>;
-  children: Template[];
+  props?: Record<string, Expression>;
+  children?: Template[];
   if?: Expression | null;
   each?: ElementEach | null;
   classList?: ObjectExpression | null;
