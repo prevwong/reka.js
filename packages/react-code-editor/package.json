@@ -12,7 +12,6 @@
   "author": "Prev Wong",
   "license": "MIT",
   "peerDependencies": {
-    "@rekajs/codemirror": ">=0.1.0",
     "@rekajs/parser": ">=0.1.0",
     "@rekajs/react": ">=0.1.0",
     "@rekajs/core": ">=0.1.0",
@@ -20,6 +19,7 @@
     "react": "^16.8.0 || ^17 || ^18"
   },
   "dependencies": {
+    "@rekajs/codemirror": ">=0.1.0",
     "@codemirror/basic-setup": "^0.19.1",
     "@codemirror/commands": "^0.19.8",
     "@codemirror/theme-one-dark": "^0.19.1",
