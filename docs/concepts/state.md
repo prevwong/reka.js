@@ -23,53 +23,35 @@ Here's an example of a simple Button component stored in the state:
                 type: "RekaComponent",
                 name: "Button",
                 props: [
-                    {
-                        type: "ComponentProp",
-                        name: "enabled"
-                    }
+                    { type: "ComponentProp", name: "enabled" }
                 ],
                 state: [
                     {
                         type: "Val",
                         name: "counter",
-                        init: {
-                            type: "Literal",
-                            value: 0,
-                        }
+                        init: { type: "Literal", value: 0 }
                     }
                 ],
                 template: {
                     type: "TagTemplate",
                     tag: "button",
                     props: {
-                        className: {
-                            type: "Literal",
-                            value: "bg-blue-900",
-                        }
+                        className: { type: "Literal", value: "bg-blue-900" }
                     },
                     children: [
                         {
                             type: "TagTemplate",
                             tag: "text",
                             props: {
-                                value: {
-                                    type: "Identifier",
-                                    name: "counter",
-                                }
+                                value: { type: "Identifier", name: "counter" }
                             }
                         },
                         {
                             type: "TagTemplate",
                             tag: "text",
-                            if: {
-                                type: "Identifier",
-                                name: "enabled"
-                            },
+                            if: { type: "Identifier", name: "enabled" },
                             props: {
-                                value: {
-                                    type: "Identifier",
-                                    name: "counter",
-                                }
+                                value: { type: "Identifier", name: "counter" }
                             }
                         }
                     ]
@@ -108,26 +90,18 @@ Additionally, we can also define global variables that can be referenced through
             {
                 type: "Val",
                 name: "globalCounter",
-                init: {
-                    type: "Literal",
-                    value: 0,
-                }
+                init: { type: "Literal", value: 0 }
             }
         ],
         components: [
             {
                 type: "RekaComponent",
                 name: "Button",
-                props: [...],
-                state: [...]
                 template: {
                     type: "TagTemplate",
                     tag: "button",
                     props: {
-                        className: {
-                            type: "Literal",
-                            value: "bg-blue-900",
-                        }
+                        className: { type: "Literal", value: "bg-blue-900" }
                     },
                     children: [
                         {
@@ -154,8 +128,8 @@ If you're coming from React, these globals are more akin to stateful values stor
 const GlobalCounterContext = React.createContext();
 
 const Button = (props) => {
-  const globalCounter = React.useContext(GlobalCounterContext);
+  const [value, setValue] = React.useContext(GlobalCounterContext);
 
-  return <button className="bg-blue-900">{globalCounter}</button>;
+  return <button className="bg-blue-900">{value}</button>;
 };
 ```

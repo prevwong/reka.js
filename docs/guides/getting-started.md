@@ -2,7 +2,7 @@
 
 ## Installation
 
-First, we need to install 2 packages:
+Before we start, we need to install 2 packages:
 
 - `@rekajs/types` which provides APIs to create Reka data types (ie: the `State` AST nodes)
 - `@rekajs/core` which allows us to create a new `Reka` instance
@@ -61,7 +61,7 @@ const App = () => {
 };
 ```
 
-## Create a Component Instance
+## Creating a Frame
 
 Next, let's create a new `Frame` to evaluate an instance of our newly created App component from above:
 
@@ -69,6 +69,7 @@ Next, let's create a new `Frame` to evaluate an instance of our newly created Ap
 const reka = Reka.create(...);
 
 const frame = await reka.createFrame({
+    id: 'my-app-component',
     component: {
         name: 'App',
         props: {}
@@ -76,9 +77,7 @@ const frame = await reka.createFrame({
 });
 ```
 
-The `Frame` instance computes a `View` which is the resulting render output of a component's instance.
-
-We can retrieve the computed `View` by accessing the `root` property of a `Frame`:
+The `Frame` instance computes a `View` which is the resulting render output of a component's instance:
 
 ```tsx
 const view = frame.view;
@@ -143,7 +142,7 @@ console.log(appComponent.template.children[1]);
 
 Earlier, we created a `Frame` instance, but what happens to its `View` when we performed the above mutation?
 
-Well, its `View` is automatically updated to reflect the changes made in the `State`:
+Well, its `View` is automatically updated to reflect the changes made in `State`:
 
 ```tsx
 // from previous example
@@ -196,69 +195,57 @@ console.log(frame.view);
 Oftentimes, it would be pretty useful to know when there's a change to a Reka data structure (ie: the `State` or `View`):
 
 ```tsx
-import * as t from '@rekajs/types';
-
-const reka = Reka.create(...);
-const frame = await reka.createFrame(...);
-
-const appComponent = reka.state.components[0];
-
 reka.watch(() => {
-    if ( appComponent.template instanceof t.TagView ) {
-        console.log('appComponent =>', appComponent.template.tag);
-    }
+  if (appComponent.template instanceof t.TagView) {
+    console.log('appComponent =>', appComponent.template.tag);
+  }
 });
 
-reka.subscribe(() => {
+reka.subscribe(
+  () => {
     return {
-        tag: appComponent.template.tag
-    }
-}, (collected) => {
-    console.log("tag: ", collected.tag);
-})
+      tag: appComponent.template.tag,
+    };
+  },
+  (collected) => {
+    console.log('tag: ', collected.tag);
+  }
+);
 
 reka.change(() => {
-    appComponent.template.tag = 'section';
-})
+  appComponent.template.tag = 'section';
+});
 // 1)
 // console:
 // appComponent => section
 // tag: section
 
 reka.change(() => {
-    appComponent.template.tag = 'div';
-})
+  appComponent.template.tag = 'div';
+});
 // 2)
 // console:
 // appComponent => div
 // tag: div
-
 ```
 
-The same can be done in order to watch for changes made to a resulting View:
+The same can be done in order to watch for changes made to a resulting `View`:
 
 ```tsx
-import * as t from '@rekajs/types';
-
-const reka = Reka.create(...);
-const frame = await reka.createFrame(...);
-
-const appComponent = reka.state.components[0];
-
 reka.watch(() => {
-    console.log('frame root tag =>', frame.view.tag);
-})
+  console.log('frame root tag =>', frame.view.tag);
+});
 
 reka.change(() => {
-    appComponent.template.tag = 'section';
-})
+  appComponent.template.tag = 'section';
+});
 // 1)
 // console:
 // frame root tag => section
 
 reka.change(() => {
-    appComponent.template.tag = 'div';
-})
+  appComponent.template.tag = 'div';
+});
 // 2)
 // console:
 // frame root tag => div
