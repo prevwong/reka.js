@@ -1,0 +1,51 @@
+.DocSearch-Container {
+  z-index: 9999;
+}
+
+.DocSearch-Button {
+  background: transparent;
+  transition: border-color 0.25s;
+  @apply flex items-center justify-center gap-4 px-2 py-1 rounded-md border-2 border-solid border-transparent shadow-none bg-transparent;
+}
+
+.DocSearch-Button:active,
+.DocSearch-Button:focus,
+.DocSearch-Button:hover {
+  @apply bg-transparent shadow-none;
+}
+
+.DocSearch-Button .DocSearch-Button-Container {
+  @apply flex items-center;
+}
+
+.DocSearch-Button .DocSearch-Search-Icon {
+  all: unset;
+  transition: color 0.5s;
+  @apply w-4 h-4 relative mr-3 text-neutral-600;
+}
+
+.DocSearch-Button:hover .DocSearch-Search-Icon {
+  @apply text-neutral-900;
+}
+
+.DocSearch-Button .DocSearch-Button-Placeholder {
+  all: unset;
+  transition: color 0.5s;
+  @apply font-normal text-sm text-neutral-900 mr-3;
+}
+
+.DocSearch-Button:hover .DocSearch-Button-Placeholder {
+  @apply font-normal text-neutral-900;
+}
+
+.DocSearch-Button .DocSearch-Button-Keys {
+  all: unset;
+  @apply flex px-2 py-1 border border-solid border-black/90 text-black rounded-md;
+}
+
+.DocSearch-Button .DocSearch-Button-Keys .DocSearch-Button-Key {
+  all: unset;
+  transition: color 0.5s, border-color 0.5s;
+  letter-spacing: 0.2rem;
+  @apply text-xs text-center flex flex-col justify-center items-center;
+}

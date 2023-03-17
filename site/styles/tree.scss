@@ -1,0 +1,63 @@
+.tree-viewer {
+  line-height: 20px;
+
+  .property-name {
+    @apply text-gray-500;
+  }
+
+  .value-container {
+    @apply text-gray-500;
+  }
+
+  .primitive-value {
+    @apply text-gray-900 font-medium;
+  }
+
+  ul {
+    @apply m-0 pl-3;
+  }
+
+  > ul {
+    @apply cursor-default flex-1;
+  }
+
+  .value-body {
+    min-width: 300px;
+  }
+
+  li.entry {
+    @apply m-0 list-none py-1 px-2;
+
+    &.change {
+      @apply bg-gray-300;
+    }
+
+    .entry > .value {
+      white-space: pre-wrap;
+
+      .s {
+        @apply cursor-text;
+      }
+    }
+
+    .tokenName {
+      @apply text-primary;
+    }
+
+    .tokenName,
+    .entry.toggable > span > .key {
+      @apply cursor-pointer relative;
+    }
+
+    .tokenName:after,
+    .entry.toggable > span > .key:after {
+      content: '';
+      @apply absolute w-full h-px left-0 bottom-0;
+    }
+
+    .tokenName:hover,
+    .entry.toggable > span > .key:hover {
+      @apply no-underline;
+    }
+  }
+}

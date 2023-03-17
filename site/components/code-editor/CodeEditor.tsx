@@ -44,7 +44,7 @@ export const CodeEditor = ({ className, ...props }: CodeEditorProps) => {
             {tabs.map((tab) => (
               <button
                 className={cn(
-                  'cursor-pointer leading-6 relative text-sm px-4 py-[0.83rem]',
+                  'cursor-pointer leading-6 relative text-sm px-4 py-[0.95rem]',
                   {
                     'text-gray-500 hover:bg-gray-100 hover:text-gray-900':
                       currentTab !== tab.id,

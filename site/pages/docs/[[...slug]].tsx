@@ -112,7 +112,7 @@ const Docs = (props: any) => {
             <Cross1Icon />
           </IconButton>
         </div>
-        <div className="doc-nav-content flex flex-col overflow-auto h-[calc(100vh-50px)] sticky top-[calc(50px+30px)] px-4 max-sm:h-full max-sm:relative max-sm:overflow-scroll max-sm:top-10 max-sm:py-4 ">
+        <div className="doc-nav-content flex flex-col overflow-auto h-[calc(100vh-50px)] sticky top-[calc(50px)] px-4 py-7 max-sm:h-full max-sm:relative max-sm:overflow-scroll max-sm:top-10 max-sm:py-4 ">
           {DOCS_SIDEBAR.main.map((link, i) => (
             <Link key={i} href={`/docs/${link.href}`} passHref legacyBehavior>
               <DocLink active={props.slug === link.href}>{link.title}</DocLink>
@@ -156,7 +156,7 @@ const Docs = (props: any) => {
           </IconButton>
           <div className="w-full overflow-scroll">
             <article className={'content'}>
-              <header className="pb-6 flex gap-2 items-center">
+              <header className="pb-10 flex gap-2 items-center">
                 <h1 className="text-4xl font-medium">{props.doc.title}</h1>
               </header>
               <div

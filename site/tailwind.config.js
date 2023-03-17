@@ -1,3 +1,5 @@
+const plugin = require('tailwindcss/plugin');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -95,5 +97,13 @@ module.exports = {
       }),
     },
   },
-  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')],
+  plugins: [
+    plugin(function ({ addBase }) {
+      addBase({
+        html: { fontSize: '0.9rem' },
+      });
+    }),
+    require('tailwindcss-animate'),
+    require('@tailwindcss/typography'),
+  ],
 };

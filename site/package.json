@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build:frame-styles": "tailwindcss -c tailwind-frame.config.js -i ./styles/frame.css -o ./public/frame.css",
+    "build:frame-styles": "tailwindcss -c tailwind-frame.config.js -i ./content/frame.css -o ./public/frame.css",
     "next:dev": "next dev -p 3001",
     "dev": "run-p next:dev generate-theme:watch",
     "build": "next build",
@@ -66,6 +66,7 @@
     "remark-emoji": "^3.0.2",
     "remark-rehype": "^10.1.0",
     "remark-shiki-twoslash": "^3.1.0",
+    "sass": "^1.59.3",
     "shiki": "^0.11.1",
     "short-uuid": "^4.2.0",
     "tailwind-merge": "^1.10.0",

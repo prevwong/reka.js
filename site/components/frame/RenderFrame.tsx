@@ -97,7 +97,7 @@ const RenderFrameView = observer((props: RenderFrameViewProps) => {
             maxHeight: props.height,
           }}
           className={cn(
-            'block m-auto w-full h-full shadow-none border border-transparent rounded-none bg-white',
+            'block m-auto w-full h-full shadow-none rounded-none bg-white',
             {
               'border-outline rounded-xs': !isNotFullWidth,
             }

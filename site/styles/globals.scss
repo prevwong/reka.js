@@ -1,0 +1,45 @@
+@import url('https://rsms.me/inter/inter.css');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/@docsearch/css@3');
+
+@import './code.scss';
+@import './tree.scss';
+@import './search.scss';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.site-layout {
+  .site-layout-header {
+    @apply transition-all ease-bezier duration-300 backdrop-blur-xl fixed top-0 z-10 overflow-hidden w-full bg-white/80 border-b border-solid border-outline h-header px-5 py-2;
+  }
+
+  .site-layout-content {
+    position: relative;
+    top: 50px;
+    height: calc(100vh - 50px);
+    transition: var(--transition);
+  }
+  &.hidden-header {
+    .site-layout-header {
+      top: -100%;
+    }
+    .site-layout-content {
+      height: 100vh;
+      top: 0;
+    }
+  }
+}
+
+.cm-editor {
+  height: 100%;
+}
+
+.ͼ2 .cm-gutters {
+  background: #ffffff;
+}
