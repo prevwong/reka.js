@@ -1,10 +1,10 @@
 import { createCollabExtension } from '@rekajs/collaboration';
 import { Reka } from '@rekajs/core';
 import * as t from '@rekajs/types';
+import { WebrtcProvider } from 'y-webrtc';
 import * as Y from 'yjs';
 
 import { ENCODED_INITIAL_STATE } from '@/generated/encoded-initial-state';
-import { WebrtcProvider } from 'y-webrtc';
 
 let webrtcProvider: WebrtcProvider;
 

@@ -8,7 +8,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     <React.Fragment>
       <Head>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+
+        {/* Use Tailwind CDN so that tailwind classes used within our Reka component gets injected on-demand */}
+        <script defer src="https://cdn.tailwindcss.com"></script>
       </Head>
+
       <Component {...pageProps} />
     </React.Fragment>
   );

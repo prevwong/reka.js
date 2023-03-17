@@ -1,9 +1,10 @@
-import { getWebrtcProvider } from '@/utils';
 import { CodeEditor } from '@rekajs/react-code-editor';
-import * as React from 'react';
-import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 import randomColor from 'randomcolor';
+import * as React from 'react';
 import shortUUID from 'short-uuid';
+import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
+
+import { getWebrtcProvider } from '@/utils';
 
 export type User = {
   id: string;

@@ -1,7 +1,6 @@
 import { Reka } from '@rekajs/core';
 import { RekaProvider } from '@rekajs/react';
 import * as t from '@rekajs/types';
-import Script from 'next/script';
 import * as React from 'react';
 
 import { Editor } from '@/components/Editor';
@@ -129,8 +128,6 @@ reka.createFrame({
 export default function Home() {
   return (
     <RekaProvider state={reka}>
-      {/* Use Tailwind CDN so that tailwind classes used within our Reka component gets injected on-demand */}
-      <Script src="https://cdn.tailwindcss.com"></Script>
       <div className="flex h-screen">
         <div className="w-3/6 h-full border-r-2">
           <Editor />
