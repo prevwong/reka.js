@@ -332,9 +332,7 @@ export function assert<T extends Type, C extends (value: T) => any>(
 ) {
   invariant(
     value instanceof assertedType,
-    `Invalid type. Expected type ${
-      assertedType.name
-    }, but received ${JSON.stringify(value)}`
+    `Invalid type. Expected type ${assertedType.name}`
   );
 
   if (cb) {
