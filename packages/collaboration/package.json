@@ -13,16 +13,17 @@
   "author": "Prev Wong",
   "license": "MIT",
   "dependencies": {
-    "@rekajs/utils": "^0.1.0",
-    "yjs": "^13.5.27"
+    "@rekajs/utils": "^0.1.0"
   },
   "peerDependencies": {
     "@rekajs/core": ">=0.1.0",
-    "@rekajs/types": ">=0.1.0"
+    "@rekajs/types": ">=0.1.0",
+    "yjs": ">=13.5.50"
   },
   "devDependencies": {
     "@rekajs/core": "workspace:*",
     "@rekajs/types": "workspace:*",
-    "y-protocols": "^1.0.5"
+    "y-protocols": "^1.0.5",
+    "yjs": "^13.5.50"
   }
 }
