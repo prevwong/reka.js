@@ -1,5 +1,13 @@
 # @rekajs/types
 
+## 0.1.2
+
+### Patch Changes
+
+- [`ce1b584`](https://github.com/prevwong/reka.js/commit/ce1b584549704cc5c1c5113bba9c75fb98fb9456) Thanks [@prevwong](https://github.com/prevwong)! - Update error message in `t.assert()`
+
+- [`65fc858`](https://github.com/prevwong/reka.js/commit/65fc85878cd6dd57bc978fce5be5c10a8dfac2bf) Thanks [@prevwong](https://github.com/prevwong)! - Set default values for Type properties
+
 ## 0.1.1
 
 ### Patch Changes

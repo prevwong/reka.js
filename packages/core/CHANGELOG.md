@@ -1,5 +1,36 @@
 # @rekajs/core
 
+## 0.1.3
+
+### Patch Changes
+
+- [`1cc0cfb`](https://github.com/prevwong/reka.js/commit/1cc0cfb19cf75f55bc61ba06d6b9b32e503d13f6) Thanks [@prevwong](https://github.com/prevwong)! - Remove unnecessary options for `reka.watch()`
+
+- [`ea0a075`](https://github.com/prevwong/reka.js/commit/ea0a075059557a7143ffeae7edb632856896f137) Thanks [@prevwong](https://github.com/prevwong)! - Fix `@each` directive bugs
+
+- [`d8cc124`](https://github.com/prevwong/reka.js/commit/d8cc124df6ec9836d996b9eb533fa6b180197e83) Thanks [@prevwong](https://github.com/prevwong)! - Fix `Observer` not automatically transforming newly inserted `Type` into Mobx observables.
+
+  For example, given the following template where `each` is initially null:
+
+  ```tsx
+  const template = t.tagTemplate({
+    tag: 'div',
+    props: {},
+    children: [],
+    each: null,
+  });
+  ```
+
+  Then, if we were to set `each` to a new `ElementEach` type object:
+
+  ```tsx
+  template.each = t.elementEach({
+      ...
+  })
+  ```
+
+  The above `ElementEach` should automatically be made into a Mobx observable.
+
 ## 0.1.2
 
 ### Patch Changes
