@@ -1,5 +1,5 @@
 import * as t from '@rekajs/types';
-import { safeObjKey } from '@rekajs/utils';
+import { invariant, safeObjKey } from '@rekajs/utils';
 import omit from 'lodash/omit';
 import {
   computed,
@@ -36,7 +36,7 @@ export type TemplateEachComputationCache = {
 
 export class ViewEvaluator {
   private declare viewObserver: Observer;
-  private _view: IObservableValue<t.View | undefined>;
+  private _view: IObservableValue<t.RekaComponentView | undefined>;
   private rootTemplate: t.ComponentTemplate;
   private rootTemplateObserver: Observer;
 
@@ -72,6 +72,13 @@ export class ViewEvaluator {
     if (children) {
       children = Array.isArray(children) ? children : [children];
     }
+
+    invariant(
+      this.reka.components.program.find(
+        (component) => component.name === componentName
+      ),
+      `Component ${componentName} not found in state`
+    );
 
     this.rootTemplate = t.componentTemplate({
       component: t.identifier({ name: this.componentName }),
@@ -155,7 +162,7 @@ export class ViewEvaluator {
     });
   }
 
-  private setView(view: t.View) {
+  private setView(view: t.RekaComponentView) {
     if (this.viewObserver) {
       this.viewObserver.dispose();
     }
@@ -455,7 +462,7 @@ export class ViewEvaluator {
         env: this.reka.head.env,
       });
 
-      return views[0];
+      return t.assert(views[0], t.RekaComponentView);
     };
 
     if (!this.viewObserver) {

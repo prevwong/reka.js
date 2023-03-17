@@ -5,7 +5,7 @@ import { ExtensionDefinition, ExtensionRegistry } from './extension';
 import { Externals } from './externals';
 import { Frame, FrameOpts } from './frame';
 import { Head } from './head';
-import { StateOpts, StateSubscriberOpts, StateWatcherOpts } from './interfaces';
+import { StateOpts, StateSubscriberOpts } from './interfaces';
 import { ChangeListenerSubscriber, Observer } from './observer';
 import { toJS } from './utils';
 
@@ -232,14 +232,10 @@ export class Reka {
   /**
    * Watch changes made within a Reka instance
    */
-  watch(cb: () => void, opts?: StateWatcherOpts) {
+  watch(cb: () => void) {
     const disposer = autorun(() => {
       cb();
     });
-
-    if (opts?.fireImmediately) {
-      cb();
-    }
 
     return () => {
       disposer();
