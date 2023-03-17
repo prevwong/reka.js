@@ -93,10 +93,8 @@ const doc = new Y.Doc();
 
 // 2. Create a new Y.Map type
 // This map will be used to store the flattened Reka state
-// Initially, this will be empty; see the section below on how to correctly set the initial state
-const type = doc.getMap('my-collaborative-editor');
-// Note: The flattened State will be stored in the "document" key:
-// type.getMap('document')
+// Initially, this will be empty; see the section below on how to correctly set the initial state locally
+const type = doc.getMap('my-collaborative-editor');)
 
 const CollabExtension = createCollabExtension(type);
 
@@ -105,10 +103,14 @@ const reka = Reka.create({
   extensions: [CollabExtension],
 });
 
-// The initial State Document, this should come from the Yjs type
-reka.load(t.unflatten(type.getMap('document')));
+// 4. Get flattend state from Yjs
+const document = type.get('document');
 
-// 4. Bind connector
+// 5. Restore the Reka state
+const state = t.unflatten(document.toJSON());
+reka.load(state);
+
+// 6. Bind connector
 const provider = new WebrtcProvider('collab-room', doc);
 ```
 
@@ -150,20 +152,21 @@ reka.load(
   })
 );
 
-const flattenedState = t.flattenType(reka.state);
+const flattenState = t.flatten(reka.state);
 
-const { converted } = jsToYType(flattenedState);
+const { converted } = jsToYType(flattenState);
 
 // Store the state in the "document" key of the Y.Map type:
 type.set('document', converted);
 
 const update = Y.encodeStateAsUpdate(doc);
+
 const encoded = Buffer.from(update).toString('base64');
 
 // Finally, save the encoded state value in a separate file:
 fs.writeFileSync(
-  './contants/encoded-initial-update.ts',
-  `export const ENCODED_INITIAL_UPDATE = '${encoded}';`
+  './generated/encoded-initial-update.ts',
+  `export const ENCODED_INITIAL_STATE = '${encoded}';`
 );
 ```
 
@@ -180,16 +183,18 @@ import { createCollabExtension } from '@rekajs/collaboration';
 import * as Y from 'yjs';
 import { WebrtcProvider } from 'y-webrtc';
 
-import { ENCODED_INITIAL_UPDATE } from './constants/encoded-initial-update';
+import { ENCODED_INITIAL_STATE } from './generated/encoded-initial-state';
 
 // 1. Create a new Yjs Doc
 const doc = new Y.Doc();
 
-// 2. Create a new Y.Map from the Doc
-const type = doc.getMap('my-collaborative-editor');
+// 2. Create a new Y.Map type
+// This map will be used to store the flattened Reka state
+// Initially, this will be empty; see the section below on how to correctly set the initial state locally
+const type = doc.getMap('my-collaborative-editor');)
 
 // 2.5: Apply initial update! <---
-Y.applyUpdate(doc, Buffer.from(ENCODED_INITIAL_UPDATE, 'base64'));
+Y.applyUpdate(doc, Buffer.from(ENCODED_INITIAL_STATE, 'base64'));
 
 const CollabExtension = createCollabExtension(type);
 
@@ -198,9 +203,13 @@ const reka = Reka.create({
   extensions: [CollabExtension],
 });
 
-// The initial State Document, this should come from the Yjs type
-reka.load(t.unflatten(type.getMap('document')));
+// 4. Get flattend state from Yjs
+const document = type.get('document');
 
-// 4. Bind connector
+// 5. Restore the Reka state
+const state = t.unflatten(document.toJSON());
+reka.load(state);
+
+// 6. Bind connector
 const provider = new WebrtcProvider('collab-room', doc);
 ```

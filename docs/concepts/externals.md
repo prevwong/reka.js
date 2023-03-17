@@ -66,7 +66,7 @@ The next type of externals is External Functions. These are useful when you need
 ```tsx
 const reka = Reka.create({
     externals: {
-        globals: self => ({
+        functions: self => ({
              getRandomNumber: (params) => {
                 if ( params.strong === true ) {
                     return crypto.getRandomValues();
@@ -139,7 +139,7 @@ const reka = Reka.create({
         states: {
             scrollTop: 0,
         },
-        globals: self => ({
+        functions: self => ({
             getScrollTop: () => {
                 return self.getExternalState('scrollTop')
             }
