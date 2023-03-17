@@ -3,19 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build:styles": "tailwindcss -c tailwind-full.config.js -i ./src/styles/globals.css -o ./public/globals.css",
     "dev": "next dev -p 3002",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "postinstall": "run-s build:styles"
+    "lint": "next lint"
   },
   "dependencies": {
-    "@rekajs/react": "workspace:*",
-    "@rekajs/react-code-editor": "workspace:*",
-    "@rekajs/core": "workspace:*",
-    "@rekajs/types": "workspace:*",
-    "@rekajs/parser": "workspace:*",
+    "@rekajs/react": "*",
+    "@rekajs/react-code-editor": "*",
+    "@rekajs/core": "*",
+    "@rekajs/types": "*",
+    "@rekajs/parser": "*",
     "@next/font": "13.1.2",
     "@types/node": "18.7.15",
     "@types/react": "^17.0.33",
@@ -26,10 +24,5 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "typescript": "4.9.4"
-  },
-  "devDependencies": {
-    "autoprefixer": "^10.4.13",
-    "postcss": "^8.4.20",
-    "tailwindcss": "^3.2.1"
   }
 }

@@ -2,17 +2,10 @@
   "name": "reka",
   "version": "0.1.0",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*",
-    "docs",
-    "site",
-    "example"
-  ],
   "scripts": {
     "build": "turbo run build",
     "build:packages": "turbo run build --filter='./packages/*'",
-    "dev": "turbo run dev --parallel",
+    "dev": "turbo run dev --parallel --filter=!./examples/*",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint --fix . --ext .js,.jsx,.ts,.tsx",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",

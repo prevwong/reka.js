@@ -13,7 +13,7 @@ export const Preview = observer(() => {
 
   return (
     <div className="w-full h-full flex flex-col text-xs">
-      <div className="px-2 py-2 border-b-2">
+      <div className="px-2 py-3 border-b-2">
         <select
           onChange={(e) => {
             const frameId = e.target.value;
