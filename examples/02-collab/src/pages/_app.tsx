@@ -8,7 +8,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     <React.Fragment>
       <Head>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <script src="https://cdn.tailwindcss.com"></script>
       </Head>
       <Component {...pageProps} />
     </React.Fragment>
