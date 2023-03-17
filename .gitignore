@@ -32,3 +32,6 @@ yarn-error.log*
 # editors
 .vscode
 .idea
+
+# parcel
+.parcel-cache

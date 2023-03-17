@@ -1,0 +1,19 @@
+{
+  "name": "@rekajs/example-basic",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@rekajs/core": "*",
+    "@rekajs/parser": "*",
+    "@rekajs/types": "*"
+  },
+  "scripts": {
+    "dev": "parcel serve ./src/index.html -p 3002",
+    "build": "parcel build ./src/index.html"
+  },
+  "keywords": [],
+  "author": "Prev Wong",
+  "devDependencies": {
+    "parcel": "^2.8.3"
+  }
+}
