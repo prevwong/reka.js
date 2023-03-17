@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build:frame-styles": "tailwindcss -c tailwind-frame.config.js -i ./content/frame.css -o ./public/frame.css",
     "next:dev": "next dev -p 3001",
     "dev": "run-p next:dev generate-theme:watch",
     "build": "next build",
@@ -12,7 +11,7 @@
     "encode-dummy-program": "tsx ./scripts/encode-initial-content.ts",
     "generate-theme": "tsx ./scripts/generate-theme.ts",
     "generate-theme:watch": "nodemon --watch ./tailwind.config.js -x tsx ./scripts/generate-theme.ts",
-    "postinstall": "run-s generate-theme build:frame-styles",
+    "postinstall": "run-s generate-theme",
     "postbuild": "next-sitemap"
   },
   "dependencies": {
