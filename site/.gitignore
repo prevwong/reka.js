@@ -35,7 +35,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/public/frame.css
 /public/robots.txt
 /public/sitemap.xml
 

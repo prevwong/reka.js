@@ -1,0 +1,15 @@
+@import url('https://rsms.me/inter/inter.css');
+
+html,
+body,
+#root,
+.frame-content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter';
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}

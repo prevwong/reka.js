@@ -102,7 +102,7 @@ const RenderFrameView = observer((props: RenderFrameViewProps) => {
               'border-outline rounded-xs': !isNotFullWidth,
             }
           )}
-          initialContent='<!DOCTYPE html><html><head><script async src="https://cdn.tailwindcss.com"></script></head><body><div id="root"></div></body></html>'
+          initialContent='<!DOCTYPE html><html><head><link href="/frame.css" rel="stylesheet" /><script async src="https://cdn.tailwindcss.com"></script></head><body><div id="root"></div></body></html>'
           mountTarget="#root"
           ref={(dom: any) => {
             editor.registerIframe(dom);
