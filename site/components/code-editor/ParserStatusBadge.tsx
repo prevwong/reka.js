@@ -18,7 +18,12 @@ export const ParserStatusBadge = (props: ParserStatusBadgeProps) => {
     switch (props.status.type) {
       case 'error':
         return {
-          icon: <Cross1Icon style={{ width: '12px', height: '12px' }} />,
+          icon: (
+            <Cross1Icon
+              className="!mr-[0.3rem]"
+              style={{ width: '10px', height: '10px' }}
+            />
+          ),
           message: 'Error',
           content: props.status.error,
         };
@@ -52,7 +57,7 @@ export const ParserStatusBadge = (props: ParserStatusBadgeProps) => {
     <Tooltip content={payload.content}>
       <div
         className={cn(
-          'flex items-center px-1.5 py-0.5 rounded-full border border-solid border-outline text-xs [&>svg]:inline-block [&>svg]:mr-2 [&>svg]:w-5 [&>svg]:h-5',
+          'flex cursor-pointer items-center px-1.5 py-0.5 rounded-full border border-solid border-outline text-xs [&>svg]:inline-block [&>svg]:mr-2 [&>svg]:w-5 [&>svg]:h-5',
           {
             'text-green-600 border-green-600': props.status.type === 'success',
             'text-red-600 border-red-400': props.status.type === 'error',

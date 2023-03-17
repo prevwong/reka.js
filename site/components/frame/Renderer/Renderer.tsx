@@ -276,9 +276,5 @@ export const Renderer = observer((props: RendererProps) => {
 
   invariant(view instanceof t.RekaComponentView, 'Unexpected root view');
 
-  const activeFrameEditor = useEditorActiveComponent();
-
-  invariant(activeFrameEditor, 'No active editor');
-
   return <InternalRenderer view={view} />;
 });

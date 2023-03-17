@@ -12,7 +12,7 @@ import {
 import { EditorContextProvider } from '@app/editor';
 import { cn } from '@app/utils';
 
-import '../styles/globals.css';
+import '../styles/globals.scss';
 
 type PageOptions = {
   hideHeaderOnInitial: boolean;
@@ -28,7 +28,10 @@ const getPageOptions = (options: Partial<PageOptions>): PageOptions => {
 };
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const loadedRef = React.useRef(false);
+  const [loaded, setLoaded] = React.useState(false);
+
+  const loadedRef = React.useRef(loaded);
+  loadedRef.current = loaded;
 
   const options = React.useMemo(
     () =>
@@ -37,6 +40,14 @@ function MyApp({ Component, pageProps }: AppProps) {
         Component['pageOptions'] || {}
       ),
     [Component]
+  );
+
+  React.useEffect(() => {
+    setLoaded(true);
+  }, [setLoaded]);
+
+  const layoutClassnameRef = React.useRef(
+    cn(SITE_LAYOUT_CLASSNAME, options.hideHeaderOnInitial && 'hidden-header')
   );
 
   return (
@@ -49,17 +60,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           <link rel="icon" type="image/png" href="/favicon.ico" />
         </Head>
         <div
-          ref={(dom) => {
-            const { current: loaded } = loadedRef;
-
-            if (loaded || !dom || !options.hideHeaderOnInitial) {
-              return;
-            }
-
-            loadedRef.current = true;
-            dom.classList.add('hidden-header');
-          }}
-          className={cn(SITE_LAYOUT_CLASSNAME)}
+          className={layoutClassnameRef.current}
+          style={{ opacity: loaded ? 1 : 0 }}
         >
           <Header />
           <div className={SITE_LAYOUT_CONTENT_CLASSNAME}>

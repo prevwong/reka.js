@@ -26,7 +26,7 @@ const isNotFullWidth = (
 };
 
 type RenderFrameViewProps = {
-  view: t.View;
+  view?: t.View;
   width?: string;
   height?: string;
 };
@@ -81,7 +81,7 @@ const RenderFrameView = observer((props: RenderFrameViewProps) => {
   }, [props.width]);
 
   return (
-    <div className="w-full h-full" ref={containerDomRef}>
+    <div className="w-full h-full render-frame-root" ref={containerDomRef}>
       <div
         className={cn(
           'w-full h-full relative flex flex-col justify-center min-h-full max-h-full origin-[0px_0px]',
@@ -108,7 +108,7 @@ const RenderFrameView = observer((props: RenderFrameViewProps) => {
             editor.registerIframe(dom);
           }}
         >
-          <Renderer key={props.view.id} view={props.view} />
+          {props.view ? <Renderer view={props.view} /> : null}
         </IFrame>
         <RenderSelectionBorders />
 
@@ -133,9 +133,6 @@ export const RenderFrame = observer((props: RenderFrameProps) => {
     });
   }, [props.frame]);
 
-  if (!props.frame.state.view) {
-    return null;
-  }
   return (
     <FrameContext.Provider value={props.frame.state}>
       <RenderFrameView
