@@ -5,7 +5,7 @@
   "scripts": {
     "build": "turbo run build",
     "build:packages": "turbo run build --filter='./packages/*'",
-    "dev": "turbo run dev --parallel --filter=!./examples/*",
+    "dev": "turbo run dev --filter=!./examples/* --parallel",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint --fix . --ext .js,.jsx,.ts,.tsx",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
