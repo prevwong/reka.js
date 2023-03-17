@@ -1,5 +1,11 @@
 # @rekajs/collaboration
 
+## 0.1.2
+
+### Patch Changes
+
+- [`84c93bc`](https://github.com/prevwong/reka.js/commit/84c93bccff3f41756a9be48bc265d08ac3f978c4) Thanks [@prevwong](https://github.com/prevwong)! - Updates Yjs as a peer dependency
+
 ## 0.1.1
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@rekajs/core",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "State management system for building no-code page editors",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

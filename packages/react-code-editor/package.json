@@ -1,6 +1,6 @@
 {
   "name": "@rekajs/react-code-editor",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Codemirror editor for editing Reka AST in code",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

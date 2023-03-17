@@ -1,5 +1,11 @@
 # @rekajs/react-code-editor
 
+## 0.1.2
+
+### Patch Changes
+
+- [`b6712fc`](https://github.com/prevwong/reka.js/commit/b6712fc9096105674d0f5d50aff437e9661c0841) Thanks [@prevwong](https://github.com/prevwong)! - Update `@rekajs/codemirror` as a required dep
+
 ## 0.1.1
 
 ### Patch Changes
