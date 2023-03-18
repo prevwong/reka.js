@@ -156,8 +156,22 @@ const Docs = (props: any) => {
           </IconButton>
           <div className="w-full overflow-scroll">
             <article className={'content'}>
-              <header className="pb-10 flex gap-2 items-center">
-                <h1 className="text-4xl font-medium">{props.doc.title}</h1>
+              <header className="pb-8 mb-1 flex flex-col gap-8">
+                <h1 className="m-0 text-4xl font-medium w-full">
+                  {props.doc.title}
+                </h1>
+                {props.doc.demo && (
+                  <a
+                    target="_blank"
+                    rel="noreferrer"
+                    href={`https://stackblitz.com/github/prevwong/reka.js/tree/main/${props.doc.demo}`}
+                  >
+                    <img
+                      alt="Open in StackBlitz"
+                      src="https://developer.stackblitz.com/img/open_in_stackblitz.svg"
+                    />
+                  </a>
+                )}
               </header>
               <div
                 className="prose prose-md prose-headings:font-medium prose-h1:mt-8 mb-8 max-w-full [&>h2>a]:no-underline [&_p>img]:object-contain [&_p>img]:m-auto [&_p>img]:border [&_p>img]:border-solid [&_p>img]:border-outline"
@@ -183,6 +197,7 @@ export async function getStaticProps({ params }: Params) {
 
   const post = getDocBySlug(params.slug.join('/'), [
     'title',
+    'demo',
     'date',
     'slug',
     'author',

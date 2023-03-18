@@ -119,7 +119,7 @@ importers:
   examples/02-collab:
     specifiers:
       '@next/font': 13.1.2
-      '@rekajs/collaboration': workspace:*
+      '@rekajs/collaboration': '*'
       '@rekajs/core': '*'
       '@rekajs/parser': '*'
       '@rekajs/react': '*'
@@ -132,7 +132,7 @@ importers:
       eslint: ^8.23.0
       eslint-config-next: 12.2.5
       next: 12.2.5
-      randomcolor: link:@types/@types/randomcolor
+      randomcolor: ^0.6.2
       react: ^17.0.2
       react-dom: ^17.0.2
       short-uuid: ^4.2.0
@@ -156,6 +156,7 @@ importers:
       eslint: 8.23.0
       eslint-config-next: 12.2.5_l4bkc2educzyqw2fxdpzlvrzlm
       next: 12.2.5_sfoxds7t5ydpegc3knd667wn6m
+      randomcolor: 0.6.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       short-uuid: 4.2.0
@@ -163,7 +164,6 @@ importers:
       y-webrtc: 10.2.5
       yjs: 13.5.50
     devDependencies:
-      randomcolor: link:@types/@types/randomcolor
       tsx: 3.12.1
       typescript: 4.9.4
 

@@ -1,3 +1,7 @@
+---
+demo: examples/02-collab
+---
+
 # Realtime Collaboration
 
 Reka provides an additional `@rekajs/collaboration` package that enables multiplayer capabilities for your page editor.

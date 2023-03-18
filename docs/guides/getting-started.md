@@ -1,3 +1,7 @@
+---
+demo: examples/00-basic
+---
+
 # Getting started
 
 ## Installation

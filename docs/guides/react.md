@@ -1,3 +1,7 @@
+---
+demo: examples/01-react
+---
+
 # Integration with React
 
 In this guide, we'll build a simple React app to interact with/manipulate the state of a Reka instance along with a renderer for Reka components.
