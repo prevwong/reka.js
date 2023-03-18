@@ -1,10 +1,6 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["."],
-  "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
-    "noImplicitAny": false,
-    "outDir": "lib",
-    "declaration": true
+    "declarationDir": "./lib"
   }
 }

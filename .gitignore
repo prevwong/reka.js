@@ -9,6 +9,7 @@ node_modules
 coverage
 
 dist
+lib
 
 # misc
 .DS_Store

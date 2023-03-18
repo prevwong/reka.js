@@ -2,11 +2,12 @@
   "name": "@rekajs/utils",
   "version": "0.1.0",
   "description": "Internal utilities used across the Reka monorepo",
-  "main": "./dist/index.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "dev": "rollup -w -c rollup.config.js",
-    "build": "rollup -c rollup.config.js"
+    "dev": "../../scripts/build.sh -w",
+    "build": "../../scripts/build.sh"
   },
   "keywords": [],
   "author": "Prev Wong",

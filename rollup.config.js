@@ -4,14 +4,26 @@ import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
+import dts from 'rollup-plugin-dts';
 
 const shouldMinify = process.env.NODE_ENV === 'production';
 const shouldIncludeInBundle = ['tslib'];
 
-export default function createRollupConfig(config) {
+const createBundle = (config) => {
   return {
     input: config.input || './src/index.ts',
-    output: config.output || [],
+    output: [
+      {
+        file: 'dist/esm/index.mjs',
+        format: 'es',
+        ...(config.output?.esm ?? {}),
+      },
+      {
+        file: 'dist/cjs/index.js',
+        format: 'cjs',
+        ...(config.output?.cjs ?? {}),
+      },
+    ],
     external: (id) => {
       if (config.external) {
         return config.external(id);
@@ -27,10 +39,29 @@ export default function createRollupConfig(config) {
       new Set([
         commonjs(),
         nodeResolve(),
-        typescript(),
+        typescript({
+          declaration: false,
+          declarationDir: null,
+        }),
         ...(config.plugins || []),
         shouldMinify && terser(),
       ])
     ),
   };
+};
+
+export default function createRollupConfig(config) {
+  return [
+    createBundle(config),
+    {
+      input: './lib/index.d.ts',
+      output: [
+        {
+          file: 'dist/index.d.ts',
+          format: 'es',
+        },
+      ],
+      plugins: [dts()],
+    },
+  ];
 }

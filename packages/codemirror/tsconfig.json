@@ -1,21 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "allowJs": false,
-    "skipLibCheck": false,
-    "esModuleInterop": false,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react",
-    "noImplicitAny": false
-  },
-  "include": ["./src"]
+    "noImplicitAny": false,
+    "declarationDir": "./lib"
+  }
 }

@@ -2,14 +2,15 @@
   "name": "@rekajs/types",
   "version": "0.1.2",
   "description": "Create and manage Reka data types",
-  "main": "./dist/index.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
     "generate-ast": "./scripts/generate-ast.js",
     "generate-ast:watch": "nodemon --watch src/types.definition.ts -x ./scripts/generate-ast.js",
-    "rollup:watch": "rollup -w -c rollup.config.js",
+    "rollup:watch": "../../scripts/build.sh -w",
     "dev": "run-p rollup:watch generate-ast:watch",
-    "build": "rollup -c rollup.config.js"
+    "build": "../../scripts/build.sh"
   },
   "keywords": [],
   "author": "Prev Wong",
