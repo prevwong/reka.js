@@ -1,6 +1,6 @@
 {
   "name": "@rekajs/parser",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Parser for Reka syntax",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.mjs",
@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@babel/types": "^7.18.13",
-    "@rekajs/utils": "^0.1.0",
+    "@rekajs/utils": "^0.1.1",
     "acorn": "^8.7.0",
     "acorn-jsx": "^5.3.2"
   }
