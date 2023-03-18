@@ -55,7 +55,5 @@ export const RenderFrame = observer((props: RenderFrameProps) => {
     return null;
   }
 
-  console.log('frame', props.frame);
-
   return <Renderer view={props.frame.view} />;
 });

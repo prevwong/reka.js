@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@next/font": "13.1.2",
-    "@rekajs/collaboration": "workspace:*",
+    "@rekajs/collaboration": "*",
     "@rekajs/core": "*",
     "@rekajs/parser": "*",
     "@rekajs/react": "*",
