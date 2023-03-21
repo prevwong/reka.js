@@ -4,9 +4,7 @@ demo: examples/01-react
 
 # Integration with React
 
-In this guide, we'll build a simple React app to interact with/manipulate the state of a Reka instance along with a renderer for Reka components.
-
-> The source code for the end result can be found [here](https://github.com/prevwong/reka.js/tree/main/example)
+In this guide, we'll build a simple React app to interact and manipulate the state of a Reka instance along with a renderer for Reka components.
 
 ## Installation
 

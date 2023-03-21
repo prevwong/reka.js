@@ -8,7 +8,7 @@ At the core of Craft.js is the `EditorState` which is a simple implicit tree dat
 {
     "ROOT": {
         type: "div",
-        props: {...},
+        props: {},
         nodes: ["node-a"],
     },
     "node-a": {
