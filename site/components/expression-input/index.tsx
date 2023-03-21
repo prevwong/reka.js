@@ -79,14 +79,17 @@ const TextareaEditor = ({
     dom.setSelectionRange(dom.value.length, dom.value.length);
 
     const listener = (e: any) => {
-      if (dom.contains(e.target as any) === true) {
+      if (
+        e.target instanceof HTMLElement &&
+        dom.contains(e.target as any) === true
+      ) {
         return;
       }
 
       commit();
     };
 
-    const parent = dom.closest('[role="dialog"]') ?? window;
+    const parent = window;
 
     parent.addEventListener('mousedown', listener);
 

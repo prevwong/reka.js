@@ -18,7 +18,7 @@ export const UserAvatar = React.forwardRef<HTMLSpanElement, UserAvatarProps>(
     return (
       <motion.span
         className={cn(
-          'w-8 h-8 bg-transparent overflow-hidden rounded-full  text-[0.6rem] text-white font-medium flex flex-col justify-center text-center border border-solid border-transparent relative cursor-pointer'
+          'w-7 h-7 bg-transparent overflow-hidden rounded-full  text-[0.6rem] text-white font-medium flex flex-col justify-center text-center border border-solid border-transparent relative cursor-pointer'
         )}
         style={{ backgroundColor: props.user.color }}
         ref={ref}

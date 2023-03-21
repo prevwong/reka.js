@@ -2,7 +2,7 @@ import * as React from 'react';
 
 export const Footer = () => {
   return (
-    <div className="px-5 py-6 border-t border-solid border-t-gray-200 text-sm text-slate-600 flex [&>a]:text-decoration-none">
+    <div className="px-5 py-8 border-t border-solid border-t-gray-200 text-sm text-slate-600 flex [&>a]:text-decoration-none">
       <div className="flex flex-col gap-1 m-auto w-auto flex-1 [&_a]:underline [&_a]:text-primary">
         <div>
           Made with{' '}

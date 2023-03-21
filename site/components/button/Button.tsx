@@ -23,7 +23,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               variant === 'primary',
             'bg-purple-100 text-purple-600 hover:bg-purple-200':
               variant === 'secondary',
-            'bg-transparent border border-solid border-outline text-neutral-500 hover:bg-primary/10 hover:text-primary shadow-sm':
+            'bg-transparent border border-solid border-outline text-neutral-500 hover:bg-primary/10 hover:text-primary hover:border-transparent shadow-sm':
               variant === 'outline',
             'bg-transparent text-primary hover:bg-primary-100':
               variant === 'subtle',
@@ -31,8 +31,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               variant === 'link',
           },
           {
-            'text-xs py-2.5 px-2.5 [&>svg]:w-3.5 [&>svg]:h-3.5':
-              size == 'default',
+            'text-xs py-2.5 px-2.5 [&>svg]:w-4 [&>svg]:h-4': size == 'default',
             'text-xs py-1.5 px-1.5 rounded-md [&>svg]:w-3 [&>svg]:h-3':
               size === 'xs',
             'text-xs px-1 py-1 rounded-md [&>svg]:w-3 [&>svg]:h-3':

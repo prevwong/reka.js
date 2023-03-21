@@ -43,11 +43,7 @@ export const EditorLayout = observer(
       const onClickOutside = (e: MouseEvent) => {
         const target = e.target;
 
-        if (!target || !(target instanceof HTMLElement)) {
-          return;
-        }
-
-        if (dom.contains(target)) {
+        if (target && target instanceof HTMLElement && dom.contains(target)) {
           return;
         }
 
@@ -82,7 +78,7 @@ export const EditorLayout = observer(
           variants={{
             compact: {
               position: 'absolute',
-              zIndex: '99',
+              zIndex: '49',
             },
             standard: {
               position: 'relative',

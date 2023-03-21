@@ -41,7 +41,6 @@ module.exports = {
         header: 50,
       },
       colors: {
-        secondary: '#9334e9',
         outline: '#e8e7e7',
         canvas: '#efefef',
         primary: {
@@ -57,6 +56,19 @@ module.exports = {
           800: '#004CA6',
           900: '#00326E',
         },
+        secondary: {
+          DEFAULT: '#9334e9',
+          '50': '#faf5ff',
+          '100': '#f3e8ff',
+          '200': '#e9d5ff',
+          '300': '#d8b4fe',
+          '400': '#c085fb',
+          '500': '#a856f6',
+          '600': '#9334e9',
+          '700': '#7e23cd',
+          '800': '#6b22a7',
+          '900': '#581d86',
+        }
       },
       zIndex: {
         max: '9999',
@@ -70,10 +82,13 @@ module.exports = {
           css: {
             '--tw-prose-quotes': theme('colors.gray[800]'),
             pre: {
-              color: 'var(--tw-prose-pre-code)',
               backgroundColor: 'var(--tw-prose-pre-bg)',
               overflowX: 'auto',
               fontWeight: '400',
+            },
+            code: {
+              backgroundColor: theme('colors.secondary[100]'),
+              color: theme('colors.secondary'),
             },
             blockquote: {
               fontWeight: '400',
@@ -85,6 +100,9 @@ module.exports = {
               quotes: 'none',
               color: theme('colors.gray[900]'),
               boxShadow: theme('boxShadow.sm'),
+            },
+            'blockquote code': {
+              color: theme('colors.secondary'),
             },
             'blockquote p:first-of-type::before': {
               content: '',
@@ -98,7 +116,7 @@ module.exports = {
     },
   },
   plugins: [
-    plugin(function ({ addBase }) {
+    plugin(function({ addBase }) {
       addBase({
         html: { fontSize: '0.9rem' },
       });

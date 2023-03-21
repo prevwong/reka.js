@@ -12,7 +12,7 @@ export const Popover = (props: PopoverProps) => (
     <PopoverPrimitive.Trigger asChild>{props.trigger}</PopoverPrimitive.Trigger>
     <PopoverPrimitive.Portal>
       <PopoverPrimitive.Content
-        className="rounded-md p-4 w-64 bg-white/80 backdrop-blur-sm shadow-xl z-50 animation-fade"
+        className="rounded-md p-4 w-64 bg-white/90 backdrop-blur-sm shadow-xl z-50 animation-fade"
         sideOffset={5}
       >
         {props.children}
