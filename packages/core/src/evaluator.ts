@@ -35,7 +35,7 @@ export type TemplateEachComputationCache = {
 };
 
 export class ViewEvaluator {
-  private declare viewObserver: Observer;
+  private viewObserver: Observer | undefined;
   private _view: IObservableValue<t.RekaComponentView | undefined>;
   private rootTemplate: t.ComponentTemplate;
   private rootTemplateObserver: Observer;
@@ -97,6 +97,10 @@ export class ViewEvaluator {
     id: string,
     expectedType?: t.TypeConstructor<T>
   ) {
+    invariant(
+      this.viewObserver,
+      'View not initialised, run .computeTree() first'
+    );
     return this.viewObserver.getTypeFromId(id, expectedType);
   }
 
@@ -313,7 +317,6 @@ export class ViewEvaluator {
         },
         {
           name: `template-${template.id}<${key}>-root-evaluation`,
-          keepAlive: true,
         }
       );
 
@@ -480,8 +483,11 @@ export class ViewEvaluator {
   }
 
   dispose() {
+    if (this.viewObserver) {
+      this.viewObserver.dispose();
+    }
+
     this.rootTemplateObserver.dispose();
-    this.viewObserver.dispose();
     this.disposeComponentEvaluators();
 
     this.tplKeyToComponentEvaluator = new Map();

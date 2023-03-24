@@ -80,11 +80,12 @@ export class Head {
   }
 
   sync() {
-    this.reka.head.resolver.resolve();
+    this.resolver.resolve();
     this.rootHeadComputation.get();
   }
 
   dispose() {
+    this.resolver.dispose();
     this.rootHeadComputation.dispose();
   }
 }

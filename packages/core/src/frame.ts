@@ -91,4 +91,8 @@ export class Frame {
   setProps(props: Record<string, any>) {
     this.evaluator.setProps(props);
   }
+
+  dispose() {
+    this.evaluator.dispose();
+  }
 }

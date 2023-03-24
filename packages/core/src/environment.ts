@@ -115,7 +115,7 @@ export class Environment {
     const distance = this.reka.head.resolver.getDistance(identifier);
 
     if (distance === undefined) {
-      throw new Error();
+      throw new Error(`Value for "${identifier.name}" not found in scope`);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias

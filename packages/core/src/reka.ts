@@ -1,5 +1,13 @@
 import * as t from '@rekajs/types';
-import { autorun, computed, makeObservable, observable, reaction } from 'mobx';
+import { getRandomId } from '@rekajs/utils';
+import {
+  action,
+  autorun,
+  computed,
+  makeObservable,
+  observable,
+  reaction,
+} from 'mobx';
 
 import { ExtensionDefinition, ExtensionRegistry } from './extension';
 import { Externals } from './externals';
@@ -10,6 +18,8 @@ import { ChangeListenerSubscriber, Observer } from './observer';
 import { toJS } from './utils';
 
 export class Reka {
+  id: string;
+
   /**
    * A list of RekaComponent instances
    */
@@ -34,6 +44,8 @@ export class Reka {
   externals: Externals;
 
   constructor(private readonly opts?: StateOpts) {
+    this.id = getRandomId();
+
     this.frames = [];
 
     this.externals = new Externals(this, opts?.externals);
@@ -41,6 +53,7 @@ export class Reka {
     makeObservable(this, {
       frames: observable,
       components: computed,
+      dispose: action,
     });
   }
 
@@ -158,6 +171,8 @@ export class Reka {
    * Remove an existing Frame instance
    */
   removeFrame(frame: Frame) {
+    frame.dispose();
+
     this.frames.splice(this.frames.indexOf(frame), 1);
 
     if (!frame.id) {
@@ -246,6 +261,8 @@ export class Reka {
    * Dispose instance, stops all future computations
    */
   dispose() {
+    this.frames.map((frame) => this.removeFrame(frame));
+
     this.head.dispose();
     this.observer.dispose();
     this.extensions.dispose();
