@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm run build:packages && turbo run dev --filter=!./examples/* --parallel",
+    "dev": "turbo run dev --filter=!./examples/* --parallel",
     "build": "pnpm run clean && turbo run build --filter=!./examples/*",
     "build:packages": "pnpm run clean && turbo run build --filter='./packages/*'",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
@@ -16,7 +16,8 @@
     "clean": "rimraf -g **/lib **/dist",
     "changeset:version": "changeset version",
     "changeset:publish": "changeset publish",
-    "publish": "run-s build:packages lint test changeset:publish"
+    "publish": "run-s build:packages lint test changeset:publish",
+    "postinstall": "run-s build:packages"
   },
   "devDependencies": {
     "@babel/plugin-syntax-flow": "^7.18.6",
