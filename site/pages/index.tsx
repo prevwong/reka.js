@@ -6,8 +6,10 @@ import * as React from 'react';
 import { HeaderToolbar } from '@app/components/header/HeaderToolbar';
 import { SEO } from '@app/components/seo';
 import { ToolbarApp } from '@app/components/toolbar-app';
+import { SITE_LAYOUT_CLASSNAME } from '@app/constants/css';
 import { EditorContext } from '@app/editor';
-import { Editor } from '@app/editor/Editor';
+import { Editor, EditorMode } from '@app/editor/Editor';
+import { requestAnimationSequence } from '@app/utils';
 
 import { EditorLayout } from '../components/editor-layout';
 
@@ -35,6 +37,47 @@ const AppEditor = () => {
       editor.dispose();
     };
   }, [setEditor]);
+
+  React.useEffect(() => {
+    if (!editor) {
+      return;
+    }
+
+    if (editor.ready) {
+      return;
+    }
+
+    const onMessage = (e: MessageEvent) => {
+      if (!e.data.REKA_CONTENT_LOADED) {
+        return;
+      }
+
+      requestAnimationSequence([
+        [() => editor.setReady(true), 200],
+        [
+          () => {
+            const siteLayoutDom = document.querySelector(
+              `.${SITE_LAYOUT_CLASSNAME}`
+            );
+
+            if (!siteLayoutDom) {
+              return;
+            }
+
+            siteLayoutDom.classList.remove('hidden-header');
+          },
+          200,
+        ],
+        [() => editor.setMode(EditorMode.UI), 400],
+      ]);
+    };
+
+    window.addEventListener('message', onMessage);
+
+    return () => {
+      window.removeEventListener('message', onMessage);
+    };
+  }, [editor]);
 
   if (!editor) {
     return null;

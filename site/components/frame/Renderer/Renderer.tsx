@@ -5,10 +5,7 @@ import { invariant } from '@rekajs/utils';
 import Image from 'next/image';
 import * as React from 'react';
 
-import { SITE_LAYOUT_CLASSNAME } from '@app/constants/css';
-import { useEditor, useEditorActiveComponent } from '@app/editor';
-import { EditorMode } from '@app/editor/Editor';
-import { requestAnimationSequence } from '@app/utils';
+import { useEditorActiveComponent } from '@app/editor';
 
 type ComponentContextType = {
   component: t.Component;
@@ -267,33 +264,6 @@ const InternalRenderer = observer((props: RendererProps) => {
 
 export const Renderer = observer((props: RendererProps) => {
   const view = props.view;
-
-  const editor = useEditor();
-
-  React.useEffect(() => {
-    if (editor.ready) {
-      return;
-    }
-
-    requestAnimationSequence([
-      [() => editor.setReady(true), 200],
-      [
-        () => {
-          const siteLayoutDom = document.querySelector(
-            `.${SITE_LAYOUT_CLASSNAME}`
-          );
-
-          if (!siteLayoutDom) {
-            return;
-          }
-
-          siteLayoutDom.classList.remove('hidden-header');
-        },
-        200,
-      ],
-      [() => editor.setMode(EditorMode.UI), 400],
-    ]);
-  }, [editor]);
 
   invariant(view instanceof t.RekaComponentView, 'Unexpected root view');
 

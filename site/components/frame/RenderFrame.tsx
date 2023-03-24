@@ -92,6 +92,7 @@ const RenderFrameView = observer((props: RenderFrameViewProps) => {
         ref={frameDomRef}
       >
         <IFrame
+          title="Rendered User Content"
           style={{
             maxWidth: props.width,
             maxHeight: props.height,
@@ -102,7 +103,22 @@ const RenderFrameView = observer((props: RenderFrameViewProps) => {
               'border-outline rounded-xs': !isNotFullWidth,
             }
           )}
-          initialContent={`<!DOCTYPE html><html><head><link href="/frame.css" rel="preload" as="style" onload="this.rel = 'stylesheet';" /><script async src="https://cdn.tailwindcss.com"></script></head><body><div id="root"></div></body></html>`}
+          initialContent={`
+            <!DOCTYPE html>
+            <html lang="en">
+              <head>
+                <link rel="preconnect" href="https://fonts.googleapis.com">
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+                <link href="/frame.css" rel="preload" as="style" onload="this.rel = 'stylesheet';" />
+                <script async src="/frame.js"></script>
+              </head>
+              <body>
+                <div id="preloader"></div>
+                <div id="root" style="display: none;"></div>
+              </body>
+            </html>
+          `}
           mountTarget="#root"
           ref={(dom: any) => {
             editor.registerIframe(dom);
