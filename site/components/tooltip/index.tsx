@@ -3,11 +3,16 @@ import * as React from 'react';
 
 type TooltipProps = {
   content: string;
+  disabled?: boolean;
   children: React.ReactNode;
 };
 
 export const Tooltip = React.forwardRef<HTMLSpanElement, TooltipProps>(
-  ({ children, content }, ref) => {
+  ({ children, disabled, content }, ref) => {
+    if (disabled) {
+      return <React.Fragment>{children}</React.Fragment>;
+    }
+
     return (
       <TooltipPrimitive.Root open={content === '' ? false : undefined}>
         <TooltipPrimitive.Trigger asChild>

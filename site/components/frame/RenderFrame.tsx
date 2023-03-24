@@ -102,7 +102,7 @@ const RenderFrameView = observer((props: RenderFrameViewProps) => {
               'border-outline rounded-xs': !isNotFullWidth,
             }
           )}
-          initialContent='<!DOCTYPE html><html><head><link href="/frame.css" rel="stylesheet" /><script async src="https://cdn.tailwindcss.com"></script></head><body><div id="root"></div></body></html>'
+          initialContent={`<!DOCTYPE html><html><head><link href="/frame.css" rel="preload" as="style" onload="this.rel = 'stylesheet';" /><script async src="https://cdn.tailwindcss.com"></script></head><body><div id="root"></div></body></html>`}
           mountTarget="#root"
           ref={(dom: any) => {
             editor.registerIframe(dom);
@@ -128,9 +128,13 @@ type RenderFrameProps = {
 
 export const RenderFrame = observer((props: RenderFrameProps) => {
   React.useEffect(() => {
-    window.requestAnimationFrame(() => {
+    const id = window.requestAnimationFrame(() => {
       props.frame.state.enableSync();
     });
+
+    return () => {
+      window.cancelAnimationFrame(id);
+    };
   }, [props.frame]);
 
   return (

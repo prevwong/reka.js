@@ -5,6 +5,7 @@ import * as React from 'react';
 import { IconButton } from '../button';
 import { ExpressionInput } from '../expression-input';
 import { TextField } from '../text-field';
+import { Tooltip } from '../tooltip';
 
 type PairInputFieldProps = {
   id: string;
@@ -118,25 +119,28 @@ const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
       `}
         ref={ref}
       >
-        <TextField
-          className={`pair-input-id-field rounded-none border-l-0 border-t-0 border-b-0 border-r-solid border-r border-r-outline`}
-          value={newId}
-          onChange={(e) => {
-            setNewId(e.target.value);
-          }}
-          onKeyUp={(e) => {
-            if (e.key !== 'Enter') {
-              return;
-            }
+        <Tooltip content={newId} disabled={!disableEditId}>
+          <TextField
+            className={`pair-input-id-field rounded-none border-l-0 border-t-0 border-b-0 border-r-solid border-r border-r-outline`}
+            value={newId}
+            onChange={(e) => {
+              setNewId(e.target.value);
+            }}
+            onKeyUp={(e) => {
+              if (e.key !== 'Enter') {
+                return;
+              }
 
-            if (!newId || !value || !onChange) {
-              return;
-            }
+              if (!newId || !value || !onChange) {
+                return;
+              }
 
-            onChange(newId, value, clear);
-          }}
-          disabled={disableEditId}
-        />
+              onChange(newId, value, clear);
+            }}
+            disabled={disableEditId}
+          />
+        </Tooltip>
+
         <div className="w-full grid grid-cols-[1fr_auto] relative">
           <ExpressionInput
             inputClassName="rounded-none border-none"

@@ -159,7 +159,7 @@ export const EditorLayout = observer(
           <ComponentEditorView />
         </motion.div>
         <motion.div
-          className={`bg-white border-l border-solid border-outline relative h-full w-editor-right-sidebar-ui`}
+          className={`bg-white border-l border-solid border-outline overflow-hidden relative h-full w-editor-right-sidebar-ui`}
           initial={false}
           animate={editor.mode}
           variants={{
@@ -173,21 +173,15 @@ export const EditorLayout = observer(
             {editor.mode === EditorMode.Code && (
               <motion.div
                 className="absolute top-0 left-0 bg-white w-full h-full"
-                initial="enter"
+                initial="hide"
                 animate="show"
                 exit="hide"
                 variants={{
-                  enter: {
-                    opacity: 0,
-                    right: '-100%',
-                  },
                   show: {
                     opacity: 1,
-                    right: 0,
                   },
                   hide: {
                     opacity: 0,
-                    right: '-100%',
                   },
                 }}
                 transition={CREATE_BEZIER_TRANSITION()}
@@ -200,19 +194,16 @@ export const EditorLayout = observer(
           <AnimatePresence initial={false}>
             {editor.mode === EditorMode.UI && (
               <motion.div
-                className="overflow-auto absolute bg-white w-full h-full flex flex-col top-0 right-0"
-                initial="enter"
+                className="overflow-auto absolute bg-white h-full flex flex-col top-0 right-0 w-editor-right-sidebar-ui"
+                initial="show"
                 animate="show"
                 exit="hide"
                 variants={{
-                  enter: {
-                    right: '-100%',
-                  },
                   show: {
-                    right: 0,
+                    opacity: 1,
                   },
                   hide: {
-                    right: '-100%',
+                    opacity: 0,
                   },
                 }}
                 transition={CREATE_BEZIER_TRANSITION()}

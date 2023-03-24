@@ -89,7 +89,6 @@ export class Editor {
     this.peers = [];
     this.connected = true;
     this.frameToEvent = new WeakMap();
-
     this.componentToComponentEditor = new WeakMap();
     this.activeComponentEditor = null;
     this.iframe = null;
@@ -110,6 +109,7 @@ export class Editor {
       setActiveComponentEditor: action,
       ready: observable,
       setReady: action,
+      dispose: action,
     });
 
     this.reka = Reka.create({
@@ -209,17 +209,21 @@ export class Editor {
   }
 
   dispose() {
-    if (!this.provider) {
+    this.reka.dispose();
+
+    if (typeof window === 'undefined') {
       return;
     }
 
     this.removeIframeEventListeners();
-
-    this.reka.dispose();
     this.provider.disconnect();
     this.provider.destroy();
-
     window.removeEventListener('resize', this.windowResizeHandler);
+
+    this.frameToEvent = new WeakMap();
+    this.componentToComponentEditor = new WeakMap();
+    this.activeComponentEditor = null;
+    this.iframe = null;
   }
 
   private addIframeEventListeners() {

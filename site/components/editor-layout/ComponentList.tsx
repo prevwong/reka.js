@@ -124,7 +124,7 @@ export const ComponentList = (props: ComponentListProps) => {
                 'group px-3 py-2 my-0.5 rounded-md text-xs leading-1 group cursor-pointer flex items-center [&>svg]:w-3.5 [&>svg]:h-3.5 [&>button]:opacity-0',
                 {
                   'bg-primary/10 text-primary': activeComponent === component,
-                  'text-gray-700 hover:bg-gray-100 hover:text-gray-900':
+                  'text-slate-700 hover:bg-slate-100 hover:text-slate-900':
                     activeComponent !== component,
                 }
               )}

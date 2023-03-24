@@ -26,7 +26,7 @@ export const Header = observer(() => {
               style={{ cursor: 'pointer' }}
             />
           </Link>
-          <div className="flex gap-4 ml-6 [&>a]:text-sm [&>a]:cursor-pointer [&>a]:text-decoration-none [&>a]:text-slate-600 [&>a:hover]:text-slate-900">
+          <div className="flex gap-4 ml-6 [&>a]:text-sm [&>a]:cursor-pointer [&>a]:text-decoration-none [&>a]:font-medium [&>a]:text-neutral-800">
             {MENU_ITEMS.map((item, i) => {
               const isExternalURL = item.link.startsWith('http');
 

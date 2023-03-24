@@ -13,8 +13,8 @@ export type UserFrameExtensionState = {
   frames: UserFrame[];
 };
 
-export const UserFrameExtensionFactory = () =>
-  createExtension<UserFrameExtensionState>({
+export const UserFrameExtensionFactory = () => {
+  return createExtension<UserFrameExtensionState>({
     key: 'user-frame-extension',
     state: {
       frames: [
@@ -175,5 +175,6 @@ export const UserFrameExtensionFactory = () =>
       );
     },
   });
+};
 
 export const UserFrameExtension = UserFrameExtensionFactory();

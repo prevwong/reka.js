@@ -31,10 +31,6 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
       return;
     }
 
-    if (!iframe) {
-      return;
-    }
-
     const { current: containerDom } = containerDomRef;
 
     if (!containerDom) {

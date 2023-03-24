@@ -58,17 +58,17 @@ module.exports = {
         },
         secondary: {
           DEFAULT: '#9334e9',
-          '50': '#faf5ff',
-          '100': '#f3e8ff',
-          '200': '#e9d5ff',
-          '300': '#d8b4fe',
-          '400': '#c085fb',
-          '500': '#a856f6',
-          '600': '#9334e9',
-          '700': '#7e23cd',
-          '800': '#6b22a7',
-          '900': '#581d86',
-        }
+          50: '#faf5ff',
+          100: '#f3e8ff',
+          200: '#e9d5ff',
+          300: '#d8b4fe',
+          400: '#c085fb',
+          500: '#a856f6',
+          600: '#9334e9',
+          700: '#7e23cd',
+          800: '#6b22a7',
+          900: '#581d86',
+        },
       },
       zIndex: {
         max: '9999',
@@ -116,7 +116,7 @@ module.exports = {
     },
   },
   plugins: [
-    plugin(function({ addBase }) {
+    plugin(function ({ addBase }) {
       addBase({
         html: { fontSize: '0.9rem' },
       });

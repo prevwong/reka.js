@@ -316,7 +316,8 @@ pre .logger.log-log svg {
 }
 
 code:not(pre code) {
-  @apply p-1 text-secondary font-normal rounded-md text-xs;
+  @apply p-1 font-normal rounded-md text-xs;
+  @apply text-secondary #{!important};
 }
 
 code:not(pre code)::after {
