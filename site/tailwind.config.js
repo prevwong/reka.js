@@ -1,3 +1,4 @@
+const { fontFamily } = require('tailwindcss/defaultTheme');
 const plugin = require('tailwindcss/plugin');
 
 /** @type {import('tailwindcss').Config} */
@@ -11,7 +12,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        code: ['JetBrains Mono'],
+        sans: ['var(--font-inter)', ...fontFamily.sans],
+        code: ['var(--font-jetbrainsmono)'],
       },
 
       keyframes: {
@@ -116,9 +118,9 @@ module.exports = {
     },
   },
   plugins: [
-    plugin(function ({ addBase }) {
+    plugin(function ({ addBase, theme }) {
       addBase({
-        html: { fontSize: '0.9rem' },
+        html: { fontSize: '0.9rem', fontFamily: theme('fontFamily.sans') },
       });
     }),
     require('tailwindcss-animate'),

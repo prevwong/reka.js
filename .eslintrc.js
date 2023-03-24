@@ -38,6 +38,12 @@ module.exports = {
       },
     ],
     'react/display-name': 0,
+    'react/no-unknown-property': [
+      0,
+      {
+        ignore: ['jsx'],
+      },
+    ],
     'react/prop-types': 0,
     '@typescript-eslint/no-explicit-any': 0,
     '@typescript-eslint/no-inferrable-types': 0,

@@ -1,5 +1,6 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import type { AppProps } from 'next/app';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import Head from 'next/head';
 import * as React from 'react';
 
@@ -11,6 +12,8 @@ import {
 } from '@app/constants/css';
 import { EditorContextProvider } from '@app/editor';
 import { cn } from '@app/utils';
+
+import '@docsearch/css';
 
 import '../styles/globals.scss';
 
@@ -26,6 +29,13 @@ const getPageOptions = (options: Partial<PageOptions>): PageOptions => {
     ...options,
   };
 };
+
+const inter = Inter({ subsets: ['latin'] });
+
+const jetbrainsmono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrainsmono',
+});
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [loaded, setLoaded] = React.useState(false);
@@ -63,8 +73,14 @@ function MyApp({ Component, pageProps }: AppProps) {
           />
           <link rel="icon" type="image/png" href="/favicon.ico" />
         </Head>
+        <style jsx global>{`
+          :root {
+            --font-inter: ${inter.style.fontFamily};
+            --font-jetbrainsmono: ${jetbrainsmono.style.fontFamily};
+          }
+        `}</style>
         <div
-          className={layoutClassnameRef.current}
+          className={cn(layoutClassnameRef.current)}
           style={{ opacity: loaded ? 1 : 0 }}
         >
           <Header />
