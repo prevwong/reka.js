@@ -8,7 +8,7 @@ import * as React from 'react';
 import useIsomorphicLayoutEffect from 'react-use/lib/useIsomorphicLayoutEffect';
 
 import { RENDER_FRAME_CONTAINER_CLASSNAME } from '@app/constants/css';
-import { useEditor, useEditorActiveComponent } from '@app/editor';
+import { useEditor } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
 import { cn, CREATE_BEZIER_TRANSITION } from '@app/utils';
@@ -46,7 +46,7 @@ export const ComponentEditorView = observer(() => {
   const [showAddFrameModal, setShowAddFrameModal] = React.useState(false);
   const [isEditingFrame, setIsEditingFrame] = React.useState(false);
 
-  const componentEditor = useEditorActiveComponent();
+  const componentEditor = editor.activeComponentEditor;
 
   const containerDOMRef = React.useRef<HTMLDivElement | null>(null);
   const frameContainerDOMRef = React.useRef<HTMLDivElement | null>(null);
@@ -86,6 +86,10 @@ export const ComponentEditorView = observer(() => {
   );
 
   const removeFrame = React.useCallback(() => {
+    if (!componentEditor) {
+      return;
+    }
+
     editor.reka.change(() => {
       const userFrame = componentEditor.activeFrame?.user;
 
@@ -97,6 +101,16 @@ export const ComponentEditorView = observer(() => {
         editor.reka.getExtension(UserFrameExtension).state.frames;
 
       userFrames.splice(userFrames.indexOf(userFrame), 1);
+
+      const nextActiveFrame = userFrames.find(
+        (frame) => frame.name === componentEditor.component.name
+      );
+
+      if (!nextActiveFrame) {
+        return;
+      }
+
+      componentEditor.setActiveFrame(nextActiveFrame.id);
     });
   }, [editor, componentEditor]);
 
@@ -126,11 +140,11 @@ export const ComponentEditorView = observer(() => {
         ref={toolbarDOMRef}
         transition={CREATE_BEZIER_TRANSITION()}
       >
-        <div className="flex flex-1 items-center">
+        <div className="flex gap-2 flex-1 items-center">
           {(editor.compactSidebar || editor.mode === EditorMode.Code) && (
             <Tooltip content="Toggle sidebar">
               <IconButton
-                className="mr-3"
+                className="mr-1.5"
                 variant={'outline'}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -150,9 +164,10 @@ export const ComponentEditorView = observer(() => {
             </Tooltip>
           )}
 
-          <span className="mr-4">{componentEditor.component.name}</span>
+          <span>{componentEditor.component.name}</span>
           {frames.length > 0 && (
             <Select
+              className="ml-2"
               placeholder="Select a frame"
               value={componentEditor.activeFrame?.state.id}
               onChange={(value) => {
@@ -165,17 +180,18 @@ export const ComponentEditorView = observer(() => {
             />
           )}
 
-          <Button
-            size="xs"
-            className="ml-2"
-            variant="subtle"
-            onClick={() => {
-              setShowAddFrameModal(true);
-            }}
-          >
-            Add Frame
-          </Button>
-          <Info info="A Frame is an instance of a Reka Component" />
+          <div className="flex items-center">
+            <Button
+              size="xs"
+              variant="subtle"
+              onClick={() => {
+                setShowAddFrameModal(true);
+              }}
+            >
+              Add Frame
+            </Button>
+            <Info info="A Frame is an instance of a Reka Component" />
+          </div>
         </div>
         <div className="flex items-center">
           <MobileFallback

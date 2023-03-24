@@ -12,7 +12,7 @@
 
 .site-layout {
   .site-layout-header {
-    @apply transition-all ease-bezier duration-300 backdrop-blur-xl fixed top-0 z-10 overflow-hidden w-full bg-white/80 border-b border-solid border-black/10 h-header px-5 py-2;
+    @apply flex transition-all ease-bezier duration-300 backdrop-blur-xl fixed top-0 z-10 overflow-hidden w-full bg-white/80 border-b border-solid border-black/10 h-header px-5 py-2;
   }
 
   .site-layout-content {
@@ -38,4 +38,8 @@
 
 .ͼ2 .cm-gutters {
   background: #ffffff;
+}
+
+.shadow-glow {
+  box-shadow: 0px 1px 10px 1px #b470f0;
 }

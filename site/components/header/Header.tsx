@@ -16,7 +16,7 @@ const MENU_ITEMS = [
 export const Header = observer(() => {
   return (
     <div className={SITE_LAYOUT_HEADER_CLASSNAME}>
-      <div className="flex items-center">
+      <div className="flex flex-1 items-center">
         <div className="flex flex-1 items-center">
           <Link href="/">
             <Image

@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { useEditor } from '@app/editor';
+import { CREATE_BEZIER_TRANSITION } from '@app/utils';
 
 import { Tooltip } from '../tooltip';
 import { UserAvatar } from '../user-avatar';
@@ -35,18 +36,20 @@ export const Collaborators = observer(() => {
             user={user}
             active={false}
             layout
-            initial={{ opacity: 0, x: -100 }}
+            initial={{ opacity: 0, x: 10 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, transition: { duration: 0.15 } }}
+            exit={{ opacity: 0, x: 10 }}
+            transition={CREATE_BEZIER_TRANSITION({ duration: 0.2 })}
           />
         ))}
         <MotionCollabUser
           user={editor.user}
           active={true}
           layout
-          initial={{ opacity: 0, x: -100 }}
+          initial={{ opacity: 0, x: 10 }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, transition: { duration: 0.15 } }}
+          exit={{ opacity: 0, x: 10 }}
+          transition={CREATE_BEZIER_TRANSITION({ duration: 0.2 })}
         />
       </AnimatePresence>
     </div>

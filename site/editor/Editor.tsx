@@ -82,6 +82,7 @@ export class Editor {
       name: generateRandomName(),
       color: randomColor({
         luminosity: 'dark',
+        hue: 'random',
         format: 'hex',
       }),
     };

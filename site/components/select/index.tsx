@@ -2,12 +2,15 @@ import { ChevronDownIcon } from '@radix-ui/react-icons';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import * as React from 'react';
 
+import { cn } from '@app/utils';
+
 type SelectItem = {
   value: string;
   title: string;
 };
 
 type SelectProps = {
+  className?: string;
   items: SelectItem[];
   onChange: (value: string) => void;
   value?: string;
@@ -20,7 +23,12 @@ export const Select = (props: SelectProps) => {
       value={props.value || undefined}
       onValueChange={(value) => props.onChange(value)}
     >
-      <SelectPrimitive.SelectTrigger className="inline-flex items-center rounded-md px-3 py-1.5 text-xs gap-2 text-gray-600 border border-solid border-outline pointer shadow-sm hover:bg-gray-100">
+      <SelectPrimitive.SelectTrigger
+        className={cn(
+          'inline-flex items-center rounded-md px-3 py-1.5 text-xs gap-2 text-gray-600 border border-solid border-outline pointer shadow-sm hover:bg-gray-100',
+          props.className
+        )}
+      >
         <SelectPrimitive.Value
           placeholder={props.placeholder || 'Select a value'}
         />
