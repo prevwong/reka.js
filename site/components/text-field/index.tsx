@@ -9,6 +9,7 @@ type InputFieldProps = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,
   HTMLInputElement
 > & {
+  inputClassName?: string;
   badge?: string;
   transparent?: boolean;
   children?: React.ReactNode;
@@ -83,7 +84,10 @@ export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
       >
         <input
           {...props}
-          className="bg-transparent text-overflow overflow-hidden text-ellipsis outline-none shadow-none py-1.5 px-3 text-black/80 transition border-none relative w-full text-xs"
+          className={cn(
+            'bg-transparent outline-none shadow-none py-1.5 px-3 text-black/80 transition border-none relative w-full text-xs',
+            props.inputClassName
+          )}
           value={onCommit ? uncommittedValue : value}
           onChange={(e) => {
             setHasError('');

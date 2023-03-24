@@ -122,6 +122,7 @@ const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
         <Tooltip content={newId} disabled={!disableEditId}>
           <TextField
             className={`pair-input-id-field rounded-none border-l-0 border-t-0 border-b-0 border-r-solid border-r border-r-outline`}
+            inputClassName={'overflow-hidden text-ellipsis'}
             value={newId}
             onChange={(e) => {
               setNewId(e.target.value);
