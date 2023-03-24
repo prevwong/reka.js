@@ -57,6 +57,10 @@ function MyApp({ Component, pageProps }: AppProps) {
           <title>Reka.js</title>
           <meta content="/social-banner.png" property="og:image" />
           <meta name="viewport" content="width=device-width" />
+          <meta
+            name="google-site-verification"
+            content="lPAM2g_ZfYyyqM1_8FaZPaObK4YB-_46AVpsSldTTWw"
+          />
           <link rel="icon" type="image/png" href="/favicon.ico" />
         </Head>
         <div
