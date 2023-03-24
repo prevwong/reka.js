@@ -20,6 +20,7 @@ export const Header = observer(() => {
         <div className="flex flex-1 items-center">
           <Link href="/">
             <Image
+              alt="Site logo"
               src="/logo.svg"
               width={30}
               height={30}

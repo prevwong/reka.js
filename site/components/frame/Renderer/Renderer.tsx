@@ -2,6 +2,7 @@ import { toJS } from '@rekajs/core';
 import { observer } from '@rekajs/react';
 import * as t from '@rekajs/types';
 import { invariant } from '@rekajs/utils';
+import Image from 'next/image';
 import * as React from 'react';
 
 import { SITE_LAYOUT_CLASSNAME } from '@app/constants/css';
@@ -64,11 +65,31 @@ const RenderTagView = observer((props: RenderTagViewProps) => {
     return <span ref={domRef}>{props.view.props.value as string}</span>;
   }
 
+  const style: Record<string, any> = props.view.props.style
+    ? toJS(props.view.props.style)
+    : {};
+
+  if (props.view.tag === 'img') {
+    return (
+      <Image
+        {...props.view.props}
+        ref={(dom) => {
+          domRef.current = dom;
+        }}
+        style={style}
+        src={props.view.props['src']}
+        alt={props.view.props['alt'] || ''}
+        width={props.view.props['width'] ?? 500}
+        height={props.view.props['height'] ?? 500}
+      />
+    );
+  }
+
   return React.createElement(
     props.view.tag,
     {
       ...props.view.props,
-      style: props.view.props.style ? toJS(props.view.props.style) : {},
+      style,
       ref: domRef,
     },
     props.view.children.length > 0
