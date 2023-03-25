@@ -35,7 +35,7 @@ export const SettingSection = (props: SettingSectionProps) => {
         onClick={() => setIsOpen(!isOpen)}
       >
         <header className="flex flex-1 items-center">
-          <span className="text-gray-900 text-sm font-medium flex items-center">
+          <span className="text-slate-800 text-sm font-medium flex items-center">
             {props.title}
             {props.info && <Info info={props.info} />}
           </span>

@@ -10,7 +10,7 @@ type InfoProps = {
 export const Info = (props: InfoProps) => {
   return (
     <Tooltip content={props.info}>
-      <div className="cursor-pointer ml-2 opacity-70">
+      <div className="cursor-pointer ml-2 text-slate-600">
         <InfoCircledIcon width={13} height={13} />
       </div>
     </Tooltip>

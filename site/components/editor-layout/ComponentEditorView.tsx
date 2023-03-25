@@ -164,7 +164,9 @@ export const ComponentEditorView = observer(() => {
             </Tooltip>
           )}
 
-          <span>{componentEditor.component.name}</span>
+          <span className="text-slate-700">
+            {componentEditor.component.name}
+          </span>
           {frames.length > 0 && (
             <Select
               className="ml-2"
@@ -275,7 +277,7 @@ export const ComponentEditorView = observer(() => {
                 checked={componentEditor.activeFrame.state.sync}
               />
 
-              <span className="text-xs flex text-neutral-600 items-center">
+              <span className="text-xs flex text-slate-700 items-center">
                 {componentEditor.activeFrame?.state.sync
                   ? 'Syncing'
                   : 'Not syncing'}

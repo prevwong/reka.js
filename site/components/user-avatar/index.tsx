@@ -24,7 +24,7 @@ export const UserAvatar = React.forwardRef<HTMLSpanElement, UserAvatarProps>(
         className={cn(
           'w-7 h-7 bg-transparent rounded-full text-[0.6rem] text-white font-medium flex flex-col justify-center text-center border border-solid border-transparent relative cursor-pointer',
           {
-            'border-secondary-400 shadow-md shadow-secondary/20': isActive,
+            'border-primary-400 shadow-md shadow-primary/20': isActive,
           }
         )}
         style={{ backgroundColor: props.user.color }}

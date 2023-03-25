@@ -120,7 +120,7 @@ const Docs = (props: any) => {
           ))}
           {DOCS_SIDEBAR.categories.map((category, i) => (
             <div className="pt-5" key={i}>
-              <span className="block text-sm py-3 px-3 font-medium text-neutral-800">
+              <span className="block text-sm py-3 px-3 font-medium text-slate-700">
                 {category.title}
               </span>
               <div>

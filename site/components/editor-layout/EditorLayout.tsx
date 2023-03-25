@@ -60,7 +60,7 @@ export const EditorLayout = observer(
 
     return (
       <React.Fragment>
-        <div className="hidden max-sm:flex bg-white h-full text-slate-700 relative gap-5 flex-1 flex-col items-center justify-center text-center">
+        <div className="hidden max-sm:flex bg-white h-full text-slate-700 relative gap-3 flex-1 flex-col items-center justify-center text-center px-6">
           <ExclamationTriangleIcon width={25} height={25} />
           <h3 className="text-lg">
             Screen size is too small to use the editor.
@@ -70,7 +70,7 @@ export const EditorLayout = observer(
           {...props}
           className={cn(
             props.className,
-            'flex max-sm:hidden overflow-hidden bg-white h-full relative flex-1'
+            'flex max-sm:hidden overflow-hidden h-full relative flex-1'
           )}
         >
           <motion.div

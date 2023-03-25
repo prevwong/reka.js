@@ -66,6 +66,7 @@ export const Footer = () => {
               target="_blank"
               className="text-slate-400 transition-all ease-bezier duration-400 hover:text-slate-800"
               key={social.link}
+              href={social.link}
               rel="noreferrer"
             >
               {social.icon}

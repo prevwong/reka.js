@@ -83,6 +83,13 @@ module.exports = {
         DEFAULT: {
           css: {
             '--tw-prose-quotes': theme('colors.gray[800]'),
+            '--tw-prose-links': theme('colors.primary[700]'),
+            a: {
+              fontWeight: 'inherit',
+            },
+            'h1 a, h2 a, h3 a, h4 a': {
+              color: 'inherit',
+            },
             pre: {
               backgroundColor: 'var(--tw-prose-pre-bg)',
               overflowX: 'auto',
@@ -111,6 +118,9 @@ module.exports = {
             },
             'blockquote p:last-of-type::after': {
               content: '',
+            },
+            'p > a ': {
+              color: theme('colors.primary'),
             },
           },
         },

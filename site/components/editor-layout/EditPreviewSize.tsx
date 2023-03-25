@@ -16,7 +16,7 @@ export const EditPreviewSize = (props: EditPreviewSizeProps) => {
 
   return (
     <React.Fragment>
-      <span className="text-xs mr-3 text-neutral-500">Preview size</span>
+      <span className="text-xs mr-3 text-slate-500">Preview size</span>
       <div className="flex items-center">
         <TextField
           placeholder="100%"
@@ -36,7 +36,7 @@ export const EditPreviewSize = (props: EditPreviewSizeProps) => {
             });
           }}
         />
-        <Cross1Icon className="w-2.5 h-2.5 mx-2 text-gray-500" />
+        <Cross1Icon className="w-2.5 h-2.5 mx-2 text-slate-500" />
         <TextField
           placeholder="100%"
           size={5}
