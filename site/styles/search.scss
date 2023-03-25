@@ -21,26 +21,26 @@
 .DocSearch-Button .DocSearch-Search-Icon {
   all: unset;
   transition: color 0.5s;
-  @apply w-4 h-4 relative mr-3 text-slate-500;
+  @apply w-4 h-4 relative mr-3 text-slate-800 max-sm:mr-0;
 }
 
 .DocSearch-Button:hover .DocSearch-Search-Icon {
-  @apply text-slate-600;
+  @apply text-slate-700;
 }
 
 .DocSearch-Button .DocSearch-Button-Placeholder {
   all: unset;
   transition: color 0.5s;
-  @apply font-normal text-sm text-slate-500 mr-3;
+  @apply font-normal text-sm text-slate-700 mr-3 max-sm:hidden;
 }
 
 .DocSearch-Button:hover .DocSearch-Button-Placeholder {
-  @apply font-normal text-slate-600;
+  @apply font-normal text-slate-700;
 }
 
 .DocSearch-Button .DocSearch-Button-Keys {
   all: unset;
-  @apply flex px-2 py-1 border border-solid border-black/20 text-slate-500 rounded-md;
+  @apply flex px-2 py-1 border border-solid border-black/20 text-slate-600 rounded-md max-sm:hidden;
 }
 
 .DocSearch-Button .DocSearch-Button-Keys .DocSearch-Button-Key {

@@ -2,6 +2,7 @@ import {
   ChevronRightIcon,
   Component1Icon,
   ComponentPlaceholderIcon,
+  LayersIcon,
 } from '@radix-ui/react-icons';
 import * as t from '@rekajs/types';
 import { pascalCase } from 'pascal-case';
@@ -107,6 +108,7 @@ export const ComponentList = (props: ComponentListProps) => {
   return (
     <React.Fragment>
       <SettingSection
+        className="flex-1"
         collapsedOnInitial={false}
         title="Components"
         onAdd={() => {
@@ -130,7 +132,7 @@ export const ComponentList = (props: ComponentListProps) => {
               )}
             >
               {component instanceof t.RekaComponent ? (
-                <Component1Icon className="mr-3.5" />
+                <LayersIcon className="mr-3.5" />
               ) : (
                 <ComponentPlaceholderIcon className="mr-3.5" />
               )}
@@ -140,6 +142,14 @@ export const ComponentList = (props: ComponentListProps) => {
           ))}
         </div>
       </SettingSection>
+      <div className="carbonads-container carbonads-container-sidebar">
+        <script
+          async
+          type="text/javascript"
+          src="//cdn.carbonads.com/carbon.js?serve=CWYDVK7J&placement=rekajsorg"
+          id="_carbonads_js"
+        ></script>
+      </div>
       <AddComponentModal
         isOpen={showAddComponentModal}
         onClose={() => {

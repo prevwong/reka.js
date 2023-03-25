@@ -23,6 +23,10 @@ export const DOCS_SIDEBAR: DocSidebar = {
       title: 'Motivation',
       href: 'motivation',
     },
+    {
+      title: 'Sponsor',
+      href: 'sponsor',
+    },
   ],
   categories: [
     {

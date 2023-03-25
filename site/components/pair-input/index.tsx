@@ -14,6 +14,7 @@ type PairInputFieldProps = {
   disableEditValue?: boolean;
   onRemove?: () => void;
   onChange?: (id: string, value: t.Expression, clear: () => void) => void;
+  idPlaceholder?: string;
   valuePlaceholder?: string;
 };
 
@@ -24,6 +25,7 @@ type PairInputValue = {
 
 type PairInputProps = {
   values: PairInputValue[];
+  idPlaceholder?: string;
   valuePlaceholder?: string;
   onChange?: (id: string, value: t.Expression, type: 'update' | 'new') => void;
   onRemove?: (id: string, value: t.Expression | null) => void;
@@ -35,6 +37,8 @@ type PairInputProps = {
 type AddNewPairInputFieldProps = {
   onAdd: (id: string, value: t.Expression) => void;
   onCancel: () => void;
+  idPlaceholder?: string;
+  valuePlaceholder?: string;
 };
 
 const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
@@ -78,6 +82,8 @@ const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
 
         clear();
       }}
+      idPlaceholder={props.idPlaceholder}
+      valuePlaceholder={props.valuePlaceholder}
     />
   );
 };
@@ -91,6 +97,7 @@ const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
       disableEditValue,
       onRemove,
       onChange,
+      idPlaceholder,
       valuePlaceholder,
     },
     ref
@@ -123,6 +130,7 @@ const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
           <TextField
             className={`pair-input-id-field rounded-none border-l-0 border-t-0 border-b-0 border-r-solid border-r border-r-outline`}
             inputClassName={'overflow-hidden text-ellipsis'}
+            placeholder={idPlaceholder}
             value={newId}
             onChange={(e) => {
               setNewId(e.target.value);
@@ -211,6 +219,8 @@ export const PairInput = (props: PairInputProps) => {
           onCancel={() => {
             props.onCancelAdding?.();
           }}
+          idPlaceholder={props.idPlaceholder}
+          valuePlaceholder={props.valuePlaceholder}
         />
       )}
     </div>

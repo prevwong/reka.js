@@ -19,7 +19,7 @@ export const ToolbarApp = observer(() => {
   }
 
   return (
-    <div className="flex items-center gap-2.5">
+    <div className="flex items-center gap-2.5 max-sm:hidden">
       <Collaborators />
       <Tooltip content="Toggle code editor">
         <Button

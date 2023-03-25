@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import * as React from 'react';
 
 import { IconButton } from '@app/components/button';
-import { CREATE_BEZIER_TRANSITION } from '@app/utils';
+import { cn, CREATE_BEZIER_TRANSITION } from '@app/utils';
 
 import { Info } from '../info';
 
@@ -13,6 +13,7 @@ type SettingSectionProps = {
   onAdd?: () => void;
   children?: React.ReactNode;
   collapsedOnInitial?: boolean;
+  className?: string;
 };
 
 export const SettingSection = (props: SettingSectionProps) => {
@@ -21,7 +22,12 @@ export const SettingSection = (props: SettingSectionProps) => {
   );
 
   return (
-    <div className="flex px-5 py-1.5 flex-col border-b border-solid border-outline setting-section last:border-none">
+    <div
+      className={cn(
+        'flex px-5 py-1.5 flex-col border-b border-solid border-outline setting-section last:border-none',
+        props.className
+      )}
+    >
       <motion.div
         className="flex relative items-center cursor-pointer mt-2 mb-1"
         initial={false}

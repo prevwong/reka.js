@@ -94,6 +94,7 @@ const Docs = (props: any) => {
           w-80 relative flex flex-col
           transition-all ease-bezier duration-400
           max-sm:z-50
+          max-sm:border-r max-sm:border-black/10
           max-sm:w-86 max-sm:fixed max-sm:-left-full max-sm:top-[50px] max-sm:h-[calc(100vh-50px)]
           max-sm:bg-white/80 max-sm:backdrop-blur-md max-sm:overflow-hidden`,
           {
@@ -101,9 +102,8 @@ const Docs = (props: any) => {
           }
         )}
       >
-        <div className="mobile-nav-header flex justify-end mb-4">
+        <div className="px-4 py-2 hidden max-sm:flex z-50 mobile-nav-header flex justify-end items-end mb-4">
           <IconButton
-            className="absolute z-50 hidden max-sm:block right-2 top-2"
             size="default"
             onClick={() => {
               setMobileNavActive(false);
@@ -112,7 +112,7 @@ const Docs = (props: any) => {
             <Cross1Icon />
           </IconButton>
         </div>
-        <div className="doc-nav-content flex flex-col overflow-auto h-[calc(100vh-50px)] sticky top-[calc(50px)] px-4 py-7 max-sm:h-full max-sm:relative max-sm:overflow-scroll max-sm:top-10 max-sm:py-4 ">
+        <div className="doc-nav-content flex flex-col overflow-auto h-[calc(100vh-50px)] sticky top-[calc(50px)] px-4 py-7 max-sm:flex-1 max-sm:h-full max-sm:relative max-sm:overflow-scroll max-sm:top-0 max-sm:pt-4 max-sm:py-4">
           {DOCS_SIDEBAR.main.map((link, i) => (
             <Link key={i} href={`/docs/${link.href}`} passHref legacyBehavior>
               <DocLink active={props.slug === link.href}>{link.title}</DocLink>
@@ -136,6 +136,16 @@ const Docs = (props: any) => {
               </div>
             </div>
           ))}
+          <div className="px-3">
+            <div className="carbonads-container carbonads-container-doc-sidebar">
+              <script
+                async
+                type="text/javascript"
+                src="//cdn.carbonads.com/carbon.js?serve=CWYDVK7J&placement=rekajsorg"
+                id="_carbonads_js"
+              ></script>
+            </div>
+          </div>
         </div>
       </motion.nav>
       <div className="flex overflow-x-hidden w-full">

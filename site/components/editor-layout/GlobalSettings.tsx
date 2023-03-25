@@ -21,6 +21,8 @@ export const GlobalSettings = observer(() => {
       <PairInput
         addingNewField={isAddingNewGlobal}
         onCancelAdding={() => setIsAddingNewGlobal(false)}
+        idPlaceholder="Name"
+        valuePlaceholder="Initial state value"
         onChange={(id, value) => {
           if (!id) {
             return;

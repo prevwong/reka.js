@@ -114,13 +114,7 @@ export const AnimatedScreenSlider = (props: AnimatedScreenSliderProps) => {
                     return { opacity: 0, left };
                   },
                 }}
-                style={{
-                  position: 'absolute',
-                  width: '100%',
-                  height: '100%',
-                  top: 0,
-                  background: '#fff',
-                }}
+                className="absolute w-full h-full top-0 bg-white flex flex-col"
                 transition={CREATE_BEZIER_TRANSITION()}
               >
                 {paths.length > 0 && i > 0 && screen.hideBackButton !== true && (

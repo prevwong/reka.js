@@ -53,6 +53,8 @@ export const PropEditorSection = observer(
                 template.classList.properties[id] = value;
               });
             }}
+            idPlaceholder="CSS class"
+            valuePlaceholder="Condition"
           ></PairInput>
         </SettingSection>
         <SettingSection
@@ -78,6 +80,8 @@ export const PropEditorSection = observer(
               id: prop,
               value: template.props[prop],
             }))}
+            idPlaceholder="Prop"
+            valuePlaceholder="Value"
           />
         </SettingSection>
       </React.Fragment>

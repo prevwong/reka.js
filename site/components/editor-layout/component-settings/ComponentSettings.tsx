@@ -39,7 +39,8 @@ export const ComponentSettings = observer(() => {
             value: prop.init,
           }))}
           emptyValuesText={'No props set'}
-          valuePlaceholder="No default value"
+          idPlaceholder="Name"
+          valuePlaceholder="No default prop value"
           addingNewField={isAddingNewProp}
           onCancelAdding={() => setIsAddingNewProp(false)}
           onChange={(id, value, type) => {
@@ -84,6 +85,8 @@ export const ComponentSettings = observer(() => {
             id: state.name,
             value: state.init,
           }))}
+          idPlaceholder="Name"
+          valuePlaceholder="Initial value"
           emptyValuesText="No state values"
           addingNewField={isAddingNewState}
           onCancelAdding={() => setIsAddingNewState(false)}
