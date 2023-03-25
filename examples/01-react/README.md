@@ -1,4 +1,10 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# React Example
+
+A simple Next.js example of integrating Reka with React.
+
+Read the guide [here](https://reka.js.org/docs/guides/react)
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/prevwong/reka.js/tree/main/examples/01-react)
 
 ## Getting Started
 

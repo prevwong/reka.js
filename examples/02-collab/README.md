@@ -1,4 +1,20 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Collaboration Example
+
+A simple example to enable collaboration capabilities in Reka.js with Yjs and WebRTC via the `@rekajs/collaboration` package.
+
+Read the guide [here](https://reka.js.org/docs/guides/realtime)
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/prevwong/reka.js/tree/main/examples/02-collab)
+
+## Setting the Editor's initial state
+
+Because we're using WebRTC in this example, we need to first correctly set the initial state that we want in Reka.
+
+To do this:-
+
+1. Edit the `/src/constants/state.ts` file
+2. Run `pnpm encode-initial-state` to generate the initial Yjs update from the constants file.
+3. The generated update is stored `/src/generated/encoded-initial-state.ts`. This is then loaded into the Yjs document when the page loads.
 
 ## Getting Started
 
