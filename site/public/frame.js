@@ -53,7 +53,6 @@ const setup = () => {
   document.head.appendChild(script);
   script.addEventListener('load', () => {
     withVerify(() => {
-      console.log('tailwind loaded');
       isTailwindLoaded = true;
     });
   });

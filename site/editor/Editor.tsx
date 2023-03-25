@@ -265,11 +265,12 @@ export class Editor {
 
     const iframePropagateEventHandler = (e: any) => {
       window.dispatchEvent(new e.constructor(e.type, e));
+      // todo: hack
+      window.dispatchEvent(new e.constructor('mousedown', e));
     };
 
     this.iframeEventHandlers = [
       { type: 'scroll', handler: iframeScrollTopListener },
-      { type: 'mousedown', handler: iframePropagateEventHandler },
       { type: 'click', handler: iframePropagateEventHandler },
     ];
 

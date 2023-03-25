@@ -15,12 +15,13 @@ type InputFieldProps = React.DetailedHTMLProps<
   children?: React.ReactNode;
   validate?: (value: any) => boolean;
   onCancel?: () => void;
-  onCommit?: (value: any) => void;
+  onCommit?: (value: any, clear: () => void) => void;
 };
 
 export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
   (
     {
+      inputClassName,
       className,
       transparent,
       badge,
@@ -54,7 +55,9 @@ export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
       }
 
       try {
-        onCommit(uncommittedValue);
+        onCommit(uncommittedValue, () => {
+          setUncommitedValue('');
+        });
       } catch (err) {
         setHasError(String(err));
       }
@@ -86,7 +89,7 @@ export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           {...props}
           className={cn(
             'bg-transparent outline-none shadow-none py-1.5 px-3 text-black/80 transition border-none relative w-full text-xs',
-            props.inputClassName
+            inputClassName
           )}
           value={onCommit ? uncommittedValue : value}
           onChange={(e) => {

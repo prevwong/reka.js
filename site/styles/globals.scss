@@ -36,7 +36,7 @@
   height: 100%;
 }
 
-.ͼ2 .cm-gutters {
+.ͼp .cm-gutters {
   background: #ffffff;
 }
 
@@ -53,7 +53,7 @@
   }
 
   #carbonads {
-    @apply font-sans border-solid border-outline px-5 py-3;
+    @apply font-sans border-solid border-outline px-2 py-2;
   }
 
   &.carbonads-container-sidebar {
@@ -69,10 +69,7 @@
   }
 
   #carbonads {
-    display: flex;
-    width: 100%;
-    background-color: transparent;
-    z-index: 100;
+    @apply flex flex-col w-full bg-transparent;
   }
 
   #carbonads a {
@@ -91,30 +88,27 @@
   }
 
   #carbonads .carbon-wrap {
-    display: flex;
+    @apply flex;
   }
 
   #carbonads .carbon-img {
-    display: block;
-    margin: 0;
+    @apply block mt-4;
     line-height: 1;
   }
 
   #carbonads .carbon-img img {
     display: block;
+    width: 100%;
   }
 
   #carbonads .carbon-text {
-    font-size: 11px;
-    padding: 10px;
-    margin-bottom: 16px;
+    @apply text-xs pl-3 pt-3 mb-8 text-slate-600;
     line-height: 1.5;
     text-align: left;
-    color: #333333;
-    font-weight: 400;
   }
 
   #carbonads .carbon-poweredby {
+    @apply text-slate-400;
     display: block;
     padding: 6px 8px;
     text-align: center;
@@ -126,6 +120,5 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    color: #8f8f8f;
   }
 }

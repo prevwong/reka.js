@@ -2,6 +2,8 @@
 
 Reka is a state management system for building no-code editors.
 
+![banner-min](https://user-images.githubusercontent.com/16416929/227709589-ab15ae78-d8eb-4ce8-b4e6-8ebbb3cff73b.png)
+
 ## Why?
 
 Much of the complexity surrounding building no-code editors comes from architecting the state management system to power such editors (ie: how should the end user designs be stored and edited in a page editor?)

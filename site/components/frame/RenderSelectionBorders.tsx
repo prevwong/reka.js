@@ -152,7 +152,7 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
   return (
     <div
       className={cn(
-        'absolute z-50 border border-solid border-primary pointer-events-none [&.overflow-border-hidden]:border-transparent [&.overflow-top>div]:top-0 [&.overflow-bottom>div]:bottom-0'
+        'absolute z-40 border border-solid border-primary pointer-events-none [&.overflow-border-hidden]:border-transparent [&.overflow-top>div]:top-0 [&.overflow-bottom>div]:bottom-0'
       )}
       ref={containerDomRef}
     >

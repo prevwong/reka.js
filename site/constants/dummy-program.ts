@@ -67,9 +67,6 @@ component App() {
      description={"End-users can design components with stateful values, expressions and templates similar to what is possible with code in UI frameworks like React."}
     >
      <div className={"flex flex-col justify-center"}>
-      <h4 className={"mb-2 text-xs text-neutral-600"}>
-       <text value={"Counter -> " + counter} />
-      </h4>
       <div className={"flex gap-2"}>
        <Button
         onClick={() => {
@@ -90,6 +87,9 @@ component App() {
         text={"Toggle Modal"}
        />
       </div>
+      <h4 className={"mt-5 text-xs text-neutral-600"}>
+       <text value={"Counter -> " + counter} />
+      </h4>
      </div>
     </Feature>
     <Feature

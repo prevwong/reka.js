@@ -79,10 +79,8 @@ const TextareaEditor = ({
     dom.setSelectionRange(dom.value.length, dom.value.length);
 
     const listener = (e: any) => {
-      if (
-        e.target instanceof HTMLElement &&
-        dom.contains(e.target as any) === true
-      ) {
+      const target = e.target;
+      if (target instanceof HTMLElement && dom.contains(target)) {
         return;
       }
 

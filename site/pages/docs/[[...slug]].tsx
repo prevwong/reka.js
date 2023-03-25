@@ -136,10 +136,10 @@ const Docs = (props: any) => {
               </div>
             </div>
           ))}
-          <div className="px-3">
+          <div className="px-3 mt-4">
             <div className="carbonads-container carbonads-container-doc-sidebar">
               <script
-                async
+                defer
                 type="text/javascript"
                 src="//cdn.carbonads.com/carbon.js?serve=CWYDVK7J&placement=rekajsorg"
                 id="_carbonads_js"

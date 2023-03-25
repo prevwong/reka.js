@@ -1,6 +1,7 @@
 import {
   DiscordLogoIcon,
   GitHubLogoIcon,
+  HeartFilledIcon,
   TwitterLogoIcon,
 } from '@radix-ui/react-icons';
 import * as React from 'react';
@@ -37,7 +38,8 @@ export const Footer = () => {
       <div className="flex flex-col gap-1 m-auto w-auto flex-1 [&_a]:underline [&_a]:text-primary">
         <div>
           Made with{' '}
-          <span className="text-sm text-primary inline m-0 -my-1">♥︎</span> by{' '}
+          <HeartFilledIcon className="text-primary inline-block m-0 -my-1 w-3.5 h-3.5" />{' '}
+          by{' '}
           <a
             href="https://twitter.com/prevwong"
             target="_blank"

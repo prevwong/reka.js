@@ -151,7 +151,7 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
         <TextField
           placeholder="Add a new comment"
           value=""
-          onCommit={(content) => {
+          onCommit={(content, clear) => {
             editor.reka.change(() => {
               const comments =
                 editor.reka.getExtension(CommentExtension).state
@@ -166,6 +166,8 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
                 user: editor.user,
                 date: Date.now(),
               });
+
+              clear();
             });
           }}
         />
