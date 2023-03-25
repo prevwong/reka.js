@@ -1,6 +1,5 @@
 import {
   ChevronRightIcon,
-  Component1Icon,
   ComponentPlaceholderIcon,
   LayersIcon,
 } from '@radix-ui/react-icons';

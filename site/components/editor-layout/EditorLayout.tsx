@@ -1,3 +1,4 @@
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { AnimatePresence, motion } from 'framer-motion';
 import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
@@ -16,7 +17,6 @@ import { TemplateSettings } from './template-settings';
 
 import { AnimatedScreenSlider } from '../animated-screen-slider/AnimatedScreenSlider';
 import { CodeEditor } from '../code-editor';
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 
 export const EditorLayout = observer(
   (

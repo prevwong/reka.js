@@ -4,6 +4,7 @@ import {
   TwitterLogoIcon,
 } from '@radix-ui/react-icons';
 import * as React from 'react';
+
 import { Tooltip } from '../tooltip';
 
 const SOCIALS = [
@@ -58,12 +59,12 @@ export const Footer = () => {
       </div>
       <div className="flex gap-6 [&_svg]:w-6 [&_svg]:h-6">
         {SOCIALS.map((social) => (
-          <Tooltip content={social.title}>
+          <Tooltip content={social.title} key={social.link}>
             <a
               target="_blank"
-              href={social.link}
               className="text-slate-400 transition-all ease-bezier duration-400 hover:text-slate-800"
               key={social.link}
+              rel="noreferrer"
             >
               {social.icon}
             </a>
