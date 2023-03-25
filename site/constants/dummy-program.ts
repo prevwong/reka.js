@@ -69,9 +69,6 @@ component App() {
      <div className={"flex flex-col justify-center"}>
       <div className={"flex gap-2"}>
        <Button
-        onClick={() => {
-         counter = counter + 1; 
-        }}
         icon={"PlusIcon"}
        />
        <Button
@@ -88,7 +85,7 @@ component App() {
        />
       </div>
       <h4 className={"mt-5 text-xs text-neutral-600"}>
-       <text value={"Counter -> " + counter} />
+       <text value={"Text"} />
       </h4>
      </div>
     </Feature>
@@ -129,10 +126,8 @@ component App() {
    </header>
    <div className={"mt-4 grid grid-cols-2 gap-4"}>
     <Card
-     name={post.name}
-     description={post.description}
-     image={post.image}
-     @each={post in $getPosts()}
+     name={"Card title"}
+     description={"Some text here"}
     />
    </div>
   </div>
@@ -141,10 +136,10 @@ component App() {
    onClose={() => {
     isModalOpen = false; 
    }}
-   title={"Contact us"}
+   title={"Modals!"}
   >
    <p className={"text-sm text-slate-700 mb-8"}>
-    <text value={"The end-users of your page builder could even build complex UI components like Modals the same way you as a developer could in code"} />
+    <text value={"The end-users of your page builder could even build complex UI components like Modals the same way you as a developer could with code"} />
    </p>
    <Button
     text={"Noice"}
