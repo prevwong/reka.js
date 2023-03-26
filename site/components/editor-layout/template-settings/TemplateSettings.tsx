@@ -4,9 +4,9 @@ import * as React from 'react';
 
 import { useEditor } from '@app/editor';
 
-import { ComponentTemplateSettings } from './ComponentTemplateSettings';
-import { SharedTemplateSettings } from './SharedTemplateSettings';
-import { TagTemplateSettings } from './TagTemplateSettings';
+import { EachTemplateSettings } from './shared/EachTemplateSettings';
+import { ConditionalTemplateSettings } from './shared/ConditionalTemplateSettings';
+import { PropTemplateSettings } from './shared/PropTemplateSettings';
 
 type TemplateHeadingProps = {
   template: t.Template;
@@ -39,20 +39,16 @@ const TemplateHeading = (props: TemplateHeadingProps) => {
   );
 };
 
-const InternalTemplateSettings = ({ template }: any) => {
+const InternalTemplateSettings = (props: { template: t.Template }) => {
   return (
     <div>
       <div className="flex px-5 py-3 mt-4">
-        <TemplateHeading template={template} />
+        <TemplateHeading template={props.template} />
       </div>
       <div className="mt-3">
-        <SharedTemplateSettings template={template} />
-        {template instanceof t.TagTemplate && (
-          <TagTemplateSettings template={template} />
-        )}
-        {template instanceof t.ComponentTemplate && (
-          <ComponentTemplateSettings template={template} />
-        )}
+        <EachTemplateSettings template={props.template} />
+        <ConditionalTemplateSettings template={props.template} />
+        <PropTemplateSettings template={props.template} />
       </div>
     </div>
   );

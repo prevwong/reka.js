@@ -10,7 +10,7 @@ type PropEditorSectionProps = {
   template: t.Template;
 };
 
-export const PropEditorSection = observer(
+export const PropTemplateSettings = observer(
   ({ template }: PropEditorSectionProps) => {
     const [addNewProp, setAddNewProp] = React.useState(false);
     const [addNewClassListItem, setAddNewClassListItem] = React.useState(false);
