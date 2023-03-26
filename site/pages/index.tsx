@@ -84,7 +84,7 @@ const AppEditor = () => {
   }
 
   return (
-    <RekaProvider key={editor.reka.id} state={editor.reka}>
+    <RekaProvider key={editor.reka.id} reka={editor.reka}>
       <HeaderToolbar>
         <ToolbarApp />
       </HeaderToolbar>

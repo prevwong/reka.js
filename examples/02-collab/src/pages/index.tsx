@@ -27,7 +27,7 @@ reka.createFrame({
 
 export default function Home() {
   return (
-    <RekaProvider state={reka}>
+    <RekaProvider reka={reka}>
       <div className="flex h-screen">
         <div className="w-3/6 h-full border-r-2">
           <Editor />
