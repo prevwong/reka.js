@@ -273,6 +273,14 @@ export const RenderSelectionBorders = observer(() => {
           type="selected"
         />
       )}
+      {activeComponentEditor.tplEvent.hovered &&
+        activeComponentEditor.tplEvent.hovered.id !==
+          activeComponentEditor.tplEvent.selected?.id && (
+          <SelectionBorders
+            template={activeComponentEditor.tplEvent.hovered}
+            type="hovered"
+          />
+        )}
     </React.Fragment>
   );
 });
