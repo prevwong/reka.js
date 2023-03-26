@@ -17,7 +17,6 @@ import { WebrtcProvider } from 'y-webrtc';
 import { createSharedStateGlobals } from '@app/constants';
 import { CollabExtension } from '@app/extensions/CollabExtension';
 import { UserAnimation } from '@app/external/UserAnimation';
-import { UserHeader } from '@app/external/UserHeader';
 import { UserIcon } from '@app/external/UserIcon';
 import {
   generateRandomName,
@@ -121,12 +120,6 @@ export class Editor {
               name: 'Animation',
               render: () => {
                 return <UserAnimation />;
-              },
-            }),
-            t.externalComponent({
-              name: 'Header',
-              render: () => {
-                return <UserHeader />;
               },
             }),
             t.externalComponent({
