@@ -223,9 +223,9 @@ export const ComponentEditorView = observer(() => {
             <div
               className={cn(
                 RENDER_FRAME_CONTAINER_CLASSNAME,
-                `w-full h-full overflow-hidden flex items-center bg-canvas transition-ease`,
+                `w-full h-full overflow-hidden flex items-center bg-canvas transition-all ease-all duration-800`,
                 {
-                  'filter-grayscale': componentEditor.activeFrame.state.sync,
+                  grayscale: !componentEditor.activeFrame.state.sync,
                 }
               )}
               ref={frameContainerDOMRef}
