@@ -106,6 +106,9 @@ export const CodeEditor = ({ onStatusChange, ...props }: CodeEditorProps) => {
     Parser.stringify(reka.program)
   );
 
+  const extensionsRef = React.useRef<Extension[]>(props.extensions ?? []);
+  extensionsRef.current = props.extensions || [];
+
   const isSynchingFromCodeMirror = React.useRef(false);
   const isSynchingFromExternal = React.useRef(false);
   const isTypingRef = React.useRef(false);
@@ -196,7 +199,7 @@ export const CodeEditor = ({ onStatusChange, ...props }: CodeEditorProps) => {
 
               syncCodeToState(currentCodeStringRef.current);
             }),
-            ...(props.extensions || []),
+            ...extensionsRef.current,
           ],
         }),
         parent: dom,
