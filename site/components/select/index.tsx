@@ -25,7 +25,7 @@ export const Select = (props: SelectProps) => {
     >
       <SelectPrimitive.SelectTrigger
         className={cn(
-          'inline-flex items-center rounded-md px-3 py-1.5 text-xs gap-2 text-gray-600 border border-solid border-outline pointer shadow-sm hover:bg-gray-100',
+          'inline-flex text-left overflow-hidden text-ellipsis whitespace-nowrap items-center rounded-md px-3 py-1.5 text-xs gap-2 text-gray-600 border border-solid border-outline pointer shadow-sm hover:bg-gray-100',
           props.className
         )}
       >

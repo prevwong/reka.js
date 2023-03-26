@@ -11,6 +11,9 @@ module.exports = {
 
   theme: {
     extend: {
+      screens: {
+        sm: '660px',
+      },
       fontFamily: {
         sans: ['var(--font-inter)', ...fontFamily.sans],
         code: ['var(--font-jetbrainsmono)'],

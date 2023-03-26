@@ -192,7 +192,10 @@ export const ComponentEditorView = observer(() => {
             >
               Add Frame
             </Button>
-            <Info info="A Frame is an instance of a Reka Component" />
+            <Info
+              className="text-gray-500"
+              info="A Frame is an instance of a Reka Component"
+            />
           </div>
         </div>
         <div className="flex items-center">
@@ -282,6 +285,7 @@ export const ComponentEditorView = observer(() => {
                   ? 'Syncing'
                   : 'Not syncing'}
                 <Info
+                  className="text-gray-500"
                   info={
                     componentEditor.activeFrame.state.sync
                       ? "The Frame's View tree will be updated when there's a change made to State"

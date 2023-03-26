@@ -182,7 +182,7 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
                   }}
                 >
                   <ChatBubbleIcon />
-                  <span className="text-xs ml-1.5">
+                  <span className="text-[0.6rem] mt-px -mb-px ml-1.5">
                     {activeComponentEditor.getCommentCount(template)}
                   </span>
                 </IconButton>

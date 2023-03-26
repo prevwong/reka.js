@@ -34,7 +34,7 @@ export const Dropdown = React.forwardRef<HTMLButtonElement, DropdownProps>(
                   `
                   relative flex items-center rounded-md py-1.5 px-2
                   cursor-pointer outline-none text-xs
-                  focus:bg-primary focus:text-white
+                  focus:bg-primary focus:text-white text-left
                   data-[disabled]:pointer-events-none data-[disabled]:opacity-50
                   `
                 )}
@@ -45,7 +45,7 @@ export const Dropdown = React.forwardRef<HTMLButtonElement, DropdownProps>(
                   });
                 }}
               >
-                {item.title}
+                <span className="text-left">{item.title}</span>
               </DropdownMenuPrimitive.DropdownMenuItem>
             ))}
             {/* <StyledArrow /> */}

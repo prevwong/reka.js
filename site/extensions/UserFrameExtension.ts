@@ -20,10 +20,10 @@ export const UserFrameExtensionFactory = () => {
       frames: [
         { id: 'Main App', name: 'App', width: '100%', height: '100%' },
         {
-          id: 'Dummy Feature Card',
+          id: 'Test Feature',
           name: 'Feature',
           props: {
-            title: t.literal({ value: 'Some Feature' }),
+            title: t.literal({ value: 'Test Feature' }),
             description: t.literal({
               value: 'An interesting feature description',
             }),
@@ -38,7 +38,7 @@ export const UserFrameExtensionFactory = () => {
         },
         { id: 'Top Header', name: 'Header' },
         {
-          id: 'Card',
+          id: 'Basic Card',
           name: 'Card',
           props: {
             name: t.literal({ value: 'Dummy Card' }),

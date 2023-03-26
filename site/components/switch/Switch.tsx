@@ -18,7 +18,7 @@ export const Switch = (props: SwitchProps) => {
       checked={props.checked}
       onCheckedChange={() => props.onChange()}
     >
-      <SwitchPrimitive.Thumb className='w-3 h-3 block rounded-full translate-x-1 transition-transform bg-white data-[state="checked"]:translate-x-6 data-[state="checked"]:bg-white' />
+      <SwitchPrimitive.Thumb className='w-3 h-3 block rounded-full translate-y-[0.3px] translate-x-1 transition-transform bg-white data-[state="checked"]:translate-x-6 data-[state="checked"]:bg-white' />
     </SwitchPrimitive.Root>
   );
 };
