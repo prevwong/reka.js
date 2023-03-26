@@ -4,8 +4,8 @@ import * as React from 'react';
 
 import { useEditor } from '@app/editor';
 
-import { EachTemplateSettings } from './shared/EachTemplateSettings';
 import { ConditionalTemplateSettings } from './shared/ConditionalTemplateSettings';
+import { EachTemplateSettings } from './shared/EachTemplateSettings';
 import { PropTemplateSettings } from './shared/PropTemplateSettings';
 
 type TemplateHeadingProps = {

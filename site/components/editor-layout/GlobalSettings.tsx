@@ -14,6 +14,7 @@ export const GlobalSettings = observer(() => {
     <SettingSection
       collapsedOnInitial={true}
       title="Global Variables"
+      info="Variables defined here can be referenced anywhere in the editor that accepts expressions"
       onAdd={() => {
         setIsAddingNewGlobal(true);
       }}

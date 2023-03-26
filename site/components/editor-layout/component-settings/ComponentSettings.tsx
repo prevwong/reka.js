@@ -30,6 +30,7 @@ export const ComponentSettings = observer(() => {
       </div>
       <SettingSection
         title="Props"
+        info="Input props that this component exposes"
         onAdd={() => setIsAddingNewProp(true)}
         collapsedOnInitial={false}
       >
@@ -77,6 +78,7 @@ export const ComponentSettings = observer(() => {
       </SettingSection>
       <SettingSection
         title="State"
+        info="Stateful variables which can be referenced anywhere within the component."
         onAdd={() => setIsAddingNewState(true)}
         collapsedOnInitial={false}
       >
