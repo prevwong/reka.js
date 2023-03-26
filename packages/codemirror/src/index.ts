@@ -1,10 +1,10 @@
-import { styleTags, tags as t } from '@codemirror/highlight';
 import {
   LRLanguage,
   LanguageSupport,
   indentNodeProp,
   foldNodeProp,
 } from '@codemirror/language';
+import { styleTags, tags as t } from '@lezer/highlight';
 
 import { parser } from './parser';
 

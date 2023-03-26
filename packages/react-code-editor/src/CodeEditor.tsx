@@ -1,10 +1,11 @@
-import { EditorState, basicSetup } from '@codemirror/basic-setup';
 import { indentWithTab } from '@codemirror/commands';
+import { EditorState, Extension } from '@codemirror/state';
 import { EditorView, keymap } from '@codemirror/view';
 import { reka as rekaCodemirrorExtension } from '@rekajs/codemirror';
 import { Parser } from '@rekajs/parser';
 import { useReka } from '@rekajs/react';
 import * as t from '@rekajs/types';
+import { basicSetup } from 'codemirror';
 import debounce from 'lodash/debounce';
 import * as React from 'react';
 
@@ -88,6 +89,7 @@ type CodeEditorProps = React.DetailedHTMLProps<
   HTMLDivElement
 > & {
   onStatusChange?: onStatusChangeCb;
+  extensions?: Extension[];
 };
 
 export const CodeEditor = ({ onStatusChange, ...props }: CodeEditorProps) => {
@@ -168,6 +170,9 @@ export const CodeEditor = ({ onStatusChange, ...props }: CodeEditorProps) => {
               '&.cm-focused': {
                 outline: 'none!important',
               },
+              '&.cm-gutters': {
+                background: '#fff',
+              },
               '.cm-scroller': {
                 'font-family': "'JetBrains Mono'",
                 fontSize: '0.875em',
@@ -191,6 +196,7 @@ export const CodeEditor = ({ onStatusChange, ...props }: CodeEditorProps) => {
 
               syncCodeToState(currentCodeStringRef.current);
             }),
+            ...(props.extensions || []),
           ],
         }),
         parent: dom,
