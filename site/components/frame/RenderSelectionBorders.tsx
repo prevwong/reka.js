@@ -3,10 +3,11 @@ import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { RENDER_FRAME_CONTAINER_CLASSNAME } from '@app/constants/css';
 import { useEditor } from '@app/editor';
 import { EditorMode } from '@app/editor/Editor';
 import { cn } from '@app/utils';
+
+import { CachedAnimationFrameCallback } from './CachedAnimationFrame';
 
 import { IconButton } from '../button';
 import { Tooltip } from '../tooltip';
@@ -83,33 +84,14 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
       );
     };
 
-    setPos();
-
-    const observer = new ResizeObserver(() => {
-      setPos();
-    });
-
-    const observedElementDisposers = [
-      props.dom.parentElement ?? props.dom,
-      document.querySelector(`.${RENDER_FRAME_CONTAINER_CLASSNAME}`),
-    ].map((el) => {
-      if (!el) {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        return () => {};
-      }
-
-      observer.observe(el);
-
-      return () => {
-        observer.unobserve(el);
-      };
-    });
-
-    iframe.contentWindow?.addEventListener('scroll', setPos);
+    const animation = CachedAnimationFrameCallback.requestAnimationFrame(
+      iframe,
+      props.dom,
+      setPos
+    );
 
     return () => {
-      observedElementDisposers.map((dispose) => dispose());
-      iframe.contentWindow?.removeEventListener('scroll', setPos);
+      animation.dispose();
     };
   }, [iframe, props.dom, props.template]);
 
@@ -291,14 +273,6 @@ export const RenderSelectionBorders = observer(() => {
           type="selected"
         />
       )}
-      {activeComponentEditor.tplEvent.hovered &&
-        activeComponentEditor.tplEvent.hovered.id !==
-          activeComponentEditor.tplEvent.selected?.id && (
-          <SelectionBorders
-            template={activeComponentEditor.tplEvent.hovered}
-            type="hovered"
-          />
-        )}
     </React.Fragment>
   );
 });
