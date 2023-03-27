@@ -55,7 +55,7 @@ const generateMarkDownForType = (type, typeArgs) => {
   }
 
   if (type === 'indexed') {
-    console.log(200, typeArgs)
+    console.log(200, typeArgs);
     return typeArgs.reverse().reduce((accum, arg, i) => {
       if (i === 0) {
         return arg.type;

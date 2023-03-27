@@ -14,8 +14,6 @@ import { useEditor } from '@app/editor';
 import { cn } from '@app/utils';
 
 import { SettingSection } from '../settings-section';
-import Script from 'next/script';
-import { Carbonads } from '../carbonads';
 
 type AddComponentModalProps = {
   isOpen: boolean;

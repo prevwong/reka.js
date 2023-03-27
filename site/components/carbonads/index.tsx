@@ -1,5 +1,6 @@
-import { cn } from '@app/utils';
 import * as React from 'react';
+
+import { cn } from '@app/utils';
 
 type CarbonadsProps = {
   className?: string;

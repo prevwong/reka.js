@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import * as React from 'react';
 
 import { IconButton } from '@app/components/button';
+import { Carbonads } from '@app/components/carbonads';
 import { HeaderToolbar } from '@app/components/header/HeaderToolbar';
 import { SEO } from '@app/components/seo';
 import { ToolbarDoc } from '@app/components/toolbar-doc';
@@ -12,7 +13,6 @@ import { DOCS_SIDEBAR } from '@app/constants/docs-sidebar';
 import { cn } from '@app/utils';
 import { getAllDocs, getDocBySlug } from '@app/utils/docs';
 import markdownToHtml from '@app/utils/markdown';
-import { Carbonads } from '@app/components/carbonads';
 
 type DocLinkProps = React.DetailedHTMLProps<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
