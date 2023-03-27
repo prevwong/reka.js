@@ -65,7 +65,7 @@ export const SettingSection = (props: SettingSectionProps) => {
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.section
-            className="-mx-4 flex-1"
+            className="-mx-4"
             key="content"
             initial="collapsed"
             animate="open"

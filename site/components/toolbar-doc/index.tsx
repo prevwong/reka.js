@@ -18,7 +18,11 @@ const HitComponent = (props: {
   return <Link href={props.hit.url}>{props.children}</Link>;
 };
 
-export const ToolbarDoc = () => {
+type ToolbarDocProps = {
+  onChange?: () => void;
+};
+
+export const ToolbarDoc = (props: ToolbarDocProps) => {
   const router = useRouter();
 
   return (
@@ -31,6 +35,7 @@ export const ToolbarDoc = () => {
         navigator={{
           navigate: (params) => {
             router.push(params.itemUrl);
+            props.onChange?.();
           },
         }}
       />

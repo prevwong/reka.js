@@ -15,7 +15,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         className={cn(
-          'inline-flex cursor-pointer items-center border border-solid border-transparent justify-center rounded-md transition-colors focus:outline-none disabled:opacity-50  disabled:pointer-events-none',
+          'inline-flex [&>svg]:pointer-events-inherit cursor-pointer items-center border border-solid border-transparent justify-center rounded-md transition-colors focus:outline-none disabled:opacity-50  disabled:pointer-events-none',
+
           {
             'bg-transparent text-gray-500 hover:bg-black/5 hover:text-neutral-900':
               variant === 'default',

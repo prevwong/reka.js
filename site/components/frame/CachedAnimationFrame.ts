@@ -54,13 +54,15 @@ export class CachedAnimationFrameCallback {
   }
 
   private hasChanged() {
+    const domRect = this.dom.getBoundingClientRect();
+
     const propertiesMap: CachedProperties = {
       scrollY: this.iframe.contentWindow?.scrollY ?? 0,
       width: this.iframe.offsetWidth,
-      domX: this.dom.offsetLeft,
-      domY: this.dom.offsetTop,
-      domWidth: this.dom.offsetWidth,
-      domHeight: this.dom.offsetHeight,
+      domX: domRect.x,
+      domY: domRect.y,
+      domWidth: domRect.width,
+      domHeight: domRect.height,
     };
 
     let hasChanged: boolean = false;

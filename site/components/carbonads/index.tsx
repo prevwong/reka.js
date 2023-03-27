@@ -24,13 +24,15 @@ export const Carbonads = (props: CarbonadsProps) => {
       '//cdn.carbonads.com/carbon.js?serve=CWYDVK7J&placement=rekajsorg'
     );
     script.setAttribute('id', '_carbonads_js');
-    script.onload = () => {
-      console.log('loaded');
-    };
 
     dom.appendChild(script);
 
     return () => {
+      const ad = dom.querySelector('#carbonads');
+      if (ad) {
+        dom.removeChild(ad);
+      }
+
       dom.removeChild(script);
     };
   }, []);

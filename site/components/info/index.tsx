@@ -14,7 +14,11 @@ export const Info = (props: InfoProps) => {
   return (
     <Tooltip content={props.info}>
       <div className={cn('cursor-pointer ml-2 text-inherit', props.className)}>
-        <InfoCircledIcon width={13} height={13} />
+        <InfoCircledIcon
+          className="pointer-events-none"
+          width={13}
+          height={13}
+        />
       </div>
     </Tooltip>
   );

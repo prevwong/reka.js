@@ -83,14 +83,46 @@ const Docs = (props: any) => {
     };
   }, [router]);
 
+  React.useEffect(() => {
+    if (!mobileNavActive) {
+      return;
+    }
+
+    const listener = (e: MouseEvent) => {
+      const nav = document.querySelector('.doc-nav');
+      const target = e.target;
+
+      if (!nav || !(target instanceof HTMLElement)) {
+        return;
+      }
+
+      if (nav.contains(target)) {
+        return;
+      }
+
+      setMobileNavActive(false);
+    };
+
+    window.addEventListener('click', listener);
+
+    return () => {
+      window.removeEventListener('click', listener);
+    };
+  }, [mobileNavActive, setMobileNavActive]);
+
   return (
     <div className="flex gap-3 relative">
       <SEO title={props.doc.title} />
       <HeaderToolbar>
-        <ToolbarDoc />
+        <ToolbarDoc
+          onChange={() => {
+            setMobileNavActive(false);
+          }}
+        />
       </HeaderToolbar>
       <motion.nav
         className={cn(
+          'doc-nav',
           `group
           w-[22rem] relative flex flex-col
           transition-all ease-bezier duration-400
@@ -120,7 +152,12 @@ const Docs = (props: any) => {
           </div>
           {DOCS_SIDEBAR.main.map((link, i) => (
             <Link key={i} href={`/docs/${link.href}`} passHref legacyBehavior>
-              <DocLink active={props.slug === link.href}>{link.title}</DocLink>
+              <DocLink
+                onClick={() => setMobileNavActive(false)}
+                active={props.slug === link.href}
+              >
+                {link.title}
+              </DocLink>
             </Link>
           ))}
           {DOCS_SIDEBAR.categories.map((category, i) => (
@@ -132,7 +169,10 @@ const Docs = (props: any) => {
                 {category.children.map((child, i) => {
                   return (
                     <Link key={i} href={child.href} passHref legacyBehavior>
-                      <DocLink active={props.slug === child.href}>
+                      <DocLink
+                        onClick={() => setMobileNavActive(false)}
+                        active={props.slug === child.href}
+                      >
                         {child.title}
                       </DocLink>
                     </Link>
@@ -146,7 +186,7 @@ const Docs = (props: any) => {
       <div className="flex overflow-x-hidden w-full">
         <div
           className={cn(`
-          w-full py-10 px-8 mx-auto flex gap-4 items-start max-w-[1000px] max-sm:m-0 max-sm:px-4 max-sm:px-5 max-sm:max-w-full
+          w-full py-10 px-8 mx-auto flex gap-4 items-start max-w-[900px] max-sm:m-0 max-sm:px-4 max-sm:px-5 max-sm:max-w-full
           `)}
         >
           <IconButton
