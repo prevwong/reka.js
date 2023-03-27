@@ -104,7 +104,7 @@ const Renderer = ({ view }) => {
   }
 
   if (props.view instanceof t.SlotView) {
-    return props.view.view.map((r) => <Renderer key={r.id} view={r} />);
+    return props.view.children.map((r) => <Renderer key={r.id} view={r} />);
   }
 
   if (props.view instanceof t.ErrorSystemView) {
