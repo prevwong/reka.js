@@ -24,7 +24,6 @@
   "devDependencies": {
     "@rekajs/core": "workspace:*",
     "@rekajs/types": "workspace:*",
-    "y-protocols": "^1.0.5",
     "yjs": "^13.5.50"
   }
 }

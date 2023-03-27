@@ -187,14 +187,12 @@ importers:
       '@rekajs/core': workspace:*
       '@rekajs/types': workspace:*
       '@rekajs/utils': ^0.1.1
-      y-protocols: ^1.0.5
       yjs: ^13.5.50
     dependencies:
       '@rekajs/utils': link:../utils
     devDependencies:
       '@rekajs/core': link:../core
       '@rekajs/types': link:../types
-      y-protocols: 1.0.5
       yjs: 13.5.50
 
   packages/core:
@@ -9736,6 +9734,7 @@ packages:
     resolution: {integrity: sha512-Wil92b7cGk712lRHDqS4T90IczF6RkcvCwAD0A2OPg+adKmOe+nOiT/N2hvpQIWS3zfjmtL4CPaH5sIW1Hkm/A==}
     dependencies:
       lib0: 0.2.52
+    dev: false
 
   /y-webrtc/10.2.5:
     resolution: {integrity: sha512-ZyBNvTI5L28sQ2PQI0T/JvyWgvuTq05L21vGkIlcvNLNSJqAaLCBJRe3FHEqXoaogqWmRcEAKGfII4ErNXMnNw==}
