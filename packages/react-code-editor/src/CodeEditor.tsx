@@ -180,10 +180,10 @@ export const CodeEditor = ({ onStatusChange, ...props }: CodeEditorProps) => {
                 wordBreak: 'break-word',
                 '-webkit-font-smoothing': 'initial',
               },
-              ".cm-gutters": {
-                backgroundColor: "#fff",
-                color: 'rgba(0,0,0,0.4)'
-              }
+              '.cm-gutters': {
+                backgroundColor: '#fff',
+                color: 'rgba(0,0,0,0.4)',
+              },
             }),
             EditorView.updateListener.of((view) => {
               if (!view.docChanged || isSynchingFromExternal.current) {
