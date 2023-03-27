@@ -119,7 +119,7 @@ console.log(frame.view);
 
 Whenever there's a change made to the State (eg: adding a new child to a parent template), Reka efficiently recomputes the updated `View`.
 
-The `View` tree is a simple serializable JSON structure. So regardless of what UI framework you're working with to build your page builder --- whether it's React, Vue or Svelte; building a renderer for Reka simply means taking this JSON structure and rendering it in your preferred UI framework.
+The `View` tree is a simple serializable JSON structure. So regardless of what UI framework you're working with to build your page builder - whether it's React, Vue or Svelte; building a renderer for Reka simply means taking this JSON structure and rendering it in your preferred UI framework.
 
 ### Extensible State :hammer:
 

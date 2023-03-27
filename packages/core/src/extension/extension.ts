@@ -1,9 +1,10 @@
 import * as t from '@rekajs/types';
 
-import { ExtensionDefinition } from './definition';
+import { ExtensionDefinition, ExtensionStateFromDefinition } from './definition';
 
 import { StateSubscriberOpts } from '../interfaces';
 import { Reka } from '../reka';
+
 
 export class Extension<D extends ExtensionDefinition = any> {
   reka: Reka;
@@ -30,8 +31,8 @@ export class Extension<D extends ExtensionDefinition = any> {
     return this.definition.dispose(this);
   }
 
-  get state() {
-    return this.reka.state.extensions[this.definition.key].value as D['state'];
+  get state(): ExtensionStateFromDefinition<D> {
+    return this.reka.state.extensions[this.definition.key].value;
   }
 
   subscribe<C extends Record<string, any>>(

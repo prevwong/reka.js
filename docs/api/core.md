@@ -42,6 +42,58 @@ const reka = Reka.create({
 
 !end-example
 
+!start-example change
+
+```tsx
+reka.change(() => {
+  reka.components.push(t.rekaComponent(...))
+})
+```
+
+!end-example
+
+!start-example listenToChanges
+
+```tsx
+reka.listenToChanges(payload => {
+  if ( payload.event === 'add' ) {
+    console.log('node added', payload.type);
+  }
+
+  if ( payload.event === 'dispose' ) {
+    console.log('node removed', payload.type);
+  }
+
+  if( payload.event === 'change' ) {
+    console.log('node changed', payload.type, payload.newValue, payload.oldValue, payload.name)
+  }
+})
+```
+
+!end-example
+
+!start-example subscribe
+
+```tsx
+reka.subscribe(state => ({
+  componentNames: state.program.components.map(component => component.name)
+}), collected => {
+  console.log('component names', collected.componentNames);
+});
+````
+
+!end-example
+
+!start-example watch
+
+```tsx
+reka.watch(() => {
+  console.log("component names", state.program.components.map(component => component.name))
+})
+```
+
+!end-example
+
 !end-typedoc
 
 !start-typedoc core/index.ts Frame

@@ -27,9 +27,9 @@ const generateMarkdownForTypeParam = (typeParam: any) => {
     u('html', `<span class="text-indigo-600">${typeParam.name}</span>`),
     ...(typeParam.implements?.length > 0
       ? [
-          u('text', { value: ' extends ' }),
-          u('inlineCode', { value: typeParam.implements[0].type }),
-        ]
+        u('text', { value: ' extends ' }),
+        u('inlineCode', { value: typeParam.implements[0].type }),
+      ]
       : []),
   ];
 };
@@ -54,9 +54,19 @@ const generateMarkDownForType = (type, typeArgs) => {
     return typeArgs.map((arg) => arg.type).join(' | ');
   }
 
-  return `${type}${
-    typeArgs ? `<${typeArgs.map((arg) => arg.type).join(',')}>` : ''
-  }`;
+  if (type === 'indexed') {
+    console.log(200, typeArgs)
+    return typeArgs.reverse().reduce((accum, arg, i) => {
+      if (i === 0) {
+        return arg.type;
+      }
+
+      return `${arg.type}[${accum}]`;
+    }, '')
+  }
+
+  return `${type}${typeArgs ? `<${typeArgs.map((arg) => arg.type).join(',')}>` : ''
+    }`;
 };
 
 const generateMarkDownForProperty = (property) => {
@@ -93,10 +103,10 @@ const generateMarkDownForFunctionSignature = (fnName, signature) => {
         ),
         ...(signature.params.length - 1 !== i
           ? [
-              u('text', {
-                value: ', ',
-              }),
-            ]
+            u('text', {
+              value: ', ',
+            }),
+          ]
           : []),
       ];
     }),
@@ -105,9 +115,9 @@ const generateMarkDownForFunctionSignature = (fnName, signature) => {
     u('inlineCode', {
       value: signature.returns?.type
         ? generateMarkDownForType(
-            signature.returns.type,
-            signature.returns.typeArgs
-          )
+          signature.returns.type,
+          signature.returns.typeArgs
+        )
         : 'void',
     }),
   ];
@@ -149,11 +159,10 @@ const generateTypeBadge = (type: string) => {
   };
 
   return u('html', {
-    value: `<span class="${
-      typeToColor[type] ?? ''
-    } text-xs text-white px-4 py-2 rounded-3xl">${capitalize(
-      capitalize(type)
-    )}</span>`,
+    value: `<span class="${typeToColor[type] ?? ''
+      } text-xs text-white px-4 py-2 rounded-3xl">${capitalize(
+        capitalize(type)
+      )}</span>`,
   });
 };
 
@@ -224,10 +233,10 @@ const _generateTypedocMarkdown = (
         u('text', { value: type.id }),
         ...(opts.showParent && type.extends && type.extends.type !== 'Object'
           ? [
-              u('html', {
-                value: `<span><span class="text-xs text-gray-600 mx-2">extends</span><span class="text-blue-600 text-sm">${type.extends.type}</span></span>`,
-              }),
-            ]
+            u('html', {
+              value: `<span><span class="text-xs text-gray-600 mx-2">extends</span><span class="text-blue-600 text-sm">${type.extends.type}</span></span>`,
+            }),
+          ]
           : []),
       ]),
       generateTypeBadge('class'),
@@ -236,10 +245,10 @@ const _generateTypedocMarkdown = (
       ...(children.length === 0
         ? []
         : [
-            u('list', {
-              children,
-            }),
-          ]),
+          u('list', {
+            children,
+          }),
+        ]),
     ];
   } else if (type.type === 'Function') {
     return [
