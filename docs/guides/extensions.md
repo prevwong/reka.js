@@ -10,6 +10,12 @@ One way to go about this is to store these comments directly as part of the `Sta
 
 ## Creating an Extension
 
+The anatomy of an `Extension` is as follows:-
+
+- Specify a unique `key` that identifies the extension
+- The initial `state` that the extension stores
+- The `init` function that contains additional logic relating to the extension (eg: listening to state changes)
+
 ```tsx
 import { createExtension } from '@rekajs/core';
 
@@ -44,9 +50,9 @@ const CommentExtension = createExtension<CommentState>({...});
 
 const reka = Reka.create({
     state: {...},
-    extension {
+    extension: [
         CommentExtension
-    }
+    ]
 })
 ```
 
