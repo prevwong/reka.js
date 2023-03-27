@@ -1,10 +1,12 @@
 import * as t from '@rekajs/types';
 
-import { ExtensionDefinition, ExtensionStateFromDefinition } from './definition';
+import {
+  ExtensionDefinition,
+  ExtensionStateFromDefinition,
+} from './definition';
 
 import { StateSubscriberOpts } from '../interfaces';
 import { Reka } from '../reka';
-
 
 export class Extension<D extends ExtensionDefinition = any> {
   reka: Reka;

@@ -16,7 +16,8 @@ export interface ExtensionConfig<
   fromJSON: (state: any) => S;
 }
 
-export type ExtensionStateFromDefinition<D extends ExtensionDefinition> = D['state'];
+export type ExtensionStateFromDefinition<D extends ExtensionDefinition> =
+  D['state'];
 
 export class ExtensionDefinition<
   S extends ExtensionStateDefinition | any = any
@@ -40,8 +41,8 @@ export class ExtensionDefinition<
       });
 
     /* eslint-disable no-alert, @typescript-eslint/no-empty-function */
-    this.init = config.init || (() => { });
-    this.dispose = config.dispose || (() => { });
+    this.init = config.init || (() => {});
+    this.dispose = config.dispose || (() => {});
     /* eslint-enable no-alert, @typescript-eslint/no-empty-function */
   }
 }
