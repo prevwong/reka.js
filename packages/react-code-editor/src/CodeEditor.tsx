@@ -173,9 +173,6 @@ export const CodeEditor = ({ onStatusChange, ...props }: CodeEditorProps) => {
               '&.cm-focused': {
                 outline: 'none!important',
               },
-              '&.cm-gutters': {
-                background: '#fff',
-              },
               '.cm-scroller': {
                 'font-family': "'JetBrains Mono'",
                 fontSize: '0.875em',
@@ -183,6 +180,10 @@ export const CodeEditor = ({ onStatusChange, ...props }: CodeEditorProps) => {
                 wordBreak: 'break-word',
                 '-webkit-font-smoothing': 'initial',
               },
+              ".cm-gutters": {
+                backgroundColor: "#fff",
+                color: 'rgba(0,0,0,0.4)'
+              }
             }),
             EditorView.updateListener.of((view) => {
               if (!view.docChanged || isSynchingFromExternal.current) {
