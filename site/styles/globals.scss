@@ -53,23 +53,7 @@
   }
 
   #carbonads {
-    @apply font-sans border-solid border-outline px-2 pb-2;
-  }
-
-  &.carbonads-container-sidebar {
-    #carbonads {
-      @apply border-t border-solid border-outline;
-    }
-  }
-
-  &.carbonads-container-doc-sidebar {
-    #carbonads {
-      @apply border border-solid border-outline rounded;
-    }
-  }
-
-  #carbonads {
-    @apply flex flex-col w-full bg-transparent;
+    @apply flex flex-col w-full bg-transparent px-2 py-1 font-sans border border-solid border-outline rounded min-h-[50px] w-full;
   }
 
   #carbonads a {
@@ -81,44 +65,30 @@
     color: inherit;
   }
 
-  #carbonads span {
-    position: relative;
-    display: block;
-    overflow: hidden;
+  #carbonads > span {
+    @apply relative overflow-hidden flex flex-col;
   }
 
   #carbonads .carbon-wrap {
-    @apply flex;
+    @apply flex items-center justify-center;
   }
 
   #carbonads .carbon-img {
-    @apply block mt-4;
+    @apply block w-full;
     line-height: 1;
   }
 
   #carbonads .carbon-img img {
-    display: block;
-    width: 100%;
+    @apply block w-full rounded-sm;
   }
 
   #carbonads .carbon-text {
-    @apply text-xs pl-3 pt-3 mb-8 text-slate-600;
+    @apply text-xs pl-3 py-1.5 text-slate-500;
     line-height: 1.5;
     text-align: left;
   }
 
   #carbonads .carbon-poweredby {
-    @apply text-slate-400;
-    display: block;
-    padding: 6px 8px;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-    font-size: 8px;
-    line-height: 1;
-    position: absolute;
-    bottom: 0;
-    right: 0;
+    @apply text-gray-500 block relative text-center mt-2 text-[0.6rem] uppercase;
   }
 }

@@ -101,11 +101,11 @@ export const EditorLayout = observer(
             transition={CREATE_BEZIER_TRANSITION({ delay: 0.2 })}
           >
             <div
-              className="relative flex-1 h-full"
+              className="relative flex-1 h-full flex flex-col"
               style={{ minWidth: theme.width['editor-left-sidebar'] }}
             >
               <GlobalSettings />
-              <div className="relative flex-1 h-full">
+              <div className="relative flex-1">
                 <AnimatedScreenSlider
                   goBackText="Components"
                   active={'component-list'}

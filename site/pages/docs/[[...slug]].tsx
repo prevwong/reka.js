@@ -12,6 +12,7 @@ import { DOCS_SIDEBAR } from '@app/constants/docs-sidebar';
 import { cn } from '@app/utils';
 import { getAllDocs, getDocBySlug } from '@app/utils/docs';
 import markdownToHtml from '@app/utils/markdown';
+import { Carbonads } from '@app/components/carbonads';
 
 type DocLinkProps = React.DetailedHTMLProps<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -91,7 +92,7 @@ const Docs = (props: any) => {
       <motion.nav
         className={cn(
           `group
-          w-80 relative flex flex-col
+          w-[22rem] relative flex flex-col
           transition-all ease-bezier duration-400
           max-sm:z-50
           max-sm:border-r max-sm:border-black/10
@@ -112,7 +113,11 @@ const Docs = (props: any) => {
             <Cross1Icon />
           </IconButton>
         </div>
+
         <div className="doc-nav-content flex flex-col overflow-auto h-[calc(100vh-50px)] sticky top-[calc(50px)] px-4 py-7 max-sm:flex-1 max-sm:h-full max-sm:relative max-sm:overflow-scroll max-sm:top-0 max-sm:pt-4 max-sm:py-4">
+          <div className="mt-4 mb-6">
+            <Carbonads className="carbonads-container-doc-sidebar" />
+          </div>
           {DOCS_SIDEBAR.main.map((link, i) => (
             <Link key={i} href={`/docs/${link.href}`} passHref legacyBehavior>
               <DocLink active={props.slug === link.href}>{link.title}</DocLink>
@@ -136,16 +141,6 @@ const Docs = (props: any) => {
               </div>
             </div>
           ))}
-          <div className="px-3 mt-4">
-            <div className="carbonads-container carbonads-container-doc-sidebar">
-              <script
-                defer
-                type="text/javascript"
-                src="//cdn.carbonads.com/carbon.js?serve=CWYDVK7J&placement=rekajsorg"
-                id="_carbonads_js"
-              ></script>
-            </div>
-          </div>
         </div>
       </motion.nav>
       <div className="flex overflow-x-hidden w-full">

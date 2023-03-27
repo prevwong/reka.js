@@ -65,7 +65,7 @@ export const SettingSection = (props: SettingSectionProps) => {
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.section
-            className="-mx-4"
+            className="-mx-4 flex-1"
             key="content"
             initial="collapsed"
             animate="open"
@@ -81,7 +81,7 @@ export const SettingSection = (props: SettingSectionProps) => {
             }}
             transition={CREATE_BEZIER_TRANSITION()}
           >
-            <div className="py-2 pb-4 px-4">{props.children}</div>
+            <div className="py-2 pb-4 px-4 h-full">{props.children}</div>
           </motion.section>
         )}
       </AnimatePresence>

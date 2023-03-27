@@ -14,6 +14,8 @@ import { useEditor } from '@app/editor';
 import { cn } from '@app/utils';
 
 import { SettingSection } from '../settings-section';
+import Script from 'next/script';
+import { Carbonads } from '../carbonads';
 
 type AddComponentModalProps = {
   isOpen: boolean;
@@ -114,41 +116,35 @@ export const ComponentList = (props: ComponentListProps) => {
           setShowAddCompnonentModal(true);
         }}
       >
-        <div>
-          {components.map((component) => (
-            <div
-              onClick={() => {
-                props.onComponentSelected(component);
-              }}
-              key={component.id}
-              className={cn(
-                'group px-3 py-2 my-0.5 rounded-md text-xs leading-1 group cursor-pointer flex items-center [&>svg]:w-3.5 [&>svg]:h-3.5 [&>button]:opacity-0',
-                {
-                  'bg-primary/10 text-primary': activeComponent === component,
-                  'text-slate-700 hover:bg-black/5 hover:text-slate-900':
-                    activeComponent !== component,
-                }
-              )}
-            >
-              {component instanceof t.RekaComponent ? (
-                <LayersIcon className="mr-3.5" />
-              ) : (
-                <ComponentPlaceholderIcon className="mr-3.5" />
-              )}
-              <span className="flex-1">{component.name}</span>
-              <ChevronRightIcon className="opacity-0 relative translate-x-5 transition ease-bezier duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
-            </div>
-          ))}
+        <div className="flex h-full flex-col">
+          <div className="flex-1">
+            {components.map((component) => (
+              <div
+                onClick={() => {
+                  props.onComponentSelected(component);
+                }}
+                key={component.id}
+                className={cn(
+                  'group px-3 py-2 my-0.5 rounded-md text-xs leading-1 group cursor-pointer flex items-center [&>svg]:w-3.5 [&>svg]:h-3.5 [&>button]:opacity-0',
+                  {
+                    'bg-primary/10 text-primary': activeComponent === component,
+                    'text-slate-700 hover:bg-black/5 hover:text-slate-900':
+                      activeComponent !== component,
+                  }
+                )}
+              >
+                {component instanceof t.RekaComponent ? (
+                  <LayersIcon className="mr-3.5" />
+                ) : (
+                  <ComponentPlaceholderIcon className="mr-3.5" />
+                )}
+                <span className="flex-1">{component.name}</span>
+                <ChevronRightIcon className="opacity-0 relative translate-x-5 transition ease-bezier duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
+              </div>
+            ))}
+          </div>
         </div>
       </SettingSection>
-      <div className="carbonads-container carbonads-container-sidebar">
-        <script
-          async
-          type="text/javascript"
-          src="//cdn.carbonads.com/carbon.js?serve=CWYDVK7J&placement=rekajsorg"
-          id="_carbonads_js"
-        ></script>
-      </div>
       <AddComponentModal
         isOpen={showAddComponentModal}
         onClose={() => {
