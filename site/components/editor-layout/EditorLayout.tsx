@@ -44,7 +44,7 @@ export const EditorLayout = observer(
       const onClickOutside = (e: MouseEvent) => {
         const target = e.target;
 
-        if (target && target instanceof HTMLElement && dom.contains(target)) {
+        if (target && target instanceof Element && dom.contains(target)) {
           return;
         }
 
@@ -74,7 +74,7 @@ export const EditorLayout = observer(
           )}
         >
           <motion.div
-            className={`overflow-auto relative h-full flex flex-col border-r border-solid border-outline bg-white/80 backdrop-blur-md ml-0 w-editor-left-sidebar`}
+            className={`overflow-x-hidden overflow-y-auto relative h-full flex flex-col border-r border-solid border-outline bg-white/80 backdrop-blur-md ml-0 w-editor-left-sidebar`}
             initial={false}
             animate={[
               leftSidebarAnimate,

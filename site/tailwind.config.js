@@ -133,7 +133,7 @@ module.exports = {
   plugins: [
     plugin(function ({ addBase, theme }) {
       addBase({
-        html: { fontSize: '0.9rem', fontFamily: theme('fontFamily.sans') },
+        html: { fontFamily: theme('fontFamily.sans') },
       });
     }),
     require('tailwindcss-animate'),

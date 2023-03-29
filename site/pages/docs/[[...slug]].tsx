@@ -29,7 +29,7 @@ const DocLink = React.forwardRef<HTMLAnchorElement, DocLinkProps>(
         {...props}
         ref={ref}
         className={cn(
-          'px-3 py-1.5 my-1 cursor-pointer text-slate-600 underline-none block w-full rounded-md text-sm',
+          'px-3 py-1.5 my-1 cursor-pointer text-slate-700 underline-none block w-full rounded-md text-sm',
           {
             'bg-primary/10 text-primary font-normal': active,
             'hover:bg-primary/10 hover:text-primary font-light': !active,
@@ -199,7 +199,7 @@ const Docs = (props: any) => {
           >
             <HamburgerMenuIcon />
           </IconButton>
-          <div className="w-full overflow-scroll">
+          <div className="w-full overflow-hidden">
             <article className={'content'}>
               <header className="pb-8 mb-1 flex flex-col gap-8">
                 <h1 className="m-0 text-4xl font-medium w-full">

@@ -48,4 +48,5 @@
   transition: color 0.5s, border-color 0.5s;
   letter-spacing: 0.2rem;
   @apply text-xs text-center flex flex-col justify-center items-center;
+  line-height: initial;
 }

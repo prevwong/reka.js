@@ -5,7 +5,7 @@ import { cn } from '@app/utils';
 
 import { IconButton } from '../button';
 
-type InputFieldProps = React.DetailedHTMLProps<
+type TextFieldProps = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,
   HTMLInputElement
 > & {
@@ -15,10 +15,10 @@ type InputFieldProps = React.DetailedHTMLProps<
   children?: React.ReactNode;
   validate?: (value: any) => boolean;
   onCancel?: () => void;
-  onCommit?: (value: any, clear: () => void) => void;
+  onCommit?: (value: any, setValue: (value?: string) => void) => void;
 };
 
-export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
+export const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
   (
     {
       inputClassName,
@@ -37,26 +37,14 @@ export const TextField = React.forwardRef<HTMLInputElement, InputFieldProps>(
     const [uncommittedValue, setUncommitedValue] = React.useState(value);
     const [hasError, setHasError] = React.useState('');
 
-    const onCommitRef = React.useRef(onCommit);
-
-    React.useEffect(() => {
-      const { current: onCommit } = onCommitRef;
-
-      if (!onCommit) {
-        return;
-      }
-
-      setUncommitedValue(value);
-    }, [value, setUncommitedValue]);
-
     const commitValue = () => {
       if (!onCommit) {
         return;
       }
 
       try {
-        onCommit(uncommittedValue, () => {
-          setUncommitedValue('');
+        onCommit(uncommittedValue, (value) => {
+          setUncommitedValue(value || '');
         });
       } catch (err) {
         setHasError(String(err));

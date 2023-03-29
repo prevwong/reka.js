@@ -6,7 +6,7 @@ import { cn } from '@app/utils';
 
 type SelectItem = {
   value: string;
-  title: string;
+  title: string | React.ReactElement;
 };
 
 type SelectProps = {
@@ -15,6 +15,7 @@ type SelectProps = {
   onChange: (value: string) => void;
   value?: string;
   placeholder?: string;
+  hideArrow?: boolean;
 };
 
 export const Select = (props: SelectProps) => {
@@ -32,16 +33,18 @@ export const Select = (props: SelectProps) => {
         <SelectPrimitive.Value
           placeholder={props.placeholder || 'Select a value'}
         />
-        <SelectPrimitive.SelectIcon>
-          <ChevronDownIcon width={12} height={12} />
-        </SelectPrimitive.SelectIcon>
+        {!props.hideArrow && (
+          <SelectPrimitive.SelectIcon>
+            <ChevronDownIcon width={12} height={12} />
+          </SelectPrimitive.SelectIcon>
+        )}
       </SelectPrimitive.SelectTrigger>
       <SelectPrimitive.Portal>
         <SelectPrimitive.Content className="overflow-hidden bg-white rounded-md shadow-lg border border-solid border-outline z-50">
           <SelectPrimitive.Viewport className="p-1.5">
             {props.items.map((item) => (
               <SelectPrimitive.Item
-                className="cursor-pointer text-xs text-gray-900 rounded-md relative select-none flex items-center pt-1 pr-4 pb-1 pl-8 data-[highlighted]:bg-primary data-[highlighted]:text-white group"
+                className="cursor-pointer text-xs text-gray-900 rounded-md relative select-none flex items-center pt-1 pr-4 pb-1 pl-7 data-[highlighted]:bg-primary data-[highlighted]:text-white group"
                 key={item.value}
                 value={item.value}
               >
@@ -49,7 +52,7 @@ export const Select = (props: SelectProps) => {
                   {item.title}
                 </SelectPrimitive.ItemText>
                 <SelectPrimitive.ItemIndicator className="absolute left-3 items-center justify-center inline-flex">
-                  <span className="animate-pulse w-2.5 h-2.5 rounded-full bg-primary group-hover:bg-white" />
+                  <span className="w-2 h-2 rounded-full bg-primary group-hover:bg-white" />
                 </SelectPrimitive.ItemIndicator>
               </SelectPrimitive.Item>
             ))}

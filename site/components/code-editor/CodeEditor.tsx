@@ -78,7 +78,7 @@ export const CodeEditor = ({ className, ...props }: CodeEditorProps) => {
             })}
           >
             <ReactCodeEditor
-              className="h-full flex-1"
+              className="h-full flex-1 text-sm"
               onStatusChange={(status) => {
                 setStatus(status);
               }}
@@ -90,7 +90,7 @@ export const CodeEditor = ({ className, ...props }: CodeEditorProps) => {
               hidden: currentTab !== 'ast',
             })}
           >
-            <Tree root={editor.reka.program} />
+            <Tree root={editor.reka.program} className="text-sm" />
           </div>
         </div>
       </div>

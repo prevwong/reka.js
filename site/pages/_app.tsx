@@ -65,6 +65,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <EditorContextProvider>
         <Head>
           <title>Reka.js</title>
+          <meta charSet="utf-8"></meta>
           <meta content="/social-banner.png" property="og:image" />
           <meta name="viewport" content="width=device-width" />
           <meta
@@ -80,7 +81,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           }
         `}</style>
         <div
-          className={cn(layoutClassnameRef.current)}
+          className={cn(layoutClassnameRef.current, 'antialiased')}
           style={{ opacity: loaded ? 1 : 0 }}
         >
           <Header />

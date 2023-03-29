@@ -78,7 +78,7 @@ export const ComponentSettings = observer(() => {
       </SettingSection>
       <SettingSection
         title="State"
-        info="Stateful variables which can be referenced anywhere within the component."
+        info="Stateful variables which can be referenced anywhere within the component"
         onAdd={() => setIsAddingNewState(true)}
         collapsedOnInitial={false}
       >

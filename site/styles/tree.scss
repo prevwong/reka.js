@@ -26,10 +26,10 @@
   }
 
   li.entry {
-    @apply m-0 list-none py-1 px-2;
+    @apply m-0 list-none py-1 px-2 whitespace-nowrap;
 
     &.change {
-      @apply bg-gray-300;
+      @apply bg-gray-100;
     }
 
     .entry > .value {

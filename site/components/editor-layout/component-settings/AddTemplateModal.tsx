@@ -83,7 +83,14 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
                 items={[
                   ...editor.reka.components.externals.map((component) => ({
                     value: `${EXTERNAL_IDENTIFIER_PREFIX_SYMBOL}${component.name}`,
-                    title: `$${component.name}`,
+                    title: (
+                      <span>
+                        {component.name}{' '}
+                        <span className="ml-1 rounded-full py-0.5 px-2 text-xs bg-secondary-100 text-secondary ">
+                          React
+                        </span>
+                      </span>
+                    ),
                   })),
                   ...editor.reka.components.program.map((component) => ({
                     value: component.name,

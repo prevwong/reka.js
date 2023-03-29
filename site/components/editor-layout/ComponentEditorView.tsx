@@ -9,7 +9,7 @@ import useIsomorphicLayoutEffect from 'react-use/lib/useIsomorphicLayoutEffect';
 
 import { RENDER_FRAME_CONTAINER_CLASSNAME } from '@app/constants/css';
 import { useEditor } from '@app/editor';
-import { EditorMode } from '@app/editor/Editor';
+import { Editor, EditorMode } from '@app/editor/Editor';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
 import { cn, CREATE_BEZIER_TRANSITION } from '@app/utils';
 
@@ -29,11 +29,11 @@ import { Tree } from '../tree';
 
 const NoFrameSelectedMessage = () => {
   return (
-    <div className="flex items-center leading-6 justify-center text-center h-full w-full">
-      <span className="text-gray-500">
+    <div className="flex items-center justify-center text-center h-full w-full">
+      <span className="text-gray-500 text-sm leading-6">
         No frame selected.
         <br />
-        Click &quot;Add new Frame&quot; to create one.
+        Click &quot;Add Frame&quot; to create one.
       </span>
     </div>
   );
@@ -68,6 +68,14 @@ export const ComponentEditorView = observer(() => {
       setBottomToolbarHeight(bottomToolbarDOM.getBoundingClientRect().height);
     }
   }, [setToolbarHeight, setBottomToolbarHeight]);
+
+  React.useEffect(() => {
+    if (editor.mode !== EditorMode.Preview) {
+      return;
+    }
+
+    setShowViewTree(false);
+  }, [editor.mode, setShowViewTree]);
 
   const frames = componentEditor
     ? editor.reka
@@ -226,7 +234,7 @@ export const ComponentEditorView = observer(() => {
             <div
               className={cn(
                 RENDER_FRAME_CONTAINER_CLASSNAME,
-                `w-full h-full overflow-hidden flex items-center bg-canvas transition-all ease-all duration-800`,
+                `w-full h-full overflow-hidden flex flex-1 items-center bg-canvas transition-all ease-all duration-800`,
                 {
                   grayscale: !componentEditor.activeFrame.state.sync,
                 }
@@ -241,8 +249,25 @@ export const ComponentEditorView = observer(() => {
             </div>
 
             {componentEditor.activeFrame.state.view && showViewTree && (
-              <div className="relative bg-white w-[350px] [&>div]:px-2 [&>div]:py-4 [&>div]:overflow-auto [&>div]:w-full [&>div]:h-full border-l border-solid border-outline">
-                <Tree root={componentEditor.activeFrame.state.view} />
+              <div className="flex flex-col relative bg-white w-[350px] border-l border-solid border-outline">
+                <header className="px-5 py-2 border-b border-solid border-outline">
+                  <h3 className="text-gray-800 text-sm font-medium flex items-center">
+                    <span>View</span>
+                    <Info info="The View is the render tree of a component" />
+                  </h3>
+                </header>
+                <Tree
+                  className="flex-1 overflow-auto pt-2 px w-full text-xs"
+                  root={componentEditor.activeFrame.state.view}
+                  shouldCollapseOnInitial={(_, key) => {
+                    console.log(300, key);
+                    if (key === 'template' || key === 'component') {
+                      return true;
+                    }
+
+                    return false;
+                  }}
+                />
               </div>
             )}
           </React.Fragment>

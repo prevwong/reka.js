@@ -11,6 +11,7 @@ import { TextField } from '../text-field';
 
 type TextareaEditorProps = {
   initialValue?: t.Expression | null;
+  className?: string;
   onClose: () => void;
   onCommit: (value: t.Expression) => void;
 };
@@ -19,6 +20,7 @@ const TextareaEditor = ({
   onClose,
   onCommit,
   initialValue,
+  className,
   ...props
 }: TextareaEditorProps) => {
   const prevInitialValueRef = React.useRef(initialValue);
@@ -102,7 +104,8 @@ const TextareaEditor = ({
         'absolute -top-px -left-px z-40 border border-solid border-outline rounded overflow-hidden shadow-2xl w-[calc(100%+1px)] bg-white',
         {
           'border-red-300 rounded-bl-none rounded-br-none': hasError,
-        }
+        },
+        className
       )}
     >
       <TextareaAutosize
@@ -115,6 +118,11 @@ const TextareaEditor = ({
           setHasError('');
         }}
         onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            onClose();
+            return;
+          }
+
           if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             commit();
@@ -144,7 +152,9 @@ type ExpressionInputProps = {
   disable?: boolean;
   onCommit?: (value: t.Expression) => void;
   onCancel?: () => void;
+  className?: string;
   inputClassName?: string;
+  textareaClassName?: string;
 };
 
 export const ExpressionInput = observer(
@@ -154,12 +164,14 @@ export const ExpressionInput = observer(
     placeholder,
     onCommit,
     onCancel,
+    className,
     inputClassName,
+    textareaClassName,
   }: ExpressionInputProps) => {
     const [showTextareaEditor, setShowTextareaEditor] = React.useState(false);
 
     return (
-      <div className="relative w-full">
+      <div className={cn('w-full relative', className)}>
         <TextField
           className={inputClassName}
           value={value ? Parser.stringify(value) : ''}
@@ -177,6 +189,7 @@ export const ExpressionInput = observer(
         {showTextareaEditor && (
           <TextareaEditor
             initialValue={value}
+            className={textareaClassName}
             onCommit={(value) => {
               if (!value || !onCommit) {
                 return;

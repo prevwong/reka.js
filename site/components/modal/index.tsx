@@ -31,7 +31,10 @@ export const Modal = (props: ModalProps) => {
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay
           className="w-full h-full left-0 top-0 bg-black/60 fixed backdrop-blur-md animate-show z-50"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            props.onClose?.();
+          }}
         />
         <div
           className="bg-white rounded-md shadow-xl fixed top-[50%] left-[50%] [transform:translate(-50%,-50%)] w-[90vw] max-w-[450px] max-h-[85vh] px-5 py-5 z-50 focus:outline-none animate-modalShow"

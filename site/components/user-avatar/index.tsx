@@ -31,7 +31,7 @@ export const UserAvatar = React.forwardRef<HTMLSpanElement, UserAvatarProps>(
         ref={ref}
       >
         <div className="absolute left-0 top-0 w-full h-full bg-black/20 rounded-full" />
-        <b className="relative z-1 font-medium relative text-white">
+        <b className="relative font-bold z-1 font-medium relative text-white leading-[1.2rem]">
           {getInitials(props.user.name)}
         </b>
       </motion.span>

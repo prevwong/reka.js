@@ -45,15 +45,157 @@ const createSafeObjKey = (str: string) => {
   return safeObjKey(str).replaceAll(/\/|\*/g, '--');
 };
 
+type ElementValueProps = {
+  name?: string;
+  parent?: t.Type | Array<any> | Record<string, any>;
+  isCollapsed?: boolean;
+  onToggleClick?: () => void;
+  value: t.Type | Record<string, any> | Array<any>;
+  shouldCollapseOnInitial?: (type: t.Type, key: string) => boolean;
+};
+
+const ElementValue = (props: ElementValueProps) => {
+  let valueOutput: React.ReactElement | null = null;
+  let content: React.ReactElement | null = null;
+  let prefix: string | null = null;
+  let suffix: string | null = null;
+
+  function renderChild(key: string, value: any, parent: any) {
+    if (typeof value === 'function') {
+      return <PrimitiveElement key={key} name={key} value={'Function()'} />;
+    }
+
+    if (value === true || value === false) {
+      return (
+        <PrimitiveElement
+          key={key}
+          name={key}
+          value={value ? 'true' : 'false'}
+        />
+      );
+    }
+
+    if (Array.isArray(value) || typeof value === 'object') {
+      return (
+        <Element
+          key={key}
+          name={key}
+          value={value}
+          parent={parent}
+          showName={Array.isArray(parent) === false}
+          shouldCollapseOnInitial={props.shouldCollapseOnInitial}
+        />
+      );
+    }
+
+    return <PrimitiveElement key={key} name={key} value={value} />;
+  }
+
+  if (props.value && typeof props.value === 'object') {
+    // Render a useful name for object like nodes
+    if (props.value instanceof t.Type) {
+      const nodeName = props.value.type;
+
+      valueOutput = (
+        <span className="tokenName font-medium" onClick={props.onToggleClick}>
+          {nodeName} <span style={{ fontSize: '12px' }}>{' = $node'}</span>
+        </span>
+      );
+    }
+
+    if (Array.isArray(props.value)) {
+      if (props.value.length > 0 && !props.isCollapsed) {
+        prefix = '[';
+        suffix = ']';
+        const node = props.value;
+        const elements = props.value
+          .filter(({ key }) => key !== 'length')
+          .map((value, key) => renderChild(key.toString(), value, node));
+
+        content = <ul className="value-body">{elements}</ul>;
+      } else {
+        valueOutput = (
+          <span>
+            {valueOutput}
+            <span className="value-container">
+              {'['}
+              {props.value.length > 0 ? '...' : ''}
+              {']'}
+            </span>
+          </span>
+        );
+      }
+    } else {
+      const node = props.value;
+
+      let keys: string[] = [];
+
+      if (node instanceof t.Type) {
+        const schema = t.Schema.get(node.type);
+        keys = ['id', ...schema.fields.map((field) => field.name)];
+      } else {
+        keys = Object.keys(node);
+      }
+
+      if (!props.isCollapsed) {
+        prefix = '{';
+        suffix = '}';
+
+        const elements: any[] = keys.map((key) =>
+          renderChild(key, node[key as keyof typeof node], node)
+        );
+
+        content = <ul className="value-body">{elements}</ul>;
+      } else {
+        valueOutput = (
+          <span>
+            {valueOutput}
+            <span className="value-container">
+              {' {'}
+              {keys.length > 0 ? '...' : ''}
+              {'}'}
+            </span>
+          </span>
+        );
+      }
+    }
+  }
+
+  return (
+    <React.Fragment>
+      <span className="value">{valueOutput}</span>
+      {prefix ? (
+        <span className="prefix value-container">&nbsp;{prefix}</span>
+      ) : null}
+      {content}
+      {suffix ? <div className="suffix value-container">{suffix}</div> : null}
+    </React.Fragment>
+  );
+};
+
+type ElementProps = {
+  name?: string;
+  showName?: boolean;
+  value: any;
+  parent?: t.Type | Array<any> | Record<string, any>;
+  shouldCollapseOnInitial?: (node: t.Type, key: string) => boolean;
+};
+
 const Element = observer(
   ({
     name,
     showName = true,
     value,
-    initialCollapsed,
     shouldCollapseOnInitial,
-  }: any) => {
+    parent,
+  }: ElementProps) => {
     const domRef = React.useRef<HTMLLIElement | null>(null);
+
+    const initialCollapsed =
+      name &&
+      parent instanceof t.Type &&
+      shouldCollapseOnInitial &&
+      shouldCollapseOnInitial(parent, name);
 
     const [isCollapsed, _setIsCollapsed] = React.useState(
       COLLAPSIBLE_STATE.get(value) !== undefined
@@ -69,134 +211,9 @@ const Element = observer(
       [_setIsCollapsed, value]
     );
 
-    const isOpen = React.useMemo(() => !isCollapsed, [isCollapsed]);
-
-    let valueOutput: React.ReactElement | null = null;
-    let content: React.ReactElement | null = null;
-    let prefix: string | null = null;
-    let suffix: string | null = null;
-
-    let showToggler = false;
-
     const onToggleClick = React.useCallback(() => {
       setIsCollapsed(!isCollapsed);
     }, [isCollapsed, setIsCollapsed]);
-
-    function renderChild(key: string, value: any, parent: any, name: string) {
-      if (typeof value === 'function') {
-        return <PrimitiveElement key={key} name={name} value={'Function()'} />;
-      }
-
-      if (value === true || value === false) {
-        return (
-          <PrimitiveElement
-            key={key}
-            name={name}
-            value={value ? 'true' : 'false'}
-          />
-        );
-      }
-
-      if (Array.isArray(value) || typeof value === 'object') {
-        return (
-          <Element
-            key={key}
-            name={name}
-            value={value}
-            showName={Array.isArray(parent) === false}
-            shouldCollapseOnInitial={shouldCollapseOnInitial}
-            initialCollapsed={
-              parent instanceof t.Type &&
-              shouldCollapseOnInitial &&
-              shouldCollapseOnInitial(parent, key)
-            }
-          />
-        );
-      }
-
-      return <PrimitiveElement key={key} name={name} value={value} />;
-    }
-
-    const selected = true;
-
-    if (value && typeof value === 'object') {
-      // Render a useful name for object like nodes
-      if (value instanceof t.Type) {
-        const nodeName = value.type;
-
-        valueOutput = (
-          <span className="tokenName font-medium" onClick={onToggleClick}>
-            {nodeName}{' '}
-            {selected ? (
-              <span style={{ fontSize: '12px' }}>{' = $node'}</span>
-            ) : null}
-          </span>
-        );
-      }
-
-      if (Array.isArray(value)) {
-        if (value.length > 0 && isOpen) {
-          prefix = '[';
-          suffix = ']';
-          const node = value;
-          const elements = value
-            .filter(({ key }) => key !== 'length')
-            .map((value, key) =>
-              renderChild(key.toString(), value, node, key.toString())
-            );
-
-          content = <ul className="value-body">{elements}</ul>;
-        } else {
-          valueOutput = (
-            <span>
-              {valueOutput}
-              <span className="value-container">
-                {'['}
-                {value.length > 0 ? '...' : ''}
-                {']'}
-              </span>
-            </span>
-          );
-        }
-        showToggler = value.length > 0;
-      } else {
-        const node = value;
-
-        let keys: string[] = [];
-
-        if (node instanceof t.Type) {
-          const schema = t.Schema.get(node.type);
-          keys = ['id', ...schema.fields.map((field) => field.name)];
-        } else {
-          keys = Object.keys(node);
-        }
-
-        if (isOpen) {
-          prefix = '{';
-          suffix = '}';
-
-          const elements: any[] = keys.map((key) =>
-            renderChild(key, node[key], node, key)
-          );
-
-          content = <ul className="value-body">{elements}</ul>;
-          showToggler = true;
-        } else {
-          // let keys = Array.from(treeAdapter.walkNode(value), ({ key }) => key);
-          valueOutput = (
-            <span>
-              {valueOutput}
-              <span className="value-container">
-                {' {'}
-                {keys.length > 0 ? '...' : ''}
-                {'}'}
-              </span>
-            </span>
-          );
-          showToggler = true;
-        }
-      }
-    }
 
     React.useEffect(() => {
       const { current: dom } = domRef;
@@ -239,13 +256,40 @@ const Element = observer(
       });
     }, [value]);
 
+    const [isVisible, setIsVisible] = React.useState(false);
+
+    React.useEffect(() => {
+      const { current: dom } = domRef;
+
+      if (!dom) {
+        return;
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        const [entry] = entries;
+
+        if (entry.intersectionRatio >= 0) {
+          setIsVisible(true);
+          observer.unobserve(dom);
+          observer.disconnect();
+        }
+      });
+
+      observer.observe(dom);
+
+      return () => {
+        observer.unobserve(dom);
+        observer.disconnect();
+      };
+    }, [setIsVisible]);
+
     return (
       <li
         ref={domRef}
         className={cn({
           entry: true,
-          toggable: showToggler,
-          open: isOpen,
+          toggable: true,
+          open: !isCollapsed,
           ...(name
             ? { [`property-${createSafeObjKey(name)}`]: name !== undefined }
             : {}),
@@ -255,14 +299,16 @@ const Element = observer(
           {name !== undefined && showName && (
             <PropertyName name={name} onClick={onToggleClick} />
           )}
-          <span className="value">{valueOutput}</span>
-          {prefix ? (
-            <span className="prefix value-container">&nbsp;{prefix}</span>
-          ) : null}
-          {content}
-          {suffix ? (
-            <div className="suffix value-container">{suffix}</div>
-          ) : null}
+          {isVisible && (
+            <ElementValue
+              name={name}
+              parent={parent}
+              onToggleClick={onToggleClick}
+              value={value}
+              shouldCollapseOnInitial={shouldCollapseOnInitial}
+              isCollapsed={isCollapsed}
+            />
+          )}
         </span>
       </li>
     );
@@ -271,7 +317,7 @@ const Element = observer(
 
 type TreeProps = {
   root: t.Type | undefined;
-  shouldCollapseOnInitial?: boolean;
+  shouldCollapseOnInitial?: (node: t.Type, key: string) => boolean;
   className?: string;
 };
 

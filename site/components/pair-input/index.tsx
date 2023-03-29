@@ -152,6 +152,8 @@ const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
 
         <div className="w-full grid grid-cols-[1fr_auto] relative">
           <ExpressionInput
+            className="static"
+            textareaClassName="w-[calc(100%+2px)]"
             inputClassName="rounded-none border-none"
             value={newValue}
             placeholder={valuePlaceholder}

@@ -111,7 +111,7 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
 
   return (
     <div
-      className="bg-white/80 backdrop-blur-md flex flex-col fixed w-72 z-max rounded-md shadow-xl"
+      className="bg-white/80 border border-solid border-outline backdrop-blur-md flex flex-col fixed w-72 z-max rounded-md shadow-xl"
       ref={containerRef}
     >
       <div className="overflow-auto px-4 py-4 max-h-52">
@@ -124,7 +124,7 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
               .sort((a, b) => (a.date < b.date ? 1 : -1))
               .map((comment, i) => {
                 return (
-                  <div className="py-3 gap-4 flex" key={i}>
+                  <div className="py-3 gap-3 flex" key={i}>
                     <div className="mt-1">
                       <UserAvatar user={comment.user} />
                     </div>
