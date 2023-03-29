@@ -1,6 +1,6 @@
 # Externals
 
-While the end-user of your page builder could use the `Program` AST by itself to design some fairly complex components, you probably still may want to expose some additional functionalities.
+While the end-user of your page builder could use the `Program` AST by itself to design some fairly complex components, you may still want to expose some additional functionalities.
 
 An external is anything that is exposed to the end-user but is not defined in the `State`.
 
