@@ -9,7 +9,7 @@ import useIsomorphicLayoutEffect from 'react-use/lib/useIsomorphicLayoutEffect';
 
 import { RENDER_FRAME_CONTAINER_CLASSNAME } from '@app/constants/css';
 import { useEditor } from '@app/editor';
-import { Editor, EditorMode } from '@app/editor/Editor';
+import { EditorMode } from '@app/editor/Editor';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
 import { cn, CREATE_BEZIER_TRANSITION } from '@app/utils';
 
