@@ -31,7 +31,7 @@
 .DocSearch-Button .DocSearch-Button-Placeholder {
   all: unset;
   transition: color 0.5s;
-  @apply font-normal text-sm text-slate-700 mr-3 max-sm:hidden;
+  @apply font-normal text-sm text-slate-700 max-sm:hidden;
 }
 
 .DocSearch-Button:hover .DocSearch-Button-Placeholder {
