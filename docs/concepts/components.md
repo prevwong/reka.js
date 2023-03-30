@@ -114,7 +114,7 @@ Apart from specifying HTML tags in the `template` property, other Components can
     children: [
         {
             type: "ComponentTemplate",
-            component: { type: "Identifier", name: "Button" }, // Where Button is another RekaComponent or an ExternalComponent
+            component: { type: "Identifier", name: "Button" }, // Where Button is another RekaComponent
             props: {},
             children: []
         }

@@ -48,7 +48,7 @@ const reka = Reka.create({
         children: [
             {
                 type: "ComponentTemplate",
-                component: { type: "Identifier", name: "Icon" }, // Where Icon is an ExternalComponent
+                component: { type: "Identifier", name: "Icon", external: true }, // Where Icon is an ExternalComponent
                 props: {
                     size: "large",
                 },
