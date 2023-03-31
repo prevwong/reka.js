@@ -13,13 +13,13 @@ const injectPackageVersion = () => {
   const pkg = require('./package.json');
 
   return `
-    if ( typeof window !== 'undefined' ) {
-      if ( !window['__REKA__'] ) {
-        window['__REKA__'] = {};
-      }
-      
-      window['__REKA__']["${pkg.name}"] = "${pkg.version}";
-    }
+if ( typeof window !== 'undefined' ) {
+  if ( !window['__REKA__'] ) {
+    window['__REKA__'] = {};
+  }
+  
+  window['__REKA__']["${pkg.name}"] = "${pkg.version}";
+}
   `;
 };
 
