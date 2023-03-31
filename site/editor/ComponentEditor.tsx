@@ -1,7 +1,7 @@
 import { Frame } from '@rekajs/core';
 import * as t from '@rekajs/types';
 import { invariant } from '@rekajs/utils';
-import { makeObservable, action, observable } from 'mobx';
+import { makeObservable, action, observable, runInAction } from 'mobx';
 
 import { CommentExtension } from '@app/extensions/CommentExtension';
 import {
@@ -14,7 +14,7 @@ import { Editor } from './Editor';
 export type ActiveFrame = {
   state: Frame;
   user: UserFrame;
-  tplElements: WeakMap<t.Template, Set<HTMLElement>>;
+  tplElements: Map<t.Template, Set<HTMLElement>>;
   templateToShowComments: t.Template | null;
 };
 
@@ -46,6 +46,7 @@ export class ComponentEditor {
       frameToIframe: observable,
       showComments: action,
       hideComments: action,
+      connectTplDOM: action,
     });
 
     const userFrameExtension =
@@ -118,7 +119,7 @@ export class ComponentEditor {
     this.activeFrame = {
       state: stateFrame,
       user: userFrame,
-      tplElements: new WeakMap(),
+      tplElements: new Map(),
       templateToShowComments: null,
     };
   }
@@ -132,18 +133,21 @@ export class ComponentEditor {
     tpl: t.Template,
     addListeners: boolean = false
   ) {
-    if (!this.activeFrame) {
+    const activeFrame = this.activeFrame;
+
+    if (!activeFrame) {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       return () => {};
     }
 
-    let set = this.activeFrame.tplElements.get(tpl);
+    let set = activeFrame.tplElements.get(tpl);
 
     if (!set) {
-      set = new Set();
-    }
+      activeFrame.tplElements.set(tpl, new Set());
 
-    this.activeFrame.tplElements.set(tpl, set);
+      /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
+      set = activeFrame.tplElements.get(tpl)!;
+    }
 
     set.add(dom);
 
@@ -173,15 +177,25 @@ export class ComponentEditor {
     }
 
     return () => {
-      if (!set) {
-        return;
-      }
+      runInAction(() => {
+        dom.removeEventListener('mouseover', mouseoverListener);
+        dom.removeEventListener('mousedown', mousedownListener);
+        dom.removeEventListener('mouseout', mouseoutListener);
 
-      dom.removeEventListener('mouseover', mouseoverListener);
-      dom.removeEventListener('mousedown', mousedownListener);
-      dom.removeEventListener('mouseout', mouseoutListener);
+        const set = activeFrame.tplElements.get(tpl);
 
-      set.delete(dom);
+        if (!set) {
+          return;
+        }
+
+        set.delete(dom);
+
+        if (set.size > 0) {
+          return;
+        }
+
+        this.activeFrame?.tplElements.delete(tpl);
+      });
     };
   }
 
