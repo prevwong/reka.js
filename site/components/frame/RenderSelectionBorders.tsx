@@ -1,5 +1,6 @@
 import { ChatBubbleIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import * as t from '@rekajs/types';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -227,17 +228,22 @@ type SelectionBordersProps = {
 const SelectionBorders = observer((props: SelectionBordersProps) => {
   const editor = useEditor();
 
-  const doms =
-    editor.activeComponentEditor?.activeFrame?.tplElements.get(
-      props.template
-    ) ?? [];
+  const doms = computed(() => {
+    return (
+      editor.activeComponentEditor?.activeFrame?.tplElements.get(
+        props.template
+      ) ?? []
+    );
+  }).get();
+
+  console.log('selected', props, doms);
 
   return (
     <React.Fragment>
       {[...doms].map((dom, i) => (
         <SelectionBorder
           dom={dom}
-          key={i}
+          key={`${props.template.id}-${i}`}
           template={props.template}
           type={props.type}
         />
@@ -273,14 +279,6 @@ export const RenderSelectionBorders = observer(() => {
           type="selected"
         />
       )}
-      {activeComponentEditor.tplEvent.hovered &&
-        activeComponentEditor.tplEvent.hovered.id !==
-          activeComponentEditor.tplEvent.selected?.id && (
-          <SelectionBorders
-            template={activeComponentEditor.tplEvent.hovered}
-            type="hovered"
-          />
-        )}
     </React.Fragment>
   );
 });

@@ -1,7 +1,7 @@
 import { Frame } from '@rekajs/core';
 import * as t from '@rekajs/types';
 import { invariant } from '@rekajs/utils';
-import { makeObservable, action, observable } from 'mobx';
+import { makeObservable, action, observable, runInAction } from 'mobx';
 
 import { CommentExtension } from '@app/extensions/CommentExtension';
 import {
@@ -133,16 +133,20 @@ export class ComponentEditor {
     tpl: t.Template,
     addListeners: boolean = false
   ) {
-    if (!this.activeFrame) {
+    const activeFrame = this.activeFrame;
+
+    if (!activeFrame) {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       return () => {};
     }
 
-    let set = this.activeFrame.tplElements.get(tpl);
+    let set = activeFrame.tplElements.get(tpl);
 
     if (!set) {
-      set = new Set();
-      this.activeFrame.tplElements.set(tpl, set);
+      activeFrame.tplElements.set(tpl, new Set());
+
+      /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
+      set = activeFrame.tplElements.get(tpl)!;
     }
 
     set.add(dom);
@@ -173,15 +177,25 @@ export class ComponentEditor {
     }
 
     return () => {
-      if (!set) {
-        return;
-      }
+      runInAction(() => {
+        dom.removeEventListener('mouseover', mouseoverListener);
+        dom.removeEventListener('mousedown', mousedownListener);
+        dom.removeEventListener('mouseout', mouseoutListener);
 
-      dom.removeEventListener('mouseover', mouseoverListener);
-      dom.removeEventListener('mousedown', mousedownListener);
-      dom.removeEventListener('mouseout', mouseoutListener);
+        const set = activeFrame.tplElements.get(tpl);
 
-      set.delete(dom);
+        if (!set) {
+          return;
+        }
+
+        set.delete(dom);
+
+        if (set.size > 0) {
+          return;
+        }
+
+        this.activeFrame?.tplElements.delete(tpl);
+      });
     };
   }
 

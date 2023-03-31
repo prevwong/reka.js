@@ -49,7 +49,6 @@ export class Editor {
   compactSidebar: boolean = false;
   compactSidebarVisible: boolean = false;
 
-  activeFrame: Frame | null;
   user: User;
   peers: User[];
   connected: boolean;
@@ -66,8 +65,6 @@ export class Editor {
   private iframeEventHandlers: IframEventListeners = [];
 
   constructor(readonly router: NextRouter) {
-    this.activeFrame = null;
-
     if (router.pathname === '/') {
       this.mode = EditorMode.Preview;
       this.ready = false;
@@ -97,8 +94,6 @@ export class Editor {
       compactSidebar: observable,
       compactSidebarVisible: observable,
       showCompactSidebar: action,
-      activeFrame: observable,
-      setActiveFrame: action,
       peers: observable,
       connected: observable,
       setConnected: action,
@@ -310,10 +305,6 @@ export class Editor {
 
   getUserById(id: string) {
     return this.allUsers.find((user) => user.id === id);
-  }
-
-  setActiveFrame(frame: Frame | null) {
-    this.activeFrame = frame;
   }
 
   setConnected(connected: boolean) {
