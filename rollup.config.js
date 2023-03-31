@@ -9,6 +9,20 @@ import dts from 'rollup-plugin-dts';
 const shouldMinify = process.env.NODE_ENV === 'production';
 const shouldIncludeInBundle = ['tslib'];
 
+const injectPackageVersion = () => {
+  const pkg = require('./package.json');
+
+  return `
+    if ( typeof window !== 'undefined' ) {
+      if ( !window['__REKA__'] ) {
+        window['__REKA__'] = {};
+      }
+      
+      window['__REKA__']["${pkg.name}"] = "${pkg.version}";
+    }
+  `;
+};
+
 const createBundle = (config) => {
   return {
     input: config.input || './src/index.ts',
@@ -16,11 +30,13 @@ const createBundle = (config) => {
       {
         file: 'dist/esm/index.mjs',
         format: 'es',
+        intro: injectPackageVersion(),
         ...(config.output?.esm ?? {}),
       },
       {
         file: 'dist/cjs/index.js',
         format: 'cjs',
+        intro: injectPackageVersion(),
         ...(config.output?.cjs ?? {}),
       },
     ],
