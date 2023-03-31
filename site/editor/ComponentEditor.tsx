@@ -14,7 +14,7 @@ import { Editor } from './Editor';
 export type ActiveFrame = {
   state: Frame;
   user: UserFrame;
-  tplElements: WeakMap<t.Template, Set<HTMLElement>>;
+  tplElements: Map<t.Template, Set<HTMLElement>>;
   templateToShowComments: t.Template | null;
 };
 
@@ -46,6 +46,7 @@ export class ComponentEditor {
       frameToIframe: observable,
       showComments: action,
       hideComments: action,
+      connectTplDOM: action,
     });
 
     const userFrameExtension =
@@ -118,7 +119,7 @@ export class ComponentEditor {
     this.activeFrame = {
       state: stateFrame,
       user: userFrame,
-      tplElements: new WeakMap(),
+      tplElements: new Map(),
       templateToShowComments: null,
     };
   }
@@ -141,9 +142,8 @@ export class ComponentEditor {
 
     if (!set) {
       set = new Set();
+      this.activeFrame.tplElements.set(tpl, set);
     }
-
-    this.activeFrame.tplElements.set(tpl, set);
 
     set.add(dom);
 

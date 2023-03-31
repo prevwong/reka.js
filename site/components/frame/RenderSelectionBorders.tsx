@@ -224,7 +224,7 @@ type SelectionBordersProps = {
   type: 'hovered' | 'selected';
 };
 
-const SelectionBorders = (props: SelectionBordersProps) => {
+const SelectionBorders = observer((props: SelectionBordersProps) => {
   const editor = useEditor();
 
   const doms =
@@ -244,7 +244,7 @@ const SelectionBorders = (props: SelectionBordersProps) => {
       ))}
     </React.Fragment>
   );
-};
+});
 
 export const RenderSelectionBorders = observer(() => {
   const editor = useEditor();
