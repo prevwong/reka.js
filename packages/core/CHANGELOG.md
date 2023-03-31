@@ -1,5 +1,18 @@
 # @rekajs/core
 
+## 0.1.5
+
+### Patch Changes
+
+- [`c1aba8e`](https://github.com/prevwong/reka.js/commit/c1aba8ee761cc4969a18817289604392504cb5ed) Thanks [@prevwong](https://github.com/prevwong)! - Fix memory leaks
+
+- [`2203e89`](https://github.com/prevwong/reka.js/commit/2203e8956b9f26c49bedabc3b6a4b8180a449be0) Thanks [@prevwong](https://github.com/prevwong)! - Update Extension type
+
+- [`61435db`](https://github.com/prevwong/reka.js/commit/61435dbfb88326eabe7857e43318a45459b08343) Thanks [@prevwong](https://github.com/prevwong)! - Inject package version to browser window
+
+- Updated dependencies [[`61435db`](https://github.com/prevwong/reka.js/commit/61435dbfb88326eabe7857e43318a45459b08343)]:
+  - @rekajs/utils@0.1.2
+
 ## 0.1.4
 
 ### Patch Changes
