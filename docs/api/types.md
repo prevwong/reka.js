@@ -2,13 +2,13 @@
 
 ## API
 
-!start-typedoc types/types.docs.ts classes
+@start-typedoc types/types.docs.ts classes
 
-!end-typedoc
+@end-typedoc
 
 ## Utilities
 
-!start-typedoc types/types.docs.ts functions
+@start-typedoc types/types.docs.ts functions
 
 !start-example match
 
@@ -158,4 +158,4 @@ console.log(expr instanceof t.Expression); // true
 
 !end-example
 
-!end-typedoc
+@end-typedoc

@@ -374,16 +374,16 @@ export default async function markdownToHtml(markdown: string) {
             continue;
           }
 
-          if (childText.value.startsWith('!start-typedoc')) {
+          if (childText.value.startsWith('@start-typedoc')) {
             const endTypeDoc = findAfter(tree, i, (node) => {
               return (
                 node.type === 'paragraph' &&
-                select('text', node).value.startsWith('!end-typedoc')
+                select('text', node).value.startsWith('@end-typedoc')
               );
             });
             const endTypeDocIndex = tree.children.indexOf(endTypeDoc);
 
-            const typedocArgs = childText.value.replace('!start-typedoc ', '');
+            const typedocArgs = childText.value.replace('@start-typedoc ', '');
 
             const examples = {};
 

@@ -4,7 +4,7 @@ The core package of Reka.
 
 ## API
 
-!start-typedoc core/index.ts Reka
+@start-typedoc core/index.ts Reka
 
 !start-example
 
@@ -55,19 +55,25 @@ reka.change(() => {
 !start-example listenToChanges
 
 ```tsx
-reka.listenToChanges(payload => {
-  if ( payload.event === 'add' ) {
+reka.listenToChanges((payload) => {
+  if (payload.event === 'add') {
     console.log('node added', payload.type);
   }
 
-  if ( payload.event === 'dispose' ) {
+  if (payload.event === 'dispose') {
     console.log('node removed', payload.type);
   }
 
-  if( payload.event === 'change' ) {
-    console.log('node changed', payload.type, payload.newValue, payload.oldValue, payload.name)
+  if (payload.event === 'change') {
+    console.log(
+      'node changed',
+      payload.type,
+      payload.newValue,
+      payload.oldValue,
+      payload.name
+    );
   }
-})
+});
 ```
 
 !end-example
@@ -75,12 +81,15 @@ reka.listenToChanges(payload => {
 !start-example subscribe
 
 ```tsx
-reka.subscribe(state => ({
-  componentNames: state.program.components.map(component => component.name)
-}), collected => {
-  console.log('component names', collected.componentNames);
-});
-````
+reka.subscribe(
+  (state) => ({
+    componentNames: state.program.components.map((component) => component.name),
+  }),
+  (collected) => {
+    console.log('component names', collected.componentNames);
+  }
+);
+```
 
 !end-example
 
@@ -88,18 +97,21 @@ reka.subscribe(state => ({
 
 ```tsx
 reka.watch(() => {
-  console.log("component names", state.program.components.map(component => component.name))
-})
+  console.log(
+    'component names',
+    state.program.components.map((component) => component.name)
+  );
+});
 ```
 
 !end-example
 
-!end-typedoc
+@end-typedoc
 
-!start-typedoc core/index.ts Frame
+@start-typedoc core/index.ts Frame
 
-!end-typedoc
+@end-typedoc
 
-!start-typedoc core/index.ts Extension
+@start-typedoc core/index.ts Extension
 
-!end-typedoc
+@end-typedoc

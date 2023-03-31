@@ -2,7 +2,7 @@
 
 ## API Reference
 
-!start-typedoc parser/index.ts Parser
+@start-typedoc parser/index.ts Parser
 
 !start-example
 
@@ -12,6 +12,7 @@ import { Parser } from '@rekajs/parser';
 Parser.stringify(...);
 Parser.parse(...);
 ```
+
 !end-example
 
 !start-example parseProgram
@@ -49,7 +50,7 @@ console.log(result.globals.length == 1); // true
 import * as t from '@rekajs/types';
 import { Parser } from '@rekajs/parser';
 
-const result = Parser.parseExpression("1+2");
+const result = Parser.parseExpression('1+2');
 
 console.log(result instanceof t.BinaryExpression); // true
 console.log(result.left instanceof t.Literal); // true
@@ -59,10 +60,10 @@ console.log(result.left.value == 1); // true;
 If you know the expected return type of the source string, you could pass the Type constructor as the second argument:
 
 ```tsx
-Parser.parseExpression("1+1", t.BinaryExpression); 
+Parser.parseExpression('1+1', t.BinaryExpression);
 // ok
 
-Parser.parseExpression("10", t.BinaryExpression); 
+Parser.parseExpression('10', t.BinaryExpression);
 // error, expected BinaryExpression but received Literal
 ```
 
@@ -74,31 +75,32 @@ Parser.parseExpression("10", t.BinaryExpression);
 import * as t from '@rekajs/types';
 import { Parser } from '@rekajs/parser';
 
-Parser.stringify(t.program({
+Parser.stringify(
+  t.program({
     components: [
-        t.rekaComponent({
-            name: 'App',
-            state: [
-                t.val({name: "counter", init: t.literal({value: 0})})
-            ],
-            props: [],
-            template: t.tagTemplate({
-                tag: 'div',
-                props: {},
-                children: [
-                    t.tagTemplate({
-                        tag: 'text',
-                        props: { value: 'Hello!' },
-                        children: []
-                    })
-                ]
-            })
-        })
-    ]
-}));
+      t.rekaComponent({
+        name: 'App',
+        state: [t.val({ name: 'counter', init: t.literal({ value: 0 }) })],
+        props: [],
+        template: t.tagTemplate({
+          tag: 'div',
+          props: {},
+          children: [
+            t.tagTemplate({
+              tag: 'text',
+              props: { value: 'Hello!' },
+              children: [],
+            }),
+          ],
+        }),
+      }),
+    ],
+  })
+);
 ```
 
 The above returns the following code:
+
 ```
 component App() {
     val counter = 0;
@@ -111,4 +113,4 @@ component App() {
 
 !end-example
 
-!end-typedoc
+@end-typedoc
