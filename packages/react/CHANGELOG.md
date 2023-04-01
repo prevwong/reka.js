@@ -1,5 +1,13 @@
 # @rekajs/react
 
+## 0.1.3
+
+### Patch Changes
+
+- [`f9b872d`](https://github.com/prevwong/reka.js/commit/f9b872d28f18406b389d42c684a15c375e8a89d2) Thanks [@prevwong](https://github.com/prevwong)! - Rename RekaProvider "state" prop to "reka" prop
+
+- [`61435db`](https://github.com/prevwong/reka.js/commit/61435dbfb88326eabe7857e43318a45459b08343) Thanks [@prevwong](https://github.com/prevwong)! - Inject package version to browser window
+
 ## 0.1.2
 
 ### Patch Changes
