@@ -3,7 +3,7 @@ import { computed, IComputedValue, runInAction, untracked } from 'mobx';
 
 import { DisposableComputation } from './computation';
 import { Environment } from './environment';
-import { TemplateEvaluateContext, ViewEvaluator } from './evaluator';
+import { TemplateEvaluateContext, Evaluator } from './evaluator';
 import { ClassListBindingKey, ComponentSlotBindingKey } from './symbols';
 import { createKey } from './utils';
 
@@ -22,7 +22,7 @@ export class ComponentViewEvaluator {
   private declare rekaComponentPropsComputation: IComputedValue<void> | null;
   private declare rekaComponentStateComputation: IComputedValue<void> | null;
 
-  private readonly tree: ViewEvaluator;
+  private readonly evaluator: Evaluator;
   private readonly ctx: TemplateEvaluateContext;
   private readonly template: t.ComponentTemplate;
 
@@ -31,13 +31,12 @@ export class ComponentViewEvaluator {
   readonly key: string;
 
   constructor(
-    tree: ViewEvaluator,
+    evaluator: Evaluator,
     ctx: TemplateEvaluateContext,
     template: t.ComponentTemplate,
-    env: Environment,
-    private readonly: boolean = false
+    env: Environment
   ) {
-    this.tree = tree;
+    this.evaluator = evaluator;
     this.ctx = ctx;
     this.template = template;
     this.key = createKey(this.ctx.path);
@@ -60,7 +59,7 @@ export class ComponentViewEvaluator {
           props: Object.keys(this.template.props).reduce(
             (accum, key) => ({
               ...accum,
-              [key]: this.tree.computeExpr(
+              [key]: this.evaluator.computeExpr(
                 this.template.props[key],
                 this.ctx.env
               ),
@@ -91,7 +90,7 @@ export class ComponentViewEvaluator {
               this.rekaComponentPropsComputation = computed(
                 () => {
                   const slot = this.template.children.flatMap((child) =>
-                    this.tree.computeTemplate(child, {
+                    this.evaluator.computeTemplate(child, {
                       ...this.ctx,
                       path: [...this.ctx.path, child.id],
                     })
@@ -107,14 +106,14 @@ export class ComponentViewEvaluator {
                       let propValue: any;
 
                       if (this.template.props[prop.name]) {
-                        propValue = this.tree.computeExpr(
+                        propValue = this.evaluator.computeExpr(
                           this.template.props[prop.name],
                           this.ctx.env
                         );
                       }
 
                       if (!propValue && prop.init) {
-                        propValue = this.tree.computeExpr(
+                        propValue = this.evaluator.computeExpr(
                           prop.init,
                           this.ctx.env
                         );
@@ -154,7 +153,7 @@ export class ComponentViewEvaluator {
               this.rekaComponentStateComputation = computed(() => {
                 component.state.forEach((val) => {
                   this.env.set(val.name, {
-                    value: this.tree.computeExpr(val.init, this.env),
+                    value: this.evaluator.computeExpr(val.init, this.env),
                     readonly: false,
                   });
                 });
@@ -165,7 +164,7 @@ export class ComponentViewEvaluator {
               this.rekaComponentPropsComputation.get();
               this.rekaComponentStateComputation.get();
 
-              render = this.tree.computeTemplate(component.template, {
+              render = this.evaluator.computeTemplate(component.template, {
                 path: [this.key, 'root'],
                 env: this.env,
               });

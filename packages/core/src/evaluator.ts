@@ -34,9 +34,10 @@ export type TemplateEachComputationCache = {
   evaluator: EachDirectiveEvaluator;
 };
 
-export class ViewEvaluator {
-  private viewObserver: Observer | undefined;
+export class Evaluator {
   private _view: IObservableValue<t.RekaComponentView | undefined>;
+
+  private viewObserver: Observer | undefined;
   private rootTemplate: t.ComponentTemplate;
   private rootTemplateObserver: Observer;
 

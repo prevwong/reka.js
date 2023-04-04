@@ -2,7 +2,7 @@ import * as t from '@rekajs/types';
 import { invariant } from '@rekajs/utils';
 import { computed, IComputedValue, untracked } from 'mobx';
 
-import { TemplateEvaluateContext, ViewEvaluator } from './evaluator';
+import { TemplateEvaluateContext, Evaluator } from './evaluator';
 import { isPrimitive, valueToHash } from './utils';
 
 type EachItemCache = {
@@ -19,7 +19,7 @@ export class EachDirectiveEvaluator {
   private declare iteratorValueComputation: IComputedValue<t.View[]>;
 
   constructor(
-    public readonly tree: ViewEvaluator,
+    public readonly evaluator: Evaluator,
     private readonly template: t.Template,
     private readonly ctx: TemplateEvaluateContext,
     private readonly renderTemplate: any
@@ -79,7 +79,7 @@ export class EachDirectiveEvaluator {
       this.iteratorValueComputation = computed(() => {
         const views: t.View[] = [];
         const newItems = new Set();
-        const iterator = this.tree.computeExpr(
+        const iterator = this.evaluator.computeExpr(
           this.eachExpr.iterator,
           this.ctx.env
         );

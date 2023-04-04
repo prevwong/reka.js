@@ -1,7 +1,7 @@
 import * as t from '@rekajs/types';
 import { makeObservable, observable, action } from 'mobx';
 
-import { ViewEvaluator } from './evaluator';
+import { Evaluator } from './evaluator';
 import { Reka } from './reka';
 import { defer } from './utils';
 
@@ -29,13 +29,13 @@ export class Frame {
 
   component: FrameComponentConfig;
 
-  private evaluator: ViewEvaluator;
+  private evaluator: Evaluator;
 
   constructor(opts: FrameOpts, readonly reka: Reka) {
     this.id = opts.id;
     this.component = opts.component;
 
-    this.evaluator = new ViewEvaluator(
+    this.evaluator = new Evaluator(
       this,
       this.component.name,
       this.component.props || {},
