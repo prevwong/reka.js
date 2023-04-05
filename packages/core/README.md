@@ -172,7 +172,7 @@ const reka = Reka.create({
   },
 });
 
-// 2) Global is now accessible throughout the State:
+// 2) External function is now accessible throughout the State:
 reka.load(
   t.state({
     program: t.program({
