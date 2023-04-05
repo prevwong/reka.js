@@ -83,7 +83,7 @@ export class Frame {
         return;
       }
 
-      return this.evaluator.computeTree();
+      return this.evaluator.computeView();
     });
   }
 

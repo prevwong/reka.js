@@ -459,7 +459,7 @@ export class Evaluator {
     return computeExpression(expr, this.reka, env);
   }
 
-  computeTree() {
+  computeView() {
     const _compute = () => {
       const views = this.computeTemplate(this.rootTemplate, {
         path: ['frame'],
@@ -512,6 +512,6 @@ export class Evaluator {
       }
     });
 
-    this.computeTree();
+    this.computeView();
   }
 }
