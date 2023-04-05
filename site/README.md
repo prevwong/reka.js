@@ -2,7 +2,7 @@
 
 Contains the application code for the landing page editor and documentation.
 
-The site is built with [Next.js](https://nextjs.org) and [Tailwind](https://tailwindcss.com)
+The site is built with [Next.js](https://nextjs.org), [Radix](https://www.radix-ui.com/) and [Tailwind](https://tailwindcss.com)
 
 ## Updating the initial Editor state
 
