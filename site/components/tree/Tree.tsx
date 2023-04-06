@@ -54,7 +54,7 @@ type ElementValueProps = {
   shouldCollapseOnInitial?: (type: t.Type, key: string) => boolean;
 };
 
-const ElementValue = (props: ElementValueProps) => {
+const ElementValue = observer((props: ElementValueProps) => {
   let valueOutput: React.ReactElement | null = null;
   let content: React.ReactElement | null = null;
   let prefix: string | null = null;
@@ -171,7 +171,7 @@ const ElementValue = (props: ElementValueProps) => {
       {suffix ? <div className="suffix value-container">{suffix}</div> : null}
     </React.Fragment>
   );
-};
+});
 
 type ElementProps = {
   name?: string;
