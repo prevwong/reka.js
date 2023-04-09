@@ -4,7 +4,7 @@ Both Craft.js and Reka are released under the [MIT license](https://github.com/p
 
 If you found these projects valuable, and you would like to help me out - please consider sponsoring/donating to the project. Your contribution would mean a lot to me!
 
-You can choose to contribute via [OpenCollective](https://opencollective.com/craftjs), [Patreon](patreon.com/imprev) or [Ko-fi](https://ko-fi.com/prevwong)
+You can choose to contribute via [OpenCollective](https://opencollective.com/craftjs), [Patreon](https://patreon.com/imprev) or [Ko-fi](https://ko-fi.com/prevwong)
 
 <img src="https://opencollective.com/craftjs/sponsors.svg?width=890">
 <img src="https://opencollective.com/craftjs/backers.svg?width=890">
