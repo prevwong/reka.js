@@ -3,6 +3,7 @@ import { TypeConstructor } from '@rekajs/types';
 import { getRandomId, invariant } from '@rekajs/utils';
 import {
   IArraySplice,
+  IArrayUpdate,
   IObjectDidChange,
   IObservable,
   IObservableArray,
@@ -36,7 +37,7 @@ type OnDiposePayload = {
   type: t.Type;
 };
 
-type OnChangePayload = Omit<IObjectDidChange | IArraySplice, 'path'> & {
+type OnChangePayload = (IObjectDidChange | IArraySplice | IArrayUpdate) & {
   path: Path[];
 };
 
@@ -59,11 +60,15 @@ export type ChangeOpts = {
   batch: boolean;
 };
 
-type ChangeListenerOnAddPayload = { event: 'add' } & OnAddPayload;
-type ChangeListenerOnDisposePaylaod = { event: 'dispose' } & OnDiposePayload;
-type ChangeListenerOnChangePayload = { event: 'change' } & OnChangePayload;
+export type ChangeListenerOnAddPayload = { event: 'add' } & OnAddPayload;
+export type ChangeListenerOnDisposePaylaod = {
+  event: 'dispose';
+} & OnDiposePayload;
+export type ChangeListenerOnChangePayload = {
+  event: 'change';
+} & OnChangePayload;
 
-type ChangeListenerPayload =
+export type ChangeListenerPayload =
   | ChangeListenerOnAddPayload
   | ChangeListenerOnDisposePaylaod
   | ChangeListenerOnChangePayload;
@@ -536,7 +541,7 @@ export class Observer<T extends t.Type = t.Type> {
     const change = {
       ...payload,
       path: this.getPath(value),
-    };
+    } as OnChangePayload;
 
     const path =
       change.path.length > 0 ? change.path[change.path.length - 1] : null;

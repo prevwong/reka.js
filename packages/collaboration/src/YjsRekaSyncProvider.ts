@@ -1,16 +1,20 @@
-import { Reka } from '@rekajs/core';
+import { Reka, ChangeListenerPayload } from '@rekajs/core';
 import * as t from '@rekajs/types';
+import { invariant } from '@rekajs/utils';
 import * as Y from 'yjs';
 
 import { getTypePathFromMobxChangePath, jsToYType, yTypeToJS } from './utils';
 
 export class YjsRekaSyncProvider {
-  private mobxChangesToSync: any[] = [];
+  private mobxChangesToSync: ChangeListenerPayload[] = [];
   private isBatchingMobxChanges = false;
   private isSynchingToMobx = false;
 
   private declare rekaChangeUnsubscriber: () => void;
-  private yDocChangeListener: (events: any, tr: any) => void;
+  private yDocChangeListener: (
+    events: Y.YEvent<any>[],
+    tr: Y.Transaction
+  ) => void;
 
   private yDoc: Y.Doc;
 
@@ -24,6 +28,7 @@ export class YjsRekaSyncProvider {
     if (typeof window !== 'undefined') {
       (window as any).crdt = this;
     }
+
     this.yDocChangeListener = (events, tr) => {
       if (!this.reka) {
         return;
@@ -136,7 +141,7 @@ export class YjsRekaSyncProvider {
     }
   }
 
-  syncMobxChangesToYDoc(changes) {
+  syncMobxChangesToYDoc(changes: ChangeListenerPayload[]) {
     Y.transact(
       this.yDoc,
       () => {
@@ -146,7 +151,7 @@ export class YjsRekaSyncProvider {
         const yDocRoot = this.yRekaDocument;
 
         changes.forEach((change) => {
-          if (change.type === 'replace') {
+          if (change.event !== 'change') {
             return;
           }
 
@@ -206,14 +211,26 @@ export class YjsRekaSyncProvider {
           }
 
           if (yType instanceof Y.Map) {
-            const newValue = jsToYType(change.newValue);
-            insert = {
-              ...insert,
-              ...newValue.typesToInsert,
-            };
+            invariant(
+              change.observableKind === 'object',
+              'Expected value to sync with Y.Map is not an object'
+            );
 
-            yType.set(change.name, newValue.converted);
+            if (change.type === 'add' || change.type === 'update') {
+              const newValue = jsToYType(change.newValue);
+              insert = {
+                ...insert,
+                ...newValue.typesToInsert,
+              };
+
+              yType.set(String(change.name), newValue.converted);
+            }
           } else if (yType instanceof Y.Array) {
+            invariant(
+              change.observableKind === 'array',
+              'Expected value to sync with Y.Array is not an array'
+            );
+
             if (change.type === 'update') {
               const newValue = jsToYType(change.newValue);
 
