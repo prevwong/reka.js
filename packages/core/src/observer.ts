@@ -15,7 +15,7 @@ import {
   runInAction,
 } from 'mobx';
 
-import { isObjectLiteral } from './utils';
+import { isObjectLiteral, noop } from './utils';
 
 type ValuesWithReference = Array<any> | Record<string, any> | t.Type;
 
@@ -201,7 +201,7 @@ export class Observer<T extends t.Type = t.Type> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    return () => {};
+    return noop;
   }
 
   private setupChild(value: any, parent: Parent) {
@@ -217,15 +217,17 @@ export class Observer<T extends t.Type = t.Type> {
   }
 
   private setupType(value: t.Type, parent?: Parent) {
+    if (this.idToType.get(value.id)) {
+      return noop;
+    }
+
     if (parent) {
       this.valueToParentMap.set(value, parent);
     }
 
     this.markedForDisposal.delete(value);
 
-    if (!this.idToType.get(value.id)) {
-      this.handleOnAddType(value);
-    }
+    this.handleOnAddType(value);
 
     this.idToType.set(value.id, value);
 

@@ -80,3 +80,6 @@ export const defer = (fn: () => void) => {
 
   return Promise.resolve().then(fn);
 };
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export const noop = () => {};
