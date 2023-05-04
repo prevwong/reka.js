@@ -317,16 +317,16 @@ export const collect = (type: t.Type) => {
  * Assert a value's Type
  */
 export function assert<T extends Type>(
-  value: Type | undefined,
+  value: any,
   assertedType: TypeConstructor<T>
 ): T;
 export function assert<T extends Type, C extends (value: T) => any>(
-  value: Type | undefined,
+  value: any,
   assertedType: TypeConstructor<T>,
   cb: C
 ): ReturnType<C>;
 export function assert<T extends Type, C extends (value: T) => any>(
-  value: Type | undefined,
+  value: any,
   assertedType: TypeConstructor<T>,
   cb?: C
 ) {
