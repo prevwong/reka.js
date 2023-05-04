@@ -1,5 +1,5 @@
 import * as t from '@rekajs/types';
-import { getRandomId } from '@rekajs/utils';
+import { getRandomId, invariant } from '@rekajs/utils';
 import {
   action,
   autorun,
@@ -154,9 +154,12 @@ export class Reka {
   async createFrame(opts: FrameOpts) {
     const frame = new Frame(opts, this);
 
-    if (opts.id) {
-      this.idToFrame.set(opts.id, frame);
-    }
+    invariant(
+      !this.idToFrame.get(frame.id),
+      `An existing frame with id "${frame.id}" already exists!`
+    );
+
+    this.idToFrame.set(frame.id, frame);
 
     this.frames.push(frame);
 

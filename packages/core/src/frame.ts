@@ -1,4 +1,5 @@
 import * as t from '@rekajs/types';
+import { getRandomId } from '@rekajs/utils';
 import { makeObservable, observable, action } from 'mobx';
 
 import { Evaluator } from './evaluator';
@@ -11,7 +12,7 @@ type FrameComponentConfig = {
 };
 
 export type FrameOpts = {
-  id: string;
+  id?: string;
   component: FrameComponentConfig;
   syncImmediately?: boolean;
 };
@@ -27,18 +28,15 @@ export class Frame {
   /// Frame only computes (and recomputes) its View when sync is set to true
   sync: boolean;
 
-  component: FrameComponentConfig;
-
   private evaluator: Evaluator;
 
-  constructor(opts: FrameOpts, readonly reka: Reka) {
-    this.id = opts.id;
-    this.component = opts.component;
+  constructor(readonly opts: FrameOpts, readonly reka: Reka) {
+    this.id = opts.id || getRandomId();
 
     this.evaluator = new Evaluator(
       this,
-      this.component.name,
-      this.component.props || {},
+      this.opts.component.name,
+      this.opts.component.props || {},
       reka
     );
 
@@ -50,6 +48,10 @@ export class Frame {
       enableSync: action,
       disableSync: action,
     });
+  }
+
+  get componentName() {
+    return this.opts.component.name;
   }
 
   /// Get the output View for the Frame
