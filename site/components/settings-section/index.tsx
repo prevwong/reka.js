@@ -1,4 +1,4 @@
-import { ChevronDownIcon, PlusIcon } from '@radix-ui/react-icons';
+import { ChevronRightIcon, PlusIcon } from '@radix-ui/react-icons';
 import { AnimatePresence, motion } from 'framer-motion';
 import * as React from 'react';
 
@@ -41,7 +41,11 @@ export const SettingSection = (props: SettingSectionProps) => {
           </span>
 
           <IconButton className="ml-1">
-            <ChevronDownIcon />
+            <ChevronRightIcon
+              className={cn('ease-bezier transition duration-400', {
+                'rotate-[90deg]': isOpen,
+              })}
+            />
           </IconButton>
         </header>
 

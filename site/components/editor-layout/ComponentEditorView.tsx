@@ -259,9 +259,25 @@ export const ComponentEditorView = observer(() => {
                 <Tree
                   className="flex-1 overflow-auto pt-2 px w-full text-xs"
                   root={componentEditor.activeFrame.state.view}
+                  renderAs={(node, key) => {
+                    if (key !== 'owner') {
+                      return null;
+                    }
+
+                    return (
+                      <span>
+                        <span className="text-primary">{`${node.type}<`}</span>
+                        {node.id}
+                        <span className="text-primary">{`>`}</span>
+                      </span>
+                    );
+                  }}
                   shouldCollapseOnInitial={(_, key) => {
-                    console.log(300, key);
-                    if (key === 'template' || key === 'component') {
+                    if (
+                      key === 'template' ||
+                      key === 'component' ||
+                      key === 'owner'
+                    ) {
                       return true;
                     }
 

@@ -52,6 +52,7 @@ type ElementValueProps = {
   onToggleClick?: () => void;
   value: t.Type | Record<string, any> | Array<any>;
   shouldCollapseOnInitial?: (type: t.Type, key: string) => boolean;
+  renderAs?: (type: t.Type, key: string) => React.ReactNode;
 };
 
 const ElementValue = observer((props: ElementValueProps) => {
@@ -63,6 +64,14 @@ const ElementValue = observer((props: ElementValueProps) => {
   function renderChild(key: string, value: any, parent: any) {
     if (typeof value === 'function') {
       return <PrimitiveElement key={key} name={key} value={'Function()'} />;
+    }
+
+    if (value === undefined) {
+      return <PrimitiveElement key={key} name={key} value={'undefined'} />;
+    }
+
+    if (value === null) {
+      return <PrimitiveElement key={key} name={key} value={'null'} />;
     }
 
     if (value === true || value === false) {
@@ -83,6 +92,7 @@ const ElementValue = observer((props: ElementValueProps) => {
           value={value}
           parent={parent}
           showName={Array.isArray(parent) === false}
+          renderAs={props.renderAs}
           shouldCollapseOnInitial={props.shouldCollapseOnInitial}
         />
       );
@@ -178,6 +188,7 @@ type ElementProps = {
   showName?: boolean;
   value: any;
   parent?: t.Type | Array<any> | Record<string, any>;
+  renderAs?: (node: t.Type, key: string) => React.ReactNode;
   shouldCollapseOnInitial?: (node: t.Type, key: string) => boolean;
 };
 
@@ -187,6 +198,7 @@ const Element = observer(
     showName = true,
     value,
     shouldCollapseOnInitial,
+    renderAs,
     parent,
   }: ElementProps) => {
     const domRef = React.useRef<HTMLLIElement | null>(null);
@@ -283,6 +295,26 @@ const Element = observer(
       };
     }, [setIsVisible]);
 
+    let renderedValue: React.ReactNode = null;
+
+    if (renderAs && value instanceof t.Type) {
+      renderedValue = renderAs(value, name || '') || null;
+    }
+
+    if (!renderedValue) {
+      renderedValue = (
+        <ElementValue
+          name={name}
+          parent={parent}
+          onToggleClick={onToggleClick}
+          value={value}
+          shouldCollapseOnInitial={shouldCollapseOnInitial}
+          renderAs={renderAs}
+          isCollapsed={isCollapsed}
+        />
+      );
+    }
+
     return (
       <li
         ref={domRef}
@@ -299,16 +331,7 @@ const Element = observer(
           {name !== undefined && showName && (
             <PropertyName name={name} onClick={onToggleClick} />
           )}
-          {isVisible && (
-            <ElementValue
-              name={name}
-              parent={parent}
-              onToggleClick={onToggleClick}
-              value={value}
-              shouldCollapseOnInitial={shouldCollapseOnInitial}
-              isCollapsed={isCollapsed}
-            />
-          )}
+          {isVisible && renderedValue}
         </span>
       </li>
     );
@@ -318,11 +341,12 @@ const Element = observer(
 type TreeProps = {
   root: t.Type | undefined;
   shouldCollapseOnInitial?: (node: t.Type, key: string) => boolean;
+  renderAs?: (node: t.Type, key: string) => React.ReactNode;
   className?: string;
 };
 
 export const Tree = observer(
-  ({ root, shouldCollapseOnInitial, className }: TreeProps) => {
+  ({ root, shouldCollapseOnInitial, className, renderAs }: TreeProps) => {
     if (!root) {
       return null;
     }
@@ -333,6 +357,7 @@ export const Tree = observer(
           <Element
             value={root}
             shouldCollapseOnInitial={shouldCollapseOnInitial}
+            renderAs={renderAs}
           />
         </ul>
       </div>
