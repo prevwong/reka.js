@@ -371,6 +371,7 @@ export class Evaluator {
         key: createKey(ctx.path),
         template,
         children: ctx.env.getByName(ComponentSlotBindingKey),
+        frame: this.frame.id,
       }),
     ];
   }
@@ -411,6 +412,7 @@ export class Evaluator {
         props,
         key: createKey(ctx.path),
         template,
+        frame: this.frame.id,
       });
     } catch (error: any) {
       // TODO: create error handling system
@@ -419,6 +421,7 @@ export class Evaluator {
         key: createKey(ctx.path),
         error: String(error),
         template,
+        frame: this.frame.id,
       });
     }
 

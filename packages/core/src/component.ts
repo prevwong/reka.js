@@ -53,6 +53,7 @@ export class ComponentViewEvaluator {
 
       return [
         t.externalComponentView({
+          frame: this.evaluator.frame.id,
           component,
           key: this.key,
           template: this.template,
@@ -72,6 +73,7 @@ export class ComponentViewEvaluator {
 
     if (component instanceof t.RekaComponent) {
       const componentViewTree = t.rekaComponentView({
+        frame: this.evaluator.frame.id,
         key: this.key,
         component,
         render: [],
@@ -171,6 +173,7 @@ export class ComponentViewEvaluator {
             } catch (err) {
               render = [
                 t.errorSystemView({
+                  frame: this.evaluator.frame.id,
                   error: String(err),
                   template: this.template,
                   key: this.key,
@@ -229,7 +232,8 @@ export class ComponentViewEvaluator {
             this.componentViewTreeComputation = null;
 
             return [
-              new t.ErrorSystemView({
+              t.errorSystemView({
+                frame: this.evaluator.frame.id,
                 error: `Component "${this.template.component.name}" not found`,
                 key: this.key,
                 template: this.template,

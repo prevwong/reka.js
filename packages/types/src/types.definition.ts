@@ -230,6 +230,7 @@ Schema.define('View', {
   fields: (t) => ({
     key: t.string,
     template: t.node('Template', true),
+    frame: t.string,
   }),
 });
 

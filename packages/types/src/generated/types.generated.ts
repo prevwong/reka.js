@@ -422,11 +422,13 @@ Schema.register('ElementEach', ElementEach);
 type ViewParameters = {
   key: string;
   template: Template;
+  frame: string;
 };
 
 export abstract class View extends Type {
   declare key: string;
   declare template: Template;
+  declare frame: string;
   constructor(type: string, value: ViewParameters) {
     super(type, value);
   }
@@ -437,6 +439,7 @@ Schema.register('View', View);
 type TagViewParameters = {
   key: string;
   template: Template;
+  frame: string;
   tag: string;
   children: View[];
   props: Record<string, any>;
@@ -456,6 +459,7 @@ Schema.register('TagView', TagView);
 type ComponentViewParameters = {
   key: string;
   template: Template;
+  frame: string;
   component: Component;
 };
 
@@ -471,6 +475,7 @@ Schema.register('ComponentView', ComponentView);
 type RekaComponentViewParameters = {
   key: string;
   template: Template;
+  frame: string;
   component: Component;
   render: View[];
 };
@@ -487,6 +492,7 @@ Schema.register('RekaComponentView', RekaComponentView);
 type ExternalComponentViewParameters = {
   key: string;
   template: Template;
+  frame: string;
   component: ExternalComponent;
   props: Record<string, string | number | boolean | Function>;
 };
@@ -504,6 +510,7 @@ Schema.register('ExternalComponentView', ExternalComponentView);
 type SlotViewParameters = {
   key: string;
   template: Template;
+  frame: string;
   children: View[];
 };
 
@@ -519,6 +526,7 @@ Schema.register('SlotView', SlotView);
 type SystemViewParameters = {
   key: string;
   template: Template;
+  frame: string;
 };
 
 export abstract class SystemView extends View {
@@ -532,6 +540,7 @@ Schema.register('SystemView', SystemView);
 type EachSystemViewParameters = {
   key: string;
   template: Template;
+  frame: string;
   children: View[];
 };
 
@@ -547,6 +556,7 @@ Schema.register('EachSystemView', EachSystemView);
 type ErrorSystemViewParameters = {
   key: string;
   template: Template;
+  frame: string;
   error: string;
 };
 
