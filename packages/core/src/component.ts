@@ -78,6 +78,7 @@ export class ComponentViewEvaluator {
         component,
         render: [],
         template: this.template,
+        owner: this.ctx.owner,
       });
 
       untracked(() => {
@@ -95,6 +96,7 @@ export class ComponentViewEvaluator {
                     this.evaluator.computeTemplate(child, {
                       ...this.ctx,
                       path: [...this.ctx.path, child.id],
+                      owner: this.ctx.owner,
                     })
                   );
 
@@ -169,6 +171,7 @@ export class ComponentViewEvaluator {
               render = this.evaluator.computeTemplate(component.template, {
                 path: [this.key, 'root'],
                 env: this.env,
+                owner: componentViewTree,
               });
             } catch (err) {
               render = [
@@ -177,6 +180,7 @@ export class ComponentViewEvaluator {
                   error: String(err),
                   template: this.template,
                   key: this.key,
+                  owner: componentViewTree,
                 }),
               ];
             }
@@ -237,6 +241,7 @@ export class ComponentViewEvaluator {
                 error: `Component "${this.template.component.name}" not found`,
                 key: this.key,
                 template: this.template,
+                owner: this.ctx.owner,
               }),
             ];
           }

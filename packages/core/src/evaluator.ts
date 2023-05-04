@@ -22,6 +22,7 @@ import { createKey } from './utils';
 
 export type TemplateEvaluateContext = {
   env: Environment;
+  owner: t.ComponentView | null;
   path: string[];
 };
 
@@ -143,6 +144,9 @@ export class Evaluator {
               }
             },
           },
+          TagView: {
+            exclude: ['owner'],
+          },
           ComponentView: {
             exclude: ['component'],
           },
@@ -177,7 +181,11 @@ export class Evaluator {
 
       this.viewObserver = new Observer(view, {
         id: `view-${this.rootTemplate.id}`,
-        shouldIgnoreObservable: (_, __, value) => {
+        shouldIgnoreObservable: (_, key, value) => {
+          if (key === 'owner') {
+            return true;
+          }
+
           if (value instanceof t.Template || value instanceof t.Component) {
             return true;
           }
@@ -372,6 +380,7 @@ export class Evaluator {
         template,
         children: ctx.env.getByName(ComponentSlotBindingKey),
         frame: this.frame.id,
+        owner: ctx.owner,
       }),
     ];
   }
@@ -413,6 +422,7 @@ export class Evaluator {
         key: createKey(ctx.path),
         template,
         frame: this.frame.id,
+        owner: ctx.owner,
       });
     } catch (error: any) {
       // TODO: create error handling system
@@ -422,6 +432,7 @@ export class Evaluator {
         error: String(error),
         template,
         frame: this.frame.id,
+        owner: ctx.owner,
       });
     }
 
@@ -467,6 +478,7 @@ export class Evaluator {
       const views = this.computeTemplate(this.rootTemplate, {
         path: ['frame'],
         env: this.reka.head.env,
+        owner: null,
       });
 
       return t.assert(views[0], t.RekaComponentView);

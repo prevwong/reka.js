@@ -443,12 +443,14 @@ type TagViewParameters = {
   tag: string;
   children: View[];
   props: Record<string, any>;
+  owner: ComponentView | null;
 };
 
 export class TagView extends View {
   declare tag: string;
   declare children: View[];
   declare props: Record<string, any>;
+  declare owner: ComponentView | null;
   constructor(value: TagViewParameters) {
     super('TagView', value);
   }
@@ -461,10 +463,12 @@ type ComponentViewParameters = {
   template: Template;
   frame: string;
   component: Component;
+  owner?: ComponentView | null;
 };
 
 export abstract class ComponentView extends View {
   declare component: Component;
+  declare owner: ComponentView | null;
   constructor(type: string, value: ComponentViewParameters) {
     super(type, value);
   }
@@ -477,6 +481,7 @@ type RekaComponentViewParameters = {
   template: Template;
   frame: string;
   component: Component;
+  owner?: ComponentView | null;
   render: View[];
 };
 
@@ -493,6 +498,7 @@ type ExternalComponentViewParameters = {
   key: string;
   template: Template;
   frame: string;
+  owner?: ComponentView | null;
   component: ExternalComponent;
   props: Record<string, string | number | boolean | Function>;
 };
@@ -512,10 +518,12 @@ type SlotViewParameters = {
   template: Template;
   frame: string;
   children: View[];
+  owner: ComponentView | null;
 };
 
 export class SlotView extends View {
   declare children: View[];
+  declare owner: ComponentView | null;
   constructor(value: SlotViewParameters) {
     super('SlotView', value);
   }
@@ -527,9 +535,11 @@ type SystemViewParameters = {
   key: string;
   template: Template;
   frame: string;
+  owner: ComponentView | null;
 };
 
 export abstract class SystemView extends View {
+  declare owner: ComponentView | null;
   constructor(type: string, value: SystemViewParameters) {
     super(type, value);
   }
@@ -541,6 +551,7 @@ type EachSystemViewParameters = {
   key: string;
   template: Template;
   frame: string;
+  owner: ComponentView | null;
   children: View[];
 };
 
@@ -557,6 +568,7 @@ type ErrorSystemViewParameters = {
   key: string;
   template: Template;
   frame: string;
+  owner: ComponentView | null;
   error: string;
 };
 

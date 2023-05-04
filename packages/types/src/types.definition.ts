@@ -240,6 +240,7 @@ Schema.define('TagView', {
     tag: t.string,
     children: t.array(t.node('View')),
     props: t.map(t.any),
+    owner: t.union(t.node('ComponentView'), t.nullish),
   }),
 });
 
@@ -248,6 +249,7 @@ Schema.define('ComponentView', {
   extends: 'View',
   fields: (t) => ({
     component: t.node('Component'),
+    owner: t.defaultValue(t.union(t.node('ComponentView'), t.nullish), null),
   }),
 });
 
@@ -270,12 +272,16 @@ Schema.define('SlotView', {
   extends: 'View',
   fields: (t) => ({
     children: t.array(t.node('View')),
+    owner: t.union(t.node('ComponentView'), t.nullish),
   }),
 });
 
 Schema.define('SystemView', {
   abstract: true,
   extends: 'View',
+  fields: (t) => ({
+    owner: t.union(t.node('ComponentView'), t.nullish),
+  }),
 });
 
 Schema.define('EachSystemView', {
