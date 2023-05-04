@@ -98,7 +98,6 @@ export class YjsRekaSyncProvider {
       return;
     }
 
-    // TODO: this is currently not handling deletions
     if (event instanceof Y.YMapEvent) {
       if (event.keys.size === 0) {
         return;
@@ -151,7 +150,13 @@ export class YjsRekaSyncProvider {
         const yDocRoot = this.yRekaDocument;
 
         changes.forEach((change) => {
-          if (change.event !== 'change') {
+          if (change.event === 'add') {
+            return;
+          }
+
+          if (change.event === 'dispose') {
+            const typeIdToDispose = change.type.id;
+            yDocRoot.get('types').delete(typeIdToDispose);
             return;
           }
 
@@ -299,10 +304,6 @@ export class YjsRekaSyncProvider {
   init() {
     // Listen to Reka state changes
     this.rekaChangeUnsubscriber = this.reka.listenToChanges((change) => {
-      if (change.event !== 'change') {
-        return;
-      }
-
       if (this.isSynchingToMobx) {
         return;
       }
