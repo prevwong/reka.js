@@ -423,12 +423,14 @@ type ViewParameters = {
   key: string;
   template: Template;
   frame: string;
+  owner?: ComponentView | null;
 };
 
 export abstract class View extends Type {
   declare key: string;
   declare template: Template;
   declare frame: string;
+  declare owner: ComponentView | null;
   constructor(type: string, value: ViewParameters) {
     super(type, value);
   }
@@ -440,17 +442,16 @@ type TagViewParameters = {
   key: string;
   template: Template;
   frame: string;
+  owner?: ComponentView | null;
   tag: string;
   children: View[];
   props: Record<string, any>;
-  owner: ComponentView | null;
 };
 
 export class TagView extends View {
   declare tag: string;
   declare children: View[];
   declare props: Record<string, any>;
-  declare owner: ComponentView | null;
   constructor(value: TagViewParameters) {
     super('TagView', value);
   }
@@ -462,13 +463,12 @@ type ComponentViewParameters = {
   key: string;
   template: Template;
   frame: string;
-  component: Component;
   owner?: ComponentView | null;
+  component: Component;
 };
 
 export abstract class ComponentView extends View {
   declare component: Component;
-  declare owner: ComponentView | null;
   constructor(type: string, value: ComponentViewParameters) {
     super(type, value);
   }
@@ -480,8 +480,8 @@ type RekaComponentViewParameters = {
   key: string;
   template: Template;
   frame: string;
-  component: Component;
   owner?: ComponentView | null;
+  component: Component;
   render: View[];
 };
 
@@ -517,13 +517,12 @@ type SlotViewParameters = {
   key: string;
   template: Template;
   frame: string;
+  owner?: ComponentView | null;
   children: View[];
-  owner: ComponentView | null;
 };
 
 export class SlotView extends View {
   declare children: View[];
-  declare owner: ComponentView | null;
   constructor(value: SlotViewParameters) {
     super('SlotView', value);
   }
@@ -535,11 +534,10 @@ type SystemViewParameters = {
   key: string;
   template: Template;
   frame: string;
-  owner: ComponentView | null;
+  owner?: ComponentView | null;
 };
 
 export abstract class SystemView extends View {
-  declare owner: ComponentView | null;
   constructor(type: string, value: SystemViewParameters) {
     super(type, value);
   }
@@ -551,7 +549,7 @@ type EachSystemViewParameters = {
   key: string;
   template: Template;
   frame: string;
-  owner: ComponentView | null;
+  owner?: ComponentView | null;
   children: View[];
 };
 
@@ -568,7 +566,7 @@ type ErrorSystemViewParameters = {
   key: string;
   template: Template;
   frame: string;
-  owner: ComponentView | null;
+  owner?: ComponentView | null;
   error: string;
 };
 

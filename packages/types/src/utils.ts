@@ -1,5 +1,3 @@
-import { invariant } from '@rekajs/utils';
-
 import { Schema, Type, TypeConstructor } from './schema';
 import * as t from './types.docs';
 
@@ -313,6 +311,13 @@ export const collect = (type: t.Type) => {
   return types;
 };
 
+export const is = <T extends Type>(
+  value: any,
+  type: TypeConstructor<T>
+): value is T => {
+  return value instanceof type;
+};
+
 /**
  * Assert a value's Type
  */
@@ -330,14 +335,13 @@ export function assert<T extends Type, C extends (value: T) => any>(
   assertedType: TypeConstructor<T>,
   cb?: C
 ) {
-  invariant(
-    value instanceof assertedType,
-    `Invalid type. Expected type ${assertedType.name}`
-  );
-
-  if (cb) {
-    return cb(value as T);
+  if (!is(value, assertedType)) {
+    throw new Error(`Invalid type. Expected type ${assertedType.name}`);
   }
 
-  return value as T;
+  if (cb) {
+    return cb(value);
+  }
+
+  return value;
 }
