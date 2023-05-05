@@ -1,5 +1,12 @@
 # @rekajs/types
 
+## 0.1.6
+
+### Patch Changes
+
+- [`25ff10b`](https://github.com/prevwong/reka.js/commit/25ff10b91cbec51e104a535fc2e652eec39bab04) Thanks [@prevwong](https://github.com/prevwong)! - - Move owner field to base View type
+  - Add .is() assertion util
+
 ## 0.1.5
 
 ### Patch Changes
