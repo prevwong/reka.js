@@ -1,5 +1,17 @@
 # @rekajs/core
 
+## 0.1.6
+
+### Patch Changes
+
+- [`ee5ad86`](https://github.com/prevwong/reka.js/commit/ee5ad8618d608280232722f62ef699c3c8ccdba8) Thanks [@prevwong](https://github.com/prevwong)! - Autogenerate frame id by default
+
+- [`6986c1d`](https://github.com/prevwong/reka.js/commit/6986c1d7ed2e7cd81a0eaef09d6655e92d4caf52) Thanks [@prevwong](https://github.com/prevwong)! - Export ChangeListenerPayload type
+
+- [`125a014`](https://github.com/prevwong/reka.js/commit/125a01474a90a07d40b1539293344d8e8e3fa461) Thanks [@prevwong](https://github.com/prevwong)! - Include frame id in output View
+
+- [#25](https://github.com/prevwong/reka.js/pull/25) [`962f75a`](https://github.com/prevwong/reka.js/commit/962f75aa4e5ed4efdff72ddc0ac3744727fdd7f5) Thanks [@prevwong](https://github.com/prevwong)! - Add owner in View
+
 ## 0.1.5
 
 ### Patch Changes

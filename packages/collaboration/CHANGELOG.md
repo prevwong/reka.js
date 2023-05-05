@@ -1,5 +1,11 @@
 # @rekajs/collaboration
 
+## 0.1.5
+
+### Patch Changes
+
+- [`ac88eb9`](https://github.com/prevwong/reka.js/commit/ac88eb940b0c2e6986b1f793ddbf03ddd8278b99) Thanks [@prevwong](https://github.com/prevwong)! - Handle type disposals
+
 ## 0.1.4
 
 ### Patch Changes
