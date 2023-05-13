@@ -1,5 +1,11 @@
 # @rekajs/parser
 
+## 0.1.4
+
+### Patch Changes
+
+- [#28](https://github.com/prevwong/reka.js/pull/28) [`c461d56`](https://github.com/prevwong/reka.js/commit/c461d562302e6139726c2964490d4a819c57d879) Thanks [@prevwong](https://github.com/prevwong)! - feat: add meta prop to ASTNode
+
 ## 0.1.3
 
 ### Patch Changes
