@@ -35,7 +35,7 @@ const parseExpressionWithAcornToRekaType = <T extends t.Type = t.Any>(
   return { expression, type };
 };
 
-const jsToReka = <T extends t.Type = t.Any>(
+const jsToReka = <T extends t.ASTNode = t.ASTNode>(
   node: b.Node,
   opts?: AcornParserOptions<T>
 ) => {
@@ -548,7 +548,7 @@ export class Parser {
   }
 
   /// Parse an expression string into a Expression AST node
-  static parseExpression<T extends t.Type = t.Any>(
+  static parseExpression<T extends t.ASTNode = t.ASTNode>(
     source: string,
     expectedType?: t.TypeConstructor<T>
   ) {
@@ -560,7 +560,7 @@ export class Parser {
   }
 
   /// Stringify an AST Node into code
-  static stringify(type: t.Any) {
+  static stringify(type: t.ASTNode) {
     return Stringifier.toString(type);
   }
 }

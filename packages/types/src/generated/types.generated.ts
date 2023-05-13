@@ -15,9 +15,12 @@ export class State extends Type {
 
 Schema.register('State', State);
 
-type ASTNodeParameters = {};
+type ASTNodeParameters = {
+  meta?: Record<string, any>;
+};
 
 export abstract class ASTNode extends Type {
+  declare meta: Record<string, any>;
   constructor(type: string, value: ASTNodeParameters) {
     super(type, value);
   }
@@ -26,6 +29,7 @@ export abstract class ASTNode extends Type {
 Schema.register('ASTNode', ASTNode);
 
 type ProgramParameters = {
+  meta?: Record<string, any>;
   globals?: Val[];
   components?: RekaComponent[];
 };
@@ -40,7 +44,9 @@ export class Program extends ASTNode {
 
 Schema.register('Program', Program);
 
-type ExpressionParameters = {};
+type ExpressionParameters = {
+  meta?: Record<string, any>;
+};
 
 export abstract class Expression extends ASTNode {
   constructor(type: string, value: ExpressionParameters) {
@@ -51,6 +57,7 @@ export abstract class Expression extends ASTNode {
 Schema.register('Expression', Expression);
 
 type LiteralParameters = {
+  meta?: Record<string, any>;
   value: string | number | boolean;
 };
 
@@ -64,6 +71,7 @@ export class Literal extends Expression {
 Schema.register('Literal', Literal);
 
 type IdentifierParameters = {
+  meta?: Record<string, any>;
   name: string;
   external?: boolean;
 };
@@ -79,6 +87,7 @@ export class Identifier extends Expression {
 Schema.register('Identifier', Identifier);
 
 type ValParameters = {
+  meta?: Record<string, any>;
   name: string;
   init: Expression;
 };
@@ -94,6 +103,7 @@ export class Val extends Expression {
 Schema.register('Val', Val);
 
 type ArrayExpressionParameters = {
+  meta?: Record<string, any>;
   elements: Expression[];
 };
 
@@ -107,6 +117,7 @@ export class ArrayExpression extends Expression {
 Schema.register('ArrayExpression', ArrayExpression);
 
 type BinaryExpressionParameters = {
+  meta?: Record<string, any>;
   left: Expression;
   operator:
     | '+'
@@ -148,6 +159,7 @@ export class BinaryExpression extends Expression {
 Schema.register('BinaryExpression', BinaryExpression);
 
 type ObjectExpressionParameters = {
+  meta?: Record<string, any>;
   properties: Record<string, Expression>;
 };
 
@@ -161,6 +173,7 @@ export class ObjectExpression extends Expression {
 Schema.register('ObjectExpression', ObjectExpression);
 
 type BlockParameters = {
+  meta?: Record<string, any>;
   statements: Expression[];
 };
 
@@ -174,6 +187,7 @@ export class Block extends Expression {
 Schema.register('Block', Block);
 
 type FuncParameters = {
+  meta?: Record<string, any>;
   name?: string | null;
   params: Identifier[];
   body: Block;
@@ -191,6 +205,7 @@ export class Func extends Expression {
 Schema.register('Func', Func);
 
 type CallExpressionParameters = {
+  meta?: Record<string, any>;
   identifier: Identifier;
   params?: Record<string, Expression>;
 };
@@ -206,6 +221,7 @@ export class CallExpression extends Expression {
 Schema.register('CallExpression', CallExpression);
 
 type ConditionalExpressionParameters = {
+  meta?: Record<string, any>;
   condition: Expression;
   consequent: Expression;
   alternate: Expression;
@@ -223,6 +239,7 @@ export class ConditionalExpression extends Expression {
 Schema.register('ConditionalExpression', ConditionalExpression);
 
 type IfStatementParameters = {
+  meta?: Record<string, any>;
   condition: Expression;
   consequent: Block;
 };
@@ -238,6 +255,7 @@ export class IfStatement extends Expression {
 Schema.register('IfStatement', IfStatement);
 
 type AssignmentParameters = {
+  meta?: Record<string, any>;
   left: Identifier;
   operator: '=' | '+=' | '-=';
   right: Expression;
@@ -255,6 +273,7 @@ export class Assignment extends Expression {
 Schema.register('Assignment', Assignment);
 
 type MemberExpressionParameters = {
+  meta?: Record<string, any>;
   object: Identifier | MemberExpression;
   property: Identifier;
 };
@@ -270,6 +289,7 @@ export class MemberExpression extends Expression {
 Schema.register('MemberExpression', MemberExpression);
 
 type ComponentPropParameters = {
+  meta?: Record<string, any>;
   name: string;
   init?: Expression | null;
 };
@@ -285,6 +305,7 @@ export class ComponentProp extends ASTNode {
 Schema.register('ComponentProp', ComponentProp);
 
 type ComponentParameters = {
+  meta?: Record<string, any>;
   name: string;
 };
 
@@ -298,6 +319,7 @@ export abstract class Component extends ASTNode {
 Schema.register('Component', Component);
 
 type RekaComponentParameters = {
+  meta?: Record<string, any>;
   name: string;
   template: Template;
   state: Val[];
@@ -316,6 +338,7 @@ export class RekaComponent extends Component {
 Schema.register('RekaComponent', RekaComponent);
 
 type ExternalComponentParameters = {
+  meta?: Record<string, any>;
   name: string;
   render: Function;
 };
@@ -330,6 +353,7 @@ export class ExternalComponent extends Component {
 Schema.register('ExternalComponent', ExternalComponent);
 
 type TemplateParameters = {
+  meta?: Record<string, any>;
   props?: Record<string, Expression>;
   children?: Template[];
   if?: Expression | null;
@@ -351,6 +375,7 @@ export abstract class Template extends Expression {
 Schema.register('Template', Template);
 
 type TagTemplateParameters = {
+  meta?: Record<string, any>;
   props?: Record<string, Expression>;
   children?: Template[];
   if?: Expression | null;
@@ -369,6 +394,7 @@ export class TagTemplate extends Template {
 Schema.register('TagTemplate', TagTemplate);
 
 type ComponentTemplateParameters = {
+  meta?: Record<string, any>;
   props?: Record<string, Expression>;
   children?: Template[];
   if?: Expression | null;
@@ -387,6 +413,7 @@ export class ComponentTemplate extends Template {
 Schema.register('ComponentTemplate', ComponentTemplate);
 
 type SlotTemplateParameters = {
+  meta?: Record<string, any>;
   props?: Record<string, Expression>;
   children?: Template[];
   if?: Expression | null;
@@ -403,6 +430,7 @@ export class SlotTemplate extends Template {
 Schema.register('SlotTemplate', SlotTemplate);
 
 type ElementEachParameters = {
+  meta?: Record<string, any>;
   alias: Identifier;
   index?: Identifier | null;
   iterator: Expression;

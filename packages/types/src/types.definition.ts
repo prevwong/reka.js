@@ -9,6 +9,9 @@ Schema.define('State', {
 
 Schema.define('ASTNode', {
   abstract: true,
+  fields: (t) => ({
+    meta: t.defaultValue(t.map(t.any), {}),
+  }),
 });
 
 Schema.define('Program', {
