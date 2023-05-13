@@ -11,12 +11,15 @@ describe('Parser', () => {
         type: 'Literal',
         id: expect.any(String),
         value: 1,
+        meta: {},
       },
+      meta: {},
       operator: '+',
       right: {
         type: 'Identifier',
         id: expect.any(String),
         name: 'counter',
+        meta: {},
       },
     } as t.BinaryExpression);
   });
