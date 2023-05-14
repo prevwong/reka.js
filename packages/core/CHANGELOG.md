@@ -1,5 +1,11 @@
 # @rekajs/core
 
+## 0.1.7
+
+### Patch Changes
+
+- [`5609f03`](https://github.com/prevwong/reka.js/commit/5609f03230775420b537f73b89a8a56745225053) Thanks [@prevwong](https://github.com/prevwong)! - Persist reactivity in .subscribe method
+
 ## 0.1.6
 
 ### Patch Changes
