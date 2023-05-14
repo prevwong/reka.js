@@ -15,7 +15,6 @@ import { Frame, FrameOpts } from './frame';
 import { Head } from './head';
 import { StateOpts, StateSubscriberOpts } from './interfaces';
 import { ChangeListenerSubscriber, Observer } from './observer';
-import { toJS } from './utils';
 
 export class Reka {
   id: string;
@@ -231,11 +230,11 @@ export class Reka {
    */
   subscribe<C>(
     collect: (reka: Reka) => C,
-    onCollect: (collected: C, prevCollected: C) => void,
+    onCollect: (collected: C, prevCollected: C | undefined) => void,
     opts?: StateSubscriberOpts
   ) {
     const dispose = reaction(
-      () => toJS(collect(this)),
+      () => collect(this),
       (collected, prevCollected) => onCollect(collected, prevCollected),
       {
         fireImmediately: opts?.fireImmediately,
