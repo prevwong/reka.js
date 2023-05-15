@@ -51,12 +51,21 @@ export class ComponentViewEvaluator {
       this.rekaComponentPropsComputation = null;
       this.rekaComponentStateComputation = null;
 
+      const children = this.template.children.flatMap((child) =>
+        this.evaluator.computeTemplate(child, {
+          ...this.ctx,
+          path: [...this.ctx.path, child.id],
+          owner: this.ctx.owner,
+        })
+      );
+
       return [
         t.externalComponentView({
           frame: this.evaluator.frame.id,
           component,
           key: this.key,
           template: this.template,
+          children: children || [],
           props: Object.keys(this.template.props).reduce(
             (accum, key) => ({
               ...accum,

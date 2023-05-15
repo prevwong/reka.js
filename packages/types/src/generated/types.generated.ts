@@ -528,11 +528,13 @@ type ExternalComponentViewParameters = {
   frame: string;
   owner?: ComponentView | null;
   component: ExternalComponent;
+  children?: View[];
   props: Record<string, string | number | boolean | Function>;
 };
 
 export class ExternalComponentView extends ComponentView {
   declare component: ExternalComponent;
+  declare children: View[];
   declare props: Record<string, string | number | boolean | Function>;
   constructor(value: ExternalComponentViewParameters) {
     super('ExternalComponentView', value);

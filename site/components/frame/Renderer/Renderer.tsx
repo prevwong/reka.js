@@ -160,7 +160,12 @@ const RenderExternalComponentView = observer(
     }, [onConnect, props.view]);
 
     return React.cloneElement(
-      props.view.component.render({ ...props.view.props }),
+      props.view.component.render({
+        ...props.view.props,
+        children: props.view.children.map((child) => (
+          <InternalRenderer key={child.id} view={child} />
+        )),
+      }),
       {
         ref: domRef,
       }
