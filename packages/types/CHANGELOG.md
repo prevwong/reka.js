@@ -1,5 +1,13 @@
 # @rekajs/types
 
+## 0.1.8
+
+### Patch Changes
+
+- [#35](https://github.com/prevwong/reka.js/pull/35) [`d653f03`](https://github.com/prevwong/reka.js/commit/d653f03253259c0deecaa73159e54db841860673) Thanks [@prevwong](https://github.com/prevwong)! - Fix nested object expressions as props in ExternalComponents
+
+- [#34](https://github.com/prevwong/reka.js/pull/34) [`de97826`](https://github.com/prevwong/reka.js/commit/de97826222f7006d1b0e84c51244fbfe9e434d4f) Thanks [@prevwong](https://github.com/prevwong)! - Fix template slots not passing through ExternalComponents
+
 ## 0.1.7
 
 ### Patch Changes

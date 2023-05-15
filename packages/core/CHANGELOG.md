@@ -1,5 +1,13 @@
 # @rekajs/core
 
+## 0.1.8
+
+### Patch Changes
+
+- [#34](https://github.com/prevwong/reka.js/pull/34) [`de97826`](https://github.com/prevwong/reka.js/commit/de97826222f7006d1b0e84c51244fbfe9e434d4f) Thanks [@prevwong](https://github.com/prevwong)! - Fix template slots not passing through ExternalComponents
+
+- [`6f81ace`](https://github.com/prevwong/reka.js/commit/6f81ace1ea03b97ef7486b7441112a9772ea2dff) Thanks [@prevwong](https://github.com/prevwong)! - Fix subscriber type
+
 ## 0.1.7
 
 ### Patch Changes
