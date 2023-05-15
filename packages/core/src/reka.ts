@@ -230,7 +230,7 @@ export class Reka {
    */
   subscribe<C>(
     collect: (reka: Reka) => C,
-    onCollect: (collected: C, prevCollected: C | undefined) => void,
+    onCollect: (collected: C, prevCollected?: C) => void,
     opts?: StateSubscriberOpts
   ) {
     const dispose = reaction(

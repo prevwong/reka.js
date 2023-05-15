@@ -57,7 +57,10 @@ export class ComponentEditor {
         framesCount: state.frames.length,
       }),
       (collected, prevCollected) => {
-        if (collected.framesCount >= prevCollected.framesCount) {
+        if (
+          prevCollected &&
+          collected.framesCount >= prevCollected.framesCount
+        ) {
           return;
         }
 

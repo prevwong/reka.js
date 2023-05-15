@@ -39,7 +39,7 @@ export class Extension<D extends ExtensionDefinition = any> {
 
   subscribe<C extends Record<string, any>>(
     collector: (state: D['state']) => C,
-    subscriber: (collected: C, prevCollected: C) => void,
+    subscriber: (collected: C, prevCollected: C | undefined) => void,
     opts?: StateSubscriberOpts
   ) {
     return this.reka.subscribe(() => collector(this.state), subscriber, opts);
