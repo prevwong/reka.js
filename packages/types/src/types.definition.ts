@@ -266,6 +266,7 @@ Schema.define('ExternalComponentView', {
   extends: 'ComponentView',
   fields: (t) => ({
     component: t.node('ExternalComponent'),
+    children: t.defaultValue(t.array(t.node('View')), []),
     props: t.map(t.union(t.string, t.number, t.boolean, t.func)),
   }),
 });
