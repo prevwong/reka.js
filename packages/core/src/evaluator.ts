@@ -106,6 +106,13 @@ export class Evaluator {
     return this.viewObserver.getTypeFromId(id, expectedType);
   }
 
+  getParentView<T extends t.View>(
+    view: t.View,
+    expectedParentType?: t.TypeConstructor<T>
+  ) {
+    return this.viewObserver?.getParent(view, expectedParentType) ?? null;
+  }
+
   private disposeComponentEvaluators() {
     this.tplKeyToComponentEvaluator.forEach((componentEvaluator) => {
       componentEvaluator.dispose();

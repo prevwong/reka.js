@@ -67,6 +67,14 @@ export class Frame {
     return this.evaluator.getViewFromId(id, expectedType);
   }
 
+  /// Get the parent View of the specified View node
+  getParentView<T extends t.View>(
+    view: t.View,
+    expectedParentType?: t.TypeConstructor<T>
+  ) {
+    return this.evaluator.getParentView(view, expectedParentType);
+  }
+
   /// Enable synching. Changes made to the State that affects the Frame's component will cause its View to be recomputed
   enableSync() {
     this.sync = true;
