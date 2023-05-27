@@ -1,5 +1,13 @@
 # @rekajs/types
 
+## 0.1.9
+
+### Patch Changes
+
+- [`3679840`](https://github.com/prevwong/reka.js/commit/3679840a0c3e0e6652dc3c106940ac3c52d636d2) Thanks [@prevwong](https://github.com/prevwong)! - Typecast component property for RekaComponentView
+
+- [`25abee2`](https://github.com/prevwong/reka.js/commit/25abee234c3453f9cc7d710ab12d810c0b327dc1) Thanks [@prevwong](https://github.com/prevwong)! - Merge Tag/Component view as Slottable
+
 ## 0.1.8
 
 ### Patch Changes
