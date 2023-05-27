@@ -1,5 +1,11 @@
 # @rekajs/core
 
+## 0.1.9
+
+### Patch Changes
+
+- [`c84d9c0`](https://github.com/prevwong/reka.js/commit/c84d9c05b2483ae0a30f1a3153364d7aeb0324e9) Thanks [@prevwong](https://github.com/prevwong)! - Add getParentView method in Frame
+
 ## 0.1.8
 
 ### Patch Changes
