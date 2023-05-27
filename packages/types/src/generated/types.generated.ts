@@ -466,19 +466,35 @@ export abstract class View extends Type {
 
 Schema.register('View', View);
 
+type SlottableViewParameters = {
+  key: string;
+  template: Template;
+  frame: string;
+  owner?: ComponentView | null;
+  children?: View[];
+};
+
+export abstract class SlottableView extends View {
+  declare children: View[];
+  constructor(type: string, value: SlottableViewParameters) {
+    super(type, value);
+  }
+}
+
+Schema.register('SlottableView', SlottableView);
+
 type TagViewParameters = {
   key: string;
   template: Template;
   frame: string;
   owner?: ComponentView | null;
+  children?: View[];
   tag: string;
-  children: View[];
   props: Record<string, any>;
 };
 
-export class TagView extends View {
+export class TagView extends SlottableView {
   declare tag: string;
-  declare children: View[];
   declare props: Record<string, any>;
   constructor(value: TagViewParameters) {
     super('TagView', value);
@@ -492,10 +508,11 @@ type ComponentViewParameters = {
   template: Template;
   frame: string;
   owner?: ComponentView | null;
+  children?: View[];
   component: Component;
 };
 
-export abstract class ComponentView extends View {
+export abstract class ComponentView extends SlottableView {
   declare component: Component;
   constructor(type: string, value: ComponentViewParameters) {
     super(type, value);
@@ -509,6 +526,7 @@ type RekaComponentViewParameters = {
   template: Template;
   frame: string;
   owner?: ComponentView | null;
+  children?: View[];
   component: Component;
   render: View[];
 };
@@ -527,14 +545,13 @@ type ExternalComponentViewParameters = {
   template: Template;
   frame: string;
   owner?: ComponentView | null;
-  component: ExternalComponent;
   children?: View[];
+  component: ExternalComponent;
   props: Record<string, any>;
 };
 
 export class ExternalComponentView extends ComponentView {
   declare component: ExternalComponent;
-  declare children: View[];
   declare props: Record<string, any>;
   constructor(value: ExternalComponentViewParameters) {
     super('ExternalComponentView', value);
@@ -651,6 +668,7 @@ export type Any =
   | SlotTemplate
   | ElementEach
   | View
+  | SlottableView
   | TagView
   | ComponentView
   | RekaComponentView
@@ -688,6 +706,7 @@ export type Visitor = {
   SlotTemplate: (node: SlotTemplate) => any;
   ElementEach: (node: ElementEach) => any;
   View: (node: View) => any;
+  SlottableView: (node: SlottableView) => any;
   TagView: (node: TagView) => any;
   ComponentView: (node: ComponentView) => any;
   RekaComponentView: (node: RekaComponentView) => any;

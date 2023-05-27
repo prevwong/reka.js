@@ -238,18 +238,25 @@ Schema.define('View', {
   }),
 });
 
-Schema.define('TagView', {
+Schema.define('SlottableView', {
+  abstract: true,
   extends: 'View',
   fields: (t) => ({
+    children: t.defaultValue(t.array(t.node('View')), []),
+  }),
+});
+
+Schema.define('TagView', {
+  extends: 'SlottableView',
+  fields: (t) => ({
     tag: t.string,
-    children: t.array(t.node('View')),
     props: t.map(t.any),
   }),
 });
 
 Schema.define('ComponentView', {
   abstract: true,
-  extends: 'View',
+  extends: 'SlottableView',
   fields: (t) => ({
     component: t.node('Component'),
   }),
@@ -266,7 +273,6 @@ Schema.define('ExternalComponentView', {
   extends: 'ComponentView',
   fields: (t) => ({
     component: t.node('ExternalComponent'),
-    children: t.defaultValue(t.array(t.node('View')), []),
     props: t.map(t.any),
   }),
 });
