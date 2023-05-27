@@ -527,11 +527,12 @@ type RekaComponentViewParameters = {
   frame: string;
   owner?: ComponentView | null;
   children?: View[];
-  component: Component;
+  component: RekaComponent;
   render: View[];
 };
 
 export class RekaComponentView extends ComponentView {
+  declare component: RekaComponent;
   declare render: View[];
   constructor(value: RekaComponentViewParameters) {
     super('RekaComponentView', value);

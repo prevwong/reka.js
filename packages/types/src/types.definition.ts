@@ -265,6 +265,7 @@ Schema.define('ComponentView', {
 Schema.define('RekaComponentView', {
   extends: 'ComponentView',
   fields: (t) => ({
+    component: t.node('RekaComponent'),
     render: t.array(t.node('View')),
   }),
 });
