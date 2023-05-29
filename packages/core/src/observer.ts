@@ -122,15 +122,16 @@ export class Observer<T extends t.Type = t.Type> {
     });
   }
 
-  private whileDisposing(cb: () => void) {
+  private whileDisposing<C>(cb: () => C) {
     if (this.isDisposing) {
-      cb();
-      return;
+      return cb();
     }
 
     this.isDisposing = true;
-    cb();
+    const returnValue = cb();
     this.isDisposing = false;
+
+    return returnValue;
   }
 
   private disposeTypes() {
@@ -389,6 +390,7 @@ export class Observer<T extends t.Type = t.Type> {
       }
 
       uniqueArrayItemCount.delete(item);
+
       if (!disposers.get(item)) {
         return;
       }
@@ -649,31 +651,31 @@ export class Observer<T extends t.Type = t.Type> {
     };
   }
 
-  change(mutation: () => void) {
+  change<C>(mutation: () => C) {
     const _change = () => {
       if (this.isMutation) {
-        mutation();
-        return;
+        return runInAction(() => {
+          return mutation();
+        });
       }
 
-      runInAction(() => {
+      return runInAction(() => {
         this.isMutation = true;
-        mutation();
+        const returnValue = mutation();
         this.isMutation = false;
 
         this.disposeTypes();
         this.uncommittedValues.clear();
+
+        return returnValue;
       });
     };
 
     if (this.opts.batch) {
-      _change();
-      return;
+      return _change();
     }
 
-    this.whileDisposing(() => {
-      _change();
-    });
+    return this.whileDisposing(() => _change());
   }
 
   dispose() {

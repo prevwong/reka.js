@@ -133,7 +133,11 @@ export class Evaluator {
       return newView;
     }
 
-    return runInAction(() => {
+    const observer = this.viewObserver;
+
+    invariant(observer, 'Root observer not initialiased');
+
+    return observer.change(() => {
       const mergedView = t.merge(existingView, newView, {
         function: (a, b) => {
           // Compare Func AST node id
