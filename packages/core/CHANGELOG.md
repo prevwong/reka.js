@@ -1,5 +1,13 @@
 # @rekajs/core
 
+## 0.1.10
+
+### Patch Changes
+
+- [`2426fcf`](https://github.com/prevwong/reka.js/commit/2426fcfdb4bfdd03220848fffed1e510d4bf5709) Thanks [@prevwong](https://github.com/prevwong)! - Add change listener for Frame's view
+
+- [`9030907`](https://github.com/prevwong/reka.js/commit/90309072aadb55070fe3d7255dfcb54e5e22b9fd) Thanks [@prevwong](https://github.com/prevwong)! - Fix notification on view disposal
+
 ## 0.1.9
 
 ### Patch Changes
