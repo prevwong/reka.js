@@ -52,6 +52,7 @@ export type ObserverHooks = {
 export type ObserverOptions = {
   id?: string;
   batch: boolean;
+  subscribers: ChangeListenerSubscriber[];
   shouldIgnoreObservable: (parent: t.Type, key: string, value: any) => boolean;
   hooks: Partial<ObserverHooks>;
 };
@@ -83,7 +84,6 @@ export class Observer<T extends t.Type = t.Type> {
   private declare rootDisposer: () => void;
 
   private valueToParentMap: WeakMap<ValuesWithReference, Parent>;
-  private changeListenerSubscribers: ChangeListenerSubscriber[] = [];
   private idToType: Map<string, t.Type>;
   private opts: ObserverOptions;
   private typeToDisposer: WeakMap<t.Type, ValueDisposer>;
@@ -109,6 +109,7 @@ export class Observer<T extends t.Type = t.Type> {
         onChange: () => {},
         onDispose: () => {},
       },
+      subscribers: [],
       batch: true,
       ...(opts || {}),
     };
@@ -177,11 +178,11 @@ export class Observer<T extends t.Type = t.Type> {
   }
 
   listenToChanges(changeListenerSubscriber: ChangeListenerSubscriber) {
-    this.changeListenerSubscribers.push(changeListenerSubscriber);
+    this.opts.subscribers.push(changeListenerSubscriber);
 
     return () => {
-      this.changeListenerSubscribers.splice(
-        this.changeListenerSubscribers.indexOf(changeListenerSubscriber),
+      this.opts.subscribers.splice(
+        this.opts.subscribers.indexOf(changeListenerSubscriber),
         1
       );
     };
@@ -584,7 +585,7 @@ export class Observer<T extends t.Type = t.Type> {
       return;
     }
 
-    this.changeListenerSubscribers.forEach((subscriber) => subscriber(change));
+    this.opts.subscribers.forEach((subscriber) => subscriber(change));
   }
 
   private getPath(value: t.Type | Array<any> | Object) {

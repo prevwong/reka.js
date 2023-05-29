@@ -3,6 +3,7 @@ import { getRandomId } from '@rekajs/utils';
 import { makeObservable, observable, action } from 'mobx';
 
 import { Evaluator } from './evaluator';
+import { ChangeListenerSubscriber } from './observer';
 import { Reka } from './reka';
 import { defer } from './utils';
 
@@ -100,6 +101,11 @@ export class Frame {
   /// Update the props of the Component associated with the Frame
   setProps(props: Record<string, any>) {
     this.evaluator.setProps(props);
+  }
+
+  /// Listen for changes and mutations made to the Frame's output View
+  listenToChanges(changeListenerSubscriber: ChangeListenerSubscriber) {
+    return this.evaluator.listenToChanges(changeListenerSubscriber);
   }
 
   dispose() {
