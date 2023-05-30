@@ -219,12 +219,12 @@ export class Observer<T extends t.Type = t.Type> {
   }
 
   private setupType(value: t.Type, parent?: Parent) {
-    if (this.idToType.get(value.id)) {
-      return noop;
-    }
-
     if (parent) {
       this.valueToParentMap.set(value, parent);
+    }
+
+    if (this.idToType.get(value.id)) {
+      return noop;
     }
 
     this.markedForDisposal.delete(value);
