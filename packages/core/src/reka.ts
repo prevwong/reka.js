@@ -95,6 +95,7 @@ export class Reka {
     this.state = t.state(state);
     this.head = new Head(this);
     this.observer = new Observer(this.state, {
+      id: 'state-observer',
       hooks: {
         onDispose: (payload) => {
           if (payload.type instanceof t.Identifier) {
