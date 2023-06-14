@@ -49,9 +49,9 @@ describe('Stringifier', () => {
         )
       ).toEqual('<Button color={"red"} />');
 
-      expect(
-        Stringifier.toString(t.slotTemplate({ props: {}, children: [] }))
-      ).toEqual('<slot />');
+      expect(Stringifier.toString(t.slotTemplate({ props: {} }))).toEqual(
+        '<slot />'
+      );
     });
     it('should parse directives', () => {
       expect(

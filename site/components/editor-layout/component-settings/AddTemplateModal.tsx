@@ -182,7 +182,6 @@ export const AddTemplateModal = (props: AddTemplateModalProps) => {
 
             props.onAdd(
               t.slotTemplate({
-                children: [],
                 props: {},
               })
             );

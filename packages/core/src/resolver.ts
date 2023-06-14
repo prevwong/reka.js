@@ -234,9 +234,11 @@ export class Resolver {
             this.resolveExpr(propValue, templateScope);
           });
 
-          template.children.forEach((child) => {
-            this.resolveTemplate(child, templateScope);
-          });
+          if (t.is(template, t.SlottableTemplate)) {
+            template.children.forEach((child) => {
+              this.resolveTemplate(child, templateScope);
+            });
+          }
         }),
       };
 

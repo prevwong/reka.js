@@ -190,7 +190,7 @@ Schema.define('Template', {
   abstract: true,
   fields: (t) => ({
     props: t.defaultValue(t.map(t.node('Expression')), {}),
-    children: t.defaultValue(t.array(t.node('Template')), []),
+
     if: t.defaultValue(t.union(t.node('Expression'), t.nullish), null),
     each: t.defaultValue(t.union(t.node('ElementEach'), t.nullish), null),
     classList: t.defaultValue(
@@ -200,15 +200,23 @@ Schema.define('Template', {
   }),
 });
 
-Schema.define('TagTemplate', {
+Schema.define('SlottableTemplate', {
+  abstract: true,
   extends: 'Template',
+  fields: (t) => ({
+    children: t.defaultValue(t.array(t.node('Template')), []),
+  }),
+});
+
+Schema.define('TagTemplate', {
+  extends: 'SlottableTemplate',
   fields: (t) => ({
     tag: t.string,
   }),
 });
 
 Schema.define('ComponentTemplate', {
-  extends: 'Template',
+  extends: 'SlottableTemplate',
   fields: (t) => ({
     component: t.node('Identifier'),
   }),

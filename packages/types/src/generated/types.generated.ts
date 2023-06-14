@@ -355,7 +355,6 @@ Schema.register('ExternalComponent', ExternalComponent);
 type TemplateParameters = {
   meta?: Record<string, any>;
   props?: Record<string, Expression>;
-  children?: Template[];
   if?: Expression | null;
   each?: ElementEach | null;
   classList?: ObjectExpression | null;
@@ -363,7 +362,6 @@ type TemplateParameters = {
 
 export abstract class Template extends Expression {
   declare props: Record<string, Expression>;
-  declare children: Template[];
   declare if: Expression | null;
   declare each: ElementEach | null;
   declare classList: ObjectExpression | null;
@@ -374,17 +372,35 @@ export abstract class Template extends Expression {
 
 Schema.register('Template', Template);
 
-type TagTemplateParameters = {
+type SlottableTemplateParameters = {
   meta?: Record<string, any>;
   props?: Record<string, Expression>;
-  children?: Template[];
   if?: Expression | null;
   each?: ElementEach | null;
   classList?: ObjectExpression | null;
+  children?: Template[];
+};
+
+export abstract class SlottableTemplate extends Template {
+  declare children: Template[];
+  constructor(type: string, value: SlottableTemplateParameters) {
+    super(type, value);
+  }
+}
+
+Schema.register('SlottableTemplate', SlottableTemplate);
+
+type TagTemplateParameters = {
+  meta?: Record<string, any>;
+  props?: Record<string, Expression>;
+  if?: Expression | null;
+  each?: ElementEach | null;
+  classList?: ObjectExpression | null;
+  children?: Template[];
   tag: string;
 };
 
-export class TagTemplate extends Template {
+export class TagTemplate extends SlottableTemplate {
   declare tag: string;
   constructor(value: TagTemplateParameters) {
     super('TagTemplate', value);
@@ -396,14 +412,14 @@ Schema.register('TagTemplate', TagTemplate);
 type ComponentTemplateParameters = {
   meta?: Record<string, any>;
   props?: Record<string, Expression>;
-  children?: Template[];
   if?: Expression | null;
   each?: ElementEach | null;
   classList?: ObjectExpression | null;
+  children?: Template[];
   component: Identifier;
 };
 
-export class ComponentTemplate extends Template {
+export class ComponentTemplate extends SlottableTemplate {
   declare component: Identifier;
   constructor(value: ComponentTemplateParameters) {
     super('ComponentTemplate', value);
@@ -415,7 +431,6 @@ Schema.register('ComponentTemplate', ComponentTemplate);
 type SlotTemplateParameters = {
   meta?: Record<string, any>;
   props?: Record<string, Expression>;
-  children?: Template[];
   if?: Expression | null;
   each?: ElementEach | null;
   classList?: ObjectExpression | null;
@@ -664,6 +679,7 @@ export type Any =
   | RekaComponent
   | ExternalComponent
   | Template
+  | SlottableTemplate
   | TagTemplate
   | ComponentTemplate
   | SlotTemplate
@@ -702,6 +718,7 @@ export type Visitor = {
   RekaComponent: (node: RekaComponent) => any;
   ExternalComponent: (node: ExternalComponent) => any;
   Template: (node: Template) => any;
+  SlottableTemplate: (node: SlottableTemplate) => any;
   TagTemplate: (node: TagTemplate) => any;
   ComponentTemplate: (node: ComponentTemplate) => any;
   SlotTemplate: (node: SlotTemplate) => any;

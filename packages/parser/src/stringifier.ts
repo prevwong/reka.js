@@ -335,7 +335,7 @@ class _Stringifier {
           }
         }
 
-        if (node.children.length > 0) {
+        if (t.is(node, t.SlottableTemplate) && node.children.length > 0) {
           this.writer.write('>');
           result.push('>');
         } else {
@@ -346,16 +346,18 @@ class _Stringifier {
           this.writer.write(['/>']);
         }
 
-        this.writer.withIndent(() => {
-          node.children.forEach((child, i, arr) => {
-            this.stringify(child);
-            if (i !== arr.length - 1) {
-              this.writer.write('\n');
-            }
+        if (t.is(node, t.SlottableTemplate)) {
+          this.writer.withIndent(() => {
+            node.children.forEach((child, i, arr) => {
+              this.stringify(child);
+              if (i !== arr.length - 1) {
+                this.writer.write('\n');
+              }
+            });
           });
-        });
+        }
 
-        if (node.children.length > 0) {
+        if (t.is(node, t.SlottableTemplate) && node.children.length > 0) {
           this.writer.write(`</${tag}>`);
         }
       },

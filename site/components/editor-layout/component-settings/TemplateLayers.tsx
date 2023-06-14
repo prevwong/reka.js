@@ -64,6 +64,10 @@ const AddTemplateButton = (props: AddTemplateButtonProps) => {
 
           editor.reka.change(() => {
             if (option === 'child') {
+              if (!(props.target instanceof t.SlottableTemplate)) {
+                return;
+              }
+
               props.target.children.push(template);
               return;
             }
@@ -74,7 +78,7 @@ const AddTemplateButton = (props: AddTemplateButtonProps) => {
               return;
             }
 
-            if (!(parent.node instanceof t.Template)) {
+            if (!(parent.node instanceof t.SlottableTemplate)) {
               return;
             }
 
@@ -205,7 +209,7 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
 
                     const parentNode = parent.node;
 
-                    if (!(parentNode instanceof t.Template)) {
+                    if (!(parentNode instanceof t.SlottableTemplate)) {
                       return;
                     }
 
@@ -224,13 +228,14 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
           </div>
         </div>
       </div>
-      {template.children.map((child) => (
-        <RenderTemplateNode
-          key={child.id}
-          templateId={child.id}
-          depth={depth + 1}
-        />
-      ))}
+      {t.is(template, t.SlottableTemplate) &&
+        template.children.map((child) => (
+          <RenderTemplateNode
+            key={child.id}
+            templateId={child.id}
+            depth={depth + 1}
+          />
+        ))}
     </div>
   );
 });
