@@ -1,5 +1,11 @@
 # @rekajs/types
 
+## 0.1.10
+
+### Patch Changes
+
+- [`78914f0`](https://github.com/prevwong/reka.js/commit/78914f0cd0b838ce827a06e4dcb7dabf7c5c4098) Thanks [@prevwong](https://github.com/prevwong)! - Group Tag/Component templates as SlottableTemplate
+
 ## 0.1.9
 
 ### Patch Changes

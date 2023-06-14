@@ -1,5 +1,13 @@
 # @rekajs/core
 
+## 0.1.11
+
+### Patch Changes
+
+- [`78914f0`](https://github.com/prevwong/reka.js/commit/78914f0cd0b838ce827a06e4dcb7dabf7c5c4098) Thanks [@prevwong](https://github.com/prevwong)! - Group Tag/Component templates as SlottableTemplate
+
+- [`7147a18`](https://github.com/prevwong/reka.js/commit/7147a18286c76079d41b0d6be071974592dba15a) Thanks [@prevwong](https://github.com/prevwong)! - Fix update parent path on Type upate
+
 ## 0.1.10
 
 ### Patch Changes
