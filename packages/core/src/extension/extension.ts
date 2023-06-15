@@ -3,10 +3,12 @@ import * as t from '@rekajs/types';
 import {
   ExtensionDefinition,
   ExtensionStateFromDefinition,
+  ExtensionVolatileStateFromDefinition,
 } from './definition';
 
 import { StateSubscriberOpts } from '../interfaces';
 import { Reka } from '../reka';
+import { ExtensionVolatileStateKey } from '../symbols';
 
 export class Extension<D extends ExtensionDefinition = any> {
   reka: Reka;
@@ -35,6 +37,12 @@ export class Extension<D extends ExtensionDefinition = any> {
 
   get state(): ExtensionStateFromDefinition<D> {
     return this.reka.state.extensions[this.definition.key].value;
+  }
+
+  get volatile(): ExtensionVolatileStateFromDefinition<D> {
+    return (
+      this.reka.volatile[ExtensionVolatileStateKey][this.definition.key] ?? {}
+    );
   }
 
   subscribe<C extends Record<string, any>>(

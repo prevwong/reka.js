@@ -15,6 +15,7 @@ import { Frame, FrameOpts } from './frame';
 import { Head } from './head';
 import { RekaOpts, StateSubscriberOpts } from './interfaces';
 import { ChangeListenerSubscriber, Observer } from './observer';
+import { ExtensionVolatileStateKey } from './symbols';
 
 export class Reka {
   id: string;
@@ -42,6 +43,11 @@ export class Reka {
 
   externals: Externals;
 
+  volatile: {
+    [key: string]: any;
+    [ExtensionVolatileStateKey]: Record<string, any>;
+  };
+
   constructor(private readonly opts?: RekaOpts) {
     this.id = getRandomId();
 
@@ -49,8 +55,13 @@ export class Reka {
 
     this.externals = new Externals(this, opts?.externals);
 
+    this.volatile = {
+      [ExtensionVolatileStateKey]: {},
+    };
+
     makeObservable(this, {
       frames: observable,
+      volatile: observable,
       components: computed,
       dispose: action,
     });
@@ -58,6 +69,16 @@ export class Reka {
 
   getExternalState(key: string) {
     return this.externals.getState(key);
+  }
+
+  getVolatileState(key: string) {
+    return this.volatile[key];
+  }
+
+  updateVolatileState(key: string, value: any) {
+    this.change(() => {
+      this.volatile[key] = value;
+    });
   }
 
   updateExternalState(key: string, value: any) {
