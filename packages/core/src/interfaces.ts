@@ -17,14 +17,14 @@ export type StateExternals = {
   components: t.Component[];
 };
 
-export type StateExternalsFactory = {
+export type RekaExternalsFactory = {
   states: StateExternalStates;
   functions: StateExternalFunctionsFactory;
   components: t.Component[];
 };
 
-export type StateOpts = {
-  externals?: Partial<StateExternalsFactory>;
+export type RekaOpts = {
+  externals?: Partial<RekaExternalsFactory>;
   extensions?: ExtensionDefinition<any>[];
 };
 

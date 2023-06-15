@@ -13,7 +13,7 @@ import { ExtensionDefinition, ExtensionRegistry } from './extension';
 import { Externals } from './externals';
 import { Frame, FrameOpts } from './frame';
 import { Head } from './head';
-import { StateOpts, StateSubscriberOpts } from './interfaces';
+import { RekaOpts, StateSubscriberOpts } from './interfaces';
 import { ChangeListenerSubscriber, Observer } from './observer';
 
 export class Reka {
@@ -42,7 +42,7 @@ export class Reka {
 
   externals: Externals;
 
-  constructor(private readonly opts?: StateOpts) {
+  constructor(private readonly opts?: RekaOpts) {
     this.id = getRandomId();
 
     this.frames = [];
@@ -278,7 +278,7 @@ export class Reka {
   /**
    * Create a new Reka instance
    */
-  static create(opts?: StateOpts) {
+  static create(opts?: RekaOpts) {
     return new Reka(opts);
   }
 }

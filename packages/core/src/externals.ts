@@ -5,7 +5,7 @@ import { action, makeObservable, observable } from 'mobx';
 import {
   StateExternalFunctions,
   StateExternalStates,
-  StateExternalsFactory,
+  RekaExternalsFactory,
 } from './interfaces';
 import { Reka } from './reka';
 
@@ -20,7 +20,7 @@ export class Externals {
 
   constructor(
     private readonly reka: Reka,
-    opts?: Partial<StateExternalsFactory>
+    opts?: Partial<RekaExternalsFactory>
   ) {
     this.states = opts?.states || {};
     this.functions = opts?.functions?.(this.reka) || {};

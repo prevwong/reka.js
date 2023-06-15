@@ -3,12 +3,12 @@ import * as t from '@rekajs/types';
 import { invariant } from '@rekajs/utils';
 
 import { FrameOpts } from '../frame';
-import { StateOpts } from '../interfaces';
+import { RekaOpts } from '../interfaces';
 import { Reka } from '../reka';
 
 const createFrame = (
   program: string,
-  opts?: Partial<{ state: StateOpts; frame: FrameOpts }>
+  opts?: Partial<{ state: RekaOpts; frame: FrameOpts }>
 ) => {
   const reka = Reka.create(opts?.state);
 
