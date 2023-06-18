@@ -1,11 +1,11 @@
-import { StateOpts } from '@rekajs/core';
+import { RekaOpts } from '@rekajs/core';
 
 import { CommentExtension } from '@app/extensions/CommentExtension';
 import { UserFrameExtension } from '@app/extensions/UserFrameExtension';
 
 export const createSharedStateGlobals = (
-  config: Partial<StateOpts> = {}
-): StateOpts => ({
+  config: Partial<RekaOpts> = {}
+): RekaOpts => ({
   extensions: [
     ...(config.extensions || []),
     UserFrameExtension,

@@ -58,7 +58,7 @@ export class ExtensionDefinition<
 
 export const createExtension = <
   S extends ExtensionStateDefinition,
-  V extends Record<string, any>
+  V extends Record<string, any> = any
 >(
   config: Require<Partial<ExtensionConfig<S, V>>, 'key'>
 ) => {
