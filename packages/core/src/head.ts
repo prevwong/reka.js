@@ -23,14 +23,7 @@ export class Head {
 
     this.globalsEnvComputation = new DisposableComputation(() => {
       this.reka.program.globals.forEach((global) => {
-        this.reka.head.env.set(global.name, {
-          value: computeExpression(
-            global.init,
-            this as any,
-            this.reka.head.env
-          ),
-          readonly: false,
-        });
+        computeExpression(global, this.reka, this.env);
       });
     });
 
