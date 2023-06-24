@@ -30,11 +30,6 @@ export class Resolver {
     CachedComponentResolver
   >;
   private cachedTemplateResolver: WeakMap<t.Template, CachedTemplateResolver>;
-
-  declare cachedGlobalsComputation: IComputedValue<void>;
-  declare cachedComponentsComputation: IComputedValue<void>;
-  declare cleanupRootScopeComputation: IComputedValue<void>;
-
   declare rootResolverComputation: DisposableComputation<void>;
 
   constructor(readonly reka: Reka) {
@@ -254,44 +249,29 @@ export class Resolver {
   }
 
   private resolveProgram() {
+    this.scope.clear();
+
     const program = this.reka.program;
 
-    if (!this.cachedGlobalsComputation) {
-      this.cachedGlobalsComputation = computed(() => {
-        program.globals.forEach((global) => {
-          this.resolveVal(global, this.scope);
-        });
-      });
-    }
+    program.globals.forEach((global) => {
+      this.resolveVal(global, this.scope);
+    });
 
-    if (!this.cachedComponentsComputation) {
-      this.cachedComponentsComputation = computed(() => {
-        program.components.forEach((component) => {
-          this.scope.defineVariableName(component.name);
-        });
-      });
-    }
+    program.components.forEach((component) => {
+      this.scope.defineVariableName(component.name);
+    });
 
-    this.cachedGlobalsComputation.get();
-    this.cachedComponentsComputation.get();
+    const globalNames = [...program.globals, ...program.components].map(
+      (globalOrComponent) => globalOrComponent.name
+    );
 
-    if (!this.cleanupRootScopeComputation) {
-      this.cleanupRootScopeComputation = computed(() => {
-        const globalNames = [...program.globals, ...program.components].map(
-          (globalOrComponent) => globalOrComponent.name
-        );
+    this.scope.forEach((name) => {
+      if (globalNames.includes(name)) {
+        return;
+      }
 
-        this.scope.forEach((name) => {
-          if (globalNames.includes(name)) {
-            return;
-          }
-
-          this.scope.removeVariableName(name);
-        });
-      });
-    }
-
-    this.cleanupRootScopeComputation.get();
+      this.scope.removeVariableName(name);
+    });
 
     program.components.forEach((component) => {
       this.resolveComponent(component, this.scope);

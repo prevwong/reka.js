@@ -114,7 +114,7 @@ export class Environment {
 
     const distance = this.reka.head.resolver.getDistance(identifier);
 
-    if (distance === undefined) {
+    if (distance === undefined || distance === -1) {
       throw new Error(`Value for "${identifier.name}" not found in scope`);
     }
 
