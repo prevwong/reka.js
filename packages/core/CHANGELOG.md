@@ -1,5 +1,17 @@
 # @rekajs/core
 
+## 0.1.12
+
+### Patch Changes
+
+- [#49](https://github.com/prevwong/reka.js/pull/49) [`885d8ba`](https://github.com/prevwong/reka.js/commit/885d8ba53cd33afdb395afb73ef373a8a1a04af6) Thanks [@prevwong](https://github.com/prevwong)! - Fix variable references in initial state value
+
+- [#50](https://github.com/prevwong/reka.js/pull/50) [`fc80ffe`](https://github.com/prevwong/reka.js/commit/fc80ffe21598ef06b0e3c36c2362be3a2d227a2a) Thanks [@prevwong](https://github.com/prevwong)! - Prevent out of scope variable reference
+
+- [`e4ee083`](https://github.com/prevwong/reka.js/commit/e4ee0838f55d526874cd318e42da860b744f7cf8) Thanks [@prevwong](https://github.com/prevwong)! - Ignore observing owner property in output View
+
+- [`d784d9d`](https://github.com/prevwong/reka.js/commit/d784d9d46e994637680dbd1c7ba0eed764ebc6fd) Thanks [@prevwong](https://github.com/prevwong)! - Add ability to define temporary/volatile stateful values
+
 ## 0.1.11
 
 ### Patch Changes
