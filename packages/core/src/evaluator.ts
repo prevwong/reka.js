@@ -150,15 +150,12 @@ export class Evaluator {
         },
         types: {
           View: {
-            exclude: ['template'],
+            exclude: ['template', 'owner'],
             diff: (a, b) => {
               if (a.key !== b.key) {
                 return b;
               }
             },
-          },
-          TagView: {
-            exclude: ['owner'],
           },
           ComponentView: {
             exclude: ['component'],
