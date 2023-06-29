@@ -23,11 +23,22 @@ export class Extension<D extends ExtensionDefinition = any> {
   init() {
     const existingState = this.reka.state.extensions[this.definition.key];
 
+    const {
+      volatile: volatileStateDefinition,
+      ...serialisableStateDefinition
+    } = this.definition.state || {};
+
     if (this.definition.state && !existingState) {
       this.reka.state.extensions[this.definition.key] = t.extensionState({
-        value: this.definition.state || null,
+        value:
+          Object.keys(serialisableStateDefinition).length > 0
+            ? serialisableStateDefinition
+            : null,
       });
     }
+
+    this.reka.volatile[ExtensionVolatileStateKey][this.definition.key] =
+      volatileStateDefinition ?? {};
 
     const serialisableState =
       this.reka.state.extensions[this.definition.key]?.value ?? {};

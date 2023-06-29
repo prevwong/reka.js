@@ -5,7 +5,6 @@ import { ExtensionDefinition } from './definition';
 import { Extension } from './extension';
 
 import { Reka } from '../reka';
-import { ExtensionVolatileStateKey } from '../symbols';
 
 export class ExtensionRegistry {
   private keyToExtension: Map<string, Extension> = new Map();
@@ -19,12 +18,6 @@ export class ExtensionRegistry {
 
       runInAction(() => {
         Object.assign(this.reka.externals.states, extension.definition.globals);
-
-        this.reka.volatile[ExtensionVolatileStateKey][
-          extension.definition.key
-        ] = {
-          ...(extension.definition.state?.['volatile'] ?? {}),
-        };
       });
     });
   }
