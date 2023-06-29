@@ -1,5 +1,17 @@
 # @rekajs/core
 
+## 0.1.13
+
+### Patch Changes
+
+- [#53](https://github.com/prevwong/reka.js/pull/53) [`59fad5e`](https://github.com/prevwong/reka.js/commit/59fad5eb1e3047b36e2fdb86449ba7d6ef12c4f0) Thanks [@prevwong](https://github.com/prevwong)! - Fix cyclic component reference
+
+- [`d1e8254`](https://github.com/prevwong/reka.js/commit/d1e8254ac84669601324ca806f7aea62f3de034b) Thanks [@prevwong](https://github.com/prevwong)! - Prevent computing view when disposed
+
+- [`b3124f7`](https://github.com/prevwong/reka.js/commit/b3124f7c3ded4d6a0dfa4601854c559ae15bb7ee) Thanks [@prevwong](https://github.com/prevwong)! - Simplify volatile state definition
+
+- [`e972aba`](https://github.com/prevwong/reka.js/commit/e972aba02ca943e3d2d17b5fe5db788fcc251b05) Thanks [@prevwong](https://github.com/prevwong)! - Add ability to create cached query callbacks
+
 ## 0.1.12
 
 ### Patch Changes
