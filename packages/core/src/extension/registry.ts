@@ -23,7 +23,7 @@ export class ExtensionRegistry {
         this.reka.volatile[ExtensionVolatileStateKey][
           extension.definition.key
         ] = {
-          ...(extension.definition.volatile || {}),
+          ...(extension.definition.state?.['volatile'] ?? {}),
         };
       });
     });

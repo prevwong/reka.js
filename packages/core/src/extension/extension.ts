@@ -3,7 +3,6 @@ import * as t from '@rekajs/types';
 import {
   ExtensionDefinition,
   ExtensionStateFromDefinition,
-  ExtensionVolatileStateFromDefinition,
 } from './definition';
 
 import { StateSubscriberOpts } from '../interfaces';
@@ -13,6 +12,8 @@ import { ExtensionVolatileStateKey } from '../symbols';
 export class Extension<D extends ExtensionDefinition = any> {
   reka: Reka;
   definition: D;
+
+  declare state: ExtensionStateFromDefinition<D>;
 
   constructor(reka: Reka, definition: D) {
     this.reka = reka;
@@ -28,21 +29,27 @@ export class Extension<D extends ExtensionDefinition = any> {
       });
     }
 
+    const serialisableState =
+      this.reka.state.extensions[this.definition.key]?.value ?? {};
+
+    const volatileState =
+      this.reka.volatile[ExtensionVolatileStateKey][this.definition.key] || {};
+
+    this.state = new Proxy(serialisableState, {
+      get: (_, prop) => {
+        if (prop === 'volatile') {
+          return volatileState;
+        }
+
+        return serialisableState[prop as any];
+      },
+    });
+
     return this.definition.init(this);
   }
 
   dispose() {
     return this.definition.dispose(this);
-  }
-
-  get state(): ExtensionStateFromDefinition<D> {
-    return this.reka.state.extensions[this.definition.key].value;
-  }
-
-  get volatile(): ExtensionVolatileStateFromDefinition<D> {
-    return (
-      this.reka.volatile[ExtensionVolatileStateKey][this.definition.key] ?? {}
-    );
   }
 
   subscribe<C extends Record<string, any>>(
