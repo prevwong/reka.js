@@ -8,6 +8,7 @@ import {
   observable,
   reaction,
 } from 'mobx';
+import { computedFn } from 'mobx-utils';
 
 import { ExtensionDefinition, ExtensionRegistry } from './extension';
 import { Externals } from './externals';
@@ -279,6 +280,10 @@ export class Reka {
     return () => {
       disposer();
     };
+  }
+
+  get createCachedQuery() {
+    return computedFn.bind(this);
   }
 
   /**
