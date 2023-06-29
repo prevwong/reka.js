@@ -4,7 +4,7 @@
   "description": "State management system for building no-code page editors",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build:types": "tsc -p .",
     "dev": "../../scripts/build.sh -w",

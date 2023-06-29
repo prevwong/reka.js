@@ -4,7 +4,6 @@ import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
-import dts from 'rollup-plugin-dts';
 
 const shouldMinify = process.env.NODE_ENV === 'production';
 const shouldIncludeInBundle = ['tslib'];
@@ -67,17 +66,5 @@ const createBundle = (config) => {
 };
 
 export default function createRollupConfig(config) {
-  return [
-    createBundle(config),
-    {
-      input: './lib/index.d.ts',
-      output: [
-        {
-          file: 'dist/index.d.ts',
-          format: 'es',
-        },
-      ],
-      plugins: [dts()],
-    },
-  ];
+  return [createBundle(config)];
 }

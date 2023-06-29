@@ -4,7 +4,7 @@
   "description": "Codemirror editor for editing Reka AST in code",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "dev": "../../scripts/build.sh -w",
     "build": "cross-env NODE_ENV=production ../../scripts/build.sh"
