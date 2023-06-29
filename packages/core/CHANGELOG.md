@@ -1,5 +1,11 @@
 # @rekajs/core
 
+## 0.1.14
+
+### Patch Changes
+
+- [`daff79c`](https://github.com/prevwong/reka.js/commit/daff79ccbeaf47406a678096c8d9220371d80c1e) Thanks [@prevwong](https://github.com/prevwong)! - Hotfix: don't include volatile state in serialisation
+
 ## 0.1.13
 
 ### Patch Changes
