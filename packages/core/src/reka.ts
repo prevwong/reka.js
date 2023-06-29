@@ -40,7 +40,8 @@ export class Reka {
   private idToFrame: Map<string, Frame> = new Map();
 
   private init = false;
-  private loaded = false;
+
+  loaded = false;
 
   externals: Externals;
 
@@ -290,6 +291,7 @@ export class Reka {
    * Dispose instance, stops all future computations
    */
   dispose() {
+    this.loaded = false;
     this.frames.map((frame) => this.removeFrame(frame));
 
     this.head.dispose();

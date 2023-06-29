@@ -509,6 +509,10 @@ export class Evaluator {
   }
 
   computeView() {
+    if (!this.reka.loaded) {
+      return;
+    }
+
     const _compute = () => {
       const views = this.computeTemplate(this.rootTemplate, {
         path: ['frame'],
