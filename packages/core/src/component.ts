@@ -56,6 +56,7 @@ export class ComponentViewEvaluator {
           ...this.ctx,
           path: [...this.ctx.path, child.id],
           owner: this.ctx.owner,
+          componentStack: [...this.ctx.componentStack, component],
         })
       );
 
@@ -181,6 +182,7 @@ export class ComponentViewEvaluator {
                 path: [this.key, 'root'],
                 env: this.env,
                 owner: componentViewTree,
+                componentStack: [...this.ctx.componentStack, component],
               });
             } catch (err) {
               render = [
@@ -248,6 +250,18 @@ export class ComponentViewEvaluator {
               t.errorSystemView({
                 frame: this.evaluator.frame.id,
                 error: `Component "${this.template.component.name}" not found`,
+                key: this.key,
+                template: this.template,
+                owner: this.ctx.owner,
+              }),
+            ];
+          }
+
+          if (this.ctx.componentStack.indexOf(component) > -1) {
+            return [
+              t.errorSystemView({
+                frame: this.evaluator.frame.id,
+                error: `Cycle detected when attempting to render "${component.name}"`,
                 key: this.key,
                 template: this.template,
                 owner: this.ctx.owner,

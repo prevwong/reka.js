@@ -24,6 +24,7 @@ export type TemplateEvaluateContext = {
   env: Environment;
   owner: t.ComponentView | null;
   path: string[];
+  componentStack: t.Component[];
 };
 
 export type TemplateViewComputationCache = {
@@ -513,6 +514,7 @@ export class Evaluator {
         path: ['frame'],
         env: this.reka.head.env,
         owner: null,
+        componentStack: [],
       });
 
       return t.assert(views[0], t.RekaComponentView);
