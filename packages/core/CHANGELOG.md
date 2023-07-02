@@ -1,5 +1,11 @@
 # @rekajs/core
 
+## 0.1.15
+
+### Patch Changes
+
+- [`460726f`](https://github.com/prevwong/reka.js/commit/460726f8fdf0274df3bbb1765fed436fb5cb81d2) Thanks [@prevwong](https://github.com/prevwong)! - Prevent component evaluation from being disposed when component template order is changed
+
 ## 0.1.14
 
 ### Patch Changes
