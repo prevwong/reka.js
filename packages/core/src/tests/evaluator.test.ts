@@ -174,4 +174,59 @@ describe('evaluator', () => {
       expect(view.props['value']).toEqual(2);
     });
   });
+
+  it('should not dispose component evaluation when child template order is changed', async () => {
+    const frame = await createFrame(`
+      component Button() => (
+        <text value={"Initial"} />
+      )
+
+      component App() => (
+        <div>
+          <Button /> 
+        </div>
+      )
+    `);
+
+    const getBtnText = (view: t.View) => {
+      return t.assert(view, t.RekaComponentView, (view) => {
+        return t.assert(view.render[0], t.TagView, (view) => {
+          return view.props.value as string;
+        });
+      });
+    };
+
+    const div = t.assert(frame.view, t.RekaComponentView, (view) =>
+      t.assert(view.render[0], t.TagView)
+    );
+
+    expect(div.children.length).toEqual(1);
+
+    await frame.reka.change(() => {
+      t.assert(div.template, t.TagTemplate).children.splice(
+        0,
+        0,
+        t.componentTemplate({
+          component: t.identifier({ name: 'Button' }),
+        })
+      );
+    });
+
+    expect(div.children.length).toEqual(2);
+
+    await frame.reka.change(() => {
+      const btnComponent = t.assert(
+        div.children[0],
+        t.RekaComponentView,
+        (view) => view.component
+      );
+
+      t.assert(btnComponent.template, t.TagTemplate).props.value = t.literal({
+        value: 'New',
+      });
+    });
+
+    expect(getBtnText(div.children[0])).toEqual('New');
+    expect(getBtnText(div.children[1])).toEqual('New');
+  });
 });
