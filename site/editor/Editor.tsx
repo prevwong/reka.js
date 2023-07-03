@@ -129,21 +129,34 @@ export class Editor {
               },
             }),
           ],
-          states: {
-            scrollTop: 0,
-          },
+          states: [
+            t.externalState({
+              name: 'scrollTop',
+              value: 0,
+            }),
+          ],
           functions: (self) => {
-            return {
-              confetti: () => {
-                confetti();
-              },
-              getScrollTop: () => {
-                return self.getExternalState('scrollTop');
-              },
-              getPosts: () => {
-                return self.getExternalState('posts');
-              },
-            };
+            return [
+              t.externalFunc({
+                name: 'confetti',
+                func: () => {
+                  confetti();
+                },
+              }),
+              t.externalFunc({
+                name: 'getScrollTop',
+                func: () => {
+                  return self.getExternalState('scrollTop').value;
+                },
+              }),
+              t.externalFunc({
+                name: 'getPosts',
+                func: () => {
+                  console.log('getting posts', self.getExternalState('posts'));
+                  return self.getExternalState('posts').value;
+                },
+              }),
+            ];
           },
         },
         extensions: [CollabExtension],

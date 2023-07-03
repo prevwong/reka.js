@@ -78,3 +78,9 @@ export const errorSystemView = (
 export const extensionState = (
   ...args: ConstructorParameters<typeof t.ExtensionState>
 ) => new t.ExtensionState(...args);
+export const externalState = (
+  ...args: ConstructorParameters<typeof t.ExternalState>
+) => new t.ExternalState(...args);
+export const externalFunc = (
+  ...args: ConstructorParameters<typeof t.ExternalFunc>
+) => new t.ExternalFunc(...args);

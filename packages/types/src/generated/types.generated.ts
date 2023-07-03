@@ -655,6 +655,36 @@ export class ExtensionState extends Type {
 
 Schema.register('ExtensionState', ExtensionState);
 
+type ExternalStateParameters = {
+  name: string;
+  value: any;
+};
+
+export class ExternalState extends Type {
+  declare name: string;
+  declare value: any;
+  constructor(value: ExternalStateParameters) {
+    super('ExternalState', value);
+  }
+}
+
+Schema.register('ExternalState', ExternalState);
+
+type ExternalFuncParameters = {
+  name: string;
+  func: Function;
+};
+
+export class ExternalFunc extends Type {
+  declare name: string;
+  declare func: Function;
+  constructor(value: ExternalFuncParameters) {
+    super('ExternalFunc', value);
+  }
+}
+
+Schema.register('ExternalFunc', ExternalFunc);
+
 export type Statement = Assignment;
 export type Any =
   | State
@@ -694,7 +724,9 @@ export type Any =
   | SystemView
   | EachSystemView
   | ErrorSystemView
-  | ExtensionState;
+  | ExtensionState
+  | ExternalState
+  | ExternalFunc;
 export type Visitor = {
   State: (node: State) => any;
   ASTNode: (node: ASTNode) => any;
@@ -734,4 +766,6 @@ export type Visitor = {
   EachSystemView: (node: EachSystemView) => any;
   ErrorSystemView: (node: ErrorSystemView) => any;
   ExtensionState: (node: ExtensionState) => any;
+  ExternalState: (node: ExternalState) => any;
+  ExternalFunc: (node: ExternalFunc) => any;
 };

@@ -4,12 +4,12 @@ import { ExtensionDefinition } from './extension';
 import { Reka } from './reka';
 
 export type StateExternalFunction = (opts: Record<string, any>) => any;
-export type StateExternalFunctions = Record<string, StateExternalFunction>;
+export type StateExternalFunctions = Array<t.ExternalFunc>;
 export type StateExternalFunctionsFactory = (
   reka: Reka
 ) => StateExternalFunctions;
 
-export type StateExternalStates = Record<string, any>;
+export type StateExternalStates = Array<t.ExternalState>;
 
 export type StateExternals = {
   states: StateExternalStates;

@@ -2,18 +2,14 @@ import * as t from '@rekajs/types';
 import { invariant } from '@rekajs/utils';
 import { action, makeObservable, observable } from 'mobx';
 
-import {
-  StateExternalFunctions,
-  StateExternalStates,
-  RekaExternalsFactory,
-} from './interfaces';
+import { RekaExternalsFactory } from './interfaces';
 import { Reka } from './reka';
 
 type ExternalSource = 'states' | 'functions' | 'components';
 
 export class Externals {
-  states: StateExternalStates;
-  functions: StateExternalFunctions;
+  states: Record<string, t.ExternalState>;
+  functions: Record<string, t.ExternalFunc>;
   components: Record<string, t.Component>;
 
   private lookup: Record<string, ExternalSource> = {};
@@ -22,16 +18,16 @@ export class Externals {
     private readonly reka: Reka,
     opts?: Partial<RekaExternalsFactory>
   ) {
-    this.states = opts?.states || {};
-    this.functions = opts?.functions?.(this.reka) || {};
-    this.components =
-      opts?.components?.reduce(
-        (accum, component) => ({
-          ...accum,
-          [component.name]: component,
-        }),
-        {}
-      ) || [];
+    this.states = Object.fromEntries(
+      opts?.states?.map((state) => [state.name, state]) ?? []
+    );
+
+    this.functions = Object.fromEntries(
+      opts?.functions?.(this.reka).map((func) => [func.name, func]) ?? []
+    );
+    this.components = Object.fromEntries(
+      opts?.components?.map((component) => [component.name, component]) ?? []
+    );
 
     this.createNamedLookup();
 
@@ -76,7 +72,7 @@ export class Externals {
     return this.components[name];
   }
 
-  getGlobal(name: string) {
+  getFunc(name: string) {
     return this.functions[name];
   }
 

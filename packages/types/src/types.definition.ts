@@ -317,3 +317,17 @@ Schema.define('ExtensionState', {
     value: t.union(t.nullish, t.map(t.any)),
   }),
 });
+
+Schema.define('ExternalState', {
+  fields: (t) => ({
+    name: t.string,
+    value: t.any,
+  }),
+});
+
+Schema.define('ExternalFunc', {
+  fields: (t) => ({
+    name: t.string,
+    func: t.func,
+  }),
+});
