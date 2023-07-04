@@ -28,6 +28,14 @@ Schema.define('Expression', {
   abstract: true,
 });
 
+Schema.define('Variable', {
+  extends: 'Expression',
+  abstract: true,
+  fields: (t) => ({
+    name: t.string,
+  }),
+});
+
 Schema.define('Literal', {
   extends: 'Expression',
   fields: (t) => ({
@@ -44,9 +52,8 @@ Schema.define('Identifier', {
 });
 
 Schema.define('Val', {
-  extends: 'Expression',
+  extends: 'Variable',
   fields: (t) => ({
-    name: t.string,
     init: t.node('Expression'),
   }),
 });
@@ -154,19 +161,15 @@ Schema.define('MemberExpression', {
 });
 
 Schema.define('ComponentProp', {
-  extends: 'ASTNode',
+  extends: 'Variable',
   fields: (t) => ({
-    name: t.string,
     init: t.defaultValue(t.union(t.node('Expression'), t.nullish), null),
   }),
 });
 
 Schema.define('Component', {
-  extends: 'ASTNode',
+  extends: 'Variable',
   abstract: true,
-  fields: (t) => ({
-    name: t.string,
-  }),
 });
 
 Schema.define('RekaComponent', {
@@ -227,11 +230,19 @@ Schema.define('SlotTemplate', {
   fields: () => ({}),
 });
 
+Schema.define('ElementEachAlias', {
+  extends: 'Variable',
+});
+
+Schema.define('ElementEachIndex', {
+  extends: 'Variable',
+});
+
 Schema.define('ElementEach', {
   extends: 'ASTNode',
   fields: (t) => ({
-    alias: t.node('Identifier'),
-    index: t.defaultValue(t.union(t.node('Identifier'), t.nullish), null),
+    alias: t.node('ElementEachAlias'),
+    index: t.defaultValue(t.union(t.node('ElementEachIndex'), t.nullish), null),
     iterator: t.node('Expression'),
   }),
 });
@@ -319,15 +330,15 @@ Schema.define('ExtensionState', {
 });
 
 Schema.define('ExternalState', {
+  extends: 'Variable',
   fields: (t) => ({
-    name: t.string,
     value: t.any,
   }),
 });
 
 Schema.define('ExternalFunc', {
+  extends: 'Variable',
   fields: (t) => ({
-    name: t.string,
     func: t.func,
   }),
 });

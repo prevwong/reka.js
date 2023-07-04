@@ -89,6 +89,10 @@ export class Reka {
     });
   }
 
+  getVariableFromIdentifier(identifier: t.Identifier) {
+    return this.head.resolver.getVariableFromIdentifier(identifier);
+  }
+
   /**
    * Get the Program AST node from State. Shorthand for state.program
    */
@@ -123,6 +127,7 @@ export class Reka {
         onDispose: (payload) => {
           if (payload.type instanceof t.Identifier) {
             this.head.resolver.removeDistance(payload.type);
+            this.head.resolver.unbindIdentifierToVariable(payload.type);
           }
         },
       },
@@ -301,6 +306,10 @@ export class Reka {
 
   toJSON() {
     return this.state;
+  }
+
+  get getVariablesAtNode() {
+    return this.head.resolver.getVariablesAtNode.bind(this.head.resolver);
   }
 
   /**

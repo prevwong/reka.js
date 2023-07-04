@@ -31,8 +31,18 @@ export class Externals {
 
     this.createNamedLookup();
 
+    Object.keys(this.states).forEach((state) => {
+      const schema = t.Schema.get('ExternalState');
+
+      makeObservable(
+        this.states[state],
+        Object.fromEntries(
+          schema.fields.map((field) => [field.name, observable])
+        )
+      );
+    });
+
     makeObservable(this, {
-      states: observable,
       updateState: action,
     });
   }
@@ -61,7 +71,7 @@ export class Externals {
   }
 
   updateState(key: string, value: any) {
-    this.states[key] = value;
+    this.states[key].value = value;
   }
 
   getState(key: string) {
@@ -74,6 +84,14 @@ export class Externals {
 
   getFunc(name: string) {
     return this.functions[name];
+  }
+
+  all() {
+    return [
+      ...Object.values(this.components),
+      ...Object.values(this.states),
+      ...Object.values(this.functions),
+    ];
   }
 
   get(name: string) {

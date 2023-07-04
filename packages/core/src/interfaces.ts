@@ -37,3 +37,13 @@ export type StateSubscriber<C> = {
   onCollect: (collected: C, prevCollected: C) => void;
   opts: StateSubscriberOpts;
 };
+
+export type ScopeDescription = {
+  level: 'external' | 'global' | 'component' | 'template' | 'function';
+  id: string;
+};
+
+export type VariableWithScope = {
+  variable: t.Variable;
+  scope: ScopeDescription;
+};

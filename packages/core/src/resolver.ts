@@ -9,7 +9,7 @@ import {
 
 import { DisposableComputation } from './computation';
 import { Reka } from './reka';
-import { Scope } from './scope';
+import { GetVariablesOpts, Scope } from './scope';
 
 type CachedTemplateResolver = {
   computed: IComputedValue<void>;
@@ -23,6 +23,7 @@ type CachedComponentResolver = {
 
 export class Resolver {
   identifiersToVariableDistance: Map<string, number>;
+  identifiersToVariable: Map<t.Identifier, t.Variable>;
 
   private scope: Scope;
   private cachedComponentResolver: WeakMap<
@@ -32,9 +33,16 @@ export class Resolver {
   private cachedTemplateResolver: WeakMap<t.Template, CachedTemplateResolver>;
   declare rootResolverComputation: DisposableComputation<void>;
 
+  private nodeToScope: WeakMap<t.ASTNode, Scope>;
+
   constructor(readonly reka: Reka) {
-    this.scope = new Scope('root');
+    this.scope = new Scope(this.reka, {
+      level: 'global',
+      id: this.reka.program.id,
+    });
+
     this.identifiersToVariableDistance = new Map();
+    this.identifiersToVariable = new Map();
 
     this.cachedComponentResolver = new WeakMap();
     this.cachedTemplateResolver = new WeakMap();
@@ -48,13 +56,30 @@ export class Resolver {
       }
     );
 
+    this.nodeToScope = new WeakMap();
+
     makeObservable(this, {
       identifiersToVariableDistance: observable,
     });
   }
 
+  getVariablesAtNode(node: t.ASTNode, opts?: GetVariablesOpts) {
+    const scope = this.nodeToScope.get(node);
+
+    console.log('var', node, scope, opts);
+    if (!scope) {
+      return [];
+    }
+
+    return scope.getVariables(opts);
+  }
+
   getDistance(identifier: t.Identifier) {
     return this.identifiersToVariableDistance.get(identifier.id);
+  }
+
+  getVariableFromIdentifier(identifier: t.Identifier) {
+    return this.identifiersToVariable.get(identifier);
   }
 
   removeDistance(identifier: t.Identifier) {
@@ -73,13 +98,45 @@ export class Resolver {
     });
   }
 
-  private resolveExpr(expr: t.Any, scope: Scope) {
+  private bindIdentifierToVariable(
+    identifier: t.Identifier,
+    variable: t.Variable
+  ) {
+    runInAction(() => {
+      this.identifiersToVariable.set(identifier, variable);
+    });
+  }
+
+  unbindIdentifierToVariable(identifier: t.Identifier) {
+    runInAction(() => {
+      this.identifiersToVariable.delete(identifier);
+    });
+  }
+
+  private resolveExpr(expr: t.ASTNode, scope: Scope) {
+    this.nodeToScope.set(expr, scope);
+
     if (expr instanceof t.Identifier) {
       if (expr.external) {
+        const externalVariable = this.reka.externals.get(expr.name);
+
+        if (externalVariable) {
+          this.bindIdentifierToVariable(expr, externalVariable);
+        }
+
         return;
       }
 
-      this.setDistance(expr, scope.getDistance(expr.name));
+      const variableWithDistance = scope.getVariableWithDistance(expr.name);
+
+      if (!variableWithDistance) {
+        this.setDistance(expr, -1);
+        this.unbindIdentifierToVariable(expr);
+        return;
+      }
+
+      this.setDistance(expr, variableWithDistance.distance);
+      this.bindIdentifierToVariable(expr, variableWithDistance.variable);
     }
 
     // TODO: assignment should be handled as binary expr
@@ -110,7 +167,10 @@ export class Resolver {
     }
 
     if (expr instanceof t.Func) {
-      const funcScope = scope.inherit(`func<${expr.id}>`);
+      const funcScope = scope.inherit({
+        level: 'function',
+        id: expr.id,
+      });
 
       expr.params.forEach((param) => {
         this.resolveExpr(param, funcScope);
@@ -148,10 +208,17 @@ export class Resolver {
       if (!cache || (cache && cache.key !== key)) {
         cache = {
           computed: computed(() => {
-            const componentScope = scope.inherit(component.name);
+            const componentScope = scope.inherit({
+              level: 'component',
+              id: component.id,
+            });
+
+            this.nodeToScope.set(component, componentScope);
 
             component.props.forEach((prop) => {
-              componentScope.defineVariableName(prop.name);
+              componentScope.defineVariable(prop);
+              this.nodeToScope.set(prop, componentScope);
+
               if (prop.init) {
                 this.resolveExpr(prop.init, scope);
               }
@@ -169,7 +236,7 @@ export class Resolver {
       }
 
       cache.computed.get();
-      scope.defineVariableName(component.name);
+      scope.defineVariable(component);
     }
   }
 
@@ -178,7 +245,12 @@ export class Resolver {
     const key = scope.toString();
 
     if (!cache || (cache && cache.key !== key)) {
-      const templateScope = scope.inherit(template.id);
+      const templateScope = scope.inherit({
+        level: 'template',
+        id: template.id,
+      });
+
+      this.nodeToScope.set(template, templateScope);
 
       let eachIndex: string | null = null;
       let eachAliasName: string | null = null;
@@ -195,23 +267,23 @@ export class Resolver {
 
             if (template.each.alias) {
               if (eachAliasName && eachAliasName !== template.each.alias.name) {
-                templateScope.removeVariableName(eachAliasName);
+                templateScope.removeVariableByName(eachAliasName);
               }
 
-              templateScope.defineVariableName(template.each.alias.name);
+              templateScope.defineVariable(template.each.alias);
               eachAliasName = template.each.alias.name;
             }
 
             if (template.each.index) {
               if (eachIndex && eachIndex !== template.each.index.name) {
-                templateScope.removeVariableName(eachIndex);
+                templateScope.removeVariableByName(eachIndex);
               }
 
               eachIndex = template.each.index.name;
-              templateScope.defineVariableName(template.each.index.name);
+              templateScope.defineVariable(template.each.index);
             } else {
               if (eachIndex) {
-                templateScope.removeVariableName(eachIndex);
+                templateScope.removeVariableByName(eachIndex);
                 eachIndex = null;
               }
             }
@@ -244,8 +316,9 @@ export class Resolver {
   }
 
   private resolveVal(val: t.Val, scope: Scope) {
+    this.nodeToScope.set(val, scope);
     this.resolveExpr(val.init, scope);
-    scope.defineVariableName(val.name);
+    scope.defineVariable(val);
   }
 
   private resolveProgram() {
@@ -253,24 +326,26 @@ export class Resolver {
 
     const program = this.reka.program;
 
+    this.nodeToScope.set(program, this.scope);
+
     program.globals.forEach((global) => {
       this.resolveVal(global, this.scope);
     });
 
     program.components.forEach((component) => {
-      this.scope.defineVariableName(component.name);
+      this.scope.defineVariable(component);
     });
 
     const globalNames = [...program.globals, ...program.components].map(
       (globalOrComponent) => globalOrComponent.name
     );
 
-    this.scope.forEach((name) => {
-      if (globalNames.includes(name)) {
+    this.scope.forEach((variable) => {
+      if (globalNames.includes(variable.name)) {
         return;
       }
 
-      this.scope.removeVariableName(name);
+      this.scope.removeVariableByName(variable.name);
     });
 
     program.components.forEach((component) => {

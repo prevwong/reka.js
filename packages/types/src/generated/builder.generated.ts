@@ -56,6 +56,12 @@ export const componentTemplate = (
 export const slotTemplate = (
   ...args: ConstructorParameters<typeof t.SlotTemplate>
 ) => new t.SlotTemplate(...args);
+export const elementEachAlias = (
+  ...args: ConstructorParameters<typeof t.ElementEachAlias>
+) => new t.ElementEachAlias(...args);
+export const elementEachIndex = (
+  ...args: ConstructorParameters<typeof t.ElementEachIndex>
+) => new t.ElementEachIndex(...args);
 export const elementEach = (
   ...args: ConstructorParameters<typeof t.ElementEach>
 ) => new t.ElementEach(...args);
