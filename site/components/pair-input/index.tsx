@@ -6,9 +6,11 @@ import { IconButton } from '../button';
 import { ExpressionInput } from '../expression-input';
 import { TextField } from '../text-field';
 import { Tooltip } from '../tooltip';
+import { VariableWithScope } from '@rekajs/core';
 
 type PairInputFieldProps = {
   id: string;
+  index: number;
   value: t.Expression | null;
   disableEditId?: boolean;
   disableEditValue?: boolean;
@@ -16,6 +18,7 @@ type PairInputFieldProps = {
   onChange?: (id: string, value: t.Expression, clear: () => void) => void;
   idPlaceholder?: string;
   valuePlaceholder?: string;
+  getVariablesForExpr?: (i: number) => VariableWithScope[];
 };
 
 type PairInputValue = {
@@ -32,13 +35,16 @@ type PairInputProps = {
   onCancelAdding?: () => void;
   addingNewField?: boolean;
   emptyValuesText?: string;
+  getVariablesForExpr?: (i: number) => VariableWithScope[];
 };
 
 type AddNewPairInputFieldProps = {
+  index: number;
   onAdd: (id: string, value: t.Expression) => void;
   onCancel: () => void;
   idPlaceholder?: string;
   valuePlaceholder?: string;
+  getVariablesForExpr?: (i: number) => VariableWithScope[];
 };
 
 const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
@@ -71,6 +77,7 @@ const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
 
   return (
     <PairInputField
+      index={props.index}
       ref={domRef}
       id={''}
       value={null}
@@ -84,6 +91,7 @@ const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
       }}
       idPlaceholder={props.idPlaceholder}
       valuePlaceholder={props.valuePlaceholder}
+      getVariablesForExpr={props.getVariablesForExpr}
     />
   );
 };
@@ -92,6 +100,7 @@ const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
   (
     {
       id,
+      index,
       value,
       disableEditId,
       disableEditValue,
@@ -99,6 +108,7 @@ const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
       onChange,
       idPlaceholder,
       valuePlaceholder,
+      getVariablesForExpr: variables,
     },
     ref
   ) => {
@@ -166,6 +176,7 @@ const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
               onChange(newId, value, clear);
             }}
             disable={disableEditValue}
+            variables={variables ? variables(index) : undefined}
           />
           <IconButton
             className="opacity-0 m-0 group-hover:opacity-100"
@@ -188,12 +199,13 @@ const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
 export const PairInput = (props: PairInputProps) => {
   return (
     <div>
-      {props.values.map(({ id, value }) => {
+      {props.values.map(({ id, value }, i) => {
         return (
           <PairInputField
             disableEditId
             key={id}
             id={id}
+            index={i}
             value={value}
             onRemove={() => {
               props.onRemove?.(id, value);
@@ -202,6 +214,7 @@ export const PairInput = (props: PairInputProps) => {
               props.onChange?.(id, value, 'update');
             }}
             valuePlaceholder={props.valuePlaceholder}
+            getVariablesForExpr={props.getVariablesForExpr}
           />
         );
       })}
@@ -214,6 +227,7 @@ export const PairInput = (props: PairInputProps) => {
       )}
       {props.addingNewField && (
         <AddNewPairInputField
+          index={props.values.length}
           onAdd={(id, value) => {
             props.onChange?.(id, value, 'new');
             props.onCancelAdding?.();
@@ -223,6 +237,7 @@ export const PairInput = (props: PairInputProps) => {
           }}
           idPlaceholder={props.idPlaceholder}
           valuePlaceholder={props.valuePlaceholder}
+          getVariablesForExpr={props.getVariablesForExpr}
         />
       )}
     </div>

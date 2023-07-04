@@ -29,6 +29,11 @@ export const PropTemplateSettings = observer(
           <PairInput
             addingNewField={addNewClassListItem}
             onCancelAdding={() => setAddNewClassListItem(false)}
+            getVariablesForExpr={() =>
+              editor.reka.head.resolver.getVariablesAtNode(template, {
+                filter: (variable) => !t.is(variable, t.RekaComponent),
+              })
+            }
             values={
               classList
                 ? Object.keys(classList.properties).map((key) => ({
@@ -76,10 +81,29 @@ export const PropTemplateSettings = observer(
                 delete template.props[id];
               });
             }}
-            values={Object.keys(template.props).map((prop) => ({
-              id: prop,
-              value: template.props[prop],
-            }))}
+            getVariablesForExpr={() =>
+              editor.reka.getVariablesAtNode(template, {
+                filter: (variable) => !t.is(variable, t.Component),
+              })
+            }
+            values={Object.keys(template.props).map((prop) => {
+              const value = template.props[prop];
+
+              if (t.is(value, t.BinaryExpression)) {
+                if (t.is(value.right, t.Identifier)) {
+                  console.log(
+                    300,
+                    value.right,
+                    editor.reka.getVariableFromIdentifier(value.right)
+                  );
+                }
+              }
+
+              return {
+                id: prop,
+                value: template.props[prop],
+              };
+            })}
             idPlaceholder="Prop"
             valuePlaceholder="Value"
           />

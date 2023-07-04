@@ -8,12 +8,16 @@ import { cn } from '@app/utils';
 
 import { Info } from '../info';
 import { TextField } from '../text-field';
+import { Tooltip } from '../tooltip';
+import { Dropdown } from '../dropdown';
+import { VariableWithScope } from '@rekajs/core';
 
 type TextareaEditorProps = {
   initialValue?: t.Expression | null;
   className?: string;
   onClose: () => void;
   onCommit: (value: t.Expression) => void;
+  variables?: VariableWithScope[];
 };
 
 const TextareaEditor = ({
@@ -21,6 +25,7 @@ const TextareaEditor = ({
   onCommit,
   initialValue,
   className,
+  variables,
   ...props
 }: TextareaEditorProps) => {
   const prevInitialValueRef = React.useRef(initialValue);
@@ -39,6 +44,8 @@ const TextareaEditor = ({
 
   const onCloseRef = React.useRef(onClose);
   onCloseRef.current = onClose;
+
+  const isDropdownOpen = React.useRef(false);
 
   React.useEffect(() => {
     const { current: prevInitialValue } = prevInitialValueRef;
@@ -86,6 +93,10 @@ const TextareaEditor = ({
         return;
       }
 
+      if (isDropdownOpen.current) {
+        return;
+      }
+
       commit();
     };
 
@@ -130,11 +141,53 @@ const TextareaEditor = ({
         }}
       />
       <div className="px-2.5 py-2 flex items-start">
-        <div className="text-[0.6rem] flex py-1 px-3 border border-solid border-secondary/20 text-secondary rounded-full items-center justify-center">
-          Expression
-          <Info
-            info={`An expression is expected here. Eg: "Some text value" for text literals.`}
-          />
+        <div className="flex items-center gap-1">
+          <div className="text-[0.6rem] flex py-px pl-1.5 pr-1 border border-solid border-secondary/20 text-secondary rounded-full items-center justify-center">
+            Expression
+            <Info
+              info={`An expression is expected here. Eg: "Some text value" for text literals.`}
+            />
+          </div>
+          {variables && (
+            <Dropdown
+              title="Variables"
+              onChange={(open) => {
+                isDropdownOpen.current = open;
+              }}
+              side="bottom"
+              items={variables.map(({ variable, scope }) => ({
+                title: (
+                  <span>
+                    {scope.level === 'external' ? '$' : ''}
+                    {variable.name}
+                  </span>
+                ),
+                value: variable.id,
+                onSelect: () => {
+                  const trimmed = value.trimEnd();
+                  const lastChar = trimmed.charAt(trimmed.length - 1);
+                  const addPlus = lastChar !== '+';
+                  const addSpace = value[value.length - 1] == ' ';
+
+                  let name = variable.name;
+
+                  if (scope.level === 'external') {
+                    name = `$` + name;
+                  }
+
+                  setValue(
+                    value +
+                      `${addSpace ? ' ' : ''}${addPlus ? ' + ' : ''}${name}`
+                  );
+                },
+              }))}
+            >
+              <span
+                title="Variables"
+                className="cursor-pointer text-[0.6rem] flex p-px rounded-full bg-primary-100 text-primary text-center flex flex-col items-center"
+              >{`{x}`}</span>
+            </Dropdown>
+          )}
         </div>
       </div>
       {hasError && (
@@ -155,6 +208,7 @@ type ExpressionInputProps = {
   className?: string;
   inputClassName?: string;
   textareaClassName?: string;
+  variables?: VariableWithScope[];
 };
 
 export const ExpressionInput = observer(
@@ -167,6 +221,7 @@ export const ExpressionInput = observer(
     className,
     inputClassName,
     textareaClassName,
+    variables,
   }: ExpressionInputProps) => {
     const [showTextareaEditor, setShowTextareaEditor] = React.useState(false);
 
@@ -200,6 +255,7 @@ export const ExpressionInput = observer(
             onClose={() => {
               setShowTextareaEditor(false);
             }}
+            variables={variables}
           />
         )}
       </div>
