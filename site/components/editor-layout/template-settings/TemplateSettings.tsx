@@ -32,7 +32,7 @@ const TemplateHeading = (props: TemplateHeadingProps) => {
           {title}
         </span>
       </div>
-      <div className="text-xs border border-solid border-primary-200 text-primary inline-block w-auto px-3 py-1 rounded-full align-end">
+      <div className="text-xs bg-primary-100 text-primary inline-block w-auto px-3 py-1 rounded-full align-end">
         {props.template.type}
       </div>
     </div>

@@ -44,7 +44,7 @@ export const Select = (props: SelectProps) => {
           <SelectPrimitive.Viewport className="p-1.5">
             {props.items.map((item) => (
               <SelectPrimitive.Item
-                className="cursor-pointer text-xs text-gray-900 rounded-md relative select-none flex items-center pt-1 pr-4 pb-1 pl-7 data-[highlighted]:bg-primary data-[highlighted]:text-white group"
+                className="cursor-pointer text-xs text-gray-900 rounded-md relative select-none flex items-center pt-1 pr-4 pb-1 pl-7 data-[highlighted]:bg-primary-100 data-[highlighted]:text-primary group"
                 key={item.value}
                 value={item.value}
               >
@@ -52,7 +52,7 @@ export const Select = (props: SelectProps) => {
                   {item.title}
                 </SelectPrimitive.ItemText>
                 <SelectPrimitive.ItemIndicator className="absolute left-3 items-center justify-center inline-flex">
-                  <span className="w-2 h-2 rounded-full bg-primary group-hover:bg-white" />
+                  <span className="w-2 h-2 rounded-full bg-primary group-hover:bg-primary" />
                 </SelectPrimitive.ItemIndicator>
               </SelectPrimitive.Item>
             ))}
