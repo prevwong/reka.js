@@ -36,13 +36,16 @@ export const ComponentSettings = observer(() => {
       >
         <PairInput
           getVariablesForExpr={(i) =>
-            editor.reka.head.resolver.getVariablesAtNode(component.props[i], {
-              before: {
-                index: i,
-              },
-              filter: ({ variable }) =>
-                t.is(variable, t.Val) || t.is(variable, t.ComponentProp),
-            })
+            editor.reka.head.resolver.getVariablesAtNode(
+              component.props[i !== undefined ? i : component.props.length],
+              {
+                before: {
+                  index: i ?? 0,
+                },
+                filter: ({ variable }) =>
+                  t.is(variable, t.Val) || t.is(variable, t.ComponentProp),
+              }
+            )
           }
           values={component.props.map((prop) => ({
             id: prop.name,
@@ -93,12 +96,15 @@ export const ComponentSettings = observer(() => {
       >
         <PairInput
           getVariablesForExpr={(i) =>
-            editor.reka.head.resolver.getVariablesAtNode(component.state[i], {
-              before: {
-                index: i,
-              },
-              filter: ({ variable }) => t.is(variable, t.Val),
-            })
+            editor.reka.head.resolver.getVariablesAtNode(
+              component.state[i !== undefined ? i : component.state.length],
+              {
+                before: {
+                  index: i ?? 0,
+                },
+                filter: ({ variable }) => t.is(variable, t.Val),
+              }
+            )
           }
           values={component.state.map((state) => {
             return {

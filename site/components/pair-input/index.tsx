@@ -10,7 +10,7 @@ import { Tooltip } from '../tooltip';
 
 type PairInputFieldProps = {
   id: string;
-  index: number;
+  index?: number;
   value: t.Expression | null;
   disableEditId?: boolean;
   disableEditValue?: boolean;
@@ -18,7 +18,7 @@ type PairInputFieldProps = {
   onChange?: (id: string, value: t.Expression, clear: () => void) => void;
   idPlaceholder?: string;
   valuePlaceholder?: string;
-  getVariablesForExpr?: (i: number) => VariableWithScope[];
+  getVariablesForExpr?: (i?: number) => VariableWithScope[];
 };
 
 type PairInputValue = {
@@ -35,16 +35,15 @@ type PairInputProps = {
   onCancelAdding?: () => void;
   addingNewField?: boolean;
   emptyValuesText?: string;
-  getVariablesForExpr?: (i: number) => VariableWithScope[];
+  getVariablesForExpr?: (i?: number) => VariableWithScope[];
 };
 
 type AddNewPairInputFieldProps = {
-  index: number;
   onAdd: (id: string, value: t.Expression) => void;
   onCancel: () => void;
   idPlaceholder?: string;
   valuePlaceholder?: string;
-  getVariablesForExpr?: (i: number) => VariableWithScope[];
+  getVariablesForExpr?: (i?: number) => VariableWithScope[];
 };
 
 const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
@@ -77,7 +76,6 @@ const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
 
   return (
     <PairInputField
-      index={props.index}
       ref={domRef}
       id={''}
       value={null}
@@ -227,7 +225,6 @@ export const PairInput = (props: PairInputProps) => {
       )}
       {props.addingNewField && (
         <AddNewPairInputField
-          index={props.values.length}
           onAdd={(id, value) => {
             props.onChange?.(id, value, 'new');
             props.onCancelAdding?.();
