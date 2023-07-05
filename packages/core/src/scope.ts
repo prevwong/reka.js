@@ -41,19 +41,71 @@ const isBeforeName = (before: Before): before is BeforeName => {
   return false;
 };
 
-const getKeyFromScopeDescription = (description: ScopeDescription) => {
+export const getKeyFromScopeDescription = (description: ScopeDescription) => {
   return `${description.level}<${description.id}>`;
+};
+
+export const getMaybeScopeDescriptionByNodeOwner = (
+  node: t.ASTNode
+): ScopeDescription | null => {
+  if (t.is(node, t.Program)) {
+    return {
+      level: 'global',
+      id: node.id,
+    };
+  }
+
+  if (t.is(node, t.Component)) {
+    return {
+      level: 'component',
+      id: node.id,
+    };
+  }
+
+  if (t.is(node, t.Template)) {
+    return {
+      level: 'template',
+      id: node.id,
+    };
+  }
+
+  if (t.is(node, t.Func)) {
+    return {
+      level: 'function',
+      id: node.id,
+    };
+  }
+
+  return null;
+};
+
+export const getScopeDescriptionByNodeOwner = (
+  node: t.ASTNode
+): ScopeDescription => {
+  const description = getMaybeScopeDescriptionByNodeOwner(node);
+
+  invariant(
+    description,
+    `Unable to infer scope description from node ${node.type}<${node.id}>`
+  );
+
+  return description;
 };
 
 export class Scope {
   variableNames: Map<string, t.Variable>;
 
+  description: ScopeDescription;
+
   constructor(
     readonly resolver: Resolver,
-    readonly description: ScopeDescription,
+    descriptionOrNode: ScopeDescription | t.ASTNode,
     readonly parent?: Scope
   ) {
     this.variableNames = new Map();
+    this.description = t.is(descriptionOrNode, t.ASTNode)
+      ? getScopeDescriptionByNodeOwner(descriptionOrNode)
+      : descriptionOrNode;
 
     invariant(
       !this.resolver.scopeRegistry.get(this.key),
@@ -156,8 +208,12 @@ export class Scope {
     return [...variables.values()];
   }
 
-  inherit(desc: ScopeDescription) {
-    const key = getKeyFromScopeDescription(desc);
+  inherit(descriptionOrNode: ScopeDescription | t.ASTNode) {
+    const description = t.is(descriptionOrNode, t.ASTNode)
+      ? getScopeDescriptionByNodeOwner(descriptionOrNode)
+      : descriptionOrNode;
+
+    const key = getKeyFromScopeDescription(description);
 
     const existing = this.resolver.scopeRegistry.get(key);
 
@@ -167,7 +223,7 @@ export class Scope {
       return existing;
     }
 
-    return new Scope(this.resolver, desc, this);
+    return new Scope(this.resolver, description, this);
   }
 
   defineVariable(variable: t.Variable) {

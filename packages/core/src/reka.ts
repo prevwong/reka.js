@@ -131,12 +131,7 @@ export class Reka {
             return;
           }
 
-          if (payload.type instanceof t.Identifier) {
-            this.head.resolver.removeDistance(payload.type);
-            this.head.resolver.unbindIdentifierToVariable(payload.type);
-          }
-
-          this.head.resolver.unbindNodeToScope(payload.type);
+          this.head.resolver.cleanupDisposedNode(payload.type);
         },
       },
     });

@@ -9,7 +9,12 @@ import {
 
 import { DisposableComputation } from './computation';
 import { Reka } from './reka';
-import { GetVariablesOpts, Scope } from './scope';
+import {
+  getKeyFromScopeDescription,
+  getMaybeScopeDescriptionByNodeOwner,
+  GetVariablesOpts,
+  Scope,
+} from './scope';
 import { VariableWithScope } from './interfaces';
 
 type CachedTemplateResolver = {
@@ -40,15 +45,10 @@ export class Resolver {
   ) => VariableWithScope[];
 
   scopeRegistry: Map<string, Scope> = new Map();
-
-  nodeToScope: WeakMap<t.ASTNode, Scope>;
+  nodeToScope: Map<t.ASTNode, Scope>;
 
   constructor(readonly reka: Reka) {
-    console.log('new resolver', this.scopeRegistry);
-    this.scope = new Scope(this, {
-      level: 'global',
-      id: this.reka.program.id,
-    });
+    this.scope = new Scope(this, reka.program);
 
     this.identifiersToVariableDistance = new Map();
     this.identifiersToVariable = new Map();
@@ -65,7 +65,7 @@ export class Resolver {
       }
     );
 
-    this.nodeToScope = new WeakMap();
+    this.nodeToScope = new Map();
 
     this.getVariablesAtNode = this.reka.createCachedQuery(
       (node: t.ASTNode, opts: GetVariablesOpts) => {
@@ -190,10 +190,7 @@ export class Resolver {
     }
 
     if (expr instanceof t.Func) {
-      const funcScope = scope.inherit({
-        level: 'function',
-        id: expr.id,
-      });
+      const funcScope = scope.inherit(expr);
 
       expr.params.forEach((param) => {
         this.resolveExpr(param, funcScope);
@@ -231,10 +228,7 @@ export class Resolver {
       if (!cache || (cache && cache.key !== key)) {
         cache = {
           computed: computed(() => {
-            const componentScope = scope.inherit({
-              level: 'component',
-              id: component.id,
-            });
+            const componentScope = scope.inherit(component);
 
             this.bindNodeToScope(component, componentScope);
 
@@ -268,10 +262,7 @@ export class Resolver {
     const key = scope.toString();
 
     if (!cache || (cache && cache.key !== key)) {
-      const templateScope = scope.inherit({
-        level: 'template',
-        id: template.id,
-      });
+      const templateScope = scope.inherit(template);
 
       this.bindNodeToScope(template, templateScope);
 
@@ -382,5 +373,24 @@ export class Resolver {
 
   dispose() {
     this.rootResolverComputation.dispose();
+  }
+
+  cleanupDisposedNode(node: t.ASTNode) {
+    if (node instanceof t.Identifier) {
+      this.removeDistance(node);
+      this.unbindIdentifierToVariable(node);
+    }
+
+    this.unbindNodeToScope(node);
+
+    const scopeDescription = getMaybeScopeDescriptionByNodeOwner(node);
+
+    if (!scopeDescription) {
+      return;
+    }
+
+    const scopeId = getKeyFromScopeDescription(scopeDescription);
+
+    this.scopeRegistry.delete(scopeId);
   }
 }
