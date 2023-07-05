@@ -93,13 +93,10 @@ export const EachTemplateSettings = observer(
             onCommit={(iterator) => {
               commitValue(iterator, alias, index);
             }}
-            variables={editor.reka.head.resolver.getVariablesAtNode(
-              props.template,
-              {
-                filter: ({ variable }) => !t.is(variable, t.Component),
-                parent: true,
-              }
-            )}
+            variables={editor.reka.getVariablesAtNode(props.template, {
+              filter: ({ variable }) => !t.is(variable, t.Component),
+              parent: true,
+            })}
           />
         </div>
         <div className="mt-4">

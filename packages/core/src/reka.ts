@@ -91,10 +91,6 @@ export class Reka {
     });
   }
 
-  getVariableFromIdentifier(identifier: t.Identifier) {
-    return this.head.resolver.getVariableFromIdentifier(identifier);
-  }
-
   /**
    * Get the Program AST node from State. Shorthand for state.program
    */
@@ -313,6 +309,12 @@ export class Reka {
 
   get getVariablesAtNode() {
     return this.head.resolver.getVariablesAtNode.bind(this.head.resolver);
+  }
+
+  get getVariableFromIdentifier() {
+    return this.head.resolver.getVariableFromIdentifier.bind(
+      this.head.resolver
+    );
   }
 
   /**

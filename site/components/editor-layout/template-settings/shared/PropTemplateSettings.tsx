@@ -18,7 +18,7 @@ export const PropTemplateSettings = observer(
 
     const classList = template.classList;
 
-    const variables = editor.reka.head.resolver.getVariablesAtNode(template, {
+    const variables = editor.reka.getVariablesAtNode(template, {
       filter: (variable) => !t.is(variable, t.RekaComponent),
     });
 

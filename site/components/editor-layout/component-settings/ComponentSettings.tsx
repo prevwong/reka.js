@@ -36,7 +36,7 @@ export const ComponentSettings = observer(() => {
       >
         <PairInput
           getVariablesForExpr={(i) =>
-            editor.reka.head.resolver.getVariablesAtNode(
+            editor.reka.getVariablesAtNode(
               component.props[i !== undefined ? i : component.props.length],
               {
                 before: {
@@ -96,7 +96,7 @@ export const ComponentSettings = observer(() => {
       >
         <PairInput
           getVariablesForExpr={(i) =>
-            editor.reka.head.resolver.getVariablesAtNode(
+            editor.reka.getVariablesAtNode(
               component.state[i !== undefined ? i : component.state.length],
               {
                 before: {
