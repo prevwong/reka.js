@@ -1,3 +1,4 @@
+import { VariableWithScope } from '@rekajs/core';
 import { Parser } from '@rekajs/parser';
 import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
@@ -6,11 +7,9 @@ import TextareaAutosize from 'react-textarea-autosize';
 
 import { cn } from '@app/utils';
 
+import { Dropdown } from '../dropdown';
 import { Info } from '../info';
 import { TextField } from '../text-field';
-import { Tooltip } from '../tooltip';
-import { Dropdown } from '../dropdown';
-import { VariableWithScope } from '@rekajs/core';
 
 type TextareaEditorProps = {
   initialValue?: t.Expression | null;

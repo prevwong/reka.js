@@ -1,6 +1,7 @@
 import * as t from '@rekajs/types';
-import { Reka } from './reka';
+
 import { ScopeDescription, VariableWithScope } from './interfaces';
+import { Reka } from './reka';
 
 type BeforeIndex = {
   index: number;

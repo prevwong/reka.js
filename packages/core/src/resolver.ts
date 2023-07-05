@@ -66,7 +66,6 @@ export class Resolver {
   getVariablesAtNode(node: t.ASTNode, opts?: GetVariablesOpts) {
     const scope = this.nodeToScope.get(node);
 
-    console.log('var', node, scope, opts);
     if (!scope) {
       return [];
     }

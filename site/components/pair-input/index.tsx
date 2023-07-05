@@ -1,4 +1,5 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
+import { VariableWithScope } from '@rekajs/core';
 import * as t from '@rekajs/types';
 import * as React from 'react';
 
@@ -6,7 +7,6 @@ import { IconButton } from '../button';
 import { ExpressionInput } from '../expression-input';
 import { TextField } from '../text-field';
 import { Tooltip } from '../tooltip';
-import { VariableWithScope } from '@rekajs/core';
 
 type PairInputFieldProps = {
   id: string;
