@@ -1,9 +1,10 @@
 import * as t from '@rekajs/types';
 import { invariant } from '@rekajs/utils';
-import { action, makeObservable, observable } from 'mobx';
+import { runInAction } from 'mobx';
 
 import { RekaExternalsFactory } from './interfaces';
 import { Reka } from './reka';
+import { ExternalVolatileStateKey } from './symbols';
 
 type ExternalSource = 'states' | 'functions' | 'components';
 
@@ -25,25 +26,24 @@ export class Externals {
     this.functions = Object.fromEntries(
       opts?.functions?.(this.reka).map((func) => [func.name, func]) ?? []
     );
+
     this.components = Object.fromEntries(
       opts?.components?.map((component) => [component.name, component]) ?? []
     );
 
     this.createNamedLookup();
 
-    Object.keys(this.states).forEach((state) => {
-      const schema = t.Schema.get('ExternalState');
+    this.initState();
+  }
 
-      makeObservable(
-        this.states[state],
-        Object.fromEntries(
-          schema.fields.map((field) => [field.name, observable])
-        )
-      );
-    });
-
-    makeObservable(this, {
-      updateState: action,
+  private initState() {
+    runInAction(() => {
+      this.reka.volatile[ExternalVolatileStateKey] = Object.values(
+        this.states
+      ).reduce((accum, state) => {
+        accum[state.name] = state.init;
+        return accum;
+      }, {});
     });
   }
 
@@ -70,8 +70,14 @@ export class Externals {
     }
   }
 
-  updateState(key: string, value: any) {
-    this.states[key].value = value;
+  updateStateValue(key: string, value: any) {
+    runInAction(() => {
+      this.reka.volatile[ExternalVolatileStateKey][key] = value;
+    });
+  }
+
+  getStateValue(key: string) {
+    return this.reka.volatile[ExternalVolatileStateKey][key];
   }
 
   getState(key: string) {

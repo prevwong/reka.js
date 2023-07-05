@@ -17,11 +17,11 @@ export const createSharedStateGlobals = (
     states: [
       t.externalState({
         name: 'myString',
-        value: 'Hello from External Variable',
+        init: 'Hello from External Variable',
       }),
       t.externalState({
         name: 'posts',
-        value: [
+        init: [
           {
             name: 'Interesting Post',
             image: '/images/pawel-olek-1.png',

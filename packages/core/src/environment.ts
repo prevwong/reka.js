@@ -112,11 +112,15 @@ export class Environment {
       const external = this.reka.externals.get(identifier.name);
 
       if (t.is(external, t.ExternalState)) {
-        return external.value;
+        return this.reka.externals.getStateValue(identifier.name);
       }
 
       if (t.is(external, t.ExternalFunc)) {
         return external.func;
+      }
+
+      if (t.is(external, t.ExternalComponent)) {
+        return external;
       }
     }
 

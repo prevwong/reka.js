@@ -132,7 +132,7 @@ export class Editor {
           states: [
             t.externalState({
               name: 'scrollTop',
-              value: 0,
+              init: 0,
             }),
           ],
           functions: (self) => {
@@ -146,14 +146,13 @@ export class Editor {
               t.externalFunc({
                 name: 'getScrollTop',
                 func: () => {
-                  return self.getExternalState('scrollTop').value;
+                  return self.getExternalState('scrollTop');
                 },
               }),
               t.externalFunc({
                 name: 'getPosts',
                 func: () => {
-                  console.log('getting posts', self.getExternalState('posts'));
-                  return self.getExternalState('posts').value;
+                  return self.getExternalState('posts');
                 },
               }),
             ];

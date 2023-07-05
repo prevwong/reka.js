@@ -332,7 +332,7 @@ Schema.define('ExtensionState', {
 Schema.define('ExternalState', {
   extends: 'Variable',
   fields: (t) => ({
-    value: t.any,
+    init: t.any,
   }),
 });
 

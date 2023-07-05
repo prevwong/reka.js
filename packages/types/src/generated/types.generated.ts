@@ -695,11 +695,11 @@ Schema.register('ExtensionState', ExtensionState);
 type ExternalStateParameters = {
   meta?: Record<string, any>;
   name: string;
-  value: any;
+  init: any;
 };
 
 export class ExternalState extends Variable {
-  declare value: any;
+  declare init: any;
   constructor(value: ExternalStateParameters) {
     super('ExternalState', value);
   }
