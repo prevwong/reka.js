@@ -46,7 +46,7 @@
     "rollup": "2.79.1",
     "tslib": "2.4.0",
     "turbo": "latest",
-    "typescript": "4.9.4",
+    "typescript": "5.1.6",
     "vitest": "0.29.2"
   },
   "engines": {
