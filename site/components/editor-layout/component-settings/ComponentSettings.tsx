@@ -40,7 +40,8 @@ export const ComponentSettings = observer(() => {
               before: {
                 index: i,
               },
-              filter: (variable) => t.is(variable, t.Val),
+              filter: ({ variable }) =>
+                t.is(variable, t.Val) || t.is(variable, t.ComponentProp),
             })
           }
           values={component.props.map((prop) => ({
@@ -96,7 +97,7 @@ export const ComponentSettings = observer(() => {
               before: {
                 index: i,
               },
-              filter: (variable) => t.is(variable, t.Val),
+              filter: ({ variable }) => t.is(variable, t.Val),
             })
           }
           values={component.state.map((state) => {

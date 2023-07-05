@@ -17,7 +17,7 @@ export type GetVariablesOpts = {
   parent?: boolean;
   includeExternals?: boolean;
   includeAncestors?: boolean;
-  filter?: (variable: t.Variable) => boolean;
+  filter?: (variable: VariableWithScope) => boolean;
   before?: Before;
 };
 
@@ -74,7 +74,7 @@ export class Scope {
     const variables = new Map<string, VariableWithScope>();
 
     const addVariable = (scope: ScopeDescription, variable: t.Variable) => {
-      if (opts.filter && !opts.filter(variable)) {
+      if (opts.filter && !opts.filter({ variable, scope })) {
         return;
       }
 

@@ -96,7 +96,7 @@ export const EachTemplateSettings = observer(
             variables={editor.reka.head.resolver.getVariablesAtNode(
               props.template,
               {
-                filter: (variable) => !t.is(variable, t.RekaComponent),
+                filter: ({ variable }) => !t.is(variable, t.Component),
                 parent: true,
               }
             )}
