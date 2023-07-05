@@ -8,6 +8,7 @@ import {
 } from 'mobx';
 
 import { DisposableComputation } from './computation';
+import { VariableWithScope } from './interfaces';
 import { Reka } from './reka';
 import {
   getKeyFromScopeDescription,
@@ -15,7 +16,6 @@ import {
   GetVariablesOpts,
   Scope,
 } from './scope';
-import { VariableWithScope } from './interfaces';
 
 type CachedTemplateResolver = {
   computed: IComputedValue<void>;

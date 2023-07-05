@@ -1,11 +1,9 @@
 import * as t from '@rekajs/types';
+import { invariant } from '@rekajs/utils';
+import { action, makeObservable, observable, untracked } from 'mobx';
 
 import { ScopeDescription, VariableWithScope } from './interfaces';
-import { Reka } from './reka';
-import { action, makeObservable, observable, untracked } from 'mobx';
 import { Resolver } from './resolver';
-import { computedFn } from 'mobx-utils';
-import { invariant } from '@rekajs/utils';
 
 type BeforeIndex = {
   index: number;

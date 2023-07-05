@@ -1,6 +1,7 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { VariableWithScope } from '@rekajs/core';
 import * as t from '@rekajs/types';
+import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { IconButton } from '../button';
@@ -94,37 +95,38 @@ const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
   );
 };
 
-const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
-  (
-    {
-      id,
-      index,
-      value,
-      disableEditId,
-      disableEditValue,
-      onRemove,
-      onChange,
-      idPlaceholder,
-      valuePlaceholder,
-      getVariablesForExpr: variables,
-    },
-    ref
-  ) => {
-    const [newId, setNewId] = React.useState(id);
-    const [newValue, setNewValue] = React.useState(value);
+const PairInputField = observer(
+  React.forwardRef<HTMLDivElement, PairInputFieldProps>(
+    (
+      {
+        id,
+        index,
+        value,
+        disableEditId,
+        disableEditValue,
+        onRemove,
+        onChange,
+        idPlaceholder,
+        valuePlaceholder,
+        getVariablesForExpr: variables,
+      },
+      ref
+    ) => {
+      const [newId, setNewId] = React.useState(id);
+      const [newValue, setNewValue] = React.useState(value);
 
-    const clear = React.useCallback(() => {
-      setNewId('');
-      setNewValue(null);
-    }, [setNewId, setNewValue]);
+      const clear = React.useCallback(() => {
+        setNewId('');
+        setNewValue(null);
+      }, [setNewId, setNewValue]);
 
-    React.useEffect(() => {
-      setNewValue(value);
-    }, [value]);
+      React.useEffect(() => {
+        setNewValue(value);
+      }, [value]);
 
-    return (
-      <div
-        className={`
+      return (
+        <div
+          className={`
         group
         grid grid-cols-[80px_1fr] relative gap-0 border-solid border border-outline -mb-px
         first:rounded-tr-md first:rounded-tl-md
@@ -132,66 +134,67 @@ const PairInputField = React.forwardRef<HTMLDivElement, PairInputFieldProps>(
         [&:not:last-child]:border-b-transparent
         [&_input]:rounded-none [&_input]:border-none [&_input]:border-r [&_input]:border-r-solid
       `}
-        ref={ref}
-      >
-        <Tooltip content={newId} disabled={!disableEditId}>
-          <TextField
-            className={`pair-input-id-field rounded-none border-l-0 border-t-0 border-b-0 border-r-solid border-r border-r-outline`}
-            inputClassName={'overflow-hidden text-ellipsis'}
-            placeholder={idPlaceholder}
-            value={newId}
-            onChange={(e) => {
-              setNewId(e.target.value);
-            }}
-            onKeyUp={(e) => {
-              if (e.key !== 'Enter') {
-                return;
-              }
+          ref={ref}
+        >
+          <Tooltip content={newId} disabled={!disableEditId}>
+            <TextField
+              className={`pair-input-id-field rounded-none border-l-0 border-t-0 border-b-0 border-r-solid border-r border-r-outline`}
+              inputClassName={'overflow-hidden text-ellipsis'}
+              placeholder={idPlaceholder}
+              value={newId}
+              onChange={(e) => {
+                setNewId(e.target.value);
+              }}
+              onKeyUp={(e) => {
+                if (e.key !== 'Enter') {
+                  return;
+                }
 
-              if (!newId || !value || !onChange) {
-                return;
-              }
+                if (!newId || !value || !onChange) {
+                  return;
+                }
 
-              onChange(newId, value, clear);
-            }}
-            disabled={disableEditId}
-          />
-        </Tooltip>
+                onChange(newId, value, clear);
+              }}
+              disabled={disableEditId}
+            />
+          </Tooltip>
 
-        <div className="w-full grid grid-cols-[1fr_auto] relative">
-          <ExpressionInput
-            className="static"
-            textareaClassName="w-[calc(100%+2px)]"
-            inputClassName="rounded-none border-none"
-            value={newValue}
-            placeholder={valuePlaceholder}
-            onCommit={(value) => {
-              if (!onChange) {
-                return;
-              }
+          <div className="w-full grid grid-cols-[1fr_auto] relative">
+            <ExpressionInput
+              className="static"
+              textareaClassName="w-[calc(100%+2px)]"
+              inputClassName="rounded-none border-none"
+              value={newValue}
+              placeholder={valuePlaceholder}
+              onCommit={(value) => {
+                if (!onChange) {
+                  return;
+                }
 
-              setNewValue(value);
-              onChange(newId, value, clear);
-            }}
-            disable={disableEditValue}
-            variables={variables ? variables(index) : undefined}
-          />
-          <IconButton
-            className="opacity-0 m-0 group-hover:opacity-100"
-            onClick={() => {
-              if (!onRemove) {
-                return;
-              }
+                setNewValue(value);
+                onChange(newId, value, clear);
+              }}
+              disable={disableEditValue}
+              variables={variables ? variables(index) : undefined}
+            />
+            <IconButton
+              className="opacity-0 m-0 group-hover:opacity-100"
+              onClick={() => {
+                if (!onRemove) {
+                  return;
+                }
 
-              onRemove();
-            }}
-          >
-            <Cross2Icon />
-          </IconButton>
+                onRemove();
+              }}
+            >
+              <Cross2Icon />
+            </IconButton>
+          </div>
         </div>
-      </div>
-    );
-  }
+      );
+    }
+  )
 );
 
 export const PairInput = (props: PairInputProps) => {
