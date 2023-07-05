@@ -10,6 +10,7 @@ import {
 import { DisposableComputation } from './computation';
 import { Reka } from './reka';
 import { GetVariablesOpts, Scope } from './scope';
+import { VariableWithScope } from './interfaces';
 
 type CachedTemplateResolver = {
   computed: IComputedValue<void>;
@@ -33,10 +34,18 @@ export class Resolver {
   private cachedTemplateResolver: WeakMap<t.Template, CachedTemplateResolver>;
   declare rootResolverComputation: DisposableComputation<void>;
 
-  private nodeToScope: WeakMap<t.ASTNode, Scope>;
+  declare getVariablesAtNode: (
+    node: t.ASTNode,
+    opts: GetVariablesOpts
+  ) => VariableWithScope[];
+
+  scopeRegistry: Map<string, Scope> = new Map();
+
+  nodeToScope: WeakMap<t.ASTNode, Scope>;
 
   constructor(readonly reka: Reka) {
-    this.scope = new Scope(this.reka, {
+    console.log('new resolver', this.scopeRegistry);
+    this.scope = new Scope(this, {
       level: 'global',
       id: this.reka.program.id,
     });
@@ -58,19 +67,22 @@ export class Resolver {
 
     this.nodeToScope = new WeakMap();
 
+    this.getVariablesAtNode = this.reka.createCachedQuery(
+      (node: t.ASTNode, opts: GetVariablesOpts) => {
+        const scope = this.nodeToScope.get(node);
+
+        if (!scope) {
+          return [];
+        }
+
+        return scope.getVariables(opts);
+      }
+    );
+
     makeObservable(this, {
       identifiersToVariableDistance: observable,
+      nodeToScope: observable,
     });
-  }
-
-  getVariablesAtNode(node: t.ASTNode, opts?: GetVariablesOpts) {
-    const scope = this.nodeToScope.get(node);
-
-    if (!scope) {
-      return [];
-    }
-
-    return scope.getVariables(opts);
   }
 
   getDistance(identifier: t.Identifier) {
@@ -106,14 +118,26 @@ export class Resolver {
     });
   }
 
+  private bindNodeToScope(node: t.ASTNode, scope: Scope) {
+    runInAction(() => {
+      this.nodeToScope.set(node, scope);
+    });
+  }
+
   unbindIdentifierToVariable(identifier: t.Identifier) {
     runInAction(() => {
       this.identifiersToVariable.delete(identifier);
     });
   }
 
+  unbindNodeToScope(node: t.ASTNode) {
+    runInAction(() => {
+      this.nodeToScope.delete(node);
+    });
+  }
+
   private resolveExpr(expr: t.ASTNode, scope: Scope) {
-    this.nodeToScope.set(expr, scope);
+    this.bindNodeToScope(expr, scope);
 
     if (expr instanceof t.Identifier) {
       if (expr.external) {
@@ -212,11 +236,11 @@ export class Resolver {
               id: component.id,
             });
 
-            this.nodeToScope.set(component, componentScope);
+            this.bindNodeToScope(component, componentScope);
 
             component.props.forEach((prop) => {
               componentScope.defineVariable(prop);
-              this.nodeToScope.set(prop, componentScope);
+              this.bindNodeToScope(prop, componentScope);
 
               if (prop.init) {
                 this.resolveExpr(prop.init, scope);
@@ -249,7 +273,7 @@ export class Resolver {
         id: template.id,
       });
 
-      this.nodeToScope.set(template, templateScope);
+      this.bindNodeToScope(template, templateScope);
 
       let eachIndex: string | null = null;
       let eachAliasName: string | null = null;
@@ -315,7 +339,7 @@ export class Resolver {
   }
 
   private resolveVal(val: t.Val, scope: Scope) {
-    this.nodeToScope.set(val, scope);
+    this.bindNodeToScope(val, scope);
     this.resolveExpr(val.init, scope);
     scope.defineVariable(val);
   }
@@ -325,7 +349,7 @@ export class Resolver {
 
     const program = this.reka.program;
 
-    this.nodeToScope.set(program, this.scope);
+    this.bindNodeToScope(program, this.scope);
 
     program.globals.forEach((global) => {
       this.resolveVal(global, this.scope);

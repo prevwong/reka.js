@@ -127,10 +127,16 @@ export class Reka {
       id: 'state-observer',
       hooks: {
         onDispose: (payload) => {
+          if (!t.is(payload.type, t.ASTNode)) {
+            return;
+          }
+
           if (payload.type instanceof t.Identifier) {
             this.head.resolver.removeDistance(payload.type);
             this.head.resolver.unbindIdentifierToVariable(payload.type);
           }
+
+          this.head.resolver.unbindNodeToScope(payload.type);
         },
       },
     });

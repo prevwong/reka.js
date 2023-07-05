@@ -2,6 +2,10 @@ import * as t from '@rekajs/types';
 
 import { ScopeDescription, VariableWithScope } from './interfaces';
 import { Reka } from './reka';
+import { action, makeObservable, observable, untracked } from 'mobx';
+import { Resolver } from './resolver';
+import { computedFn } from 'mobx-utils';
+import { invariant } from '@rekajs/utils';
 
 type BeforeIndex = {
   index: number;
@@ -37,19 +41,41 @@ const isBeforeName = (before: Before): before is BeforeName => {
   return false;
 };
 
+const getKeyFromScopeDescription = (description: ScopeDescription) => {
+  return `${description.level}<${description.id}>`;
+};
+
 export class Scope {
-  private variableNames: Map<string, t.Variable>;
+  variableNames: Map<string, t.Variable>;
 
   constructor(
-    readonly reka: Reka,
+    readonly resolver: Resolver,
     readonly description: ScopeDescription,
     readonly parent?: Scope
   ) {
     this.variableNames = new Map();
+
+    invariant(
+      !this.resolver.scopeRegistry.get(this.key),
+      `Duplicate scope found! ${this.key}`
+    );
+
+    this.resolver.scopeRegistry.set(this.key, this);
+
+    makeObservable(this, {
+      variableNames: observable,
+      defineVariable: action,
+      removeVariableByName: action,
+      clear: action,
+    });
+  }
+
+  get reka() {
+    return this.resolver.reka;
   }
 
   get key() {
-    return `${this.description.level}<${this.description.id}>`;
+    return getKeyFromScopeDescription(this.description);
   }
 
   getVariables(maybeOpts?: GetVariablesOpts): VariableWithScope[] {
@@ -131,7 +157,17 @@ export class Scope {
   }
 
   inherit(desc: ScopeDescription) {
-    return new Scope(this.reka, desc, this);
+    const key = getKeyFromScopeDescription(desc);
+
+    const existing = this.resolver.scopeRegistry.get(key);
+
+    if (existing) {
+      existing.clear();
+
+      return existing;
+    }
+
+    return new Scope(this.resolver, desc, this);
   }
 
   defineVariable(variable: t.Variable) {
@@ -147,23 +183,25 @@ export class Scope {
   }
 
   getVariableWithDistance(name: string) {
-    let distance = 0;
+    return untracked(() => {
+      let distance = 0;
 
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    let scope: Scope = this;
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      let scope: Scope = this;
 
-    do {
-      const variable = scope.variableNames.get(name);
+      do {
+        const variable = scope.variableNames.get(name);
 
-      if (variable) {
-        return {
-          variable,
-          distance,
-        };
-      }
-    } while (scope.parent && (scope = scope.parent) && (distance += 1));
+        if (variable) {
+          return {
+            variable,
+            distance,
+          };
+        }
+      } while (scope.parent && (scope = scope.parent) && (distance += 1));
 
-    return null;
+      return null;
+    });
   }
 
   has(name: string) {
@@ -177,18 +215,20 @@ export class Scope {
   }
 
   toString() {
-    const keyToId: string[] = [];
+    return untracked(() => {
+      const keyToId: string[] = [];
 
-    for (const [key] of this.variableNames) {
-      keyToId.push(`${key}`);
-    }
+      for (const [key] of this.variableNames) {
+        keyToId.push(`${key}`);
+      }
 
-    let key = keyToId.join(`,`);
+      let key = keyToId.join(`,`);
 
-    if (this.parent) {
-      key = this.parent.toString() + ',' + key;
-    }
+      if (this.parent) {
+        key = this.parent.toString() + ',' + key;
+      }
 
-    return key;
+      return key;
+    });
   }
 }
