@@ -77,8 +77,8 @@ describe('Stringifier', () => {
             children: [],
             each: t.elementEach({
               iterator: t.identifier({ name: 'posts' }),
-              alias: t.identifier({ name: 'post' }),
-              index: t.identifier({ name: 'i' }),
+              alias: t.elementEachAlias({ name: 'post' }),
+              index: t.elementEachIndex({ name: 'i' }),
             }),
           })
         )
@@ -92,7 +92,7 @@ describe('Stringifier', () => {
             children: [],
             each: t.elementEach({
               iterator: t.identifier({ name: 'posts' }),
-              alias: t.identifier({ name: 'post' }),
+              alias: t.elementEachAlias({ name: 'post' }),
             }),
           })
         )
