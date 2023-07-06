@@ -1,19 +1,234 @@
+import * as t from '@rekajs/types';
+import { invariant } from '@rekajs/utils';
+import { action, makeObservable, observable, untracked } from 'mobx';
+
+import { ScopeDescription, VariableWithScope } from './interfaces';
+import { Resolver } from './resolver';
+
+type BeforeIndex = {
+  index: number;
+};
+
+type BeforeName = {
+  name: string;
+};
+
+type Before = BeforeIndex | BeforeName;
+
+export type GetVariablesOpts = {
+  parent?: boolean;
+  includeExternals?: boolean;
+  includeAncestors?: boolean;
+  filter?: (variable: VariableWithScope) => boolean;
+  before?: Before;
+};
+
+const isBeforeIndex = (before: Before): before is BeforeIndex => {
+  if ((before as BeforeIndex).index !== undefined) {
+    return true;
+  }
+
+  return false;
+};
+
+const isBeforeName = (before: Before): before is BeforeName => {
+  if ((before as BeforeName).name !== undefined) {
+    return true;
+  }
+
+  return false;
+};
+
+export const getKeyFromScopeDescription = (description: ScopeDescription) => {
+  return `${description.level}<${description.id}>`;
+};
+
+export const getMaybeScopeDescriptionByNodeOwner = (
+  node: t.ASTNode
+): ScopeDescription | null => {
+  if (t.is(node, t.Program)) {
+    return {
+      level: 'global',
+      id: node.id,
+    };
+  }
+
+  if (t.is(node, t.Component)) {
+    return {
+      level: 'component',
+      id: node.id,
+    };
+  }
+
+  if (t.is(node, t.Template)) {
+    return {
+      level: 'template',
+      id: node.id,
+    };
+  }
+
+  if (t.is(node, t.Func)) {
+    return {
+      level: 'function',
+      id: node.id,
+    };
+  }
+
+  return null;
+};
+
+export const getScopeDescriptionByNodeOwner = (
+  node: t.ASTNode
+): ScopeDescription => {
+  const description = getMaybeScopeDescriptionByNodeOwner(node);
+
+  invariant(
+    description,
+    `Unable to infer scope description from node ${node.type}<${node.id}>`
+  );
+
+  return description;
+};
+
 export class Scope {
-  private variableNames: Set<string>;
+  variableNames: Map<string, t.Variable>;
 
-  constructor(readonly key: string, readonly parent?: Scope) {
-    this.variableNames = new Set();
+  description: ScopeDescription;
+
+  constructor(
+    readonly resolver: Resolver,
+    descriptionOrNode: ScopeDescription | t.ASTNode,
+    readonly parent?: Scope
+  ) {
+    this.variableNames = new Map();
+    this.description = t.is(descriptionOrNode, t.ASTNode)
+      ? getScopeDescriptionByNodeOwner(descriptionOrNode)
+      : descriptionOrNode;
+
+    invariant(
+      !this.resolver.scopeRegistry.get(this.key),
+      `Duplicate scope found! ${this.key}`
+    );
+
+    this.resolver.scopeRegistry.set(this.key, this);
+
+    makeObservable(this, {
+      variableNames: observable,
+      defineVariable: action,
+      removeVariableByName: action,
+      clear: action,
+    });
   }
 
-  inherit(key: string) {
-    return new Scope(key, this);
+  get reka() {
+    return this.resolver.reka;
   }
 
-  defineVariableName(name: string) {
-    this.variableNames.add(name);
+  get key() {
+    return getKeyFromScopeDescription(this.description);
   }
 
-  removeVariableName(name: string) {
+  getVariables(maybeOpts?: GetVariablesOpts): VariableWithScope[] {
+    const opts = {
+      parent: false,
+      includeExternals: true,
+      includeAncestors: true,
+      ...(maybeOpts ?? {}),
+    };
+
+    if (opts.parent) {
+      if (!this.parent) {
+        return [];
+      }
+
+      return this.parent.getVariables({
+        ...opts,
+        parent: false,
+      });
+    }
+
+    const variables = new Map<string, VariableWithScope>();
+
+    const addVariable = (scope: ScopeDescription, variable: t.Variable) => {
+      if (opts.filter && !opts.filter({ variable, scope })) {
+        return;
+      }
+
+      variables.set(variable.name, {
+        scope,
+        variable,
+      });
+    };
+
+    let i = 0;
+
+    for (const [key, variable] of this.variableNames) {
+      if (opts.before && isBeforeIndex(opts.before) && i >= opts.before.index) {
+        break;
+      }
+
+      if (opts.before && isBeforeName(opts.before) && key == opts.before.name) {
+        break;
+      }
+
+      i++;
+
+      addVariable(this.description, variable);
+    }
+
+    if (opts.includeAncestors) {
+      let parent = this.parent;
+
+      while (parent) {
+        for (const [name, variable] of parent.variableNames) {
+          if (variables.has(name)) {
+            continue;
+          }
+
+          addVariable(parent.description, variable);
+        }
+        parent = parent.parent;
+      }
+    }
+
+    if (opts.includeExternals) {
+      this.reka.externals.all().forEach((v) => {
+        addVariable(
+          {
+            level: 'external',
+            id: this.reka.id,
+          },
+          v
+        );
+      });
+    }
+
+    return [...variables.values()];
+  }
+
+  inherit(descriptionOrNode: ScopeDescription | t.ASTNode) {
+    const description = t.is(descriptionOrNode, t.ASTNode)
+      ? getScopeDescriptionByNodeOwner(descriptionOrNode)
+      : descriptionOrNode;
+
+    const key = getKeyFromScopeDescription(description);
+
+    const existing = this.resolver.scopeRegistry.get(key);
+
+    if (existing) {
+      existing.clear();
+
+      return existing;
+    }
+
+    return new Scope(this.resolver, description, this);
+  }
+
+  defineVariable(variable: t.Variable) {
+    this.variableNames.set(variable.name, variable);
+  }
+
+  removeVariableByName(name: string) {
     this.variableNames.delete(name);
   }
 
@@ -21,44 +236,53 @@ export class Scope {
     this.variableNames.clear();
   }
 
-  getDistance(name: string) {
-    let distance = 0;
+  getVariableWithDistance(name: string) {
+    return untracked(() => {
+      let distance = 0;
 
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    let scope: Scope = this;
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      let scope: Scope = this;
 
-    do {
-      if (scope.variableNames.has(name)) {
-        return distance;
-      }
-    } while (scope.parent && (scope = scope.parent) && (distance += 1));
+      do {
+        const variable = scope.variableNames.get(name);
 
-    return -1;
+        if (variable) {
+          return {
+            variable,
+            distance,
+          };
+        }
+      } while (scope.parent && (scope = scope.parent) && (distance += 1));
+
+      return null;
+    });
   }
 
   has(name: string) {
     return this.variableNames.has(name);
   }
 
-  forEach(cb: (name: string) => void) {
-    for (const name of this.variableNames) {
-      cb(name);
+  forEach(cb: (variable: t.Variable) => void) {
+    for (const [_, variable] of this.variableNames) {
+      cb(variable);
     }
   }
 
   toString() {
-    const keyToId: string[] = [];
+    return untracked(() => {
+      const keyToId: string[] = [];
 
-    for (const key of this.variableNames) {
-      keyToId.push(`${key}`);
-    }
+      for (const [key] of this.variableNames) {
+        keyToId.push(`${key}`);
+      }
 
-    let key = keyToId.join(`,`);
+      let key = keyToId.join(`,`);
 
-    if (this.parent) {
-      key = this.parent.toString() + ',' + key;
-    }
+      if (this.parent) {
+        key = this.parent.toString() + ',' + key;
+      }
 
-    return key;
+      return key;
+    });
   }
 }

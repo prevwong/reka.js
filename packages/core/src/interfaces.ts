@@ -4,12 +4,12 @@ import { ExtensionDefinition } from './extension';
 import { Reka } from './reka';
 
 export type StateExternalFunction = (opts: Record<string, any>) => any;
-export type StateExternalFunctions = Record<string, StateExternalFunction>;
+export type StateExternalFunctions = Array<t.ExternalFunc>;
 export type StateExternalFunctionsFactory = (
   reka: Reka
 ) => StateExternalFunctions;
 
-export type StateExternalStates = Record<string, any>;
+export type StateExternalStates = Array<t.ExternalState>;
 
 export type StateExternals = {
   states: StateExternalStates;
@@ -36,4 +36,14 @@ export type StateSubscriber<C> = {
   collect: (reka: Reka) => C;
   onCollect: (collected: C, prevCollected: C) => void;
   opts: StateSubscriberOpts;
+};
+
+export type ScopeDescription = {
+  level: 'external' | 'global' | 'component' | 'template' | 'function';
+  id: string;
+};
+
+export type VariableWithScope = {
+  variable: t.Variable;
+  scope: ScopeDescription;
 };

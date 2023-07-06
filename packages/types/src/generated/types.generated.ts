@@ -56,6 +56,20 @@ export abstract class Expression extends ASTNode {
 
 Schema.register('Expression', Expression);
 
+type VariableParameters = {
+  meta?: Record<string, any>;
+  name: string;
+};
+
+export abstract class Variable extends Expression {
+  declare name: string;
+  constructor(type: string, value: VariableParameters) {
+    super(type, value);
+  }
+}
+
+Schema.register('Variable', Variable);
+
 type LiteralParameters = {
   meta?: Record<string, any>;
   value: string | number | boolean;
@@ -92,8 +106,7 @@ type ValParameters = {
   init: Expression;
 };
 
-export class Val extends Expression {
-  declare name: string;
+export class Val extends Variable {
   declare init: Expression;
   constructor(value: ValParameters) {
     super('Val', value);
@@ -294,8 +307,7 @@ type ComponentPropParameters = {
   init?: Expression | null;
 };
 
-export class ComponentProp extends ASTNode {
-  declare name: string;
+export class ComponentProp extends Variable {
   declare init: Expression | null;
   constructor(value: ComponentPropParameters) {
     super('ComponentProp', value);
@@ -309,8 +321,7 @@ type ComponentParameters = {
   name: string;
 };
 
-export abstract class Component extends ASTNode {
-  declare name: string;
+export abstract class Component extends Variable {
   constructor(type: string, value: ComponentParameters) {
     super(type, value);
   }
@@ -444,16 +455,42 @@ export class SlotTemplate extends Template {
 
 Schema.register('SlotTemplate', SlotTemplate);
 
+type ElementEachAliasParameters = {
+  meta?: Record<string, any>;
+  name: string;
+};
+
+export class ElementEachAlias extends Variable {
+  constructor(value: ElementEachAliasParameters) {
+    super('ElementEachAlias', value);
+  }
+}
+
+Schema.register('ElementEachAlias', ElementEachAlias);
+
+type ElementEachIndexParameters = {
+  meta?: Record<string, any>;
+  name: string;
+};
+
+export class ElementEachIndex extends Variable {
+  constructor(value: ElementEachIndexParameters) {
+    super('ElementEachIndex', value);
+  }
+}
+
+Schema.register('ElementEachIndex', ElementEachIndex);
+
 type ElementEachParameters = {
   meta?: Record<string, any>;
-  alias: Identifier;
-  index?: Identifier | null;
+  alias: ElementEachAlias;
+  index?: ElementEachIndex | null;
   iterator: Expression;
 };
 
 export class ElementEach extends ASTNode {
-  declare alias: Identifier;
-  declare index: Identifier | null;
+  declare alias: ElementEachAlias;
+  declare index: ElementEachIndex | null;
   declare iterator: Expression;
   constructor(value: ElementEachParameters) {
     super('ElementEach', value);
@@ -655,12 +692,43 @@ export class ExtensionState extends Type {
 
 Schema.register('ExtensionState', ExtensionState);
 
+type ExternalStateParameters = {
+  meta?: Record<string, any>;
+  name: string;
+  init: any;
+};
+
+export class ExternalState extends Variable {
+  declare init: any;
+  constructor(value: ExternalStateParameters) {
+    super('ExternalState', value);
+  }
+}
+
+Schema.register('ExternalState', ExternalState);
+
+type ExternalFuncParameters = {
+  meta?: Record<string, any>;
+  name: string;
+  func: Function;
+};
+
+export class ExternalFunc extends Variable {
+  declare func: Function;
+  constructor(value: ExternalFuncParameters) {
+    super('ExternalFunc', value);
+  }
+}
+
+Schema.register('ExternalFunc', ExternalFunc);
+
 export type Statement = Assignment;
 export type Any =
   | State
   | ASTNode
   | Program
   | Expression
+  | Variable
   | Literal
   | Identifier
   | Val
@@ -683,6 +751,8 @@ export type Any =
   | TagTemplate
   | ComponentTemplate
   | SlotTemplate
+  | ElementEachAlias
+  | ElementEachIndex
   | ElementEach
   | View
   | SlottableView
@@ -694,12 +764,15 @@ export type Any =
   | SystemView
   | EachSystemView
   | ErrorSystemView
-  | ExtensionState;
+  | ExtensionState
+  | ExternalState
+  | ExternalFunc;
 export type Visitor = {
   State: (node: State) => any;
   ASTNode: (node: ASTNode) => any;
   Program: (node: Program) => any;
   Expression: (node: Expression) => any;
+  Variable: (node: Variable) => any;
   Literal: (node: Literal) => any;
   Identifier: (node: Identifier) => any;
   Val: (node: Val) => any;
@@ -722,6 +795,8 @@ export type Visitor = {
   TagTemplate: (node: TagTemplate) => any;
   ComponentTemplate: (node: ComponentTemplate) => any;
   SlotTemplate: (node: SlotTemplate) => any;
+  ElementEachAlias: (node: ElementEachAlias) => any;
+  ElementEachIndex: (node: ElementEachIndex) => any;
   ElementEach: (node: ElementEach) => any;
   View: (node: View) => any;
   SlottableView: (node: SlottableView) => any;
@@ -734,4 +809,6 @@ export type Visitor = {
   EachSystemView: (node: EachSystemView) => any;
   ErrorSystemView: (node: ErrorSystemView) => any;
   ExtensionState: (node: ExtensionState) => any;
+  ExternalState: (node: ExternalState) => any;
+  ExternalFunc: (node: ExternalFunc) => any;
 };

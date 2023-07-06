@@ -109,7 +109,19 @@ export class Environment {
 
   getByIdentifier(identifier: t.Identifier) {
     if (identifier.external) {
-      return this.reka.externals.get(identifier.name);
+      const external = this.reka.externals.get(identifier.name);
+
+      if (t.is(external, t.ExternalState)) {
+        return this.reka.externals.getStateValue(identifier.name);
+      }
+
+      if (t.is(external, t.ExternalFunc)) {
+        return external.func;
+      }
+
+      if (t.is(external, t.ExternalComponent)) {
+        return external;
+      }
     }
 
     const distance = this.reka.head.resolver.getDistance(identifier);

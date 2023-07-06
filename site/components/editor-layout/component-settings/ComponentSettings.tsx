@@ -35,6 +35,18 @@ export const ComponentSettings = observer(() => {
         collapsedOnInitial={false}
       >
         <PairInput
+          getVariablesForExpr={(i) =>
+            editor.reka.getVariablesAtNode(
+              component.props[i !== undefined ? i : component.props.length],
+              {
+                before: {
+                  index: i ?? 0,
+                },
+                filter: ({ variable }) =>
+                  t.is(variable, t.Val) || t.is(variable, t.ComponentProp),
+              }
+            )
+          }
           values={component.props.map((prop) => ({
             id: prop.name,
             value: prop.init,
@@ -83,10 +95,23 @@ export const ComponentSettings = observer(() => {
         collapsedOnInitial={false}
       >
         <PairInput
-          values={component.state.map((state) => ({
-            id: state.name,
-            value: state.init,
-          }))}
+          getVariablesForExpr={(i) =>
+            editor.reka.getVariablesAtNode(
+              component.state[i !== undefined ? i : component.state.length],
+              {
+                before: {
+                  index: i ?? 0,
+                },
+                filter: ({ variable }) => t.is(variable, t.Val),
+              }
+            )
+          }
+          values={component.state.map((state) => {
+            return {
+              id: state.name,
+              value: state.init,
+            };
+          })}
           idPlaceholder="Name"
           valuePlaceholder="Initial value"
           emptyValuesText="No state values"

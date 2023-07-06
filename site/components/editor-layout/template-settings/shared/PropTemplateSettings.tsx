@@ -18,6 +18,10 @@ export const PropTemplateSettings = observer(
 
     const classList = template.classList;
 
+    const variables = editor.reka.getVariablesAtNode(template, {
+      filter: (variable) => !t.is(variable, t.RekaComponent),
+    });
+
     return (
       <React.Fragment>
         <SettingSection
@@ -29,6 +33,7 @@ export const PropTemplateSettings = observer(
           <PairInput
             addingNewField={addNewClassListItem}
             onCancelAdding={() => setAddNewClassListItem(false)}
+            getVariablesForExpr={() => variables}
             values={
               classList
                 ? Object.keys(classList.properties).map((key) => ({
@@ -76,10 +81,17 @@ export const PropTemplateSettings = observer(
                 delete template.props[id];
               });
             }}
-            values={Object.keys(template.props).map((prop) => ({
-              id: prop,
-              value: template.props[prop],
-            }))}
+            getVariablesForExpr={() =>
+              editor.reka.getVariablesAtNode(template, {
+                filter: ({ variable }) => !t.is(variable, t.Component),
+              })
+            }
+            values={Object.keys(template.props).map((prop) => {
+              return {
+                id: prop,
+                value: template.props[prop],
+              };
+            })}
             idPlaceholder="Prop"
             valuePlaceholder="Value"
           />

@@ -1,19 +1,16 @@
 import * as t from '@rekajs/types';
 import { invariant } from '@rekajs/utils';
-import { action, makeObservable, observable } from 'mobx';
+import { runInAction } from 'mobx';
 
-import {
-  StateExternalFunctions,
-  StateExternalStates,
-  RekaExternalsFactory,
-} from './interfaces';
+import { RekaExternalsFactory } from './interfaces';
 import { Reka } from './reka';
+import { ExternalVolatileStateKey } from './symbols';
 
 type ExternalSource = 'states' | 'functions' | 'components';
 
 export class Externals {
-  states: StateExternalStates;
-  functions: StateExternalFunctions;
+  states: Record<string, t.ExternalState>;
+  functions: Record<string, t.ExternalFunc>;
   components: Record<string, t.Component>;
 
   private lookup: Record<string, ExternalSource> = {};
@@ -22,22 +19,31 @@ export class Externals {
     private readonly reka: Reka,
     opts?: Partial<RekaExternalsFactory>
   ) {
-    this.states = opts?.states || {};
-    this.functions = opts?.functions?.(this.reka) || {};
-    this.components =
-      opts?.components?.reduce(
-        (accum, component) => ({
-          ...accum,
-          [component.name]: component,
-        }),
-        {}
-      ) || [];
+    this.states = Object.fromEntries(
+      opts?.states?.map((state) => [state.name, state]) ?? []
+    );
+
+    this.functions = Object.fromEntries(
+      opts?.functions?.(this.reka).map((func) => [func.name, func]) ?? []
+    );
+
+    this.components = Object.fromEntries(
+      opts?.components?.map((component) => [component.name, component]) ?? []
+    );
 
     this.createNamedLookup();
 
-    makeObservable(this, {
-      states: observable,
-      updateState: action,
+    this.initState();
+  }
+
+  private initState() {
+    runInAction(() => {
+      this.reka.volatile[ExternalVolatileStateKey] = Object.values(
+        this.states
+      ).reduce((accum, state) => {
+        accum[state.name] = state.init;
+        return accum;
+      }, {});
     });
   }
 
@@ -64,8 +70,14 @@ export class Externals {
     }
   }
 
-  updateState(key: string, value: any) {
-    this.states[key] = value;
+  updateStateValue(key: string, value: any) {
+    runInAction(() => {
+      this.reka.volatile[ExternalVolatileStateKey][key] = value;
+    });
+  }
+
+  getStateValue(key: string) {
+    return this.reka.volatile[ExternalVolatileStateKey][key];
   }
 
   getState(key: string) {
@@ -76,8 +88,16 @@ export class Externals {
     return this.components[name];
   }
 
-  getGlobal(name: string) {
+  getFunc(name: string) {
     return this.functions[name];
+  }
+
+  all() {
+    return [
+      ...Object.values(this.components),
+      ...Object.values(this.states),
+      ...Object.values(this.functions),
+    ];
   }
 
   get(name: string) {

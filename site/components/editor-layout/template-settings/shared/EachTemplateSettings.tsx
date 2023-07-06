@@ -64,10 +64,10 @@ export const EachTemplateSettings = observer(
 
         props.template.each = t.elementEach({
           iterator,
-          alias: t.identifier({
+          alias: t.elementEachAlias({
             name: aliasName,
           }),
-          index: index ? t.identifier({ name: index }) : null,
+          index: index ? t.elementEachIndex({ name: index }) : null,
         });
       });
     };
@@ -93,6 +93,10 @@ export const EachTemplateSettings = observer(
             onCommit={(iterator) => {
               commitValue(iterator, alias, index);
             }}
+            variables={editor.reka.getVariablesAtNode(props.template, {
+              filter: ({ variable }) => !t.is(variable, t.Component),
+              parent: true,
+            })}
           />
         </div>
         <div className="mt-4">

@@ -151,8 +151,14 @@ const jsToReka = <T extends t.ASTNode = t.ASTNode>(
           }
 
           return t.elementEach({
-            alias,
-            index,
+            alias: t.elementEachAlias({
+              name: alias.name,
+            }),
+            index: index
+              ? t.elementEachIndex({
+                  name: index.name,
+                })
+              : undefined,
             iterator: _convert(node.right),
           });
         }
