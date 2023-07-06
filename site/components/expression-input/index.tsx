@@ -178,6 +178,17 @@ const TextareaEditor = ({
                     value +
                       `${addSpace ? ' ' : ''}${addPlus ? ' + ' : ''}${name}`
                   );
+
+                  const { current: dom } = domRef;
+
+                  if (!dom) {
+                    return;
+                  }
+
+                  Promise.resolve().then(() => {
+                    dom.focus();
+                    dom.setSelectionRange(dom.value.length, dom.value.length);
+                  });
                 },
               }))}
             >
