@@ -1,5 +1,11 @@
 # @rekajs/parser
 
+## 0.1.6
+
+### Patch Changes
+
+- [#57](https://github.com/prevwong/reka.js/pull/57) [`417fc28`](https://github.com/prevwong/reka.js/commit/417fc282d49ce9687fdf367b63532c6083b46dbc) Thanks [@prevwong](https://github.com/prevwong)! - Add ability to find variables by scope
+
 ## 0.1.5
 
 ### Patch Changes
