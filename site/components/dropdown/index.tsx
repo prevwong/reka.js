@@ -53,7 +53,7 @@ export const Dropdown = React.forwardRef<HTMLButtonElement, DropdownProps>(
                 key={i}
                 onSelect={() => {
                   Promise.resolve().then(() => {
-                  item.onSelect();
+                    item.onSelect();
                   });
                 }}
               >

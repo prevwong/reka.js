@@ -50,6 +50,7 @@ module.exports = {
     '@typescript-eslint/ban-types': 'off',
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/no-non-null-assertion': 0,
     'no-constant-condition': 0,
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': [
