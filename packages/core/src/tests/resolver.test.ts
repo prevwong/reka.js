@@ -1,7 +1,8 @@
 import * as t from '@rekajs/types';
 
-import { Frame } from '../frame';
 import { createFrame } from './fixtures';
+
+import { Frame } from '../frame';
 
 const createTestFrame = () => {
   return createFrame(
@@ -138,9 +139,7 @@ describe('Resolver', () => {
         );
       });
 
-      expect(frame.reka.getVariableFromIdentifier(globalProp)).toEqual(
-        undefined
-      );
+      expect(frame.reka.getVariableFromIdentifier(globalProp)).toEqual(null);
     });
   });
 
@@ -160,6 +159,7 @@ describe('Resolver', () => {
         state1,
         state2,
       } = queryFromFrame(frame);
+
       expect(
         frame.reka
           .getVariablesAtNode(frame.reka.program, {

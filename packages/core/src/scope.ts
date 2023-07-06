@@ -136,11 +136,7 @@ export class Scope {
       ...(maybeOpts ?? {}),
     };
 
-    if (opts.parent) {
-      if (!this.parent) {
-        return [];
-      }
-
+    if (opts.parent && this.parent) {
       return this.parent.getVariables({
         ...opts,
         parent: false,
@@ -160,34 +156,44 @@ export class Scope {
       });
     };
 
-    let i = 0;
+    if (!opts.parent) {
+      let i = 0;
 
-    for (const [key, variable] of this.variableNames) {
-      if (opts.before && isBeforeIndex(opts.before) && i >= opts.before.index) {
-        break;
-      }
-
-      if (opts.before && isBeforeName(opts.before) && key == opts.before.name) {
-        break;
-      }
-
-      i++;
-
-      addVariable(this.description, variable);
-    }
-
-    if (opts.includeAncestors) {
-      let parent = this.parent;
-
-      while (parent) {
-        for (const [name, variable] of parent.variableNames) {
-          if (variables.has(name)) {
-            continue;
-          }
-
-          addVariable(parent.description, variable);
+      for (const [key, variable] of this.variableNames) {
+        if (
+          opts.before &&
+          isBeforeIndex(opts.before) &&
+          i >= opts.before.index
+        ) {
+          break;
         }
-        parent = parent.parent;
+
+        if (
+          opts.before &&
+          isBeforeName(opts.before) &&
+          key == opts.before.name
+        ) {
+          break;
+        }
+
+        i++;
+
+        addVariable(this.description, variable);
+      }
+
+      if (opts.includeAncestors) {
+        let parent = this.parent;
+
+        while (parent) {
+          for (const [name, variable] of parent.variableNames) {
+            if (variables.has(name)) {
+              continue;
+            }
+
+            addVariable(parent.description, variable);
+          }
+          parent = parent.parent;
+        }
       }
     }
 

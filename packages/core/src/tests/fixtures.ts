@@ -1,9 +1,9 @@
+import { Parser } from '@rekajs/parser';
 import * as t from '@rekajs/types';
 
 import { FrameOpts } from '../frame';
 import { RekaOpts } from '../interfaces';
 import { Reka } from '../reka';
-import { Parser } from '@rekajs/parser';
 
 export const createFrame = (
   program: string,

@@ -8,7 +8,6 @@ import {
 } from 'mobx';
 
 import { DisposableComputation } from './computation';
-import { VariableWithScope } from './interfaces';
 import { Reka } from './reka';
 import {
   getKeyFromScopeDescription,
@@ -28,8 +27,10 @@ type CachedComponentResolver = {
 };
 
 export class Resolver {
+  scopeRegistry: Map<string, Scope> = new Map();
   identifiersToVariableDistance: Map<string, number>;
   identifiersToVariable: Map<t.Identifier, t.Variable>;
+  nodeToScope: Map<t.ASTNode, Scope>;
 
   private scope: Scope;
   private cachedComponentResolver: WeakMap<
@@ -37,15 +38,8 @@ export class Resolver {
     CachedComponentResolver
   >;
   private cachedTemplateResolver: WeakMap<t.Template, CachedTemplateResolver>;
+
   declare rootResolverComputation: DisposableComputation<void>;
-
-  declare getVariablesAtNode: (
-    node: t.ASTNode,
-    opts: GetVariablesOpts
-  ) => VariableWithScope[];
-
-  scopeRegistry: Map<string, Scope> = new Map();
-  nodeToScope: Map<t.ASTNode, Scope>;
 
   constructor(readonly reka: Reka) {
     this.scope = new Scope(this, reka.program);
@@ -67,18 +61,6 @@ export class Resolver {
 
     this.nodeToScope = new Map();
 
-    this.getVariablesAtNode = this.reka.createCachedQuery(
-      (node: t.ASTNode, opts: GetVariablesOpts) => {
-        const scope = this.nodeToScope.get(node);
-
-        if (!scope) {
-          return [];
-        }
-
-        return scope.getVariables(opts);
-      }
-    );
-
     makeObservable(this, {
       identifiersToVariableDistance: observable,
       nodeToScope: observable,
@@ -89,8 +71,18 @@ export class Resolver {
     return this.identifiersToVariableDistance.get(identifier.id);
   }
 
+  getVariablesAtNode(node: t.ASTNode, opts?: GetVariablesOpts) {
+    const scope = this.nodeToScope.get(node);
+
+    if (!scope) {
+      return [];
+    }
+
+    return scope.getVariables(opts);
+  }
+
   getVariableFromIdentifier(identifier: t.Identifier) {
-    return this.identifiersToVariable.get(identifier);
+    return this.identifiersToVariable.get(identifier) || null;
   }
 
   removeDistance(identifier: t.Identifier) {
