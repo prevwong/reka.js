@@ -164,11 +164,14 @@ You may also want to expose additional functionalities for the end-users of your
 // 1) Expose function to return current time
 const reka = Reka.create({
   externals: {
-    functions: (self) => ({
-      getDateTime: () => {
-        return Date.now();
-      },
-    }),
+    functions: [
+      t.externalFunc({
+        name: 'getDateTime',
+        func: () => {
+          return Date.now();
+        },
+      }),
+    ],
   },
 });
 
