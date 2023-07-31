@@ -187,8 +187,11 @@ export class Reka {
 
   /**
    * Create a new Frame instance
+   *
+   * @param opts The Frame options
+   * @param evaluateImmediately Whether to evaluate Frames immediately or defer through a microtask
    */
-  async createFrame(opts: FrameOpts) {
+  async createFrame(opts: FrameOpts, evaluateImmediately?: boolean) {
     const frame = new Frame(opts, this);
 
     invariant(
@@ -201,7 +204,7 @@ export class Reka {
     this.frames.push(frame);
 
     if (!this.init) {
-      await frame.compute();
+      await frame.compute(evaluateImmediately);
     }
 
     return frame;
