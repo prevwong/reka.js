@@ -110,8 +110,16 @@ export class Reka {
 
   /**
    * Load a new State data type
+   *
+   * @param state The State data type to load
+   * @param syncImmediately Whether to sync changes made to the State to all active Frames immediately
+   * @param evaluateImmediately Whether to evaluate Frames immediately or defer through a microtask
    */
-  load(state: t.State, syncImmediately: boolean = true) {
+  load(
+    state: t.State,
+    syncImmediately: boolean = true,
+    evaluateImmediately?: boolean
+  ) {
     if (this.loaded) {
       this.dispose();
     }
@@ -139,7 +147,7 @@ export class Reka {
     this.extensions.init();
 
     if (syncImmediately) {
-      this.sync();
+      this.sync(evaluateImmediately);
     } else {
       this.head.sync();
     }
@@ -150,13 +158,15 @@ export class Reka {
 
   /**
    * Sync changes made to the State to all active Frames. You usually do not need to call this manually
+   *
+   * @param evaluateImmediately Whether to evaluate Frames immediately or defer through a microtask
    */
-  sync() {
+  sync(evaluateImmediately?: boolean) {
     this.head.sync();
 
     return Promise.all(
       this.frames.map((frame) => {
-        return frame.compute();
+        return frame.compute(evaluateImmediately);
       })
     );
   }
