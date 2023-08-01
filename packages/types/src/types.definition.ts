@@ -23,6 +23,31 @@ Schema.define('Program', {
   }),
 });
 
+Schema.define('Input', {
+  abstract: true,
+});
+
+Schema.define('PrimitiveInput', {
+  extends: 'Input',
+  fields: (t) => ({
+    kind: t.enumeration('string', 'number', 'boolean'),
+  }),
+});
+
+Schema.define('ArrayInput', {
+  extends: 'Input',
+  fields: (t) => ({
+    param: t.node('Input'),
+  }),
+});
+
+Schema.define('EnumInput', {
+  extends: 'Input',
+  fields: (t) => ({
+    values: t.map(t.string),
+  }),
+});
+
 Schema.define('Expression', {
   extends: 'ASTNode',
   abstract: true,
@@ -55,6 +80,7 @@ Schema.define('Val', {
   extends: 'Variable',
   fields: (t) => ({
     init: t.node('Expression'),
+    input: t.optional(t.node('Input')),
   }),
 });
 
@@ -164,6 +190,7 @@ Schema.define('ComponentProp', {
   extends: 'Variable',
   fields: (t) => ({
     init: t.defaultValue(t.union(t.node('Expression'), t.nullish), null),
+    input: t.optional(t.node('Input')),
   }),
 });
 

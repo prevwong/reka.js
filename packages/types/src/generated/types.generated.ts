@@ -44,6 +44,55 @@ export class Program extends ASTNode {
 
 Schema.register('Program', Program);
 
+type InputParameters = {};
+
+export abstract class Input extends Type {
+  constructor(type: string, value: InputParameters) {
+    super(type, value);
+  }
+}
+
+Schema.register('Input', Input);
+
+type PrimitiveInputParameters = {
+  kind: 'string' | 'number' | 'boolean';
+};
+
+export class PrimitiveInput extends Input {
+  declare kind: 'string' | 'number' | 'boolean';
+  constructor(value: PrimitiveInputParameters) {
+    super('PrimitiveInput', value);
+  }
+}
+
+Schema.register('PrimitiveInput', PrimitiveInput);
+
+type ArrayInputParameters = {
+  param: Input;
+};
+
+export class ArrayInput extends Input {
+  declare param: Input;
+  constructor(value: ArrayInputParameters) {
+    super('ArrayInput', value);
+  }
+}
+
+Schema.register('ArrayInput', ArrayInput);
+
+type EnumInputParameters = {
+  values: Record<string, string>;
+};
+
+export class EnumInput extends Input {
+  declare values: Record<string, string>;
+  constructor(value: EnumInputParameters) {
+    super('EnumInput', value);
+  }
+}
+
+Schema.register('EnumInput', EnumInput);
+
 type ExpressionParameters = {
   meta?: Record<string, any>;
 };
@@ -104,10 +153,12 @@ type ValParameters = {
   meta?: Record<string, any>;
   name: string;
   init: Expression;
+  input?: Input | null;
 };
 
 export class Val extends Variable {
   declare init: Expression;
+  declare input: Input | null;
   constructor(value: ValParameters) {
     super('Val', value);
   }
@@ -305,10 +356,12 @@ type ComponentPropParameters = {
   meta?: Record<string, any>;
   name: string;
   init?: Expression | null;
+  input?: Input | null;
 };
 
 export class ComponentProp extends Variable {
   declare init: Expression | null;
+  declare input: Input | null;
   constructor(value: ComponentPropParameters) {
     super('ComponentProp', value);
   }
@@ -727,6 +780,10 @@ export type Any =
   | State
   | ASTNode
   | Program
+  | Input
+  | PrimitiveInput
+  | ArrayInput
+  | EnumInput
   | Expression
   | Variable
   | Literal
@@ -771,6 +828,10 @@ export type Visitor = {
   State: (node: State) => any;
   ASTNode: (node: ASTNode) => any;
   Program: (node: Program) => any;
+  Input: (node: Input) => any;
+  PrimitiveInput: (node: PrimitiveInput) => any;
+  ArrayInput: (node: ArrayInput) => any;
+  EnumInput: (node: EnumInput) => any;
   Expression: (node: Expression) => any;
   Variable: (node: Variable) => any;
   Literal: (node: Literal) => any;

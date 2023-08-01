@@ -3,6 +3,14 @@ export const state = (...args: ConstructorParameters<typeof t.State>) =>
   new t.State(...args);
 export const program = (...args: ConstructorParameters<typeof t.Program>) =>
   new t.Program(...args);
+export const primitiveInput = (
+  ...args: ConstructorParameters<typeof t.PrimitiveInput>
+) => new t.PrimitiveInput(...args);
+export const arrayInput = (
+  ...args: ConstructorParameters<typeof t.ArrayInput>
+) => new t.ArrayInput(...args);
+export const enumInput = (...args: ConstructorParameters<typeof t.EnumInput>) =>
+  new t.EnumInput(...args);
 export const literal = (...args: ConstructorParameters<typeof t.Literal>) =>
   new t.Literal(...args);
 export const identifier = (
