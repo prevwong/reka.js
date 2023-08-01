@@ -314,36 +314,36 @@ class _Parser extends Lexer {
     return declarations;
   }
 
-  private parseInputType() {
-    const inputType = this.consume(TokenType.INPUT_TYPE).value;
+  private parseKindType() {
+    const kindType = this.consume(TokenType.KIND_TYPE).value;
 
     if (
-      inputType === 'string' ||
-      inputType === 'number' ||
-      inputType === 'boolean'
+      kindType === 'string' ||
+      kindType === 'number' ||
+      kindType === 'boolean'
     ) {
-      return t.primitiveInput({
-        kind: inputType,
+      return t.primitiveKind({
+        primitive: kindType,
       });
     }
 
-    if (inputType === 'array') {
-      this.consume(TokenType.INPUT_PARAM_START);
+    if (kindType === 'array') {
+      this.consume(TokenType.KIND_PARAM_START);
 
-      const param = this.parseInputType();
+      const param = this.parseKindType();
 
-      this.consume(TokenType.INPUT_PARAM_END);
+      this.consume(TokenType.KIND_PARAM_END);
 
-      return t.arrayInput({
+      return t.arrayKind({
         param,
       });
     }
 
-    if (inputType === 'enum') {
-      this.consume(TokenType.INPUT_PARAM_START);
+    if (kindType === 'enum') {
+      this.consume(TokenType.KIND_PARAM_START);
       const startToken = this.currentToken;
 
-      while (!this.match(TokenType.INPUT_PARAM_END)) {
+      while (!this.match(TokenType.KIND_PARAM_END)) {
         this.next();
       }
 
@@ -356,7 +356,7 @@ class _Parser extends Lexer {
 
       const values = getJSObjFromExpr(expr);
 
-      return t.enumInput({
+      return t.enumKind({
         values,
       });
     }
@@ -364,18 +364,18 @@ class _Parser extends Lexer {
     throw new Error();
   }
 
-  private parseInput() {
-    if (!this.match(TokenType.INPUT)) {
+  private parseKind() {
+    if (!this.match(TokenType.KIND)) {
       return;
     }
 
-    return this.parseInputType();
+    return this.parseKindType();
   }
 
   private parseVariableDecl() {
     this.consume(TokenType.VAL);
     const name = this.consume(TokenType.IDENTIFIER);
-    const input = this.parseInput();
+    const kind = this.parseKind();
 
     this.consume(TokenType.EQ);
     const init = this.parseExpressionAt(this.currentToken.pos - 1) as any;
@@ -383,7 +383,7 @@ class _Parser extends Lexer {
 
     return t.val({
       name: name.value,
-      input,
+      kind,
       init,
     });
   }
@@ -400,7 +400,7 @@ class _Parser extends Lexer {
     while (!this.match(TokenType.RPAREN)) {
       const propName = this.consume(TokenType.IDENTIFIER).value;
 
-      const input = this.parseInput();
+      const kind = this.parseKind();
 
       let init: t.Expression | undefined;
 
@@ -442,7 +442,7 @@ class _Parser extends Lexer {
         t.componentProp({
           name: propName,
           init,
-          input,
+          kind,
         })
       );
 

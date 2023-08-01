@@ -8,15 +8,15 @@ import { Writer, WriterResult } from './writer';
 class _Stringifier {
   writer: Writer = new Writer();
 
-  private stringifyInput(input: t.Input) {
-    const _stringifyInputType = (input: t.Input) => {
-      if (t.is(input, t.PrimitiveInput)) {
-        this.writer.write(input.kind);
+  private stringifyInput(input: t.Kind) {
+    const _stringifyInputType = (input: t.Kind) => {
+      if (t.is(input, t.PrimitiveKind)) {
+        this.writer.write(input.primitive);
 
         return;
       }
 
-      if (t.is(input, t.ArrayInput)) {
+      if (t.is(input, t.ArrayKind)) {
         this.writer.write(`array<`);
         _stringifyInputType(input.param);
         this.writer.write('>');
@@ -24,7 +24,7 @@ class _Stringifier {
         return;
       }
 
-      if (t.is(input, t.EnumInput)) {
+      if (t.is(input, t.EnumKind)) {
         this.writer.write('enum<');
         this.writer.write(JSON.stringify(input.values));
         this.writer.write('>');
@@ -176,8 +176,8 @@ class _Stringifier {
       Val: (node) => {
         this.writer.write(`val ${node.name}`);
 
-        if (node.input) {
-          this.stringifyInput(node.input);
+        if (node.kind) {
+          this.stringifyInput(node.kind);
         }
 
         if (node.init) {
@@ -208,8 +208,8 @@ class _Stringifier {
       ComponentProp: (node) => {
         this.writer.write(node.name);
 
-        if (node.input) {
-          this.stringifyInput(node.input);
+        if (node.kind) {
+          this.stringifyInput(node.kind);
         }
 
         if (node.init) {

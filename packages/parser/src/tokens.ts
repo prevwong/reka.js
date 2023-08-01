@@ -30,10 +30,10 @@ export enum TokenType {
   NUMBER = 'number',
   FUNC = 'func',
 
-  INPUT = 'input',
-  INPUT_TYPE = 'input_type',
-  INPUT_PARAM_START = 'input_param_start',
-  INPUT_PARAM_END = 'input_param_end',
+  KIND = 'kind',
+  KIND_TYPE = 'kind_type',
+  KIND_PARAM_START = 'kind_param_start',
+  KIND_PARAM_END = 'kind_param_end',
 
   IF = 'if',
   IN = 'in',

@@ -23,26 +23,26 @@ Schema.define('Program', {
   }),
 });
 
-Schema.define('Input', {
+Schema.define('Kind', {
   abstract: true,
 });
 
-Schema.define('PrimitiveInput', {
-  extends: 'Input',
+Schema.define('PrimitiveKind', {
+  extends: 'Kind',
   fields: (t) => ({
-    kind: t.enumeration('string', 'number', 'boolean'),
+    primitive: t.enumeration('string', 'number', 'boolean'),
   }),
 });
 
-Schema.define('ArrayInput', {
-  extends: 'Input',
+Schema.define('ArrayKind', {
+  extends: 'Kind',
   fields: (t) => ({
-    param: t.node('Input'),
+    param: t.node('Kind'),
   }),
 });
 
-Schema.define('EnumInput', {
-  extends: 'Input',
+Schema.define('EnumKind', {
+  extends: 'Kind',
   fields: (t) => ({
     values: t.map(t.string),
   }),
@@ -80,7 +80,7 @@ Schema.define('Val', {
   extends: 'Variable',
   fields: (t) => ({
     init: t.node('Expression'),
-    input: t.optional(t.node('Input')),
+    kind: t.optional(t.node('Kind')),
   }),
 });
 
@@ -190,7 +190,7 @@ Schema.define('ComponentProp', {
   extends: 'Variable',
   fields: (t) => ({
     init: t.defaultValue(t.union(t.node('Expression'), t.nullish), null),
-    input: t.optional(t.node('Input')),
+    kind: t.optional(t.node('Kind')),
   }),
 });
 

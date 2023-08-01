@@ -159,8 +159,8 @@ describe('Stringifier', () => {
       Stringifier.toString(
         t.val({
           name: 'color',
-          input: t.primitiveInput({
-            kind: 'string',
+          kind: t.primitiveKind({
+            primitive: 'string',
           }),
           init: t.literal({ value: 'blue' }),
         })
@@ -171,9 +171,9 @@ describe('Stringifier', () => {
       Stringifier.toString(
         t.val({
           name: 'colors',
-          input: t.arrayInput({
-            param: t.primitiveInput({
-              kind: 'string',
+          kind: t.arrayKind({
+            param: t.primitiveKind({
+              primitive: 'string',
             }),
           }),
           init: t.arrayExpression({ elements: [t.literal({ value: 'blue' })] }),
@@ -185,7 +185,7 @@ describe('Stringifier', () => {
       Stringifier.toString(
         t.val({
           name: 'colors',
-          input: t.enumInput({
+          kind: t.enumKind({
             values: {
               blue: 'Blue',
               red: 'Red',

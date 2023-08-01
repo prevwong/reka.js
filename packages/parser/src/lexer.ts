@@ -3,7 +3,7 @@ import {
   tc_component_tmpl,
   tc_element_open_tag,
   tc_element_expr,
-  tc_input,
+  tc_kind,
   tc_val_prop,
   tc_component_prop_start,
 } from './context';
@@ -121,8 +121,8 @@ export class Lexer {
         return this.tokenize(TokenType.EQ);
       }
       case '<': {
-        if (this.currentContext === tc_input) {
-          return this.tokenize(TokenType.INPUT_PARAM_START);
+        if (this.currentContext === tc_kind) {
+          return this.tokenize(TokenType.KIND_PARAM_START);
         }
 
         if (
@@ -139,8 +139,8 @@ export class Lexer {
         return this.tokenize(TokenType.LT);
       }
       case '>': {
-        if (this.currentContext === tc_input) {
-          return this.tokenize(TokenType.INPUT_PARAM_END);
+        if (this.currentContext === tc_kind) {
+          return this.tokenize(TokenType.KIND_PARAM_END);
         }
 
         if (this.currentContext === tc_element_open_tag) {
@@ -164,7 +164,7 @@ export class Lexer {
       }
       case ':': {
         if (this.currentContext === tc_val_prop) {
-          return this.tokenize(TokenType.INPUT);
+          return this.tokenize(TokenType.KIND);
         }
 
         return this.tokenize(TokenType.COLON);
@@ -229,8 +229,8 @@ export class Lexer {
       return this.tokenize(keyword);
     }
 
-    if (this.currentContext === tc_input) {
-      return this.tokenize(TokenType.INPUT_TYPE);
+    if (this.currentContext === tc_kind) {
+      return this.tokenize(TokenType.KIND_TYPE);
     }
 
     if (this.currentContext === tc_element_open_tag) {
@@ -276,19 +276,19 @@ export class Lexer {
         break;
       }
 
-      case TokenType.INPUT: {
-        this.state.addContext(tc_input);
+      case TokenType.KIND: {
+        this.state.addContext(tc_kind);
 
         break;
       }
       case TokenType.EQ: {
-        if (this.currentContext === tc_input) {
+        if (this.currentContext === tc_kind) {
           this.state.popContext();
         }
         break;
       }
       case TokenType.SEMICOLON: {
-        if (this.currentContext === tc_input) {
+        if (this.currentContext === tc_kind) {
           this.state.popContext();
         }
 
@@ -318,7 +318,7 @@ export class Lexer {
         break;
       }
       case TokenType.RPAREN: {
-        if (this.currentContext === tc_input) {
+        if (this.currentContext === tc_kind) {
           this.state.popContext();
         }
 

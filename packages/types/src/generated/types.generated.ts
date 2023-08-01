@@ -44,54 +44,54 @@ export class Program extends ASTNode {
 
 Schema.register('Program', Program);
 
-type InputParameters = {};
+type KindParameters = {};
 
-export abstract class Input extends Type {
-  constructor(type: string, value: InputParameters) {
+export abstract class Kind extends Type {
+  constructor(type: string, value: KindParameters) {
     super(type, value);
   }
 }
 
-Schema.register('Input', Input);
+Schema.register('Kind', Kind);
 
-type PrimitiveInputParameters = {
-  kind: 'string' | 'number' | 'boolean';
+type PrimitiveKindParameters = {
+  primitive: 'string' | 'number' | 'boolean';
 };
 
-export class PrimitiveInput extends Input {
-  declare kind: 'string' | 'number' | 'boolean';
-  constructor(value: PrimitiveInputParameters) {
-    super('PrimitiveInput', value);
+export class PrimitiveKind extends Kind {
+  declare primitive: 'string' | 'number' | 'boolean';
+  constructor(value: PrimitiveKindParameters) {
+    super('PrimitiveKind', value);
   }
 }
 
-Schema.register('PrimitiveInput', PrimitiveInput);
+Schema.register('PrimitiveKind', PrimitiveKind);
 
-type ArrayInputParameters = {
-  param: Input;
+type ArrayKindParameters = {
+  param: Kind;
 };
 
-export class ArrayInput extends Input {
-  declare param: Input;
-  constructor(value: ArrayInputParameters) {
-    super('ArrayInput', value);
+export class ArrayKind extends Kind {
+  declare param: Kind;
+  constructor(value: ArrayKindParameters) {
+    super('ArrayKind', value);
   }
 }
 
-Schema.register('ArrayInput', ArrayInput);
+Schema.register('ArrayKind', ArrayKind);
 
-type EnumInputParameters = {
+type EnumKindParameters = {
   values: Record<string, string>;
 };
 
-export class EnumInput extends Input {
+export class EnumKind extends Kind {
   declare values: Record<string, string>;
-  constructor(value: EnumInputParameters) {
-    super('EnumInput', value);
+  constructor(value: EnumKindParameters) {
+    super('EnumKind', value);
   }
 }
 
-Schema.register('EnumInput', EnumInput);
+Schema.register('EnumKind', EnumKind);
 
 type ExpressionParameters = {
   meta?: Record<string, any>;
@@ -153,12 +153,12 @@ type ValParameters = {
   meta?: Record<string, any>;
   name: string;
   init: Expression;
-  input?: Input | null;
+  kind?: Kind | null;
 };
 
 export class Val extends Variable {
   declare init: Expression;
-  declare input: Input | null;
+  declare kind: Kind | null;
   constructor(value: ValParameters) {
     super('Val', value);
   }
@@ -356,12 +356,12 @@ type ComponentPropParameters = {
   meta?: Record<string, any>;
   name: string;
   init?: Expression | null;
-  input?: Input | null;
+  kind?: Kind | null;
 };
 
 export class ComponentProp extends Variable {
   declare init: Expression | null;
-  declare input: Input | null;
+  declare kind: Kind | null;
   constructor(value: ComponentPropParameters) {
     super('ComponentProp', value);
   }
@@ -780,10 +780,10 @@ export type Any =
   | State
   | ASTNode
   | Program
-  | Input
-  | PrimitiveInput
-  | ArrayInput
-  | EnumInput
+  | Kind
+  | PrimitiveKind
+  | ArrayKind
+  | EnumKind
   | Expression
   | Variable
   | Literal
@@ -828,10 +828,10 @@ export type Visitor = {
   State: (node: State) => any;
   ASTNode: (node: ASTNode) => any;
   Program: (node: Program) => any;
-  Input: (node: Input) => any;
-  PrimitiveInput: (node: PrimitiveInput) => any;
-  ArrayInput: (node: ArrayInput) => any;
-  EnumInput: (node: EnumInput) => any;
+  Kind: (node: Kind) => any;
+  PrimitiveKind: (node: PrimitiveKind) => any;
+  ArrayKind: (node: ArrayKind) => any;
+  EnumKind: (node: EnumKind) => any;
   Expression: (node: Expression) => any;
   Variable: (node: Variable) => any;
   Literal: (node: Literal) => any;
