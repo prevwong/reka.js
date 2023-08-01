@@ -16,6 +16,7 @@ export type FrameOpts = {
   id?: string;
   component: FrameComponentConfig;
   syncImmediately?: boolean;
+  evaluateImmediately?: boolean;
 };
 
 /**
@@ -88,7 +89,7 @@ export class Frame {
   }
 
   /// Compute a View tree
-  compute(evaluateImmediately?: boolean) {
+  compute(evaluateImmediately: boolean = false) {
     const evaluate = () => {
       if (!this.sync) {
         return;

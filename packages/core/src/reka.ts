@@ -118,7 +118,7 @@ export class Reka {
   load(
     state: t.State,
     syncImmediately: boolean = true,
-    evaluateImmediately?: boolean
+    evaluateImmediately: boolean = false
   ) {
     if (this.loaded) {
       this.dispose();
@@ -161,7 +161,7 @@ export class Reka {
    *
    * @param evaluateImmediately Whether to evaluate Frames immediately or defer through a microtask
    */
-  sync(evaluateImmediately?: boolean) {
+  sync(evaluateImmediately: boolean = false) {
     this.head.sync();
 
     return Promise.all(
@@ -187,11 +187,8 @@ export class Reka {
 
   /**
    * Create a new Frame instance
-   *
-   * @param opts The Frame options
-   * @param evaluateImmediately Whether to evaluate Frames immediately or defer through a microtask
    */
-  async createFrame(opts: FrameOpts, evaluateImmediately?: boolean) {
+  async createFrame(opts: FrameOpts) {
     const frame = new Frame(opts, this);
 
     invariant(
@@ -204,7 +201,7 @@ export class Reka {
     this.frames.push(frame);
 
     if (!this.init) {
-      await frame.compute(evaluateImmediately);
+      await frame.compute(opts.evaluateImmediately);
     }
 
     return frame;
