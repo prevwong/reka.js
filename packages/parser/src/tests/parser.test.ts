@@ -108,7 +108,7 @@ describe('Parser', () => {
           name: 'colors',
           kind: {
             type: 'ArrayKind',
-            param: {
+            kind: {
               type: 'PrimitiveKind',
               primitive: 'string',
             },

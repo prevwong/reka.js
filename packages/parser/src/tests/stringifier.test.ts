@@ -172,7 +172,7 @@ describe('Stringifier', () => {
         t.val({
           name: 'colors',
           kind: t.arrayKind({
-            param: t.primitiveKind({
+            kind: t.primitiveKind({
               primitive: 'string',
             }),
           }),

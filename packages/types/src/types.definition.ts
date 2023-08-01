@@ -37,7 +37,7 @@ Schema.define('PrimitiveKind', {
 Schema.define('ArrayKind', {
   extends: 'Kind',
   fields: (t) => ({
-    param: t.node('Kind'),
+    kind: t.node('Kind'),
   }),
 });
 

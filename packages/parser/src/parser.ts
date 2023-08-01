@@ -330,12 +330,12 @@ class _Parser extends Lexer {
     if (kindType === 'array') {
       this.consume(TokenType.KIND_PARAM_START);
 
-      const param = this.parseKindType();
+      const kind = this.parseKindType();
 
       this.consume(TokenType.KIND_PARAM_END);
 
       return t.arrayKind({
-        param,
+        kind,
       });
     }
 

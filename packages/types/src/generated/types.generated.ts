@@ -68,11 +68,11 @@ export class PrimitiveKind extends Kind {
 Schema.register('PrimitiveKind', PrimitiveKind);
 
 type ArrayKindParameters = {
-  param: Kind;
+  kind: Kind;
 };
 
 export class ArrayKind extends Kind {
-  declare param: Kind;
+  declare kind: Kind;
   constructor(value: ArrayKindParameters) {
     super('ArrayKind', value);
   }

@@ -18,7 +18,7 @@ class _Stringifier {
 
       if (t.is(input, t.ArrayKind)) {
         this.writer.write(`array<`);
-        _stringifyInputType(input.param);
+        _stringifyInputType(input.kind);
         this.writer.write('>');
 
         return;
