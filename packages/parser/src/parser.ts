@@ -339,7 +339,7 @@ class _Parser extends Lexer {
       });
     }
 
-    if (kindType === 'enum') {
+    if (kindType === 'option') {
       this.consume(TokenType.KIND_PARAM_START);
       const startToken = this.currentToken;
 
@@ -354,10 +354,10 @@ class _Parser extends Lexer {
 
       b.assertObjectExpression(expr);
 
-      const values = getJSObjFromExpr(expr);
+      const options = getJSObjFromExpr(expr);
 
-      return t.enumKind({
-        values,
+      return t.optionKind({
+        options,
       });
     }
 

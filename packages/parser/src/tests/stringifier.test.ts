@@ -185,8 +185,8 @@ describe('Stringifier', () => {
       Stringifier.toString(
         t.val({
           name: 'colors',
-          kind: t.enumKind({
-            values: {
+          kind: t.optionKind({
+            options: {
               blue: 'Blue',
               red: 'Red',
               green: 'Green',
@@ -196,7 +196,7 @@ describe('Stringifier', () => {
         })
       )
     ).toEqual(
-      `val colors:enum<{"blue":"Blue","red":"Red","green":"Green"}> = "blue"`
+      `val colors:option<{"blue":"Blue","red":"Red","green":"Green"}> = "blue"`
     );
   });
 });

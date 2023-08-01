@@ -41,10 +41,10 @@ Schema.define('ArrayKind', {
   }),
 });
 
-Schema.define('EnumKind', {
+Schema.define('OptionKind', {
   extends: 'Kind',
   fields: (t) => ({
-    values: t.map(t.string),
+    options: t.map(t.string),
   }),
 });
 

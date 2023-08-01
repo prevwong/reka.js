@@ -80,18 +80,18 @@ export class ArrayKind extends Kind {
 
 Schema.register('ArrayKind', ArrayKind);
 
-type EnumKindParameters = {
-  values: Record<string, string>;
+type OptionKindParameters = {
+  options: Record<string, string>;
 };
 
-export class EnumKind extends Kind {
-  declare values: Record<string, string>;
-  constructor(value: EnumKindParameters) {
-    super('EnumKind', value);
+export class OptionKind extends Kind {
+  declare options: Record<string, string>;
+  constructor(value: OptionKindParameters) {
+    super('OptionKind', value);
   }
 }
 
-Schema.register('EnumKind', EnumKind);
+Schema.register('OptionKind', OptionKind);
 
 type ExpressionParameters = {
   meta?: Record<string, any>;
@@ -783,7 +783,7 @@ export type Any =
   | Kind
   | PrimitiveKind
   | ArrayKind
-  | EnumKind
+  | OptionKind
   | Expression
   | Variable
   | Literal
@@ -831,7 +831,7 @@ export type Visitor = {
   Kind: (node: Kind) => any;
   PrimitiveKind: (node: PrimitiveKind) => any;
   ArrayKind: (node: ArrayKind) => any;
-  EnumKind: (node: EnumKind) => any;
+  OptionKind: (node: OptionKind) => any;
   Expression: (node: Expression) => any;
   Variable: (node: Variable) => any;
   Literal: (node: Literal) => any;

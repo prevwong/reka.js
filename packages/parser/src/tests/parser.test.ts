@@ -86,7 +86,7 @@ describe('Parser', () => {
       Parser.parseProgram(`
       val color: string = "blue";
       val colors: array<string> = ["blue"];
-      val option: enum<{blue: "Blue", red: "Red"}> = "red";
+      val option: option<{blue: "Blue", red: "Red"}> = "red";
     `)
     ).toMatchObject({
       type: 'Program',
@@ -122,8 +122,8 @@ describe('Parser', () => {
           type: 'Val',
           name: 'option',
           kind: {
-            type: 'EnumKind',
-            values: {
+            type: 'OptionKind',
+            options: {
               blue: 'Blue',
               red: 'Red',
             },

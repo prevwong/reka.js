@@ -24,9 +24,9 @@ class _Stringifier {
         return;
       }
 
-      if (t.is(input, t.EnumKind)) {
-        this.writer.write('enum<');
-        this.writer.write(JSON.stringify(input.values));
+      if (t.is(input, t.OptionKind)) {
+        this.writer.write('option<');
+        this.writer.write(JSON.stringify(input.options));
         this.writer.write('>');
       }
     };

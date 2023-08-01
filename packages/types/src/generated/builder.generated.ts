@@ -8,8 +8,9 @@ export const primitiveKind = (
 ) => new t.PrimitiveKind(...args);
 export const arrayKind = (...args: ConstructorParameters<typeof t.ArrayKind>) =>
   new t.ArrayKind(...args);
-export const enumKind = (...args: ConstructorParameters<typeof t.EnumKind>) =>
-  new t.EnumKind(...args);
+export const optionKind = (
+  ...args: ConstructorParameters<typeof t.OptionKind>
+) => new t.OptionKind(...args);
 export const literal = (...args: ConstructorParameters<typeof t.Literal>) =>
   new t.Literal(...args);
 export const identifier = (
