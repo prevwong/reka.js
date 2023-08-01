@@ -6,7 +6,6 @@ import {
   MapValidator,
   ModelValidator,
   NodeValidator,
-  OptionalValidator,
   TypeValidator,
   UnionValidator,
 } from './definitions';
@@ -19,7 +18,7 @@ export const union = (...validators: Validator[]) =>
   new UnionValidator(validators);
 export const array = (validator: Validator) => new ArrayValidator(validator);
 export const optional = (validator: Validator) =>
-  new OptionalValidator(validator);
+  new DefaultValidator(union(validator, nullish), null);
 export const map = (validator: Validator) => new MapValidator(validator);
 export const model = (model: Record<string, Validator>) =>
   new ModelValidator(model);

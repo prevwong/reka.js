@@ -38,27 +38,6 @@ export class DefaultValidator extends Validator {
   }
 }
 
-export class OptionalValidator extends Validator {
-  type: Validator;
-
-  constructor(type: Validator) {
-    super('optional');
-    this.type = type;
-  }
-
-  validate() {
-    return true;
-  }
-
-  format(value: any) {
-    if (value === undefined) {
-      return value;
-    }
-
-    return this.type.get(value);
-  }
-}
-
 export class NodeValidator extends Validator {
   node: string;
   isRef: boolean;
