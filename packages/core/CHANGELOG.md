@@ -1,5 +1,11 @@
 # @rekajs/core
 
+## 0.1.17
+
+### Patch Changes
+
+- [#61](https://github.com/prevwong/reka.js/pull/61) [`aa27d49`](https://github.com/prevwong/reka.js/commit/aa27d49b92f9d28ca383b22220fb52943a2a1e44) Thanks [@ryanburns23](https://github.com/ryanburns23)! - Add ability to evaluate frames immediately on load (#60)
+
 ## 0.1.16
 
 ### Patch Changes

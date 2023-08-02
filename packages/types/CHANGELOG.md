@@ -1,5 +1,11 @@
 # @rekajs/types
 
+## 0.1.12
+
+### Patch Changes
+
+- [#62](https://github.com/prevwong/reka.js/pull/62) [`871bf97`](https://github.com/prevwong/reka.js/commit/871bf978850538934b1cd0d3ed34aaba9ce3fab0) Thanks [@prevwong](https://github.com/prevwong)! - Add ability to specify variable kind
+
 ## 0.1.11
 
 ### Patch Changes
