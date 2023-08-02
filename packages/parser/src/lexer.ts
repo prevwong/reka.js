@@ -3,6 +3,9 @@ import {
   tc_component_tmpl,
   tc_element_open_tag,
   tc_element_expr,
+  tc_kind,
+  tc_val_prop,
+  tc_component_prop_start,
 } from './context';
 import { State } from './state';
 import { KEYWORDS, Token, TokenType } from './tokens';
@@ -78,12 +81,12 @@ export class Lexer {
 
     switch (c) {
       case '(': {
-        if (
-          this.currentToken?.type === TokenType.ARROW &&
-          this.currentContext === tc_component
-        ) {
-          return this.tokenize(TokenType.COMPONENT_TMPL_START);
+        if (this.currentContext === tc_component) {
+          if (this.currentToken?.type === TokenType.ARROW) {
+            return this.tokenize(TokenType.COMPONENT_TMPL_START);
+          }
         }
+
         return this.tokenize(TokenType.LPAREN);
       }
       case ')': {
@@ -118,6 +121,10 @@ export class Lexer {
         return this.tokenize(TokenType.EQ);
       }
       case '<': {
+        if (this.currentContext === tc_kind) {
+          return this.tokenize(TokenType.KIND_PARAM_START);
+        }
+
         if (
           this.currentContext === tc_component_tmpl ||
           this.currentContext === tc_element_open_tag
@@ -132,6 +139,10 @@ export class Lexer {
         return this.tokenize(TokenType.LT);
       }
       case '>': {
+        if (this.currentContext === tc_kind) {
+          return this.tokenize(TokenType.KIND_PARAM_END);
+        }
+
         if (this.currentContext === tc_element_open_tag) {
           return this.tokenize(TokenType.ELEMENT_TAG_END);
         }
@@ -150,6 +161,13 @@ export class Lexer {
         const string = this.tokenize(TokenType.STRING);
         this.state.current += 1;
         return string;
+      }
+      case ':': {
+        if (this.currentContext === tc_val_prop) {
+          return this.tokenize(TokenType.KIND);
+        }
+
+        return this.tokenize(TokenType.COLON);
       }
       case ';': {
         return this.tokenize(TokenType.SEMICOLON);
@@ -211,6 +229,10 @@ export class Lexer {
       return this.tokenize(keyword);
     }
 
+    if (this.currentContext === tc_kind) {
+      return this.tokenize(TokenType.KIND_TYPE);
+    }
+
     if (this.currentContext === tc_element_open_tag) {
       return this.tokenize(TokenType.ELEMENT_PROPERTY);
     }
@@ -249,8 +271,65 @@ export class Lexer {
 
   private updateContext() {
     switch (this.state.currentToken?.type) {
+      case TokenType.VAL: {
+        this.state.addContext(tc_val_prop);
+        break;
+      }
+
+      case TokenType.KIND: {
+        this.state.addContext(tc_kind);
+
+        break;
+      }
+      case TokenType.EQ: {
+        if (this.currentContext === tc_kind) {
+          this.state.popContext();
+        }
+        break;
+      }
+      case TokenType.SEMICOLON: {
+        if (this.currentContext === tc_kind) {
+          this.state.popContext();
+        }
+
+        if (this.currentContext == tc_val_prop) {
+          this.state.popContext();
+        }
+
+        break;
+      }
       case TokenType.COMPONENT: {
         this.state.addContext(tc_component);
+        break;
+      }
+      case TokenType.LPAREN: {
+        // At the start of a component definition
+        // component name(...)
+        if (
+          this.currentContext === tc_component &&
+          this.previousToken.type === TokenType.IDENTIFIER
+        ) {
+          this.state.addContext(tc_component_prop_start);
+
+          // TODO: should probably add an explicit "prop" keyword
+          this.state.addContext(tc_val_prop);
+        }
+
+        break;
+      }
+      case TokenType.RPAREN: {
+        if (this.currentContext === tc_kind) {
+          this.state.popContext();
+        }
+
+        if (this.currentContext === tc_val_prop) {
+          this.state.popContext();
+        }
+
+        if (this.currentContext === tc_component_prop_start) {
+          this.state.popContext();
+        }
+
         break;
       }
       case TokenType.COMPONENT_TMPL_START: {

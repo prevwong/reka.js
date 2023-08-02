@@ -8,6 +8,33 @@ import { Writer, WriterResult } from './writer';
 class _Stringifier {
   writer: Writer = new Writer();
 
+  private stringifyInput(input: t.Kind) {
+    const _stringifyInputType = (input: t.Kind) => {
+      if (t.is(input, t.PrimitiveKind)) {
+        this.writer.write(input.primitive);
+
+        return;
+      }
+
+      if (t.is(input, t.ArrayKind)) {
+        this.writer.write(`array<`);
+        _stringifyInputType(input.kind);
+        this.writer.write('>');
+
+        return;
+      }
+
+      if (t.is(input, t.OptionKind)) {
+        this.writer.write('option<');
+        this.writer.write(JSON.stringify(input.options));
+        this.writer.write('>');
+      }
+    };
+
+    this.writer.write(`:`);
+    _stringifyInputType(input);
+  }
+
   toString(node: t.ASTNode) {
     this.stringify(node);
 
@@ -149,6 +176,10 @@ class _Stringifier {
       Val: (node) => {
         this.writer.write(`val ${node.name}`);
 
+        if (node.kind) {
+          this.stringifyInput(node.kind);
+        }
+
         if (node.init) {
           this.writer.write(' = ');
           this.stringify(node.init);
@@ -176,6 +207,10 @@ class _Stringifier {
       },
       ComponentProp: (node) => {
         this.writer.write(node.name);
+
+        if (node.kind) {
+          this.stringifyInput(node.kind);
+        }
 
         if (node.init) {
           this.writer.write(`=`);

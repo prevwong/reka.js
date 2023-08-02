@@ -3,6 +3,14 @@ export const state = (...args: ConstructorParameters<typeof t.State>) =>
   new t.State(...args);
 export const program = (...args: ConstructorParameters<typeof t.Program>) =>
   new t.Program(...args);
+export const primitiveKind = (
+  ...args: ConstructorParameters<typeof t.PrimitiveKind>
+) => new t.PrimitiveKind(...args);
+export const arrayKind = (...args: ConstructorParameters<typeof t.ArrayKind>) =>
+  new t.ArrayKind(...args);
+export const optionKind = (
+  ...args: ConstructorParameters<typeof t.OptionKind>
+) => new t.OptionKind(...args);
 export const literal = (...args: ConstructorParameters<typeof t.Literal>) =>
   new t.Literal(...args);
 export const identifier = (

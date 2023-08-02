@@ -81,4 +81,59 @@ describe('Parser', () => {
       ],
     });
   });
+  it('should be able to parse variable kind', () => {
+    expect(
+      Parser.parseProgram(`
+      val color: string = "blue";
+      val colors: array<string> = ["blue"];
+      val option: option<{blue: "Blue", red: "Red"}> = "red";
+    `)
+    ).toMatchObject({
+      type: 'Program',
+      globals: [
+        {
+          type: 'Val',
+          name: 'color',
+          kind: {
+            type: 'PrimitiveKind',
+            primitive: 'string',
+          },
+          init: {
+            type: 'Literal',
+            value: 'blue',
+          },
+        },
+        {
+          type: 'Val',
+          name: 'colors',
+          kind: {
+            type: 'ArrayKind',
+            kind: {
+              type: 'PrimitiveKind',
+              primitive: 'string',
+            },
+          },
+          init: {
+            type: 'ArrayExpression',
+            elements: [{ type: 'Literal', value: 'blue' }],
+          },
+        },
+        {
+          type: 'Val',
+          name: 'option',
+          kind: {
+            type: 'OptionKind',
+            options: {
+              blue: 'Blue',
+              red: 'Red',
+            },
+          },
+          init: {
+            type: 'Literal',
+            value: 'red',
+          },
+        },
+      ],
+    });
+  });
 });

@@ -23,6 +23,31 @@ Schema.define('Program', {
   }),
 });
 
+Schema.define('Kind', {
+  abstract: true,
+});
+
+Schema.define('PrimitiveKind', {
+  extends: 'Kind',
+  fields: (t) => ({
+    primitive: t.enumeration('string', 'number', 'boolean'),
+  }),
+});
+
+Schema.define('ArrayKind', {
+  extends: 'Kind',
+  fields: (t) => ({
+    kind: t.node('Kind'),
+  }),
+});
+
+Schema.define('OptionKind', {
+  extends: 'Kind',
+  fields: (t) => ({
+    options: t.map(t.string),
+  }),
+});
+
 Schema.define('Expression', {
   extends: 'ASTNode',
   abstract: true,
@@ -55,6 +80,7 @@ Schema.define('Val', {
   extends: 'Variable',
   fields: (t) => ({
     init: t.node('Expression'),
+    kind: t.optional(t.node('Kind')),
   }),
 });
 
@@ -164,6 +190,7 @@ Schema.define('ComponentProp', {
   extends: 'Variable',
   fields: (t) => ({
     init: t.defaultValue(t.union(t.node('Expression'), t.nullish), null),
+    kind: t.optional(t.node('Kind')),
   }),
 });
 

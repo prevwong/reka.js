@@ -154,4 +154,49 @@ describe('Stringifier', () => {
       })
     );
   });
+  it('should be able to stringify vals with input types', () => {
+    expect(
+      Stringifier.toString(
+        t.val({
+          name: 'color',
+          kind: t.primitiveKind({
+            primitive: 'string',
+          }),
+          init: t.literal({ value: 'blue' }),
+        })
+      )
+    ).toEqual(`val color:string = "blue"`);
+
+    expect(
+      Stringifier.toString(
+        t.val({
+          name: 'colors',
+          kind: t.arrayKind({
+            kind: t.primitiveKind({
+              primitive: 'string',
+            }),
+          }),
+          init: t.arrayExpression({ elements: [t.literal({ value: 'blue' })] }),
+        })
+      )
+    ).toEqual(`val colors:array<string> = ["blue"]`);
+
+    expect(
+      Stringifier.toString(
+        t.val({
+          name: 'colors',
+          kind: t.optionKind({
+            options: {
+              blue: 'Blue',
+              red: 'Red',
+              green: 'Green',
+            },
+          }),
+          init: t.literal({ value: 'blue' }),
+        })
+      )
+    ).toEqual(
+      `val colors:option<{"blue":"Blue","red":"Red","green":"Green"}> = "blue"`
+    );
+  });
 });

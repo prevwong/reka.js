@@ -9,6 +9,7 @@ export enum TokenType {
   DOT = '.',
   MINUS = '-',
   PLUS = '+',
+  COLON = ':',
   SEMICOLON = ';',
   SLASH = '/',
   STAR = '*',
@@ -28,6 +29,11 @@ export enum TokenType {
   STRING = 'string',
   NUMBER = 'number',
   FUNC = 'func',
+
+  KIND = 'kind',
+  KIND_TYPE = 'kind_type',
+  KIND_PARAM_START = 'kind_param_start',
+  KIND_PARAM_END = 'kind_param_end',
 
   IF = 'if',
   IN = 'in',

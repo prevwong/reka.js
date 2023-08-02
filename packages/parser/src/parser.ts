@@ -35,6 +35,33 @@ const parseExpressionWithAcornToRekaType = <T extends t.Type = t.Any>(
   return { expression, type };
 };
 
+const getJSObjFromExpr = (obj: b.ObjectExpression) => {
+  return obj.properties.reduce((accum, property) => {
+    b.assertProperty(property);
+
+    b.assertLiteral(property.value);
+
+    let key: string | undefined;
+
+    if (b.isIdentifier(property.key)) {
+      key = property.key.name;
+    }
+
+    // Acorn's Literal type is more generic than Babel's
+    // @ts-ignore
+    if (property.key.type === 'Literal') {
+      key = (property.key as any).value;
+    }
+
+    invariant(key, 'Property Key not defined');
+
+    return {
+      ...accum,
+      [key]: (property.value as any).value ?? '',
+    };
+  }, {});
+};
+
 const jsToReka = <T extends t.ASTNode = t.ASTNode>(
   node: b.Node,
   opts?: AcornParserOptions<T>
@@ -287,15 +314,76 @@ class _Parser extends Lexer {
     return declarations;
   }
 
+  private parseKindType() {
+    const kindType = this.consume(TokenType.KIND_TYPE).value;
+
+    if (
+      kindType === 'string' ||
+      kindType === 'number' ||
+      kindType === 'boolean'
+    ) {
+      return t.primitiveKind({
+        primitive: kindType,
+      });
+    }
+
+    if (kindType === 'array') {
+      this.consume(TokenType.KIND_PARAM_START);
+
+      const kind = this.parseKindType();
+
+      this.consume(TokenType.KIND_PARAM_END);
+
+      return t.arrayKind({
+        kind,
+      });
+    }
+
+    if (kindType === 'option') {
+      this.consume(TokenType.KIND_PARAM_START);
+      const startToken = this.currentToken;
+
+      while (!this.match(TokenType.KIND_PARAM_END)) {
+        this.next();
+      }
+
+      const endToken = this.previousToken;
+
+      const str = this.source.slice(startToken.pos, endToken.pos);
+      const expr = parseWithAcorn(str, 0);
+
+      b.assertObjectExpression(expr);
+
+      const options = getJSObjFromExpr(expr);
+
+      return t.optionKind({
+        options,
+      });
+    }
+
+    throw new Error();
+  }
+
+  private parseKind() {
+    if (!this.match(TokenType.KIND)) {
+      return;
+    }
+
+    return this.parseKindType();
+  }
+
   private parseVariableDecl() {
     this.consume(TokenType.VAL);
     const name = this.consume(TokenType.IDENTIFIER);
+    const kind = this.parseKind();
+
     this.consume(TokenType.EQ);
     const init = this.parseExpressionAt(this.currentToken.pos - 1) as any;
     this.consume(TokenType.SEMICOLON);
 
     return t.val({
       name: name.value,
+      kind,
       init,
     });
   }
@@ -307,54 +395,59 @@ class _Parser extends Lexer {
 
     this.consume(TokenType.LPAREN);
 
-    const startToken = this.currentToken;
+    const props: t.ComponentProp[] = [];
 
-    while (!this.check(TokenType.RPAREN)) {
-      if (this.check(TokenType.LPAREN)) {
-        while (!this.check(TokenType.RPAREN)) {
+    while (!this.match(TokenType.RPAREN)) {
+      const propName = this.consume(TokenType.IDENTIFIER).value;
+
+      const kind = this.parseKind();
+
+      let init: t.Expression | undefined;
+
+      if (this.match(TokenType.EQ)) {
+        const startToken = this.currentToken;
+
+        let parenCount = 0;
+
+        while (
+          !this.check(TokenType.COMMA) &&
+          !(this.check(TokenType.RPAREN) && parenCount == 0)
+        ) {
+          if (this.check(TokenType.LPAREN)) {
+            parenCount++;
+          }
+
+          if (this.check(TokenType.RPAREN)) {
+            parenCount--;
+          }
+
           this.next();
         }
+
+        const endToken = this.currentToken;
+
+        let startTokenPos = startToken.pos;
+        const endTokenPos = endToken.pos;
+
+        if (startToken.type === TokenType.STRING) {
+          startTokenPos--;
+        }
+
+        const exprString = `(${this.source.slice(startTokenPos, endTokenPos)})`;
+
+        init = parseExpressionWithAcornToRekaType(exprString, 0).type;
       }
 
-      this.next();
-    }
-
-    const endToken = this.currentToken;
-
-    const paramsStr = this.source.slice(startToken.pos, endToken.pos);
-
-    const parsedDummyFn = parseWithAcorn(`function (${paramsStr}) {}`, 0);
-
-    invariant(b.isFunctionExpression(parsedDummyFn), 'Not function expr');
-
-    const props = parsedDummyFn.params.map((param) => {
-      let init: t.Expression | undefined;
-      let name: string;
-
-      invariant(
-        b.isAssignmentPattern(param) || b.isIdentifier(param),
-        'Invalid component prop'
+      props.push(
+        t.componentProp({
+          name: propName,
+          init,
+          kind,
+        })
       );
 
-      if (b.isAssignmentPattern(param)) {
-        init = jsToReka(param.right, { expectedType: t.Expression });
-
-        invariant(
-          b.isIdentifier(param.left),
-          'Invalid component prop assignment'
-        );
-        name = param.left.name;
-      } else {
-        name = param.name;
-      }
-
-      return t.componentProp({
-        name,
-        init,
-      });
-    });
-
-    this.consume(TokenType.RPAREN);
+      this.match(TokenType.COMMA);
+    }
 
     const state = this.parseComponentStateDeclaration();
     this.consume(TokenType.ARROW);

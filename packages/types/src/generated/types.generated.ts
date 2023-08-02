@@ -44,6 +44,55 @@ export class Program extends ASTNode {
 
 Schema.register('Program', Program);
 
+type KindParameters = {};
+
+export abstract class Kind extends Type {
+  constructor(type: string, value: KindParameters) {
+    super(type, value);
+  }
+}
+
+Schema.register('Kind', Kind);
+
+type PrimitiveKindParameters = {
+  primitive: 'string' | 'number' | 'boolean';
+};
+
+export class PrimitiveKind extends Kind {
+  declare primitive: 'string' | 'number' | 'boolean';
+  constructor(value: PrimitiveKindParameters) {
+    super('PrimitiveKind', value);
+  }
+}
+
+Schema.register('PrimitiveKind', PrimitiveKind);
+
+type ArrayKindParameters = {
+  kind: Kind;
+};
+
+export class ArrayKind extends Kind {
+  declare kind: Kind;
+  constructor(value: ArrayKindParameters) {
+    super('ArrayKind', value);
+  }
+}
+
+Schema.register('ArrayKind', ArrayKind);
+
+type OptionKindParameters = {
+  options: Record<string, string>;
+};
+
+export class OptionKind extends Kind {
+  declare options: Record<string, string>;
+  constructor(value: OptionKindParameters) {
+    super('OptionKind', value);
+  }
+}
+
+Schema.register('OptionKind', OptionKind);
+
 type ExpressionParameters = {
   meta?: Record<string, any>;
 };
@@ -104,10 +153,12 @@ type ValParameters = {
   meta?: Record<string, any>;
   name: string;
   init: Expression;
+  kind?: Kind | null;
 };
 
 export class Val extends Variable {
   declare init: Expression;
+  declare kind: Kind | null;
   constructor(value: ValParameters) {
     super('Val', value);
   }
@@ -305,10 +356,12 @@ type ComponentPropParameters = {
   meta?: Record<string, any>;
   name: string;
   init?: Expression | null;
+  kind?: Kind | null;
 };
 
 export class ComponentProp extends Variable {
   declare init: Expression | null;
+  declare kind: Kind | null;
   constructor(value: ComponentPropParameters) {
     super('ComponentProp', value);
   }
@@ -727,6 +780,10 @@ export type Any =
   | State
   | ASTNode
   | Program
+  | Kind
+  | PrimitiveKind
+  | ArrayKind
+  | OptionKind
   | Expression
   | Variable
   | Literal
@@ -771,6 +828,10 @@ export type Visitor = {
   State: (node: State) => any;
   ASTNode: (node: ASTNode) => any;
   Program: (node: Program) => any;
+  Kind: (node: Kind) => any;
+  PrimitiveKind: (node: PrimitiveKind) => any;
+  ArrayKind: (node: ArrayKind) => any;
+  OptionKind: (node: OptionKind) => any;
   Expression: (node: Expression) => any;
   Variable: (node: Variable) => any;
   Literal: (node: Literal) => any;
