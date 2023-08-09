@@ -166,10 +166,7 @@ export class ComponentViewEvaluator {
             if (!this.rekaComponentStateComputation) {
               this.rekaComponentStateComputation = computed(() => {
                 component.state.forEach((val) => {
-                  this.env.set(val.name, {
-                    value: this.evaluator.computeExpr(val.init, this.env),
-                    readonly: false,
-                  });
+                  this.evaluator.computeExpr(val, this.env);
                 });
               });
             }

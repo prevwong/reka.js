@@ -2,7 +2,7 @@ import * as t from '@rekajs/types';
 import { invariant } from '@rekajs/utils';
 import { action, makeObservable, observable, untracked } from 'mobx';
 
-import { ScopeDescription, VariableWithScope } from './interfaces';
+import { ScopeDescription, IdentifiableWithScope } from './interfaces';
 import { Resolver } from './resolver';
 
 type BeforeIndex = {
@@ -15,11 +15,11 @@ type BeforeName = {
 
 type Before = BeforeIndex | BeforeName;
 
-export type GetVariablesOpts = {
+export type GetIdentifiableOpts = {
   parent?: boolean;
   includeExternals?: boolean;
   includeAncestors?: boolean;
-  filter?: (variable: VariableWithScope) => boolean;
+  filter?: (identifiable: IdentifiableWithScope) => boolean;
   before?: Before;
 };
 
@@ -99,7 +99,7 @@ export const getScopeDescriptionByNodeOwner = (
 };
 
 export class Scope {
-  variableNames: Map<string, t.Variable>;
+  identifiables: Map<string, t.Identifiable>;
 
   description: ScopeDescription;
 
@@ -110,7 +110,7 @@ export class Scope {
     descriptionOrNode: ScopeDescription | t.ASTNode,
     readonly parent?: Scope
   ) {
-    this.variableNames = new Map();
+    this.identifiables = new Map();
     this.description = t.is(descriptionOrNode, t.ASTNode)
       ? getScopeDescriptionByNodeOwner(descriptionOrNode)
       : descriptionOrNode;
@@ -125,9 +125,9 @@ export class Scope {
     this.resolver.scopeRegistry.set(this.key, this);
 
     makeObservable(this, {
-      variableNames: observable,
-      defineVariable: action,
-      removeVariableByName: action,
+      identifiables: observable,
+      defineIdentifiable: action,
+      removeIdentifiableByName: action,
       clear: action,
     });
   }
@@ -140,7 +140,7 @@ export class Scope {
     return getKeyFromScopeDescription(this.description);
   }
 
-  getVariables(maybeOpts?: GetVariablesOpts): VariableWithScope[] {
+  getIdentifiables(maybeOpts?: GetIdentifiableOpts): IdentifiableWithScope[] {
     const opts = {
       parent: false,
       includeExternals: true,
@@ -149,29 +149,32 @@ export class Scope {
     };
 
     if (opts.parent && this.parent) {
-      return this.parent.getVariables({
+      return this.parent.getIdentifiables({
         ...opts,
         parent: false,
       });
     }
 
-    const variables = new Map<string, VariableWithScope>();
+    const identifiables = new Map<string, IdentifiableWithScope>();
 
-    const addVariable = (scope: ScopeDescription, variable: t.Variable) => {
-      if (opts.filter && !opts.filter({ variable, scope })) {
+    const addIdentifiable = (
+      scope: ScopeDescription,
+      identifiable: t.Identifiable
+    ) => {
+      if (opts.filter && !opts.filter({ identifiable, scope })) {
         return;
       }
 
-      variables.set(variable.name, {
+      identifiables.set(identifiable.name, {
         scope,
-        variable,
+        identifiable,
       });
     };
 
     if (!opts.parent) {
       let i = 0;
 
-      for (const [key, variable] of this.variableNames) {
+      for (const [key, identifiable] of this.identifiables) {
         if (
           opts.before &&
           isBeforeIndex(opts.before) &&
@@ -190,19 +193,19 @@ export class Scope {
 
         i++;
 
-        addVariable(this.description, variable);
+        addIdentifiable(this.description, identifiable);
       }
 
       if (opts.includeAncestors) {
         let parent = this.parent;
 
         while (parent) {
-          for (const [name, variable] of parent.variableNames) {
-            if (variables.has(name)) {
+          for (const [name, identifiable] of parent.identifiables) {
+            if (identifiables.has(name)) {
               continue;
             }
 
-            addVariable(parent.description, variable);
+            addIdentifiable(parent.description, identifiable);
           }
           parent = parent.parent;
         }
@@ -211,7 +214,7 @@ export class Scope {
 
     if (opts.includeExternals) {
       this.reka.externals.all().forEach((v) => {
-        addVariable(
+        addIdentifiable(
           {
             level: 'external',
             id: this.reka.id,
@@ -221,7 +224,7 @@ export class Scope {
       });
     }
 
-    return [...variables.values()];
+    return [...identifiables.values()];
   }
 
   inherit(descriptionOrNode: ScopeDescription | t.ASTNode) {
@@ -246,19 +249,19 @@ export class Scope {
     return new Scope(this.resolver, description, this);
   }
 
-  defineVariable(variable: t.Variable) {
-    this.variableNames.set(variable.name, variable);
+  defineIdentifiable(identifiable: t.Identifiable) {
+    this.identifiables.set(identifiable.name, identifiable);
   }
 
-  removeVariableByName(name: string) {
-    this.variableNames.delete(name);
+  removeIdentifiableByName(name: string) {
+    this.identifiables.delete(name);
   }
 
   clear() {
-    this.variableNames.clear();
+    this.identifiables.clear();
   }
 
-  getVariableWithDistance(name: string) {
+  getIdentifiableWithDistance(name: string) {
     return untracked(() => {
       let distance = 0;
 
@@ -266,11 +269,11 @@ export class Scope {
       let scope: Scope = this;
 
       do {
-        const variable = scope.variableNames.get(name);
+        const identifiable = scope.identifiables.get(name);
 
-        if (variable) {
+        if (identifiable) {
           return {
-            variable,
+            identifiable,
             distance,
           };
         }
@@ -281,12 +284,12 @@ export class Scope {
   }
 
   has(name: string) {
-    return this.variableNames.has(name);
+    return this.identifiables.has(name);
   }
 
-  forEach(cb: (variable: t.Variable) => void) {
-    for (const [_, variable] of this.variableNames) {
-      cb(variable);
+  forEach(cb: (identifiable: t.Identifiable) => void) {
+    for (const [_, identifiable] of this.identifiables) {
+      cb(identifiable);
     }
   }
 
@@ -294,7 +297,7 @@ export class Scope {
     return untracked(() => {
       const keyToId: string[] = [];
 
-      for (const [key] of this.variableNames) {
+      for (const [key] of this.identifiables) {
         if (!key) {
           continue;
         }

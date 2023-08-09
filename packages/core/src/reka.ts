@@ -318,11 +318,11 @@ export class Reka {
   }
 
   get getVariablesAtNode() {
-    return this.head.resolver.getVariablesAtNode.bind(this.head.resolver);
+    return this.head.resolver.getIdentifiablesAtNode.bind(this.head.resolver);
   }
 
-  get getVariableFromIdentifier() {
-    return this.head.resolver.getVariableFromIdentifier.bind(
+  get getIdentifiableFromIdentifier() {
+    return this.head.resolver.getIdentifiableFromIdentifier.bind(
       this.head.resolver
     );
   }

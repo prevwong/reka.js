@@ -142,9 +142,9 @@ describe('Stringifier', () => {
       )
     ).toEqual(
       Writer.block((writer) => {
-        writer.write('component App(color) {');
+        writer.write('component App(color:any) {');
         writer.withIndent(() => {
-          writer.write('val counter = 0;');
+          writer.write('val counter:any = 0;');
         });
         writer.write('} => (');
         writer.withIndent(() => {

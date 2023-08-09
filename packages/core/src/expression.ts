@@ -168,10 +168,12 @@ export const computeExpression = (
   }
 
   if (expr instanceof t.Val) {
-    const value = computeExpression(expr.init, reka, env, {
-      ...ctx,
-      untrackIdentifier: true,
-    });
+    const value = expr.init
+      ? computeExpression(expr.init, reka, env, {
+          ...ctx,
+          untrackIdentifier: true,
+        })
+      : null;
 
     env.set(expr.name, {
       value,

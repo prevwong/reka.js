@@ -43,7 +43,7 @@ export type ScopeDescription = {
   id: string;
 };
 
-export type VariableWithScope = {
-  variable: t.Variable;
+export type IdentifiableWithScope = {
+  identifiable: t.Identifiable;
   scope: ScopeDescription;
 };

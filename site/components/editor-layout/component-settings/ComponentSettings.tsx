@@ -42,8 +42,7 @@ export const ComponentSettings = observer(() => {
                 before: {
                   index: i ?? 0,
                 },
-                filter: ({ variable }) =>
-                  t.is(variable, t.Val) || t.is(variable, t.ComponentProp),
+                filter: ({ identifiable }) => t.is(identifiable, t.Variable),
               }
             )
           }
@@ -102,7 +101,7 @@ export const ComponentSettings = observer(() => {
                 before: {
                   index: i ?? 0,
                 },
-                filter: ({ variable }) => t.is(variable, t.Val),
+                filter: ({ identifiable }) => t.is(identifiable, t.Val),
               }
             )
           }

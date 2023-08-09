@@ -30,7 +30,7 @@ Schema.define('Kind', {
 Schema.define('PrimitiveKind', {
   extends: 'Kind',
   fields: (t) => ({
-    primitive: t.enumeration('string', 'number', 'boolean'),
+    primitive: t.enumeration('string', 'number', 'boolean', 'any'),
   }),
 });
 
@@ -53,11 +53,23 @@ Schema.define('Expression', {
   abstract: true,
 });
 
-Schema.define('Variable', {
+Schema.define('Identifiable', {
   extends: 'Expression',
   abstract: true,
   fields: (t) => ({
     name: t.string,
+  }),
+});
+
+Schema.define('Variable', {
+  extends: 'Identifiable',
+  abstract: true,
+  fields: (t) => ({
+    kind: t.defaultValue(t.node('Kind'), {
+      type: 'PrimitiveKind',
+      primitive: 'any',
+    }),
+    init: t.optional(t.node('Expression')),
   }),
 });
 
@@ -78,10 +90,6 @@ Schema.define('Identifier', {
 
 Schema.define('Val', {
   extends: 'Variable',
-  fields: (t) => ({
-    init: t.node('Expression'),
-    kind: t.optional(t.node('Kind')),
-  }),
 });
 
 Schema.define('ArrayExpression', {
@@ -191,14 +199,10 @@ Schema.define('MemberExpression', {
 
 Schema.define('ComponentProp', {
   extends: 'Variable',
-  fields: (t) => ({
-    init: t.defaultValue(t.union(t.node('Expression'), t.nullish), null),
-    kind: t.optional(t.node('Kind')),
-  }),
 });
 
 Schema.define('Component', {
-  extends: 'Variable',
+  extends: 'Identifiable',
   abstract: true,
 });
 
@@ -261,11 +265,11 @@ Schema.define('SlotTemplate', {
 });
 
 Schema.define('ElementEachAlias', {
-  extends: 'Variable',
+  extends: 'Identifiable',
 });
 
 Schema.define('ElementEachIndex', {
-  extends: 'Variable',
+  extends: 'Identifiable',
 });
 
 Schema.define('ElementEach', {
@@ -360,14 +364,14 @@ Schema.define('ExtensionState', {
 });
 
 Schema.define('ExternalState', {
-  extends: 'Variable',
+  extends: 'Identifiable',
   fields: (t) => ({
     init: t.any,
   }),
 });
 
 Schema.define('ExternalFunc', {
-  extends: 'Variable',
+  extends: 'Identifiable',
   fields: (t) => ({
     func: t.func,
   }),
