@@ -119,7 +119,14 @@ class _Stringifier {
       CallExpression: (node) => {
         this.stringify(node.identifier);
         this.writer.write('(');
-        Object.keys(node.params).forEach((param, i, arr) => {
+
+        const paramKeys = Object.keys(node.params);
+
+        if (paramKeys.length > 0) {
+          this.writer.write('{');
+        }
+
+        paramKeys.forEach((param, i, arr) => {
           this.writer.write(
             `${param}: ${this.writer.withTemp(() =>
               this.stringify(node.params[param])
@@ -130,6 +137,11 @@ class _Stringifier {
             this.writer.write(', ');
           }
         });
+
+        if (paramKeys.length > 0) {
+          this.writer.write('}');
+        }
+
         this.writer.write(')');
       },
       ConditionalExpression: (node) => {
