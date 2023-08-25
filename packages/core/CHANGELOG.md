@@ -1,5 +1,11 @@
 # @rekajs/core
 
+## 0.1.18
+
+### Patch Changes
+
+- [#68](https://github.com/prevwong/reka.js/pull/68) [`5d73463`](https://github.com/prevwong/reka.js/commit/5d7346344312f66a72c86d1f277cb147948bca40) Thanks [@prevwong](https://github.com/prevwong)! - Fix scope cache
+
 ## 0.1.17
 
 ### Patch Changes
