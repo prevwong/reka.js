@@ -1,5 +1,11 @@
 # @rekajs/parser
 
+## 0.1.8
+
+### Patch Changes
+
+- [#66](https://github.com/prevwong/reka.js/pull/66) [`bc6510a`](https://github.com/prevwong/reka.js/commit/bc6510a316392ca8742b32e7269e55b1b97cd3d6) Thanks [@prevwong](https://github.com/prevwong)! - Fix call expression params stringification
+
 ## 0.1.7
 
 ### Patch Changes
