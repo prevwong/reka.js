@@ -43,6 +43,14 @@ export const getKeyFromScopeDescription = (description: ScopeDescription) => {
   return `${description.level}<${description.id}>`;
 };
 
+export const getScopePath = (description: ScopeDescription, parent?: Scope) => {
+  if (!parent) {
+    return getKeyFromScopeDescription(description);
+  }
+
+  return `${parent.path}.${getKeyFromScopeDescription(description)}`;
+};
+
 export const getMaybeScopeDescriptionByNodeOwner = (
   node: t.ASTNode
 ): ScopeDescription | null => {
@@ -95,6 +103,8 @@ export class Scope {
 
   description: ScopeDescription;
 
+  path: string;
+
   constructor(
     readonly resolver: Resolver,
     descriptionOrNode: ScopeDescription | t.ASTNode,
@@ -104,6 +114,8 @@ export class Scope {
     this.description = t.is(descriptionOrNode, t.ASTNode)
       ? getScopeDescriptionByNodeOwner(descriptionOrNode)
       : descriptionOrNode;
+
+    this.path = getScopePath(this.description, this.parent);
 
     invariant(
       !this.resolver.scopeRegistry.get(this.key),
@@ -222,9 +234,13 @@ export class Scope {
     const existing = this.resolver.scopeRegistry.get(key);
 
     if (existing) {
-      existing.clear();
+      if (existing.path === getScopePath(description, this)) {
+        existing.clear();
 
-      return existing;
+        return existing;
+      }
+
+      this.resolver.scopeRegistry.delete(key);
     }
 
     return new Scope(this.resolver, description, this);
@@ -279,13 +295,17 @@ export class Scope {
       const keyToId: string[] = [];
 
       for (const [key] of this.variableNames) {
+        if (!key) {
+          continue;
+        }
+
         keyToId.push(`${key}`);
       }
 
-      let key = keyToId.join(`,`);
+      let key = `${this.description.id}<${keyToId.join('.')}>`;
 
       if (this.parent) {
-        key = this.parent.toString() + ',' + key;
+        key = this.parent.toString() + '.' + key;
       }
 
       return key;
