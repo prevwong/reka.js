@@ -1,5 +1,11 @@
 # @rekajs/parser
 
+## 0.1.9
+
+### Patch Changes
+
+- [#70](https://github.com/prevwong/reka.js/pull/70) [`8dc6cca`](https://github.com/prevwong/reka.js/commit/8dc6cca1269d2b1259a7a0928eb186eb33c061d3) Thanks [@prevwong](https://github.com/prevwong)! - Fix member expression external idenfitiers
+
 ## 0.1.8
 
 ### Patch Changes
