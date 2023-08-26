@@ -263,6 +263,12 @@ const jsToReka = <T extends t.ASTNode = t.ASTNode>(
       case 'JSXExpressionContainer': {
         return t.Schema.fromJSON(node.expression);
       }
+      case 'MemberExpression': {
+        return t.memberExpression({
+          object: _convert(node.object),
+          property: _convert(node.property),
+        });
+      }
       default: {
         return t.Schema.fromJSON(node) as t.Type;
       }
