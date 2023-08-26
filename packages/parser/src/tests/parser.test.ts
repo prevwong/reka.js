@@ -23,6 +23,35 @@ describe('Parser', () => {
       },
     } as t.BinaryExpression);
   });
+  it('should be able to parse member expression', () => {
+    expect(Parser.parseExpression(`obj.prop`)).toMatchObject({
+      type: 'MemberExpression',
+      object: {
+        type: 'Identifier',
+        name: 'obj',
+        external: false,
+      },
+      property: {
+        type: 'Identifier',
+        name: 'prop',
+        external: false,
+      },
+    });
+
+    expect(Parser.parseExpression(`$obj.prop`)).toMatchObject({
+      type: 'MemberExpression',
+      object: {
+        type: 'Identifier',
+        name: 'obj',
+        external: true,
+      },
+      property: {
+        type: 'Identifier',
+        name: 'prop',
+        external: false,
+      },
+    });
+  });
   it('should be able to parse program', () => {
     expect(
       Parser.parseProgram(`
