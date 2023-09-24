@@ -30,6 +30,18 @@ export const computeExpression = (
       case '-': {
         return left - right;
       }
+      case '*': {
+        return left * right;
+      }
+      case '/': {
+        return left / right;
+      }
+      case '^': {
+        return Math.pow(left, right);
+      }
+      case '%': {
+        return left % right;
+      }
       case '==': {
         return left == right;
       }
@@ -114,6 +126,18 @@ export const computeExpression = (
       }
       case '-=': {
         return env.reassign(expr.left, env.getByIdentifier(expr.left) - right);
+      }
+      case '*=': {
+        return env.reassign(expr.left, env.getByIdentifier(expr.left) * right);
+      }
+      case '/=': {
+        return env.reassign(expr.left, env.getByIdentifier(expr.left) / right);
+      }
+      case '^=': {
+        return env.reassign(expr.left, Math.pow(env.getByIdentifier(expr.left), right));
+      }
+      case '%=': {
+        return env.reassign(expr.left, env.getByIdentifier(expr.left) % right);
       }
     }
   }
