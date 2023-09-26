@@ -134,7 +134,10 @@ export const computeExpression = (
         return env.reassign(expr.left, env.getByIdentifier(expr.left) / right);
       }
       case '^=': {
-        return env.reassign(expr.left, Math.pow(env.getByIdentifier(expr.left), right));
+        return env.reassign(
+          expr.left,
+          Math.pow(env.getByIdentifier(expr.left), right)
+        );
       }
       case '%=': {
         return env.reassign(expr.left, env.getByIdentifier(expr.left) % right);
