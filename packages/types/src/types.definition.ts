@@ -107,7 +107,9 @@ Schema.define('BinaryExpression', {
       '>',
       '>=',
       '||',
-      '&&'
+      '&&',
+      '^',
+      '%'
     ),
     right: t.node('Expression'),
   }),
@@ -173,7 +175,7 @@ Schema.define('Assignment', {
   alias: ['Statement'],
   fields: (t) => ({
     left: t.node('Identifier'),
-    operator: t.enumeration('=', '+=', '-='),
+    operator: t.enumeration('=', '+=', '-=', '*=', '/=', '^=', '%='),
     right: t.node('Expression'),
   }),
 });
