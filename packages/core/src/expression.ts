@@ -82,7 +82,7 @@ export const computeExpression = (
 
   if (expr instanceof t.MemberExpression) {
     const obj = computeExpression(expr.object, reka, env, ctx);
-    return obj[expr.property.name];
+    return obj[computeExpression(expr.property, reka, env, ctx)];
   }
 
   if (expr instanceof t.Literal) {

@@ -343,12 +343,12 @@ Schema.register('Assignment', Assignment);
 type MemberExpressionParameters = {
   meta?: Record<string, any>;
   object: Identifier | MemberExpression;
-  property: Identifier;
+  property: Expression;
 };
 
 export class MemberExpression extends Expression {
   declare object: Identifier | MemberExpression;
-  declare property: Identifier;
+  declare property: Expression;
   constructor(value: MemberExpressionParameters) {
     super('MemberExpression', value);
   }

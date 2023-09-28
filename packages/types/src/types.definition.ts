@@ -184,7 +184,7 @@ Schema.define('MemberExpression', {
   extends: 'Expression',
   fields: (t) => ({
     object: t.union(t.node('Identifier'), t.node('MemberExpression')),
-    property: t.node('Identifier'),
+    property: t.node('Expression'),
   }),
 });
 
