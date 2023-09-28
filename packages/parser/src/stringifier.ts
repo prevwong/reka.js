@@ -90,8 +90,9 @@ class _Stringifier {
       },
       MemberExpression: (node) => {
         this.stringify(node.object);
-        this.writer.write('.');
+        this.writer.write('[');
         this.stringify(node.property);
+        this.writer.write(']');
       },
       ObjectExpression: (node) => {
         this.writer.write('{');
