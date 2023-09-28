@@ -173,7 +173,7 @@ export const CodeEditor = ({ onStatusChange, ...props }: CodeEditorProps) => {
               outline: 'none!important',
             },
             '.cm-scroller': {
-              'font-family': "'JetBrains Mono'",
+              'font-family': "inherit",
               fontSize: '0.875em',
               lineHeight: '1.6em',
               wordBreak: 'break-word',

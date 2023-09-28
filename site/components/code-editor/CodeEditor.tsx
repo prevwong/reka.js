@@ -78,7 +78,7 @@ export const CodeEditor = ({ className, ...props }: CodeEditorProps) => {
             })}
           >
             <ReactCodeEditor
-              className="h-full flex-1 text-sm"
+              className="h-full flex-1 text-sm font-code"
               onStatusChange={(status) => {
                 setStatus(status);
               }}
