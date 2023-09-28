@@ -158,54 +158,58 @@ export const CodeEditor = ({ onStatusChange, ...props }: CodeEditorProps) => {
 
     const { current: onStatusChange } = onStatusChangeRef;
 
-    setCodemirrorView(
-      new EditorView({
-        state: EditorState.create({
-          doc: currentCodeStringRef.current,
-          extensions: [
-            basicSetup,
-            keymap.of([indentWithTab]),
-            rekaCodemirrorExtension(),
-            EditorView.theme({
-              '&': {
-                height: '100%',
-              },
-              '&.cm-focused': {
-                outline: 'none!important',
-              },
-              '.cm-scroller': {
-                'font-family': "'JetBrains Mono'",
-                fontSize: '0.875em',
-                lineHeight: '1.6em',
-                wordBreak: 'break-word',
-                '-webkit-font-smoothing': 'initial',
-              },
-              '.cm-gutters': {
-                backgroundColor: '#fff',
-                color: 'rgba(0,0,0,0.4)',
-              },
-            }),
-            EditorView.updateListener.of((view) => {
-              if (!view.docChanged || isSynchingFromExternal.current) {
-                return;
-              }
+    const view = new EditorView({
+      state: EditorState.create({
+        doc: currentCodeStringRef.current,
+        extensions: [
+          basicSetup,
+          keymap.of([indentWithTab]),
+          rekaCodemirrorExtension(),
+          EditorView.theme({
+            '&': {
+              height: '100%',
+            },
+            '&.cm-focused': {
+              outline: 'none!important',
+            },
+            '.cm-scroller': {
+              'font-family': "'JetBrains Mono'",
+              fontSize: '0.875em',
+              lineHeight: '1.6em',
+              wordBreak: 'break-word',
+              '-webkit-font-smoothing': 'initial',
+            },
+            '.cm-gutters': {
+              backgroundColor: '#fff',
+              color: 'rgba(0,0,0,0.4)',
+            },
+          }),
+          EditorView.updateListener.of((view) => {
+            if (!view.docChanged || isSynchingFromExternal.current) {
+              return;
+            }
 
-              isTypingRef.current = true;
+            isTypingRef.current = true;
 
-              currentCodeStringRef.current = view.state.doc.toString();
+            currentCodeStringRef.current = view.state.doc.toString();
 
-              onStatusChange?.({
-                type: 'parsing',
-              });
+            onStatusChange?.({
+              type: 'parsing',
+            });
 
-              syncCodeToState(currentCodeStringRef.current);
-            }),
-            ...extensionsRef.current,
-          ],
-        }),
-        parent: dom,
-      })
-    );
+            syncCodeToState(currentCodeStringRef.current);
+          }),
+          ...extensionsRef.current,
+        ],
+      }),
+      parent: dom,
+    });
+
+    setCodemirrorView(view);
+
+    return () => {
+      view.destroy();
+    };
   }, [syncCodeToState]);
 
   const onExternalChange = React.useCallback(() => {
