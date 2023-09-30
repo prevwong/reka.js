@@ -173,6 +173,29 @@ describe('evaluator', () => {
 
       expect(view.props['value']).toEqual(2);
     });
+    it('should be able to manipulate member expression', async () => {
+      const frame = await createFrame(`
+        component App() {
+          val table = {
+            items: [2,3,4]
+          };
+        } => (
+          <button value={table['items'][1]} onClick={() => {
+            table.items[1] = 99;
+          }} />
+        )
+      `);
+
+      const view = t.assert(frame.view, t.RekaComponentView, (view) => {
+        return t.assert(view.render[0], t.TagView);
+      });
+
+      expect(view.props['value']).toEqual(3);
+
+      await view.props['onClick']();
+
+      expect(view.props['value']).toEqual(99);
+    });
   });
 
   it('should not dispose component evaluation when child template order is changed', async () => {

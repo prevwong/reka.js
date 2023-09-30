@@ -174,7 +174,7 @@ Schema.define('Assignment', {
   extends: 'Expression',
   alias: ['Statement'],
   fields: (t) => ({
-    left: t.node('Identifier'),
+    left: t.union(t.node('Identifier'), t.node('MemberExpression')),
     operator: t.enumeration('=', '+=', '-=', '*=', '/=', '^=', '%='),
     right: t.node('Expression'),
   }),
