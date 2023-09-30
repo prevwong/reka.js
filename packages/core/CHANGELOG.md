@@ -1,5 +1,17 @@
 # @rekajs/core
 
+## 0.1.19
+
+### Patch Changes
+
+- [#75](https://github.com/prevwong/reka.js/pull/75) [`3493275`](https://github.com/prevwong/reka.js/commit/349327518010e3e7c3389dd40f38fd32b2ae4bd3) Thanks [@def-roth](https://github.com/def-roth)! - Add missing binary operators in evaluator
+
+- [#85](https://github.com/prevwong/reka.js/pull/85) [`66fa530`](https://github.com/prevwong/reka.js/commit/66fa5305446b56ce0fd69f2bcd95650a69c5d327) Thanks [@prevwong](https://github.com/prevwong)! - Improve member expression type and enable assignments on member expressions
+
+- [#81](https://github.com/prevwong/reka.js/pull/81) [`e261648`](https://github.com/prevwong/reka.js/commit/e261648de3ff8b2434e8dac1013a14adb4b5d55b) Thanks [@prevwong](https://github.com/prevwong)! - Fix member expression property
+
+- [#79](https://github.com/prevwong/reka.js/pull/79) [`81a7f6d`](https://github.com/prevwong/reka.js/commit/81a7f6d3d78a9043a7cd3febf38b24cec637fb29) Thanks [@prevwong](https://github.com/prevwong)! - Add missing operators in types definition
+
 ## 0.1.18
 
 ### Patch Changes

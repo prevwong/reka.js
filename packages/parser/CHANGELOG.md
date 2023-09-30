@@ -1,5 +1,13 @@
 # @rekajs/parser
 
+## 0.1.10
+
+### Patch Changes
+
+- [#85](https://github.com/prevwong/reka.js/pull/85) [`66fa530`](https://github.com/prevwong/reka.js/commit/66fa5305446b56ce0fd69f2bcd95650a69c5d327) Thanks [@prevwong](https://github.com/prevwong)! - Improve member expression type and enable assignments on member expressions
+
+- [#81](https://github.com/prevwong/reka.js/pull/81) [`e261648`](https://github.com/prevwong/reka.js/commit/e261648de3ff8b2434e8dac1013a14adb4b5d55b) Thanks [@prevwong](https://github.com/prevwong)! - Fix member expression property
+
 ## 0.1.9
 
 ### Patch Changes
