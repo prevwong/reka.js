@@ -1,5 +1,13 @@
 # @rekajs/react-code-editor
 
+## 0.1.5
+
+### Patch Changes
+
+- [#82](https://github.com/prevwong/reka.js/pull/82) [`d04e52b`](https://github.com/prevwong/reka.js/commit/d04e52bd1e7ab100da2d4ce170c095d0239293a3) Thanks [@prevwong](https://github.com/prevwong)! - Fix dispose code editor on unmount
+
+- [`0a65f1d`](https://github.com/prevwong/reka.js/commit/0a65f1d2e92a797153ef418a1a8f4c39428880d3) Thanks [@prevwong](https://github.com/prevwong)! - Fix code editor font
+
 ## 0.1.4
 
 ### Patch Changes
