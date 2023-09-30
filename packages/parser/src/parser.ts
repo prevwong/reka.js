@@ -62,6 +62,23 @@ const getJSObjFromExpr = (obj: b.ObjectExpression) => {
   }, {});
 };
 
+const convertMemberExpression = (expr: b.MemberExpression) => {
+  let property: t.Expression;
+
+  if (b.isIdentifier(expr.property) && !expr.computed) {
+    property = t.literal({
+      value: expr.property.name,
+    });
+  } else {
+    property = jsToReka(expr.property);
+  }
+
+  return t.memberExpression({
+    object: jsToReka(expr.object),
+    property,
+  });
+};
+
 const jsToReka = <T extends t.ASTNode = t.ASTNode>(
   node: b.Node,
   opts?: AcornParserOptions<T>
@@ -264,10 +281,7 @@ const jsToReka = <T extends t.ASTNode = t.ASTNode>(
         return t.Schema.fromJSON(node.expression);
       }
       case 'MemberExpression': {
-        return t.memberExpression({
-          object: _convert(node.object),
-          property: _convert(node.property),
-        });
+        return convertMemberExpression(node);
       }
       default: {
         return t.Schema.fromJSON(node) as t.Type;

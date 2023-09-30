@@ -1,9 +1,9 @@
 import * as t from '@rekajs/types';
-import { invariant } from '@rekajs/utils';
 import { action, untracked } from 'mobx';
 
 import { Environment } from './environment';
 import { Reka } from './reka';
+import { invariant } from '@rekajs/utils';
 
 type ExprContext = {
   untrackIdentifier: boolean;
@@ -11,6 +11,65 @@ type ExprContext = {
 
 const DEFAULT_EXPR_CONTEXT: ExprContext = {
   untrackIdentifier: false,
+};
+
+const getPathFromMemberExpression = (
+  expr: t.MemberExpression,
+  reka: Reka,
+  env: Environment,
+  ctx: ExprContext
+) => {
+  if (t.is(expr.object, t.Identifier)) {
+    return [expr.object.name, computeExpression(expr.property, reka, env, ctx)];
+  }
+
+  return [
+    ...getPathFromMemberExpression(expr.object, reka, env, ctx),
+    computeExpression(expr.property, reka, env, ctx),
+  ];
+};
+
+const assertNonExternalIdentifier = (identifier: t.Identifier) => {
+  invariant(!identifier.external, 'Cannot reassign external value');
+};
+
+const updateLocalValue = (
+  target: t.Identifier | t.MemberExpression,
+  reka: Reka,
+  env: Environment,
+  ctx: ExprContext,
+  updater: (currentValue: any) => any
+) => {
+  const currentValue = computeExpression(target, reka, env, {
+    untrackIdentifier: true,
+  });
+
+  const newValue = updater(currentValue);
+
+  if (t.is(target, t.Identifier)) {
+    assertNonExternalIdentifier(target);
+    env.reassign(target, newValue);
+    return;
+  }
+
+  const rootIdentifier = t.getRootIdentifierInMemberExpression(target);
+  assertNonExternalIdentifier(rootIdentifier);
+
+  const baseValue = computeExpression(rootIdentifier, reka, env, {
+    untrackIdentifier: true,
+  });
+
+  const path = getPathFromMemberExpression(target, reka, env, ctx);
+
+  let targetValue = baseValue;
+
+  for (let i = 1; i < path.length - 1; i++) {
+    targetValue = baseValue[path[i]];
+  }
+
+  targetValue[path[path.length - 1]] = newValue;
+
+  env.reassign(rootIdentifier, baseValue);
 };
 
 export const computeExpression = (
@@ -81,8 +140,16 @@ export const computeExpression = (
   }
 
   if (expr instanceof t.MemberExpression) {
-    const obj = computeExpression(expr.object, reka, env, ctx);
-    return obj[computeExpression(expr.property, reka, env, ctx)];
+    const rootIdentifier = t.getRootIdentifierInMemberExpression(expr);
+    const obj = computeExpression(rootIdentifier, reka, env, ctx);
+    const path = getPathFromMemberExpression(expr, reka, env, ctx);
+    let target = obj;
+
+    for (let i = 1; i < path.length; i++) {
+      target = target[path[i]];
+    }
+
+    return target;
   }
 
   if (expr instanceof t.Literal) {
@@ -113,36 +180,33 @@ export const computeExpression = (
   }
 
   if (expr instanceof t.Assignment) {
-    invariant(!expr.left.external, 'Cannot reassign external value');
-
     const right = computeExpression(expr.right, reka, env);
 
-    switch (expr.operator) {
-      case '=': {
-        return env.reassign(expr.left, right);
+    updateLocalValue(expr.left, reka, env, ctx, (current) => {
+      switch (expr.operator) {
+        case '=': {
+          return right;
+        }
+        case '+=': {
+          return current + right;
+        }
+        case '-=': {
+          return current - right;
+        }
+        case '*=': {
+          return current * right;
+        }
+        case '/=': {
+          return current / right;
+        }
+        case '^=': {
+          return Math.pow(current, right);
+        }
+        case '%=': {
+          return current % right;
+        }
       }
-      case '+=': {
-        return env.reassign(expr.left, env.getByIdentifier(expr.left) + right);
-      }
-      case '-=': {
-        return env.reassign(expr.left, env.getByIdentifier(expr.left) - right);
-      }
-      case '*=': {
-        return env.reassign(expr.left, env.getByIdentifier(expr.left) * right);
-      }
-      case '/=': {
-        return env.reassign(expr.left, env.getByIdentifier(expr.left) / right);
-      }
-      case '^=': {
-        return env.reassign(
-          expr.left,
-          Math.pow(env.getByIdentifier(expr.left), right)
-        );
-      }
-      case '%=': {
-        return env.reassign(expr.left, env.getByIdentifier(expr.left) % right);
-      }
-    }
+    });
   }
 
   if (expr instanceof t.Block) {

@@ -345,3 +345,13 @@ export function assert<T extends Type, C extends (value: T) => any>(
 
   return value;
 }
+
+export const getRootIdentifierInMemberExpression = (
+  expr: t.MemberExpression
+): t.Identifier => {
+  if (t.is(expr.object, t.Identifier)) {
+    return expr.object;
+  }
+
+  return getRootIdentifierInMemberExpression(expr.object);
+};

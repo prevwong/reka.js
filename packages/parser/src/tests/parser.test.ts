@@ -32,9 +32,48 @@ describe('Parser', () => {
         external: false,
       },
       property: {
+        type: 'Literal',
+        value: 'prop',
+      },
+    });
+
+    expect(Parser.parseExpression(`obj.prop[0]`)).toMatchObject({
+      type: 'MemberExpression',
+      object: {
+        type: 'MemberExpression',
+        object: {
+          type: 'Identifier',
+          name: 'obj',
+          external: false,
+        },
+        property: {
+          type: 'Literal',
+          value: 'prop',
+        },
+      },
+      property: {
+        type: 'Literal',
+        value: 0,
+      },
+    });
+
+    expect(Parser.parseExpression(`obj.prop[idx]`)).toMatchObject({
+      type: 'MemberExpression',
+      object: {
+        type: 'MemberExpression',
+        object: {
+          type: 'Identifier',
+          name: 'obj',
+          external: false,
+        },
+        property: {
+          type: 'Literal',
+          value: 'prop',
+        },
+      },
+      property: {
         type: 'Identifier',
-        name: 'prop',
-        external: false,
+        name: 'idx',
       },
     });
 
@@ -46,9 +85,8 @@ describe('Parser', () => {
         external: true,
       },
       property: {
-        type: 'Identifier',
-        name: 'prop',
-        external: false,
+        type: 'Literal',
+        value: 'prop',
       },
     });
   });

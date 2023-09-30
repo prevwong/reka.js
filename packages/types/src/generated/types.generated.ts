@@ -324,13 +324,13 @@ Schema.register('IfStatement', IfStatement);
 
 type AssignmentParameters = {
   meta?: Record<string, any>;
-  left: Identifier;
+  left: Identifier | MemberExpression;
   operator: '=' | '+=' | '-=' | '*=' | '/=' | '^=' | '%=';
   right: Expression;
 };
 
 export class Assignment extends Expression {
-  declare left: Identifier;
+  declare left: Identifier | MemberExpression;
   declare operator: '=' | '+=' | '-=' | '*=' | '/=' | '^=' | '%=';
   declare right: Expression;
   constructor(value: AssignmentParameters) {
