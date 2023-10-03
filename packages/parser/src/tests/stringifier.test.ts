@@ -199,4 +199,19 @@ describe('Stringifier', () => {
       `val colors:option<{"blue":"Blue","red":"Red","green":"Green"}> = "blue"`
     );
   });
+  it('should preserve precedence when parsing conditional expressions within binary expressions', () => {
+    expect(
+      Stringifier.toString(
+        t.binaryExpression({
+          left: t.identifier({ name: 'left' }),
+          operator: '+',
+          right: t.conditionalExpression({
+            condition: t.identifier({ name: 'isRequired' }),
+            consequent: t.literal({ value: '*' }),
+            alternate: t.literal({ value: '' }),
+          }),
+        })
+      )
+    ).toEqual(`left + (isRequired ? "*" : "")`);
+  });
 });
