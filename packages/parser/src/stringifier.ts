@@ -41,6 +41,21 @@ class _Stringifier {
     return this.writer.toString();
   }
 
+  parenthesize(
+    result: WriterResult,
+    currentPrecedence: Precedence,
+    precedence: Precedence
+  ) {
+    if (currentPrecedence < precedence) {
+      this.writer.write('(');
+      this.writer.write(result);
+      this.writer.write(')');
+      return;
+    }
+
+    this.writer.write(result);
+  }
+
   stringify(node: t.ASTNode, precedence: Precedence = Precedence.Sequence) {
     return t.match(node, {
       Literal: (node) => {
@@ -62,7 +77,8 @@ class _Stringifier {
         this.writer.write(']');
       },
       BinaryExpression: (node) => {
-        let result;
+        let result: WriterResult;
+
         const currentPrecedence = BinaryPrecedence[node.operator];
 
         const leftPrecedence = currentPrecedence;
@@ -79,14 +95,7 @@ class _Stringifier {
         result = Writer.join(leftFragment, [node.operator]);
         result = Writer.join(result, rightFragment);
 
-        if (currentPrecedence < precedence) {
-          this.writer.write('(');
-          this.writer.write(result);
-          this.writer.write(')');
-          return;
-        }
-
-        this.writer.write(result);
+        this.parenthesize(result, currentPrecedence, precedence);
       },
       MemberExpression: (node) => {
         this.stringify(node.object);
@@ -146,11 +155,15 @@ class _Stringifier {
         this.writer.write(')');
       },
       ConditionalExpression: (node) => {
-        this.stringify(node.condition);
-        this.writer.write(' ? ');
-        this.stringify(node.consequent);
-        this.writer.write(' : ');
-        this.stringify(node.alternate);
+        const result = this.writer.withTemp(() => {
+          this.stringify(node.condition, Precedence.Coalesce);
+          this.writer.write(' ? ');
+          this.stringify(node.consequent, Precedence.Assignment);
+          this.writer.write(' : ');
+          this.stringify(node.alternate, Precedence.Assignment);
+        });
+
+        this.parenthesize(result, Precedence.Conditional, precedence);
       },
       IfStatement: (node) => {
         this.writer.write(`if (`);
