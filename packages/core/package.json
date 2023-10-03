@@ -26,5 +26,9 @@
     "lodash": "^4.17.21",
     "mobx": "^6.3.13",
     "mobx-utils": "^6.0.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prevwong/reka.js/"
   }
 }

@@ -17,5 +17,9 @@
   "license": "MIT",
   "dependencies": {
     "@rekajs/utils": "^0.1.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prevwong/reka.js/"
   }
 }

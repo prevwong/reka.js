@@ -23,5 +23,9 @@
     "@rekajs/utils": "^0.1.2",
     "acorn": "^8.7.0",
     "acorn-jsx": "^5.3.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prevwong/reka.js/"
   }
 }

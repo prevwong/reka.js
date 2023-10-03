@@ -25,5 +25,9 @@
     "@rekajs/core": "workspace:*",
     "@rekajs/types": "workspace:*",
     "yjs": "^13.5.50"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prevwong/reka.js/"
   }
 }
