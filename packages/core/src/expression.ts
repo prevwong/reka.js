@@ -1,9 +1,9 @@
 import * as t from '@rekajs/types';
+import { invariant } from '@rekajs/utils';
 import { action, untracked } from 'mobx';
 
 import { Environment } from './environment';
 import { Reka } from './reka';
-import { invariant } from '@rekajs/utils';
 
 type ExprContext = {
   untrackIdentifier: boolean;
