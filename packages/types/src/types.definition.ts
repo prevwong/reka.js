@@ -108,6 +108,7 @@ Schema.define('BinaryExpression', {
       '>=',
       '||',
       '&&',
+      '??',
       '^',
       '%'
     ),
