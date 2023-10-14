@@ -283,6 +283,13 @@ const jsToReka = <T extends t.ASTNode = t.ASTNode>(
       case 'MemberExpression': {
         return convertMemberExpression(node);
       }
+      case 'LogicalExpression': {
+        return t.binaryExpression({
+          left: _convert(node.left),
+          operator: node.operator,
+          right: _convert(node.right),
+        });
+      }
       default: {
         return t.Schema.fromJSON(node) as t.Type;
       }

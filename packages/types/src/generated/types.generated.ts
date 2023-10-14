@@ -196,6 +196,7 @@ type BinaryExpressionParameters = {
     | '>='
     | '||'
     | '&&'
+    | '??'
     | '^'
     | '%';
   right: Expression;
@@ -216,6 +217,7 @@ export class BinaryExpression extends Expression {
     | '>='
     | '||'
     | '&&'
+    | '??'
     | '^'
     | '%';
   declare right: Expression;

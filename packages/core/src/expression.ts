@@ -82,7 +82,9 @@ export const computeExpression = (
     const left = computeExpression(expr.left, reka, env, ctx);
     const right = computeExpression(expr.right, reka, env, ctx);
 
-    switch (expr.operator) {
+    const operator = expr.operator;
+
+    switch (operator) {
       case '+': {
         return left + right;
       }
@@ -119,8 +121,17 @@ export const computeExpression = (
       case '<=': {
         return left <= right;
       }
+      case '||': {
+        return left || right;
+      }
+      case '&&': {
+        return left && right;
+      }
+      case '??': {
+        return left ?? right;
+      }
       default: {
-        throw new Error(`Invalid binary operator "${expr.operator}"`);
+        throw new Error(`Invalid binary operator "${operator}"`);
       }
     }
   }
