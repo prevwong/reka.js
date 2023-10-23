@@ -147,7 +147,7 @@ describe('Resolver', () => {
     });
   });
 
-  describe('getVariablesAtNode', () => {
+  describe('getIdentifiablesAtNode', () => {
     let frame: Frame;
 
     beforeEach(async () => {
@@ -166,7 +166,7 @@ describe('Resolver', () => {
 
       expect(
         frame.reka
-          .getVariablesAtNode(frame.reka.program, {
+          .getIdentifiablesAtNode(frame.reka.program, {
             parent: true,
           })
           .map(({ scope, identifiable }) => ({
@@ -177,7 +177,7 @@ describe('Resolver', () => {
 
       expect(
         frame.reka
-          .getVariablesAtNode(frame.reka.program, {
+          .getIdentifiablesAtNode(frame.reka.program, {
             includeExternals: false,
           })
           .map(({ scope, identifiable }) => ({
@@ -191,7 +191,7 @@ describe('Resolver', () => {
 
       expect(
         frame.reka
-          .getVariablesAtNode(appComponent, {
+          .getIdentifiablesAtNode(appComponent, {
             includeExternals: false,
             includeAncestors: false,
           })

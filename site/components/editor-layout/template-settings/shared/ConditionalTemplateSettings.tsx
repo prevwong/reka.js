@@ -23,8 +23,8 @@ export const ConditionalTemplateSettings = observer(
         <div>
           <ExpressionInput
             value={props.template.if}
-            variables={editor.reka.getVariablesAtNode(props.template, {
-              filter: ({ variable }) => !t.is(variable, t.Component),
+            identifiables={editor.reka.getIdentifiablesAtNode(props.template, {
+              filter: ({ identifiable }) => !t.is(identifiable, t.Component),
             })}
             placeholder="counter > 0"
             onCommit={(expression) => {

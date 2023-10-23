@@ -317,7 +317,7 @@ export class Reka {
     return this.state;
   }
 
-  get getVariablesAtNode() {
+  get getIdentifiablesAtNode() {
     return this.head.resolver.getIdentifiablesAtNode.bind(this.head.resolver);
   }
 

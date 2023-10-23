@@ -93,8 +93,8 @@ export const EachTemplateSettings = observer(
             onCommit={(iterator) => {
               commitValue(iterator, alias, index);
             }}
-            variables={editor.reka.getVariablesAtNode(props.template, {
-              filter: ({ variable }) => !t.is(variable, t.Component),
+            identifiables={editor.reka.getIdentifiablesAtNode(props.template, {
+              filter: ({ identifiable }) => !t.is(identifiable, t.Component),
               parent: true,
             })}
           />

@@ -218,7 +218,7 @@ type ExpressionInputProps = {
   className?: string;
   inputClassName?: string;
   textareaClassName?: string;
-  variables?: IdentifiableWithScope[];
+  identifiables?: IdentifiableWithScope[];
 };
 
 export const ExpressionInput = observer(
@@ -231,7 +231,7 @@ export const ExpressionInput = observer(
     className,
     inputClassName,
     textareaClassName,
-    variables,
+    identifiables: variables,
   }: ExpressionInputProps) => {
     const [showTextareaEditor, setShowTextareaEditor] = React.useState(false);
 
