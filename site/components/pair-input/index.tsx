@@ -1,5 +1,5 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { VariableWithScope } from '@rekajs/core';
+import { IdentifiableWithScope } from '@rekajs/core';
 import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
@@ -19,7 +19,7 @@ type PairInputFieldProps = {
   onChange?: (id: string, value: t.Expression, clear: () => void) => void;
   idPlaceholder?: string;
   valuePlaceholder?: string;
-  getVariablesForExpr?: (i?: number) => VariableWithScope[];
+  getIdentifiablesForExpr?: (i?: number) => IdentifiableWithScope[];
 };
 
 type PairInputValue = {
@@ -36,7 +36,7 @@ type PairInputProps = {
   onCancelAdding?: () => void;
   addingNewField?: boolean;
   emptyValuesText?: string;
-  getVariablesForExpr?: (i?: number) => VariableWithScope[];
+  getIdentifiablesForExpr?: (i?: number) => IdentifiableWithScope[];
 };
 
 type AddNewPairInputFieldProps = {
@@ -44,7 +44,7 @@ type AddNewPairInputFieldProps = {
   onCancel: () => void;
   idPlaceholder?: string;
   valuePlaceholder?: string;
-  getVariablesForExpr?: (i?: number) => VariableWithScope[];
+  getIdentifiablesForExpr?: (i?: number) => IdentifiableWithScope[];
 };
 
 const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
@@ -90,7 +90,7 @@ const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
       }}
       idPlaceholder={props.idPlaceholder}
       valuePlaceholder={props.valuePlaceholder}
-      getVariablesForExpr={props.getVariablesForExpr}
+      getIdentifiablesForExpr={props.getIdentifiablesForExpr}
     />
   );
 };
@@ -108,7 +108,7 @@ const PairInputField = observer(
         onChange,
         idPlaceholder,
         valuePlaceholder,
-        getVariablesForExpr: variables,
+        getIdentifiablesForExpr: variables,
       },
       ref
     ) => {
@@ -176,7 +176,7 @@ const PairInputField = observer(
                 onChange(newId, value, clear);
               }}
               disable={disableEditValue}
-              variables={variables ? variables(index) : undefined}
+              identifiables={variables ? variables(index) : undefined}
             />
             <IconButton
               className="opacity-0 m-0 group-hover:opacity-100"
@@ -215,7 +215,7 @@ export const PairInput = (props: PairInputProps) => {
               props.onChange?.(id, value, 'update');
             }}
             valuePlaceholder={props.valuePlaceholder}
-            getVariablesForExpr={props.getVariablesForExpr}
+            getIdentifiablesForExpr={props.getIdentifiablesForExpr}
           />
         );
       })}
@@ -237,7 +237,7 @@ export const PairInput = (props: PairInputProps) => {
           }}
           idPlaceholder={props.idPlaceholder}
           valuePlaceholder={props.valuePlaceholder}
-          getVariablesForExpr={props.getVariablesForExpr}
+          getIdentifiablesForExpr={props.getIdentifiablesForExpr}
         />
       )}
     </div>

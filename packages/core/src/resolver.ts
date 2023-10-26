@@ -12,7 +12,7 @@ import { Reka } from './reka';
 import {
   getKeyFromScopeDescription,
   getMaybeScopeDescriptionByNodeOwner,
-  GetVariablesOpts,
+  GetIdentifiableOpts,
   Scope,
 } from './scope';
 
@@ -28,8 +28,8 @@ type CachedComponentResolver = {
 
 export class Resolver {
   scopeRegistry: Map<string, Scope> = new Map();
-  identifiersToVariableDistance: Map<string, number>;
-  identifiersToVariable: Map<t.Identifier, t.Variable>;
+  identifiersToIdentifiableDistance: Map<string, number>;
+  identifiersToIdentifiable: Map<t.Identifier, t.Identifiable>;
   nodeToScope: Map<t.ASTNode, Scope>;
 
   private scope: Scope;
@@ -44,8 +44,8 @@ export class Resolver {
   constructor(readonly reka: Reka) {
     this.scope = new Scope(this, reka.program);
 
-    this.identifiersToVariableDistance = new Map();
-    this.identifiersToVariable = new Map();
+    this.identifiersToIdentifiableDistance = new Map();
+    this.identifiersToIdentifiable = new Map();
 
     this.cachedComponentResolver = new WeakMap();
     this.cachedTemplateResolver = new WeakMap();
@@ -62,32 +62,32 @@ export class Resolver {
     this.nodeToScope = new Map();
 
     makeObservable(this, {
-      identifiersToVariableDistance: observable,
+      identifiersToIdentifiableDistance: observable,
       nodeToScope: observable,
     });
   }
 
   getDistance(identifier: t.Identifier) {
-    return this.identifiersToVariableDistance.get(identifier.id);
+    return this.identifiersToIdentifiableDistance.get(identifier.id);
   }
 
-  getVariablesAtNode(node: t.ASTNode, opts?: GetVariablesOpts) {
+  getIdentifiablesAtNode(node: t.ASTNode, opts?: GetIdentifiableOpts) {
     const scope = this.nodeToScope.get(node);
 
     if (!scope) {
       return [];
     }
 
-    return scope.getVariables(opts);
+    return scope.getIdentifiables(opts);
   }
 
-  getVariableFromIdentifier(identifier: t.Identifier) {
-    return this.identifiersToVariable.get(identifier) || null;
+  getIdentifiableFromIdentifier(identifier: t.Identifier) {
+    return this.identifiersToIdentifiable.get(identifier) || null;
   }
 
   removeDistance(identifier: t.Identifier) {
     runInAction(() => {
-      this.identifiersToVariableDistance.delete(identifier.id);
+      this.identifiersToIdentifiableDistance.delete(identifier.id);
     });
   }
 
@@ -97,16 +97,16 @@ export class Resolver {
     }
 
     runInAction(() => {
-      this.identifiersToVariableDistance.set(identifier.id, distance);
+      this.identifiersToIdentifiableDistance.set(identifier.id, distance);
     });
   }
 
-  private bindIdentifierToVariable(
+  private bindIdentifierToIdentifiable(
     identifier: t.Identifier,
-    variable: t.Variable
+    identifiable: t.Identifiable
   ) {
     runInAction(() => {
-      this.identifiersToVariable.set(identifier, variable);
+      this.identifiersToIdentifiable.set(identifier, identifiable);
     });
   }
 
@@ -116,9 +116,9 @@ export class Resolver {
     });
   }
 
-  unbindIdentifierToVariable(identifier: t.Identifier) {
+  unbindIdentifierToIdentifiable(identifier: t.Identifier) {
     runInAction(() => {
-      this.identifiersToVariable.delete(identifier);
+      this.identifiersToIdentifiable.delete(identifier);
     });
   }
 
@@ -133,25 +133,30 @@ export class Resolver {
 
     if (expr instanceof t.Identifier) {
       if (expr.external) {
-        const externalVariable = this.reka.externals.get(expr.name);
+        const externalIdentifiable = this.reka.externals.get(expr.name);
 
-        if (externalVariable) {
-          this.bindIdentifierToVariable(expr, externalVariable);
+        if (externalIdentifiable) {
+          this.bindIdentifierToIdentifiable(expr, externalIdentifiable);
         }
 
         return;
       }
 
-      const variableWithDistance = scope.getVariableWithDistance(expr.name);
+      const identifiableWithDistance = scope.getIdentifiableWithDistance(
+        expr.name
+      );
 
-      if (!variableWithDistance) {
+      if (!identifiableWithDistance) {
         this.setDistance(expr, -1);
-        this.unbindIdentifierToVariable(expr);
+        this.unbindIdentifierToIdentifiable(expr);
         return;
       }
 
-      this.setDistance(expr, variableWithDistance.distance);
-      this.bindIdentifierToVariable(expr, variableWithDistance.variable);
+      this.setDistance(expr, identifiableWithDistance.distance);
+      this.bindIdentifierToIdentifiable(
+        expr,
+        identifiableWithDistance.identifiable
+      );
     }
 
     // TODO: assignment should be handled as binary expr
@@ -225,16 +230,11 @@ export class Resolver {
             this.bindNodeToScope(component, componentScope);
 
             component.props.forEach((prop) => {
-              componentScope.defineVariable(prop);
-              this.bindNodeToScope(prop, componentScope);
-
-              if (prop.init) {
-                this.resolveExpr(prop.init, scope);
-              }
+              this.resolveVariable(prop, componentScope);
             });
 
             component.state.forEach((state) => {
-              this.resolveVal(state, componentScope);
+              this.resolveVariable(state, componentScope);
             });
 
             this.resolveTemplate(component.template, componentScope);
@@ -245,7 +245,7 @@ export class Resolver {
       }
 
       cache.computed.get();
-      scope.defineVariable(component);
+      scope.defineIdentifiable(component);
     }
   }
 
@@ -273,23 +273,23 @@ export class Resolver {
 
             if (template.each.alias) {
               if (eachAliasName && eachAliasName !== template.each.alias.name) {
-                templateScope.removeVariableByName(eachAliasName);
+                templateScope.removeIdentifiableByName(eachAliasName);
               }
 
-              templateScope.defineVariable(template.each.alias);
+              templateScope.defineIdentifiable(template.each.alias);
               eachAliasName = template.each.alias.name;
             }
 
             if (template.each.index) {
               if (eachIndex && eachIndex !== template.each.index.name) {
-                templateScope.removeVariableByName(eachIndex);
+                templateScope.removeIdentifiableByName(eachIndex);
               }
 
               eachIndex = template.each.index.name;
-              templateScope.defineVariable(template.each.index);
+              templateScope.defineIdentifiable(template.each.index);
             } else {
               if (eachIndex) {
-                templateScope.removeVariableByName(eachIndex);
+                templateScope.removeIdentifiableByName(eachIndex);
                 eachIndex = null;
               }
             }
@@ -321,10 +321,14 @@ export class Resolver {
     cache.computed.get();
   }
 
-  private resolveVal(val: t.Val, scope: Scope) {
-    this.bindNodeToScope(val, scope);
-    this.resolveExpr(val.init, scope);
-    scope.defineVariable(val);
+  private resolveVariable(variable: t.Variable, scope: Scope) {
+    this.bindNodeToScope(variable, scope);
+
+    if (variable.init) {
+      this.resolveExpr(variable.init, scope);
+    }
+
+    scope.defineIdentifiable(variable);
   }
 
   private resolveProgram() {
@@ -335,23 +339,23 @@ export class Resolver {
     this.bindNodeToScope(program, this.scope);
 
     program.globals.forEach((global) => {
-      this.resolveVal(global, this.scope);
+      this.resolveVariable(global, this.scope);
     });
 
     program.components.forEach((component) => {
-      this.scope.defineVariable(component);
+      this.scope.defineIdentifiable(component);
     });
 
     const globalNames = [...program.globals, ...program.components].map(
       (globalOrComponent) => globalOrComponent.name
     );
 
-    this.scope.forEach((variable) => {
-      if (globalNames.includes(variable.name)) {
+    this.scope.forEach((identifiable) => {
+      if (globalNames.includes(identifiable.name)) {
         return;
       }
 
-      this.scope.removeVariableByName(variable.name);
+      this.scope.removeIdentifiableByName(identifiable.name);
     });
 
     program.components.forEach((component) => {
@@ -370,7 +374,7 @@ export class Resolver {
   cleanupDisposedNode(node: t.ASTNode) {
     if (node instanceof t.Identifier) {
       this.removeDistance(node);
-      this.unbindIdentifierToVariable(node);
+      this.unbindIdentifierToIdentifiable(node);
     }
 
     this.unbindNodeToScope(node);

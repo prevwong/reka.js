@@ -55,11 +55,11 @@ export abstract class Kind extends Type {
 Schema.register('Kind', Kind);
 
 type PrimitiveKindParameters = {
-  primitive: 'string' | 'number' | 'boolean';
+  primitive: 'string' | 'number' | 'boolean' | 'any';
 };
 
 export class PrimitiveKind extends Kind {
-  declare primitive: 'string' | 'number' | 'boolean';
+  declare primitive: 'string' | 'number' | 'boolean' | 'any';
   constructor(value: PrimitiveKindParameters) {
     super('PrimitiveKind', value);
   }
@@ -105,13 +105,30 @@ export abstract class Expression extends ASTNode {
 
 Schema.register('Expression', Expression);
 
-type VariableParameters = {
+type IdentifiableParameters = {
   meta?: Record<string, any>;
   name: string;
 };
 
-export abstract class Variable extends Expression {
+export abstract class Identifiable extends Expression {
   declare name: string;
+  constructor(type: string, value: IdentifiableParameters) {
+    super(type, value);
+  }
+}
+
+Schema.register('Identifiable', Identifiable);
+
+type VariableParameters = {
+  meta?: Record<string, any>;
+  name: string;
+  kind?: Kind;
+  init?: Expression | null;
+};
+
+export abstract class Variable extends Identifiable {
+  declare kind: Kind;
+  declare init: Expression | null;
   constructor(type: string, value: VariableParameters) {
     super(type, value);
   }
@@ -152,13 +169,11 @@ Schema.register('Identifier', Identifier);
 type ValParameters = {
   meta?: Record<string, any>;
   name: string;
-  init: Expression;
-  kind?: Kind | null;
+  kind?: Kind;
+  init?: Expression | null;
 };
 
 export class Val extends Variable {
-  declare init: Expression;
-  declare kind: Kind | null;
   constructor(value: ValParameters) {
     super('Val', value);
   }
@@ -361,13 +376,11 @@ Schema.register('MemberExpression', MemberExpression);
 type ComponentPropParameters = {
   meta?: Record<string, any>;
   name: string;
+  kind?: Kind;
   init?: Expression | null;
-  kind?: Kind | null;
 };
 
 export class ComponentProp extends Variable {
-  declare init: Expression | null;
-  declare kind: Kind | null;
   constructor(value: ComponentPropParameters) {
     super('ComponentProp', value);
   }
@@ -380,7 +393,7 @@ type ComponentParameters = {
   name: string;
 };
 
-export abstract class Component extends Variable {
+export abstract class Component extends Identifiable {
   constructor(type: string, value: ComponentParameters) {
     super(type, value);
   }
@@ -519,7 +532,7 @@ type ElementEachAliasParameters = {
   name: string;
 };
 
-export class ElementEachAlias extends Variable {
+export class ElementEachAlias extends Identifiable {
   constructor(value: ElementEachAliasParameters) {
     super('ElementEachAlias', value);
   }
@@ -532,7 +545,7 @@ type ElementEachIndexParameters = {
   name: string;
 };
 
-export class ElementEachIndex extends Variable {
+export class ElementEachIndex extends Identifiable {
   constructor(value: ElementEachIndexParameters) {
     super('ElementEachIndex', value);
   }
@@ -757,7 +770,7 @@ type ExternalStateParameters = {
   init: any;
 };
 
-export class ExternalState extends Variable {
+export class ExternalState extends Identifiable {
   declare init: any;
   constructor(value: ExternalStateParameters) {
     super('ExternalState', value);
@@ -772,7 +785,7 @@ type ExternalFuncParameters = {
   func: Function;
 };
 
-export class ExternalFunc extends Variable {
+export class ExternalFunc extends Identifiable {
   declare func: Function;
   constructor(value: ExternalFuncParameters) {
     super('ExternalFunc', value);
@@ -791,6 +804,7 @@ export type Any =
   | ArrayKind
   | OptionKind
   | Expression
+  | Identifiable
   | Variable
   | Literal
   | Identifier
@@ -839,6 +853,7 @@ export type Visitor = {
   ArrayKind: (node: ArrayKind) => any;
   OptionKind: (node: OptionKind) => any;
   Expression: (node: Expression) => any;
+  Identifiable: (node: Identifiable) => any;
   Variable: (node: Variable) => any;
   Literal: (node: Literal) => any;
   Identifier: (node: Identifier) => any;

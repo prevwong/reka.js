@@ -18,7 +18,7 @@ export const PropTemplateSettings = observer(
 
     const classList = template.classList;
 
-    const variables = editor.reka.getVariablesAtNode(template, {
+    const variables = editor.reka.getIdentifiablesAtNode(template, {
       filter: (variable) => !t.is(variable, t.RekaComponent),
     });
 
@@ -33,7 +33,7 @@ export const PropTemplateSettings = observer(
           <PairInput
             addingNewField={addNewClassListItem}
             onCancelAdding={() => setAddNewClassListItem(false)}
-            getVariablesForExpr={() => variables}
+            getIdentifiablesForExpr={() => variables}
             values={
               classList
                 ? Object.keys(classList.properties).map((key) => ({
@@ -81,9 +81,9 @@ export const PropTemplateSettings = observer(
                 delete template.props[id];
               });
             }}
-            getVariablesForExpr={() =>
-              editor.reka.getVariablesAtNode(template, {
-                filter: ({ variable }) => !t.is(variable, t.Component),
+            getIdentifiablesForExpr={() =>
+              editor.reka.getIdentifiablesAtNode(template, {
+                filter: ({ identifiable }) => !t.is(identifiable, t.Component),
               })
             }
             values={Object.keys(template.props).map((prop) => {

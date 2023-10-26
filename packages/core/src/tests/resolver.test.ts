@@ -106,29 +106,31 @@ describe('Resolver', () => {
         itemProp,
       } = queryFromFrame(frame);
 
-      expect(frame.reka.getVariableFromIdentifier(globalProp)).toEqual(
+      expect(frame.reka.getIdentifiableFromIdentifier(globalProp)).toEqual(
         globalState
       );
 
-      expect(frame.reka.getVariableFromIdentifier(dataState1Prop)).toEqual(
+      expect(frame.reka.getIdentifiableFromIdentifier(dataState1Prop)).toEqual(
         state1
       );
 
-      expect(frame.reka.getVariableFromIdentifier(dataState2Prop)).toEqual(
+      expect(frame.reka.getIdentifiableFromIdentifier(dataState2Prop)).toEqual(
         state2
       );
 
-      expect(frame.reka.getVariableFromIdentifier(eachIterator)).toEqual(
+      expect(frame.reka.getIdentifiableFromIdentifier(eachIterator)).toEqual(
         externalState
       );
 
-      expect(frame.reka.getVariableFromIdentifier(itemProp)).toEqual(eachAlias);
+      expect(frame.reka.getIdentifiableFromIdentifier(itemProp)).toEqual(
+        eachAlias
+      );
     });
 
     it('should return null if variable is removed', () => {
       const { globalState, globalProp } = queryFromFrame(frame);
 
-      expect(frame.reka.getVariableFromIdentifier(globalProp)).toEqual(
+      expect(frame.reka.getIdentifiableFromIdentifier(globalProp)).toEqual(
         globalState
       );
 
@@ -139,11 +141,13 @@ describe('Resolver', () => {
         );
       });
 
-      expect(frame.reka.getVariableFromIdentifier(globalProp)).toEqual(null);
+      expect(frame.reka.getIdentifiableFromIdentifier(globalProp)).toEqual(
+        null
+      );
     });
   });
 
-  describe('getVariablesAtNode', () => {
+  describe('getIdentifiablesAtNode', () => {
     let frame: Frame;
 
     beforeEach(async () => {
@@ -162,43 +166,43 @@ describe('Resolver', () => {
 
       expect(
         frame.reka
-          .getVariablesAtNode(frame.reka.program, {
+          .getIdentifiablesAtNode(frame.reka.program, {
             parent: true,
           })
-          .map(({ scope, variable }) => ({
+          .map(({ scope, identifiable }) => ({
             scope: scope.level,
-            variable,
+            identifiable,
           }))
-      ).toEqual([{ scope: 'external', variable: externalState }]);
+      ).toEqual([{ scope: 'external', identifiable: externalState }]);
 
       expect(
         frame.reka
-          .getVariablesAtNode(frame.reka.program, {
+          .getIdentifiablesAtNode(frame.reka.program, {
             includeExternals: false,
           })
-          .map(({ scope, variable }) => ({
+          .map(({ scope, identifiable }) => ({
             scope: scope.level,
-            variable,
+            identifiable,
           }))
       ).toEqual([
-        { scope: 'global', variable: globalState },
-        { scope: 'global', variable: appComponent },
+        { scope: 'global', identifiable: globalState },
+        { scope: 'global', identifiable: appComponent },
       ]);
 
       expect(
         frame.reka
-          .getVariablesAtNode(appComponent, {
+          .getIdentifiablesAtNode(appComponent, {
             includeExternals: false,
             includeAncestors: false,
           })
-          .map(({ scope, variable }) => ({
+          .map(({ scope, identifiable }) => ({
             scope: scope.level,
-            variable,
+            identifiable,
           }))
       ).toEqual([
-        { scope: 'component', variable: componentProp },
-        { scope: 'component', variable: state1 },
-        { scope: 'component', variable: state2 },
+        { scope: 'component', identifiable: componentProp },
+        { scope: 'component', identifiable: state1 },
+        { scope: 'component', identifiable: state2 },
       ]);
     });
   });

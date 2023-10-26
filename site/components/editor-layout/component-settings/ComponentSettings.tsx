@@ -35,15 +35,14 @@ export const ComponentSettings = observer(() => {
         collapsedOnInitial={false}
       >
         <PairInput
-          getVariablesForExpr={(i) =>
-            editor.reka.getVariablesAtNode(
+          getIdentifiablesForExpr={(i) =>
+            editor.reka.getIdentifiablesAtNode(
               component.props[i !== undefined ? i : component.props.length],
               {
                 before: {
                   index: i ?? 0,
                 },
-                filter: ({ variable }) =>
-                  t.is(variable, t.Val) || t.is(variable, t.ComponentProp),
+                filter: ({ identifiable }) => t.is(identifiable, t.Variable),
               }
             )
           }
@@ -95,14 +94,14 @@ export const ComponentSettings = observer(() => {
         collapsedOnInitial={false}
       >
         <PairInput
-          getVariablesForExpr={(i) =>
-            editor.reka.getVariablesAtNode(
+          getIdentifiablesForExpr={(i) =>
+            editor.reka.getIdentifiablesAtNode(
               component.state[i !== undefined ? i : component.state.length],
               {
                 before: {
                   index: i ?? 0,
                 },
-                filter: ({ variable }) => t.is(variable, t.Val),
+                filter: ({ identifiable }) => t.is(identifiable, t.Val),
               }
             )
           }

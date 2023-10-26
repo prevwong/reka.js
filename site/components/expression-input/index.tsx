@@ -1,4 +1,4 @@
-import { VariableWithScope } from '@rekajs/core';
+import { IdentifiableWithScope } from '@rekajs/core';
 import { Parser } from '@rekajs/parser';
 import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
@@ -16,7 +16,7 @@ type TextareaEditorProps = {
   className?: string;
   onClose: () => void;
   onCommit: (value: t.Expression) => void;
-  variables?: VariableWithScope[];
+  identifiables?: IdentifiableWithScope[];
 };
 
 const TextareaEditor = ({
@@ -24,7 +24,7 @@ const TextareaEditor = ({
   onCommit,
   initialValue,
   className,
-  variables,
+  identifiables,
   ...props
 }: TextareaEditorProps) => {
   const prevInitialValueRef = React.useRef(initialValue);
@@ -147,28 +147,28 @@ const TextareaEditor = ({
               info={`An expression is expected here. Eg: "Some text value" for text literals.`}
             />
           </div>
-          {variables && (
+          {identifiables && (
             <Dropdown
               title="Variables"
               onChange={(open) => {
                 isDropdownOpen.current = open;
               }}
               side="bottom"
-              items={variables.map(({ variable, scope }) => ({
+              items={identifiables.map(({ identifiable, scope }) => ({
                 title: (
                   <span>
                     {scope.level === 'external' ? '$' : ''}
-                    {variable.name}
+                    {identifiable.name}
                   </span>
                 ),
-                value: variable.id,
+                value: identifiable.id,
                 onSelect: () => {
                   const trimmed = value.trimEnd();
                   const lastChar = trimmed.charAt(trimmed.length - 1);
                   const addPlus = lastChar !== '+';
                   const addSpace = value[value.length - 1] == ' ';
 
-                  let name = variable.name;
+                  let name = identifiable.name;
 
                   if (scope.level === 'external') {
                     name = `$` + name;
@@ -218,7 +218,7 @@ type ExpressionInputProps = {
   className?: string;
   inputClassName?: string;
   textareaClassName?: string;
-  variables?: VariableWithScope[];
+  identifiables?: IdentifiableWithScope[];
 };
 
 export const ExpressionInput = observer(
@@ -231,7 +231,7 @@ export const ExpressionInput = observer(
     className,
     inputClassName,
     textareaClassName,
-    variables,
+    identifiables: variables,
   }: ExpressionInputProps) => {
     const [showTextareaEditor, setShowTextareaEditor] = React.useState(false);
 
@@ -265,7 +265,7 @@ export const ExpressionInput = observer(
             onClose={() => {
               setShowTextareaEditor(false);
             }}
-            variables={variables}
+            identifiables={variables}
           />
         )}
       </div>
