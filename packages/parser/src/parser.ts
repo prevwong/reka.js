@@ -143,23 +143,9 @@ const jsToReka = <T extends t.ASTNode = t.ASTNode>(
       case 'CallExpression': {
         const identifier = _convert(node.callee) as t.Identifier;
 
-        let params: Record<string, t.Expression> = {};
-
-        const arg0 = node.arguments[0];
-
-        if (arg0) {
-          const objExpr = _convert(arg0);
-          invariant(
-            objExpr instanceof t.ObjectExpression,
-            'Invalid options argument'
-          );
-
-          params = objExpr.properties;
-        }
-
         return t.callExpression({
           identifier,
-          params,
+          arguments: node.arguments.map((arg) => _convert(arg)),
         });
       }
       case 'IfStatement': {

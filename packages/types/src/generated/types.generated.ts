@@ -292,12 +292,12 @@ Schema.register('Func', Func);
 type CallExpressionParameters = {
   meta?: Record<string, any>;
   identifier: Identifier;
-  params?: Record<string, Expression>;
+  arguments?: Expression[];
 };
 
 export class CallExpression extends Expression {
   declare identifier: Identifier;
-  declare params: Record<string, Expression>;
+  declare arguments: Expression[];
   constructor(value: CallExpressionParameters) {
     super('CallExpression', value);
   }
