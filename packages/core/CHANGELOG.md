@@ -1,5 +1,17 @@
 # @rekajs/core
 
+## 0.1.20
+
+### Patch Changes
+
+- [#98](https://github.com/prevwong/reka.js/pull/98) [`06e2931`](https://github.com/prevwong/reka.js/commit/06e293134709607ab281fd32fdff981cf7418c49) Thanks [@prevwong](https://github.com/prevwong)! - Fix assignment op on member expressions
+
+- [#64](https://github.com/prevwong/reka.js/pull/64) [`ceca2c7`](https://github.com/prevwong/reka.js/commit/ceca2c7774c8c8127e0502178037b3fe209c56ee) Thanks [@prevwong](https://github.com/prevwong)! - Improve variables types subclassing
+
+- [#97](https://github.com/prevwong/reka.js/pull/97) [`6e72de6`](https://github.com/prevwong/reka.js/commit/6e72de6e516330a079f3334bc3e1e86eaa3cd55f) Thanks [@prevwong](https://github.com/prevwong)! - Fix call expression arguments definition
+
+- [#92](https://github.com/prevwong/reka.js/pull/92) [`6e9a337`](https://github.com/prevwong/reka.js/commit/6e9a337ef9bd95e25ccfae9fcb1756e512cdda9f) Thanks [@prevwong](https://github.com/prevwong)! - Support logical expressions
+
 ## 0.1.19
 
 ### Patch Changes
