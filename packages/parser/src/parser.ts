@@ -347,7 +347,8 @@ class _Parser extends Lexer {
     if (
       kindType === 'string' ||
       kindType === 'number' ||
-      kindType === 'boolean'
+      kindType === 'boolean' ||
+      kindType === 'any'
     ) {
       return t.primitiveKind({
         primitive: kindType,

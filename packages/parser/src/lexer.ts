@@ -287,6 +287,13 @@ export class Lexer {
         }
         break;
       }
+      case TokenType.COMMA: {
+        if (this.currentContext === tc_kind) {
+          this.state.popContext();
+        }
+
+        break;
+      }
       case TokenType.SEMICOLON: {
         if (this.currentContext === tc_kind) {
           this.state.popContext();
