@@ -64,7 +64,7 @@ const updateLocalValue = (
   let targetValue = baseValue;
 
   for (let i = 1; i < path.length - 1; i++) {
-    targetValue = baseValue[path[i]];
+    targetValue = targetValue[path[i]];
   }
 
   targetValue[path[path.length - 1]] = newValue;
