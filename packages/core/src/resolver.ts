@@ -199,8 +199,8 @@ export class Resolver {
     if (expr instanceof t.CallExpression) {
       this.resolveExpr(expr.identifier, scope);
 
-      Object.keys(expr.params).forEach((param) => {
-        this.resolveExpr(expr.params[param], scope);
+      expr.arguments.forEach((arg) => {
+        this.resolveExpr(arg, scope);
       });
     }
 

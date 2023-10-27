@@ -130,27 +130,13 @@ class _Stringifier {
         this.stringify(node.identifier);
         this.writer.write('(');
 
-        const paramKeys = Object.keys(node.params);
-
-        if (paramKeys.length > 0) {
-          this.writer.write('{');
-        }
-
-        paramKeys.forEach((param, i, arr) => {
-          this.writer.write(
-            `${param}: ${this.writer.withTemp(() =>
-              this.stringify(node.params[param])
-            )}`
-          );
+        node.arguments.forEach((arg, i, arr) => {
+          this.stringify(arg);
 
           if (i !== arr.length - 1) {
             this.writer.write(', ');
           }
         });
-
-        if (paramKeys.length > 0) {
-          this.writer.write('}');
-        }
 
         this.writer.write(')');
       },

@@ -158,7 +158,7 @@ Schema.define('CallExpression', {
   extends: 'Expression',
   fields: (t) => ({
     identifier: t.node('Identifier'),
-    params: t.defaultValue(t.map(t.node('Expression')), {}),
+    arguments: t.defaultValue(t.array(t.node('Expression')), []),
   }),
 });
 

@@ -260,15 +260,9 @@ export const computeExpression = (
   if (expr instanceof t.CallExpression) {
     const fn = env.getByIdentifier(expr.identifier);
 
-    const params = Object.keys(expr.params).reduce(
-      (accum, key) => ({
-        ...accum,
-        [key]: computeExpression(expr.params[key], reka, env),
-      }),
-      {}
-    );
+    const args = expr.arguments.map((arg) => computeExpression(arg, reka, env));
 
-    return fn(params);
+    return fn(...args);
   }
 
   if (expr instanceof t.IfStatement) {
