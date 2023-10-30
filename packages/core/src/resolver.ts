@@ -214,6 +214,10 @@ export class Resolver {
       this.resolveExpr(expr.consequent, scope);
       this.resolveExpr(expr.alternate, scope);
     }
+
+    if (expr instanceof t.Val) {
+      this.resolveVariable(expr, scope);
+    }
   }
 
   private resolveComponent(component: t.Component, scope: Scope) {
@@ -339,7 +343,7 @@ export class Resolver {
     this.bindNodeToScope(program, this.scope);
 
     program.globals.forEach((global) => {
-      this.resolveVariable(global, this.scope);
+      this.resolveExpr(global, this.scope);
     });
 
     program.components.forEach((component) => {
