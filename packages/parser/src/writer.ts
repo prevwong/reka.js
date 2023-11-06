@@ -44,7 +44,7 @@ export class Writer {
       }
 
       arr[i - 1] += current;
-      arr.length--;
+      arr.splice(i, 1);
     }
 
     return arr;
@@ -131,6 +131,10 @@ export class Writer {
     const _toString = (arr: WriterResult) => {
       for (let i = 0; i < arr.length; i++) {
         const c = arr[i];
+
+        if (c.length === 0) {
+          continue;
+        }
 
         if (Array.isArray(c)) {
           const prev = depth;
