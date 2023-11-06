@@ -305,6 +305,22 @@ export class CallExpression extends Expression {
 
 Schema.register('CallExpression', CallExpression);
 
+type UnaryExpressionParameters = {
+  meta?: Record<string, any>;
+  operator: '-' | '+';
+  argument: Expression;
+};
+
+export class UnaryExpression extends Expression {
+  declare operator: '-' | '+';
+  declare argument: Expression;
+  constructor(value: UnaryExpressionParameters) {
+    super('UnaryExpression', value);
+  }
+}
+
+Schema.register('UnaryExpression', UnaryExpression);
+
 type ConditionalExpressionParameters = {
   meta?: Record<string, any>;
   condition: Expression;
@@ -815,6 +831,7 @@ export type Any =
   | Block
   | Func
   | CallExpression
+  | UnaryExpression
   | ConditionalExpression
   | IfStatement
   | Assignment
@@ -864,6 +881,7 @@ export type Visitor = {
   Block: (node: Block) => any;
   Func: (node: Func) => any;
   CallExpression: (node: CallExpression) => any;
+  UnaryExpression: (node: UnaryExpression) => any;
   ConditionalExpression: (node: ConditionalExpression) => any;
   IfStatement: (node: IfStatement) => any;
   Assignment: (node: Assignment) => any;

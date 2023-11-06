@@ -162,6 +162,14 @@ Schema.define('CallExpression', {
   }),
 });
 
+Schema.define('UnaryExpression', {
+  extends: 'Expression',
+  fields: (t) => ({
+    operator: t.union(t.enumeration('-', '+')),
+    argument: t.node('Expression'),
+  }),
+});
+
 Schema.define('ConditionalExpression', {
   extends: 'Expression',
   fields: (t) => ({

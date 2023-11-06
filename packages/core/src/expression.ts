@@ -265,6 +265,16 @@ export const computeExpression = (
     return fn(...args);
   }
 
+  if (expr instanceof t.UnaryExpression) {
+    const value = computeExpression(expr.argument, reka, env);
+
+    if (expr.operator === '-') {
+      return -value;
+    }
+
+    throw new Error(`Unknown unary operator: ${expr.operator}`);
+  }
+
   if (expr instanceof t.IfStatement) {
     const bool = computeExpression(expr.condition, reka, env, ctx);
 

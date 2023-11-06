@@ -34,6 +34,9 @@ export const func = (...args: ConstructorParameters<typeof t.Func>) =>
 export const callExpression = (
   ...args: ConstructorParameters<typeof t.CallExpression>
 ) => new t.CallExpression(...args);
+export const unaryExpression = (
+  ...args: ConstructorParameters<typeof t.UnaryExpression>
+) => new t.UnaryExpression(...args);
 export const conditionalExpression = (
   ...args: ConstructorParameters<typeof t.ConditionalExpression>
 ) => new t.ConditionalExpression(...args);

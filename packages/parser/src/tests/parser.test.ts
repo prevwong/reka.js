@@ -203,4 +203,13 @@ describe('Parser', () => {
       ],
     });
   });
+  it('should be able to parse negative values', () => {
+    expect(Parser.parseExpression('-1')).toMatchObject({
+      operator: '-',
+      argument: {
+        type: 'Literal',
+        value: 1,
+      },
+    });
+  });
 });
