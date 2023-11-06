@@ -214,4 +214,20 @@ describe('Stringifier', () => {
       )
     ).toEqual(`left + (isRequired ? "*" : "")`);
   });
+  it('should be able to stringify nested objects correctly', () => {
+    expect(
+      Stringifier.toString(
+        t.assignment({
+          left: t.identifier({ name: 'obj' }),
+          operator: '=',
+          right: t.objectExpression({
+            properties: {
+              foo: t.literal({ value: 1 }),
+              bar: t.literal({ value: 0 }),
+            },
+          }),
+        })
+      )
+    ).toEqual(`obj = {\n "foo": 1,\n "bar": 0\n}`);
+  });
 });
