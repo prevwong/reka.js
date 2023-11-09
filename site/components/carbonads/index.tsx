@@ -15,6 +15,10 @@ export const Carbonads = (props: CarbonadsProps) => {
       return;
     }
 
+    if (!!dom.innerHTML) {
+      return;
+    }
+
     const script = document.createElement('script');
     script.setAttribute('type', 'text/javascript');
     script.setAttribute('async', 'true');
@@ -26,15 +30,6 @@ export const Carbonads = (props: CarbonadsProps) => {
     script.setAttribute('id', '_carbonads_js');
 
     dom.appendChild(script);
-
-    return () => {
-      const ad = dom.querySelector('#carbonads');
-      if (ad) {
-        dom.removeChild(ad);
-      }
-
-      dom.removeChild(script);
-    };
   }, []);
 
   return (
