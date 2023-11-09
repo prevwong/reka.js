@@ -1,5 +1,15 @@
 # @rekajs/core
 
+## 0.1.21
+
+### Patch Changes
+
+- [#107](https://github.com/prevwong/reka.js/pull/107) [`6157637`](https://github.com/prevwong/reka.js/commit/6157637bef2addd34c330989e76d4bf432ad5d01) Thanks [@prevwong](https://github.com/prevwong)! - Fix params in function AST nodes
+
+- [#100](https://github.com/prevwong/reka.js/pull/100) [`5d934d0`](https://github.com/prevwong/reka.js/commit/5d934d07a9408f7ff7c47a24e96b6863a69540f6) Thanks [@prevwong](https://github.com/prevwong)! - Fix resolve variables inside function statements
+
+- [#106](https://github.com/prevwong/reka.js/pull/106) [`377b50e`](https://github.com/prevwong/reka.js/commit/377b50ec65328cbf429a3fdc640a1c296ee77f8d) Thanks [@prevwong](https://github.com/prevwong)! - Support unary expressions
+
 ## 0.1.20
 
 ### Patch Changes

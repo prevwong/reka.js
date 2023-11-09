@@ -1,5 +1,15 @@
 # @rekajs/parser
 
+## 0.1.12
+
+### Patch Changes
+
+- [#107](https://github.com/prevwong/reka.js/pull/107) [`6157637`](https://github.com/prevwong/reka.js/commit/6157637bef2addd34c330989e76d4bf432ad5d01) Thanks [@prevwong](https://github.com/prevwong)! - Fix params in function AST nodes
+
+- [#106](https://github.com/prevwong/reka.js/pull/106) [`377b50e`](https://github.com/prevwong/reka.js/commit/377b50ec65328cbf429a3fdc640a1c296ee77f8d) Thanks [@prevwong](https://github.com/prevwong)! - Support unary expressions
+
+- [#105](https://github.com/prevwong/reka.js/pull/105) [`0792582`](https://github.com/prevwong/reka.js/commit/0792582472fc3585c5c9abb5ba9246055b734aac) Thanks [@prevwong](https://github.com/prevwong)! - Fix stringify obj expressions
+
 ## 0.1.11
 
 ### Patch Changes

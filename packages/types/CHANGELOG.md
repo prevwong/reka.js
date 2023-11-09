@@ -1,5 +1,13 @@
 # @rekajs/types
 
+## 0.1.15
+
+### Patch Changes
+
+- [#107](https://github.com/prevwong/reka.js/pull/107) [`6157637`](https://github.com/prevwong/reka.js/commit/6157637bef2addd34c330989e76d4bf432ad5d01) Thanks [@prevwong](https://github.com/prevwong)! - Fix params in function AST nodes
+
+- [#106](https://github.com/prevwong/reka.js/pull/106) [`377b50e`](https://github.com/prevwong/reka.js/commit/377b50ec65328cbf429a3fdc640a1c296ee77f8d) Thanks [@prevwong](https://github.com/prevwong)! - Support unary expressions
+
 ## 0.1.14
 
 ### Patch Changes
