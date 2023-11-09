@@ -145,11 +145,15 @@ Schema.define('Block', {
   }),
 });
 
+Schema.define('Param', {
+  extends: 'Identifiable',
+});
+
 Schema.define('Func', {
   extends: 'Expression',
   fields: (t) => ({
     name: t.defaultValue(t.union(t.string, t.nullish), null),
-    params: t.array(t.node('Identifier')),
+    params: t.array(t.node('Param')),
     body: t.node('Block'),
   }),
 });

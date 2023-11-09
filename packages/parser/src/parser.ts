@@ -113,7 +113,13 @@ const jsToReka = <T extends t.ASTNode = t.ASTNode>(
       }
       case 'ArrowFunctionExpression': {
         return t.func({
-          params: node.params.map((p) => _convert(p)),
+          params: node.params.map((p) => {
+            b.assertIdentifier(p);
+
+            return t.param({
+              name: p.name,
+            });
+          }),
           body: _convert(node.body as b.BlockStatement),
         });
       }

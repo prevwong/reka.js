@@ -190,7 +190,7 @@ export class Resolver {
       const funcScope = scope.inherit(expr);
 
       expr.params.forEach((param) => {
-        this.resolveExpr(param, funcScope);
+        funcScope.defineIdentifiable(param);
       });
 
       this.resolveExpr(expr.body, funcScope);

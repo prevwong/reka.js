@@ -271,16 +271,29 @@ export class Block extends Expression {
 
 Schema.register('Block', Block);
 
+type ParamParameters = {
+  meta?: Record<string, any>;
+  name: string;
+};
+
+export class Param extends Identifiable {
+  constructor(value: ParamParameters) {
+    super('Param', value);
+  }
+}
+
+Schema.register('Param', Param);
+
 type FuncParameters = {
   meta?: Record<string, any>;
   name?: string | null;
-  params: Identifier[];
+  params: Param[];
   body: Block;
 };
 
 export class Func extends Expression {
   declare name: string | null;
-  declare params: Identifier[];
+  declare params: Param[];
   declare body: Block;
   constructor(value: FuncParameters) {
     super('Func', value);
@@ -829,6 +842,7 @@ export type Any =
   | BinaryExpression
   | ObjectExpression
   | Block
+  | Param
   | Func
   | CallExpression
   | UnaryExpression
@@ -879,6 +893,7 @@ export type Visitor = {
   BinaryExpression: (node: BinaryExpression) => any;
   ObjectExpression: (node: ObjectExpression) => any;
   Block: (node: Block) => any;
+  Param: (node: Param) => any;
   Func: (node: Func) => any;
   CallExpression: (node: CallExpression) => any;
   UnaryExpression: (node: UnaryExpression) => any;
