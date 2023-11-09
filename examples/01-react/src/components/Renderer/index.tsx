@@ -16,9 +16,11 @@ export const Renderer = observer((props: RendererProps) => {
     return React.createElement(
       props.view.tag,
       props.view.props,
-      props.view.children.map((child) => (
-        <Renderer key={child.id} view={child} />
-      ))
+      props.view.children.length > 0
+        ? props.view.children.map((child) => (
+            <Renderer key={child.id} view={child} />
+          ))
+        : null
     );
   }
 
