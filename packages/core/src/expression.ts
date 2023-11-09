@@ -235,7 +235,7 @@ export const computeExpression = (
       const blockEnv = env.inherit();
 
       expr.params.forEach((param, i) => {
-        env.set(param.name, { value: args[i], readonly: true });
+        blockEnv.set(param.name, { value: args[i], readonly: true });
       });
 
       let returnValue: any;

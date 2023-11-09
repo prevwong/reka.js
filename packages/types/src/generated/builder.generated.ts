@@ -29,6 +29,8 @@ export const objectExpression = (
 ) => new t.ObjectExpression(...args);
 export const block = (...args: ConstructorParameters<typeof t.Block>) =>
   new t.Block(...args);
+export const param = (...args: ConstructorParameters<typeof t.Param>) =>
+  new t.Param(...args);
 export const func = (...args: ConstructorParameters<typeof t.Func>) =>
   new t.Func(...args);
 export const callExpression = (

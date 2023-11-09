@@ -217,7 +217,10 @@ class _Stringifier {
         });
         this.writer.write('}');
       },
-      ComponentProp: (node) => {
+      Param: (node) => {
+        this.writer.write(node.name);
+      },
+      Variable: (node) => {
         this.writer.write(node.name);
 
         if (node.kind) {
