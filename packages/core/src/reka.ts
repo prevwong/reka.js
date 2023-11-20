@@ -7,6 +7,7 @@ import {
   makeObservable,
   observable,
   reaction,
+  runInAction,
 } from 'mobx';
 import { computedFn } from 'mobx-utils';
 
@@ -175,14 +176,16 @@ export class Reka {
    * Perform a mutation to the State
    */
   change(mutator: () => void) {
-    this.observer.change(mutator);
+    return runInAction(() => {
+      this.observer.change(mutator);
 
-    // Don't sync yet when we're still setting up (ie: creating the Extensions registry)
-    if (this.init) {
-      return;
-    }
+      // Don't sync yet when we're still setting up (ie: creating the Extensions registry)
+      if (this.init) {
+        return;
+      }
 
-    return this.sync();
+      return this.sync();
+    });
   }
 
   /**

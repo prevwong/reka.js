@@ -222,6 +222,16 @@ export const computeExpression = (
     });
   }
 
+  if (expr instanceof t.PropBinding) {
+    return (value: any) => {
+      reka.change(() => {
+        updateLocalValue(expr.identifier, reka, env, ctx, () => {
+          return value;
+        });
+      });
+    };
+  }
+
   if (expr instanceof t.Block) {
     expr.statements.forEach((statement) => {
       computeExpression(statement, reka, env);

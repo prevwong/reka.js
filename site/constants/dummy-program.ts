@@ -265,4 +265,21 @@ component Card(name,description,image="/images/placeholder.jpeg") => (
   </div>
  </div>
 )
+
+component Input(text="", className="") {
+    val str = "Wassup";
+} => (
+    <div>
+        <text value={"yoooo: " + text + " " + str} />
+        <br />
+        <Yomo @classList={{ "bg-red-100": true }} value:={str}  />
+    </div>
+)
+
+component Yomo(value, className) => (
+    <div className={"mt-8 p-5 bg-gray-100 " + className}>
+        <text value={value} />
+        <input className="w-full mt-6" type="text" value:={value} /> 
+    </div>
+)
 `);

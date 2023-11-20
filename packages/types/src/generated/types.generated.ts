@@ -464,6 +464,20 @@ export class ExternalComponent extends Component {
 
 Schema.register('ExternalComponent', ExternalComponent);
 
+type PropBindingParameters = {
+  meta?: Record<string, any>;
+  identifier: Identifier;
+};
+
+export class PropBinding extends Expression {
+  declare identifier: Identifier;
+  constructor(value: PropBindingParameters) {
+    super('PropBinding', value);
+  }
+}
+
+Schema.register('PropBinding', PropBinding);
+
 type TemplateParameters = {
   meta?: Record<string, any>;
   props?: Record<string, Expression>;
@@ -644,11 +658,13 @@ type TagViewParameters = {
   children?: View[];
   tag: string;
   props: Record<string, any>;
+  bindings: Record<string, Function>;
 };
 
 export class TagView extends SlottableView {
   declare tag: string;
   declare props: Record<string, any>;
+  declare bindings: Record<string, Function>;
   constructor(value: TagViewParameters) {
     super('TagView', value);
   }
@@ -854,6 +870,7 @@ export type Any =
   | Component
   | RekaComponent
   | ExternalComponent
+  | PropBinding
   | Template
   | SlottableTemplate
   | TagTemplate
@@ -905,6 +922,7 @@ export type Visitor = {
   Component: (node: Component) => any;
   RekaComponent: (node: RekaComponent) => any;
   ExternalComponent: (node: ExternalComponent) => any;
+  PropBinding: (node: PropBinding) => any;
   Template: (node: Template) => any;
   SlottableTemplate: (node: SlottableTemplate) => any;
   TagTemplate: (node: TagTemplate) => any;

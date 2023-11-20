@@ -82,10 +82,25 @@ const RenderTagView = observer((props: RenderTagViewProps) => {
     );
   }
 
+  let elProps = { ...props.view.props };
+
+  Object.entries(props.view.bindings).forEach(([name, updater]) => {
+    if (name === 'value' && props.view.tag === 'input') {
+      elProps = {
+        ...elProps,
+        onChange: (e: InputEvent) => {
+          // @ts-ignore
+          // @ts-ignore
+          updater(e.target.value);
+        },
+      };
+    }
+  });
+
   return React.createElement(
     props.view.tag,
     {
-      ...props.view.props,
+      ...elProps,
       style,
       ref: domRef,
     },

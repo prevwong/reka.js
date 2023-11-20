@@ -281,6 +281,9 @@ class _Stringifier {
         });
         this.writer.write(')');
       },
+      PropBinding: (node) => {
+        this.stringify(node.identifier);
+      },
       Template: (node) => {
         const tag =
           node instanceof t.ComponentTemplate
@@ -308,8 +311,13 @@ class _Stringifier {
           props.push(
             this.writer.withTemp(() => {
               propKeys.forEach((prop, i, arr) => {
-                this.writer.write(`${prop}={`);
-                this.stringify(node.props[prop]);
+                const valueExpr = node.props[prop];
+                this.writer.write(`${prop}`);
+                if (t.is(valueExpr, t.PropBinding)) {
+                  this.writer.write(':');
+                }
+                this.writer.write(`={`);
+                this.stringify(valueExpr);
                 this.writer.write('}');
                 if (i !== arr.length - 1) {
                   this.writer.write('\n');
