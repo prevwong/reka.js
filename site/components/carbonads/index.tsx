@@ -15,7 +15,7 @@ export const Carbonads = (props: CarbonadsProps) => {
       return;
     }
 
-    if (!!dom.innerHTML) {
+    if (dom.innerHTML) {
       return;
     }
 
