@@ -11,6 +11,7 @@ import {
 } from 'mobx';
 
 import { ComponentViewEvaluator } from './component';
+import { DisposableComputation } from './computation';
 import { EachDirectiveEvaluator } from './each';
 import { Environment } from './environment';
 import { computeExpression } from './expression';
@@ -42,6 +43,7 @@ export class Evaluator {
   private viewObserver: Observer | undefined;
   private rootTemplate: t.ComponentTemplate;
   private rootTemplateObserver: Observer;
+  private declare rootTemplateComputation: DisposableComputation<t.View[]>;
 
   private tplToView: WeakMap<t.Template, t.View[]> = new WeakMap();
   private tplKeyToClassListComputationCache: Map<string, IComputedValue<void>> =
@@ -508,18 +510,34 @@ export class Evaluator {
     return computeExpression(expr, this.reka, env);
   }
 
+  computeRootTemplate() {
+    if (this.rootTemplateComputation) {
+      return this.rootTemplateComputation.get();
+    }
+
+    this.rootTemplateComputation = new DisposableComputation(
+      () =>
+        this.computeTemplate(this.rootTemplate, {
+          path: ['frame'],
+          env: this.reka.head.env,
+          owner: null,
+          componentStack: [],
+        }),
+      {
+        keepAlive: true,
+      }
+    );
+
+    return this.rootTemplateComputation.get();
+  }
+
   computeView() {
     if (!this.reka.loaded) {
       return;
     }
 
     const _compute = () => {
-      const views = this.computeTemplate(this.rootTemplate, {
-        path: ['frame'],
-        env: this.reka.head.env,
-        owner: null,
-        componentStack: [],
-      });
+      const views = this.computeRootTemplate();
 
       return t.assert(views[0], t.RekaComponentView);
     };
@@ -541,6 +559,10 @@ export class Evaluator {
   dispose() {
     if (this.viewObserver) {
       this.viewObserver.dispose();
+    }
+
+    if (this.rootTemplateComputation) {
+      this.rootTemplateComputation.dispose();
     }
 
     this.rootTemplateObserver.dispose();
