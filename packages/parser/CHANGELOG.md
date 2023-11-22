@@ -1,5 +1,14 @@
 # @rekajs/parser
 
+## 0.1.13
+
+### Patch Changes
+
+- [#111](https://github.com/prevwong/reka.js/pull/111) [`b54562e`](https://github.com/prevwong/reka.js/commit/b54562e0e6a5737a04ca907dad36ce65048cc568) Thanks [@prevwong](https://github.com/prevwong)! - Enable component prop bindings
+
+- Updated dependencies [[`c9cd8b5`](https://github.com/prevwong/reka.js/commit/c9cd8b5ce64922e91a85e001fa62305e964ec5d6)]:
+  - @rekajs/utils@0.1.3
+
 ## 0.1.12
 
 ### Patch Changes
