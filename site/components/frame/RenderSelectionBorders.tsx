@@ -186,7 +186,7 @@ const SelectionBorder = observer((props: SelectionBorderProps) => {
                         return;
                       }
 
-                      editor.setActiveComponentEditor(component);
+                      editor.router.push(`/?component=${component.name}`);
                     }}
                   >
                     <Pencil1Icon />

@@ -26,6 +26,10 @@ const AppEditor = () => {
   routerRef.current = router;
 
   React.useEffect(() => {
+    if (!router.isReady) {
+      return;
+    }
+
     const editor = new Editor(routerRef.current);
 
     (window as any).state = editor.reka;
@@ -36,7 +40,7 @@ const AppEditor = () => {
       setEditor(null);
       editor.dispose();
     };
-  }, [setEditor]);
+  }, [setEditor, router.isReady]);
 
   React.useEffect(() => {
     if (!editor) {

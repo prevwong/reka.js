@@ -64,6 +64,7 @@ export class Editor {
   private declare provider: WebrtcProvider;
   private declare windowResizeHandler: () => void;
   private iframeEventHandlers: IframEventListeners = [];
+  private declare disposeHandleRouteChange: () => void;
 
   constructor(readonly router: NextRouter) {
     this.activeFrame = null;
@@ -124,6 +125,12 @@ export class Editor {
             }),
             t.externalComponent({
               name: 'Icon',
+              props: [
+                t.componentProp({
+                  name: 'name',
+                  kind: t.primitiveKind({ primitive: 'string' }),
+                }),
+              ],
               render: (props: { name: string }) => {
                 return <UserIcon name={props.name} />;
               },
@@ -168,8 +175,19 @@ export class Editor {
     );
 
     if (this.reka.program.components.length > 0) {
-      this.setActiveComponentEditor(this.reka.program.components[0]);
+      let component = this.reka.program.components[0];
+
+      if (router.query.component) {
+        component =
+          this.reka.program.components.find(
+            (component) => component.name === router.query.component
+          ) || component;
+      }
+
+      this.setActiveComponentEditor(component);
     }
+
+    this.setupComponentRouteListener();
 
     if (typeof window === 'undefined') {
       return;
@@ -206,6 +224,37 @@ export class Editor {
     this.listenAwareness();
   }
 
+  private setupComponentRouteListener() {
+    const handleRouteChange = (path: string) => {
+      const matchedPattern = path.match(/\/?component=(\w+)/);
+
+      if (!matchedPattern) {
+        this.setActiveComponentEditor(this.reka.program.components[0]);
+        return;
+      }
+
+      const name = matchedPattern[1];
+
+      const matchingComponent = this.reka.program.components.find(
+        (component) => component.name === name
+      );
+
+      if (!matchingComponent) {
+        this.router.replace('/');
+        this.setActiveComponentEditor(this.reka.program.components[0]);
+        return;
+      }
+
+      this.setActiveComponentEditor(matchingComponent);
+    };
+
+    this.router.events.on('routeChangeComplete', handleRouteChange);
+
+    this.disposeHandleRouteChange = () => {
+      this.router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }
+
   showCompactSidebar(bool: boolean) {
     this.compactSidebarVisible = bool;
   }
@@ -215,6 +264,10 @@ export class Editor {
   }
 
   dispose() {
+    if (this.disposeHandleRouteChange) {
+      this.disposeHandleRouteChange();
+    }
+
     this.reka.dispose();
 
     if (typeof window === 'undefined') {
@@ -358,6 +411,19 @@ export class Editor {
     }
 
     return event;
+  }
+
+  setActiveComponentEditorByName(name: string) {
+    const component = this.reka.program.components.find(
+      (component) => component.name === name
+    );
+
+    if (!component) {
+      return false;
+    }
+
+    this.setActiveComponentEditor(component);
+    return true;
   }
 
   setActiveComponentEditor(component: t.Component) {

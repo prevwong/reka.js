@@ -134,7 +134,10 @@ export const EditorLayout = observer(
                         return (
                           <ComponentList
                             onComponentSelected={(component) => {
-                              editor.setActiveComponentEditor(component);
+                              editor.router.push(
+                                `/?component=${component.name}`
+                              );
+                              // editor.setActiveComponentEditor(component);
                               cb.goTo('component-editor');
                             }}
                           />
