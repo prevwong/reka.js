@@ -1,5 +1,14 @@
 # @rekajs/react-code-editor
 
+## 0.1.6
+
+### Patch Changes
+
+- [`c9cd8b5`](https://github.com/prevwong/reka.js/commit/c9cd8b5ce64922e91a85e001fa62305e964ec5d6) Thanks [@prevwong](https://github.com/prevwong)! - Remove lodash dep
+
+- Updated dependencies [[`c9cd8b5`](https://github.com/prevwong/reka.js/commit/c9cd8b5ce64922e91a85e001fa62305e964ec5d6)]:
+  - @rekajs/utils@0.1.3
+
 ## 0.1.5
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@rekajs/types",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "Create and manage Reka data types",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.mjs",
@@ -16,7 +16,7 @@
   "author": "Prev Wong",
   "license": "MIT",
   "dependencies": {
-    "@rekajs/utils": "^0.1.2"
+    "@rekajs/utils": "^0.1.3"
   },
   "repository": {
     "type": "git",
