@@ -212,4 +212,16 @@ describe('Parser', () => {
       },
     });
   });
+  it('should be able to parse directives', () => {
+    const parsed = Parser.parseProgram(`component Test(value) => (
+      <input type="text" value:={value} />
+    )`);
+
+    expect(parsed.components[0].template.props['value']).toMatchObject({
+      identifier: {
+        type: 'Identifier',
+        name: 'value',
+      },
+    });
+  });
 });

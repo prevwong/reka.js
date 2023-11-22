@@ -1,13 +1,19 @@
-import { Cross2Icon } from '@radix-ui/react-icons';
+import {
+  ChevronDownIcon,
+  Cross2Icon,
+  Link1Icon,
+  LinkBreak2Icon,
+} from '@radix-ui/react-icons';
 import { IdentifiableWithScope } from '@rekajs/core';
 import * as t from '@rekajs/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { IconButton } from '../button';
+import { Button, IconButton } from '../button';
 import { ExpressionInput } from '../expression-input';
 import { TextField } from '../text-field';
 import { Tooltip } from '../tooltip';
+import { Dropdown } from '../dropdown';
 
 type PairInputFieldProps = {
   id: string;
@@ -15,6 +21,7 @@ type PairInputFieldProps = {
   value: t.Expression | null;
   disableEditId?: boolean;
   disableEditValue?: boolean;
+  allowPropBinding?: boolean;
   onRemove?: () => void;
   onChange?: (id: string, value: t.Expression, clear: () => void) => void;
   idPlaceholder?: string;
@@ -32,6 +39,7 @@ type PairInputProps = {
   idPlaceholder?: string;
   valuePlaceholder?: string;
   onChange?: (id: string, value: t.Expression, type: 'update' | 'new') => void;
+  allowPropBinding?: boolean;
   onRemove?: (id: string, value: t.Expression | null) => void;
   onCancelAdding?: () => void;
   addingNewField?: boolean;
@@ -41,6 +49,7 @@ type PairInputProps = {
 
 type AddNewPairInputFieldProps = {
   onAdd: (id: string, value: t.Expression) => void;
+  allowPropBinding?: boolean;
   onCancel: () => void;
   idPlaceholder?: string;
   valuePlaceholder?: string;
@@ -80,6 +89,7 @@ const AddNewPairInputField = (props: AddNewPairInputFieldProps) => {
       ref={domRef}
       id={''}
       value={null}
+      allowPropBinding={props.allowPropBinding}
       onRemove={() => {
         props.onCancel();
       }}
@@ -105,6 +115,7 @@ const PairInputField = observer(
         disableEditId,
         disableEditValue,
         onRemove,
+        allowPropBinding,
         onChange,
         idPlaceholder,
         valuePlaceholder,
@@ -114,6 +125,9 @@ const PairInputField = observer(
     ) => {
       const [newId, setNewId] = React.useState(id);
       const [newValue, setNewValue] = React.useState(value);
+      const [isPropBinding, setIsPropBinding] = React.useState(
+        t.is(value, t.PropBinding)
+      );
 
       const clear = React.useCallback(() => {
         setNewId('');
@@ -160,24 +174,114 @@ const PairInputField = observer(
             />
           </Tooltip>
 
-          <div className="w-full grid grid-cols-[1fr_auto] relative">
-            <ExpressionInput
-              className="static"
-              textareaClassName="w-[calc(100%+2px)]"
-              inputClassName="rounded-none border-none"
-              value={newValue}
-              placeholder={valuePlaceholder}
-              onCommit={(value) => {
-                if (!onChange) {
-                  return;
-                }
+          <div className="w-full grid grid-cols-[1fr_auto_auto] items-center relative">
+            {!isPropBinding && (
+              <ExpressionInput
+                className="static"
+                textareaClassName="w-[calc(100%+2px)]"
+                inputClassName="rounded-none border-none"
+                value={newValue}
+                placeholder={valuePlaceholder}
+                onCommit={(value) => {
+                  if (!onChange) {
+                    return;
+                  }
 
-                setNewValue(value);
-                onChange(newId, value, clear);
-              }}
-              disable={disableEditValue}
-              identifiables={variables ? variables(index) : undefined}
-            />
+                  setNewValue(value);
+                  onChange(newId, value, clear);
+                }}
+                disable={disableEditValue}
+                identifiables={variables ? variables(index) : undefined}
+              />
+            )}
+            {isPropBinding && (
+              <div className="w-full px-1 p-0.5 flex items-center">
+                <Dropdown
+                  items={
+                    variables
+                      ? variables(index)
+                          .filter(({ scope }) => scope.level !== 'external')
+                          .map(({ identifiable }) => ({
+                            title: <span>{identifiable.name}</span>,
+                            value: identifiable.id,
+                            onSelect: () => {
+                              onChange?.(
+                                id,
+                                t.propBinding({
+                                  identifier: t.identifier({
+                                    name: identifiable.name,
+                                  }),
+                                }),
+                                clear
+                              );
+                            },
+                          }))
+                      : []
+                  }
+                >
+                  <Button
+                    className="text-xs py-0.5 flex gap-1"
+                    variant="secondary"
+                    size="xxs"
+                  >
+                    {t.is(value, t.PropBinding)
+                      ? value.identifier.name
+                      : 'Select Variable'}
+                    <ChevronDownIcon />
+                  </Button>
+                </Dropdown>
+              </div>
+            )}
+
+            {!isPropBinding && allowPropBinding && (
+              <Tooltip content="Bind prop to variable">
+                <IconButton
+                  className="opacity-0 m-0 group-hover:opacity-100"
+                  onClick={() => {
+                    setIsPropBinding(true);
+                    if (!onChange) {
+                      return;
+                    }
+
+                    if (t.is(value, t.Identifier) && !value.external) {
+                      onChange(
+                        id,
+                        t.propBinding({
+                          identifier: t.identifier({
+                            name: value.name,
+                          }),
+                        }),
+                        clear
+                      );
+                    }
+                  }}
+                >
+                  <Link1Icon />
+                </IconButton>
+              </Tooltip>
+            )}
+            {isPropBinding && (
+              <IconButton
+                className="opacity-0 m-0 group-hover:opacity-100"
+                onClick={() => {
+                  setIsPropBinding(false);
+                  if (!onChange) {
+                    return;
+                  }
+
+                  if (t.is(value, t.PropBinding)) {
+                    onChange(
+                      id,
+                      t.identifier({ name: value.identifier.name }),
+                      clear
+                    );
+                    return;
+                  }
+                }}
+              >
+                <LinkBreak2Icon />
+              </IconButton>
+            )}
             <IconButton
               className="opacity-0 m-0 group-hover:opacity-100"
               onClick={() => {
@@ -203,6 +307,7 @@ export const PairInput = (props: PairInputProps) => {
       {props.values.map(({ id, value }, i) => {
         return (
           <PairInputField
+            {...props}
             disableEditId
             key={id}
             id={id}
@@ -228,6 +333,8 @@ export const PairInput = (props: PairInputProps) => {
       )}
       {props.addingNewField && (
         <AddNewPairInputField
+          {...props}
+          allowPropBinding={props.allowPropBinding}
           onAdd={(id, value) => {
             props.onChange?.(id, value, 'new');
             props.onCancelAdding?.();

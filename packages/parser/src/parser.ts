@@ -527,19 +527,29 @@ class _Parser extends Lexer {
     ) {
       if (this.check(TokenType.ELEMENT_PROPERTY)) {
         const propName = this.consume(TokenType.ELEMENT_PROPERTY).value;
-        this.consume(TokenType.EQ);
 
-        let propValue;
-        if (this.check(TokenType.STRING)) {
-          const token = this.consume(TokenType.STRING);
-          propValue = t.literal({
-            value: token.value,
+        // Binding prop
+        if (this.match(TokenType.COLON)) {
+          this.consume(TokenType.EQ);
+
+          props[propName] = t.propBinding({
+            identifier: t.assert(this.parseElementExpr(), t.Identifier),
           });
         } else {
-          propValue = this.parseElementExpr();
-        }
+          this.consume(TokenType.EQ);
 
-        props[propName] = propValue;
+          let propValue;
+          if (this.check(TokenType.STRING)) {
+            const token = this.consume(TokenType.STRING);
+            propValue = t.literal({
+              value: token.value,
+            });
+          } else {
+            propValue = this.parseElementExpr();
+          }
+
+          props[propName] = propValue;
+        }
       } else {
         const directive = this.consume(TokenType.ELEMENT_DIRECTIVE).value;
         this.consume(TokenType.EQ);

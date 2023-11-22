@@ -234,6 +234,13 @@ Schema.define('ExternalComponent', {
   }),
 });
 
+Schema.define('PropBinding', {
+  extends: 'Expression',
+  fields: (t) => ({
+    identifier: t.node('Identifier'),
+  }),
+});
+
 Schema.define('Template', {
   extends: 'Expression',
   abstract: true,
@@ -316,6 +323,7 @@ Schema.define('TagView', {
   fields: (t) => ({
     tag: t.string,
     props: t.map(t.any),
+    bindings: t.map(t.func),
   }),
 });
 

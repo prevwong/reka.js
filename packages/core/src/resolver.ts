@@ -186,6 +186,10 @@ export class Resolver {
       });
     }
 
+    if (expr instanceof t.PropBinding) {
+      this.resolveExpr(expr.identifier, scope);
+    }
+
     if (expr instanceof t.Func) {
       const funcScope = scope.inherit(expr);
 

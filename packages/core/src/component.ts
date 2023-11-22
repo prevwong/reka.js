@@ -20,6 +20,7 @@ export class ComponentViewEvaluator {
 
   private declare rekaComponentRootComputation: DisposableComputation<t.View> | null;
   private declare rekaComponentPropsComputation: IComputedValue<void> | null;
+  private declare rekaComponentPropsBindingComputation: IComputedValue<void> | null;
   private declare rekaComponentStateComputation: IComputedValue<void> | null;
 
   private readonly evaluator: Evaluator;
@@ -116,27 +117,29 @@ export class ComponentViewEvaluator {
                   });
 
                   component.props.forEach((prop) => {
-                    const getPropValue = () => {
-                      let propValue: any;
+                    let propValue: any;
 
-                      if (this.template.props[prop.name]) {
-                        propValue = this.evaluator.computeExpr(
-                          this.template.props[prop.name],
-                          this.ctx.env
-                        );
+                    const tplPropValue = this.template.props[prop.name];
+
+                    if (tplPropValue) {
+                      let expr = tplPropValue;
+
+                      if (t.is(tplPropValue, t.PropBinding)) {
+                        expr = tplPropValue.identifier;
                       }
 
-                      if (!propValue && prop.init) {
-                        propValue = this.evaluator.computeExpr(
-                          prop.init,
-                          this.ctx.env
-                        );
-                      }
+                      propValue = this.evaluator.computeExpr(
+                        expr,
+                        this.ctx.env
+                      );
+                    }
 
-                      return propValue;
-                    };
-
-                    let propValue = getPropValue();
+                    if (!propValue && prop.init) {
+                      propValue = this.evaluator.computeExpr(
+                        prop.init,
+                        this.ctx.env
+                      );
+                    }
 
                     const classListBinding =
                       this.ctx.env.getByName(ClassListBindingKey);
@@ -153,7 +156,7 @@ export class ComponentViewEvaluator {
 
                     this.env.set(prop.name, {
                       value: propValue,
-                      readonly: true,
+                      readonly: false,
                     });
                   });
                 },
@@ -161,6 +164,27 @@ export class ComponentViewEvaluator {
                   name: `component-${this.template.component.name}<${this.template.id}>-props-evaluation`,
                 }
               );
+            }
+
+            if (!this.rekaComponentPropsBindingComputation) {
+              this.rekaComponentPropsBindingComputation = computed(() => {
+                for (const [prop, value] of Object.entries(
+                  this.template.props
+                )) {
+                  if (!t.is(value, t.PropBinding)) {
+                    continue;
+                  }
+
+                  const currPropValue = this.env.getByName(prop, false, true);
+
+                  this.evaluator.reka.change(() => {
+                    this.ctx.env.reassign(
+                      t.assert(value, t.PropBinding).identifier,
+                      currPropValue
+                    );
+                  });
+                }
+              });
             }
 
             if (!this.rekaComponentStateComputation) {
@@ -173,6 +197,7 @@ export class ComponentViewEvaluator {
 
             try {
               this.rekaComponentPropsComputation.get();
+              this.rekaComponentPropsBindingComputation.get();
               this.rekaComponentStateComputation.get();
 
               render = this.evaluator.computeTemplate(component.template, {

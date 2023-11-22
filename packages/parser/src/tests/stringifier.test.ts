@@ -230,4 +230,20 @@ describe('Stringifier', () => {
       )
     ).toEqual(`obj = {\n "foo": 1,\n "bar": 0\n}`);
   });
+  it('should be able to stringifiy prop binding', () => {
+    expect(
+      Stringifier.toString(
+        t.tagTemplate({
+          tag: 'input',
+          props: {
+            value: t.propBinding({
+              identifier: t.identifier({
+                name: 'value',
+              }),
+            }),
+          },
+        })
+      )
+    ).toEqual(`<input value:={value} />`);
+  });
 });

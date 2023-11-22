@@ -60,6 +60,9 @@ export const rekaComponent = (
 export const externalComponent = (
   ...args: ConstructorParameters<typeof t.ExternalComponent>
 ) => new t.ExternalComponent(...args);
+export const propBinding = (
+  ...args: ConstructorParameters<typeof t.PropBinding>
+) => new t.PropBinding(...args);
 export const tagTemplate = (
   ...args: ConstructorParameters<typeof t.TagTemplate>
 ) => new t.TagTemplate(...args);

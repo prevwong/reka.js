@@ -436,11 +436,32 @@ export class Evaluator {
       // TODO: currently props are re-evaluated any time a change occurs within the template tree
       // We should maybe cache the props evaluation as well
       const props = Object.keys(template.props).reduce((accum, key) => {
-        const value = this.computeExpr(template.props[key], ctx.env);
+        const prop = template.props[key];
+
+        let value: any;
+
+        if (t.is(prop, t.PropBinding)) {
+          value = this.computeExpr(prop.identifier, ctx.env);
+        } else {
+          value = this.computeExpr(prop, ctx.env);
+        }
 
         return {
           ...accum,
           [key]: value,
+        };
+      }, {});
+
+      const propBindings = Object.keys(template.props).reduce((accum, key) => {
+        const prop = template.props[key];
+
+        if (!t.is(prop, t.PropBinding)) {
+          return accum;
+        }
+
+        return {
+          ...accum,
+          [key]: this.computeExpr(prop, ctx.env),
         };
       }, {});
 
@@ -456,6 +477,7 @@ export class Evaluator {
         tag: template.tag,
         children,
         props,
+        bindings: propBindings,
         key: createKey(ctx.path),
         template,
         frame: this.frame.id,

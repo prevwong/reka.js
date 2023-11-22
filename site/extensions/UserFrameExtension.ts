@@ -81,6 +81,18 @@ export const UserFrameExtensionFactory = () => {
           width: '300px',
           height: '300px',
         },
+        {
+          id: 'Basic text input',
+          name: 'Input',
+          props: {
+            text: t.literal({ value: 'Hello!' }),
+          },
+        },
+        {
+          id: 'Prop Binding Demo',
+          name: 'PropBinding',
+          props: {},
+        },
       ],
     },
     init: (ext) => {
@@ -140,7 +152,7 @@ export const UserFrameExtensionFactory = () => {
                 name: currentFrame.name,
                 props: currentFrame.props,
               },
-              syncImmediately: true,
+              syncImmediately: false,
             });
           });
 

@@ -68,10 +68,7 @@ export class Environment {
       return;
     }
 
-    return env.bindings.set(identifier.name, {
-      ...binding,
-      value,
-    });
+    binding.value = value;
   }
 
   set(name: BindingKey, binding: Binding) {
@@ -87,17 +84,24 @@ export class Environment {
     this.bindings.delete(name);
   }
 
-  getByName(name: BindingKey, external?: boolean) {
+  getByName(
+    name: BindingKey,
+    external?: boolean,
+    getInCurrentEnvironmentOnly?: boolean
+  ) {
     if (external) {
       invariant(typeof name === 'string', 'Invalid external binding key');
 
       return this.reka.externals.get(name);
     }
 
-    const v = this.bindings.get(name)?.value;
+    const valueInCurrentEnvironment = this.bindings.get(name)?.value;
 
-    if (v !== undefined) {
-      return v;
+    if (
+      valueInCurrentEnvironment !== undefined ||
+      getInCurrentEnvironmentOnly
+    ) {
+      return valueInCurrentEnvironment;
     }
 
     if (!this.parent) {
