@@ -5,8 +5,8 @@ import { reka as rekaCodemirrorExtension } from '@rekajs/codemirror';
 import { Parser } from '@rekajs/parser';
 import { useReka } from '@rekajs/react';
 import * as t from '@rekajs/types';
+import { debounce } from '@rekajs/utils';
 import { basicSetup } from 'codemirror';
-import debounce from 'lodash/debounce';
 import * as React from 'react';
 
 const _diffASTArrayTypes = <T extends t.Type>(

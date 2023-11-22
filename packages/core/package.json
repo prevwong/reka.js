@@ -15,15 +15,13 @@
   "license": "MIT",
   "devDependencies": {
     "@rekajs/parser": "workspace:*",
-    "@rekajs/types": "workspace:*",
-    "@types/lodash": "^4.14.185"
+    "@rekajs/types": "workspace:*"
   },
   "peerDependencies": {
     "@rekajs/types": ">=0.1.0"
   },
   "dependencies": {
     "@rekajs/utils": "^0.1.2",
-    "lodash": "^4.17.21",
     "mobx": "^6.3.13",
     "mobx-utils": "^6.0.6"
   },

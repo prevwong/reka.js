@@ -1,6 +1,5 @@
 import * as t from '@rekajs/types';
-import { invariant, safeObjKey } from '@rekajs/utils';
-import omit from 'lodash/omit';
+import { invariant, safeObjKey, omit } from '@rekajs/utils';
 import {
   computed,
   IComputedValue,
@@ -72,7 +71,7 @@ export class Evaluator {
   ) {
     this._view = observable.box();
 
-    const nonChildrenProps = omit(this.componentProps, ['children']);
+    const nonChildrenProps = omit(this.componentProps, ['children', 'x']);
 
     let children = this.componentProps['children'];
 

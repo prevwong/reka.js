@@ -13,6 +13,7 @@
   "author": "Prev Wong",
   "license": "MIT",
   "dependencies": {
+    "debounce": "^2.0.0",
     "nanoid": "^3.3.4",
     "tiny-invariant": "^1.2.0"
   },

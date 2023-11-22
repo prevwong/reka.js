@@ -1,4 +1,5 @@
 import * as t from '@rekajs/types';
+import { invariant, capitalize } from '@rekajs/utils';
 import { computed, IComputedValue, runInAction, untracked } from 'mobx';
 
 import { DisposableComputation } from './computation';
@@ -6,8 +7,6 @@ import { Environment } from './environment';
 import { TemplateEvaluateContext, Evaluator } from './evaluator';
 import { ClassListBindingKey, ComponentSlotBindingKey } from './symbols';
 import { createKey } from './utils';
-import { invariant } from '@rekajs/utils';
-import capitalize from 'lodash/capitalize';
 
 type ComponentViewTreeComputationCache = {
   component: t.Component;
