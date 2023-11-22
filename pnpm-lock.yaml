@@ -259,7 +259,7 @@ importers:
   packages/collaboration:
     dependencies:
       '@rekajs/utils':
-        specifier: ^0.1.2
+        specifier: ^0.1.3
         version: link:../utils
     devDependencies:
       '@rekajs/core':
@@ -275,7 +275,7 @@ importers:
   packages/core:
     dependencies:
       '@rekajs/utils':
-        specifier: ^0.1.2
+        specifier: ^0.1.3
         version: link:../utils
       mobx:
         specifier: ^6.3.13
@@ -297,7 +297,7 @@ importers:
         specifier: ^7.18.13
         version: 7.18.13
       '@rekajs/utils':
-        specifier: ^0.1.2
+        specifier: ^0.1.3
         version: link:../utils
       acorn:
         specifier: ^8.7.0
@@ -353,7 +353,7 @@ importers:
         specifier: '>=0.1.2'
         version: link:../codemirror
       '@rekajs/utils':
-        specifier: '>=0.1.2'
+        specifier: '>=0.1.3'
         version: link:../utils
       codemirror:
         specifier: ^6.0.1
@@ -390,7 +390,7 @@ importers:
   packages/types:
     dependencies:
       '@rekajs/utils':
-        specifier: ^0.1.2
+        specifier: ^0.1.3
         version: link:../utils
 
   packages/utils:
