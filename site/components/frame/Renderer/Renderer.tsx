@@ -84,13 +84,17 @@ const RenderTagView = observer((props: RenderTagViewProps) => {
 
   let elProps = { ...props.view.props };
 
+  /**
+   * The renderer is responsible for implementing any and all relevant prop bindings associated with a HTML element
+   *
+   * Craft.js should implement all necessary prop bindings for HTML elements,
+   * but for this demo in Reka, we will only implement the "value" prop binding for the input tag
+   */
   Object.entries(props.view.bindings).forEach(([name, updater]) => {
     if (name === 'value' && props.view.tag === 'input') {
       elProps = {
         ...elProps,
-        onChange: (e: InputEvent) => {
-          // @ts-ignore
-          // @ts-ignore
+        onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
           updater(e.target.value);
         },
       };

@@ -266,19 +266,19 @@ component Card(name,description,image="/images/placeholder.jpeg") => (
  </div>
 )
 
-component Input(text="", className="") {
-    val str = "Wassup";
+component PropBinding() {
+    val text = "Hello";
 } => (
     <div>
-        <text value={"yoooo: " + text + " " + str} />
-        <br />
-        <Yomo @classList={{ "bg-red-100": true }} value:={str}  />
+        <text value={"Outer text variable: " + text} />
+        <Input value:={text}  />
+        <Button onClick={() => { text = "" }} className="mt-8" text="Clear text variable" />
     </div>
 )
 
-component Yomo(value, className) => (
-    <div className={"mt-8 p-5 bg-gray-100 " + className}>
-        <text value={value} />
+component Input(value = "") => (
+    <div className={"w-full mt-8 p-5 bg-neutral-100"}>
+        <text value={"Input prop value: " + value} />
         <input className="w-full mt-6" type="text" value:={value} /> 
     </div>
 )

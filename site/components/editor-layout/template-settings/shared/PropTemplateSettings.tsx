@@ -76,6 +76,7 @@ export const PropTemplateSettings = observer(
                 template.props[id] = value;
               });
             }}
+            allowPropBinding={true}
             onRemove={(id) => {
               editor.reka.change(() => {
                 delete template.props[id];

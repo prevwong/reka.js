@@ -88,6 +88,11 @@ export const UserFrameExtensionFactory = () => {
             text: t.literal({ value: 'Hello!' }),
           },
         },
+        {
+          id: 'Prop Binding Demo',
+          name: 'PropBinding',
+          props: {},
+        },
       ],
     },
     init: (ext) => {
