@@ -10,10 +10,10 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { Button, IconButton } from '../button';
+import { Dropdown } from '../dropdown';
 import { ExpressionInput } from '../expression-input';
 import { TextField } from '../text-field';
 import { Tooltip } from '../tooltip';
-import { Dropdown } from '../dropdown';
 
 type PairInputFieldProps = {
   id: string;
