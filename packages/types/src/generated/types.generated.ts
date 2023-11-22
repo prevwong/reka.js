@@ -453,10 +453,12 @@ type ExternalComponentParameters = {
   meta?: Record<string, any>;
   name: string;
   render: Function;
+  props?: ComponentProp[];
 };
 
 export class ExternalComponent extends Component {
   declare render: Function;
+  declare props: ComponentProp[];
   constructor(value: ExternalComponentParameters) {
     super('ExternalComponent', value);
   }
