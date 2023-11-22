@@ -6,6 +6,8 @@ import { Environment } from './environment';
 import { TemplateEvaluateContext, Evaluator } from './evaluator';
 import { ClassListBindingKey, ComponentSlotBindingKey } from './symbols';
 import { createKey } from './utils';
+import { invariant } from '@rekajs/utils';
+import capitalize from 'lodash/capitalize';
 
 type ComponentViewTreeComputationCache = {
   component: t.Component;
@@ -47,6 +49,47 @@ export class ComponentViewEvaluator {
     this.rekaComponentStateComputation = null;
   }
 
+  private computeProps(component: t.Component) {
+    invariant(
+      component instanceof t.RekaComponent ||
+        component instanceof t.ExternalComponent
+    );
+
+    return component.props.reduce((accum, prop) => {
+      let propValue: any;
+
+      const tplPropValue = this.template.props[prop.name];
+
+      if (tplPropValue) {
+        let expr = tplPropValue;
+
+        if (t.is(tplPropValue, t.PropBinding)) {
+          expr = tplPropValue.identifier;
+        }
+
+        propValue = this.evaluator.computeExpr(expr, this.ctx.env);
+      }
+
+      if (!propValue && prop.init) {
+        propValue = this.evaluator.computeExpr(prop.init, this.ctx.env);
+      }
+
+      const classListBinding = this.ctx.env.getByName(ClassListBindingKey);
+
+      if (
+        prop.name === 'className' &&
+        classListBinding &&
+        Object.keys(classListBinding).length > 0
+      ) {
+        propValue = [propValue, ...classListBinding].filter(Boolean).join(' ');
+      }
+
+      accum.push([prop.name, propValue]);
+
+      return accum;
+    }, [] as Array<[string, any]>);
+  }
+
   private computeViewTreeForComponent(component: t.Component) {
     if (component instanceof t.ExternalComponent) {
       this.rekaComponentPropsComputation = null;
@@ -61,6 +104,37 @@ export class ComponentViewEvaluator {
         })
       );
 
+      const props = this.computeProps(component).reduce(
+        (accum, [prop, value]) => {
+          accum.push([prop, value]);
+
+          const tplPropValue = this.template.props[prop];
+
+          /**
+           * External components should expose a `on{Prop}Change` prop in order to
+           * support 2 way bindings in Reka
+           *
+           * const Input = (props) => {
+           *  return <input type="text" value={props.value} onChange={e => props.onValueChange(e.targetValue)} />
+           * }
+           *
+           */
+          if (t.is(tplPropValue, t.PropBinding)) {
+            accum.push([
+              `on${capitalize(prop)}Change`,
+              (updatedValue: any) => {
+                this.evaluator.reka.change(() => {
+                  this.ctx.env.reassign(tplPropValue.identifier, updatedValue);
+                });
+              },
+            ]);
+          }
+
+          return accum;
+        },
+        [] as [string, any][]
+      );
+
       return [
         t.externalComponentView({
           frame: this.evaluator.frame.id,
@@ -68,16 +142,7 @@ export class ComponentViewEvaluator {
           key: this.key,
           template: this.template,
           children: children || [],
-          props: Object.keys(this.template.props).reduce(
-            (accum, key) => ({
-              ...accum,
-              [key]: this.evaluator.computeExpr(
-                this.template.props[key],
-                this.ctx.env
-              ),
-            }),
-            {}
-          ),
+          props: Object.fromEntries(props),
         }),
       ];
     }
@@ -116,46 +181,9 @@ export class ComponentViewEvaluator {
                     readonly: true,
                   });
 
-                  component.props.forEach((prop) => {
-                    let propValue: any;
-
-                    const tplPropValue = this.template.props[prop.name];
-
-                    if (tplPropValue) {
-                      let expr = tplPropValue;
-
-                      if (t.is(tplPropValue, t.PropBinding)) {
-                        expr = tplPropValue.identifier;
-                      }
-
-                      propValue = this.evaluator.computeExpr(
-                        expr,
-                        this.ctx.env
-                      );
-                    }
-
-                    if (!propValue && prop.init) {
-                      propValue = this.evaluator.computeExpr(
-                        prop.init,
-                        this.ctx.env
-                      );
-                    }
-
-                    const classListBinding =
-                      this.ctx.env.getByName(ClassListBindingKey);
-
-                    if (
-                      prop.name === 'className' &&
-                      classListBinding &&
-                      Object.keys(classListBinding).length > 0
-                    ) {
-                      propValue = [propValue, ...classListBinding]
-                        .filter(Boolean)
-                        .join(' ');
-                    }
-
-                    this.env.set(prop.name, {
-                      value: propValue,
+                  this.computeProps(component).forEach(([prop, value]) => {
+                    this.env.set(prop, {
+                      value,
                       readonly: false,
                     });
                   });

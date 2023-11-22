@@ -231,6 +231,7 @@ Schema.define('ExternalComponent', {
   extends: 'Component',
   fields: (t) => ({
     render: t.type('Function'),
+    props: t.defaultValue(t.array(t.node('ComponentProp')), []),
   }),
 });
 
