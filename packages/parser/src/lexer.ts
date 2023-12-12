@@ -184,7 +184,8 @@ export class Lexer {
 
           return this.tokenize(TokenType.ELEMENT_DIRECTIVE);
         }
-        break;
+
+        return this.tokenize(TokenType.AMPERSAND);
       }
       case '$': {
         return this.tokenize(TokenType.DOLLAR);

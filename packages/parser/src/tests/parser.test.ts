@@ -224,4 +224,15 @@ describe('Parser', () => {
       },
     });
   });
+  it('should be able to parse identifier component props', () => {
+    const parsed = Parser.parseProgram(
+      `component Test(@value: string) => (<text />)`
+    );
+
+    expect(parsed.components[0].props[0]).toMatchObject({
+      type: 'ComponentProp',
+      name: 'value',
+      identifier: true,
+    });
+  });
 });

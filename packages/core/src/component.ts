@@ -83,10 +83,10 @@ export class ComponentViewEvaluator {
         propValue = [propValue, ...classListBinding].filter(Boolean).join(' ');
       }
 
-      accum.push([prop.name, propValue]);
+      accum.push([prop, propValue]);
 
       return accum;
-    }, [] as Array<[string, any]>);
+    }, [] as Array<[t.ComponentProp, any]>);
   }
 
   private computeViewTreeForComponent(component: t.Component) {
@@ -105,9 +105,9 @@ export class ComponentViewEvaluator {
 
       const props = this.computeProps(component).reduce(
         (accum, [prop, value]) => {
-          accum.push([prop, value]);
+          accum.push([prop.name, value]);
 
-          const tplPropValue = this.template.props[prop];
+          const tplPropValue = this.template.props[prop.name];
 
           /**
            * External components should expose a `on{Prop}Change` prop in order to
@@ -118,9 +118,9 @@ export class ComponentViewEvaluator {
            * }
            *
            */
-          if (t.is(tplPropValue, t.PropBinding)) {
+          if (t.is(tplPropValue, t.PropBinding) && prop.bindable) {
             accum.push([
-              `on${capitalize(prop)}Change`,
+              `on${capitalize(prop.name)}Change`,
               (updatedValue: any) => {
                 this.evaluator.reka.change(() => {
                   this.ctx.env.reassign(tplPropValue.identifier, updatedValue);
@@ -181,9 +181,9 @@ export class ComponentViewEvaluator {
                   });
 
                   this.computeProps(component).forEach(([prop, value]) => {
-                    this.env.set(prop, {
+                    this.env.set(prop.name, {
                       value,
-                      readonly: false,
+                      readonly: !prop.bindable,
                     });
                   });
                 },
@@ -195,22 +195,30 @@ export class ComponentViewEvaluator {
 
             if (!this.rekaComponentPropsBindingComputation) {
               this.rekaComponentPropsBindingComputation = computed(() => {
-                for (const [prop, value] of Object.entries(
-                  this.template.props
-                )) {
-                  if (!t.is(value, t.PropBinding)) {
-                    continue;
+                component.props.forEach((prop) => {
+                  if (!prop.bindable) {
+                    return;
                   }
 
-                  const currPropValue = this.env.getByName(prop, false, true);
+                  const tplProPValue = this.template.props[prop.name];
+
+                  if (!tplProPValue || !t.is(tplProPValue, t.PropBinding)) {
+                    return;
+                  }
+
+                  const currPropValue = this.env.getByName(
+                    prop.name,
+                    false,
+                    true
+                  );
 
                   this.evaluator.reka.change(() => {
                     this.ctx.env.reassign(
-                      t.assert(value, t.PropBinding).identifier,
+                      t.assert(tplProPValue, t.PropBinding).identifier,
                       currPropValue
                     );
                   });
-                }
+                });
               });
             }
 

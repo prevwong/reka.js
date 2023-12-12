@@ -407,9 +407,11 @@ type ComponentPropParameters = {
   name: string;
   kind?: Kind;
   init?: Expression | null;
+  bindable?: boolean;
 };
 
 export class ComponentProp extends Variable {
+  declare bindable: boolean;
   constructor(value: ComponentPropParameters) {
     super('ComponentProp', value);
   }

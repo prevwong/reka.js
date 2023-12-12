@@ -416,9 +416,14 @@ class _Parser extends Lexer {
     this.consume(TokenType.LPAREN);
 
     const props: t.ComponentProp[] = [];
+    let bindable = false;
 
     while (!this.match(TokenType.RPAREN)) {
-      const propName = this.consume(TokenType.IDENTIFIER).value;
+      if (this.match(TokenType.AMPERSAND)) {
+        bindable = true;
+      }
+
+      let propName = this.consume(TokenType.IDENTIFIER).value;
 
       const kind = this.parseKind();
 
@@ -463,6 +468,7 @@ class _Parser extends Lexer {
           name: propName,
           init,
           kind,
+          bindable,
         })
       );
 
