@@ -232,7 +232,7 @@ describe('Parser', () => {
     expect(parsed.components[0].props[0]).toMatchObject({
       type: 'ComponentProp',
       name: 'value',
-      identifier: true,
+      bindable: true,
     });
   });
 });
