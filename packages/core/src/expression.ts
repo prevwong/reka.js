@@ -223,13 +223,20 @@ export const computeExpression = (
   }
 
   if (expr instanceof t.PropBinding) {
-    return (value: any) => {
+    const fn = (value: any) => {
       reka.change(() => {
         updateLocalValue(expr.identifier, reka, env, ctx, () => {
           return value;
         });
       });
     };
+
+    fn[
+      'PropBindingIdentifier'
+    ] = `${expr.identifier.id}.${expr.identifier.name}`;
+    fn['FuncNodeId'] = `PropBindingCallback#${expr.identifier.id}`;
+
+    return fn;
   }
 
   if (expr instanceof t.Block) {
