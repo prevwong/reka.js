@@ -1,5 +1,11 @@
 # @rekajs/types
 
+## 0.1.17
+
+### Patch Changes
+
+- [#113](https://github.com/prevwong/reka.js/pull/113) [`914c0a2`](https://github.com/prevwong/reka.js/commit/914c0a2414e40e423dacb0dc2191b2896270a61f) Thanks [@prevwong](https://github.com/prevwong)! - Requires component props to explicitly specify that they can be bindable
+
 ## 0.1.16
 
 ### Patch Changes
