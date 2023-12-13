@@ -232,6 +232,22 @@ class _Stringifier {
           this.stringify(node.init);
         }
       },
+      ComponentProp: (node) => {
+        if (node.bindable) {
+          this.writer.write(`@`);
+        }
+
+        this.writer.write(node.name);
+
+        if (node.kind) {
+          this.stringifyInput(node.kind);
+        }
+
+        if (node.init) {
+          this.writer.write(`=`);
+          this.stringify(node.init);
+        }
+      },
       RekaComponent: (node) => {
         this.writer.write(`component ${node.name}(`);
 

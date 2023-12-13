@@ -211,6 +211,9 @@ Schema.define('MemberExpression', {
 
 Schema.define('ComponentProp', {
   extends: 'Variable',
+  fields: (t) => ({
+    bindable: t.defaultValue(t.boolean, false),
+  }),
 });
 
 Schema.define('Component', {
