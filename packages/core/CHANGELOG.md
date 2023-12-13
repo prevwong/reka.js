@@ -1,5 +1,11 @@
 # @rekajs/core
 
+## 0.1.24
+
+### Patch Changes
+
+- [`f477ae6`](https://github.com/prevwong/reka.js/commit/f477ae6f9af3990f23d22feb2234dd80bdb8afd4) Thanks [@prevwong](https://github.com/prevwong)! - Fix prop binding callback function cache
+
 ## 0.1.23
 
 ### Patch Changes
