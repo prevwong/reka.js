@@ -162,8 +162,7 @@ describe('Parser', () => {
           type: 'Val',
           name: 'color',
           kind: {
-            type: 'PrimitiveKind',
-            primitive: 'string',
+            type: 'StringKind',
           },
           init: {
             type: 'Literal',
@@ -175,9 +174,8 @@ describe('Parser', () => {
           name: 'colors',
           kind: {
             type: 'ArrayKind',
-            kind: {
-              type: 'PrimitiveKind',
-              primitive: 'string',
+            elements: {
+              type: 'StringKind',
             },
           },
           init: {
@@ -198,6 +196,54 @@ describe('Parser', () => {
           init: {
             type: 'Literal',
             value: 'red',
+          },
+        },
+      ],
+    });
+  });
+  it('should be able to parse variable with number kind', () => {
+    expect(
+      Parser.parseProgram(`
+      val num: number = 100;
+      val numWithMinMax: number<1,2> = 1;
+      val numWithMin: number<1> = 1;
+      val numWithMax: number<_,2> = 1;
+    `)
+    ).toMatchObject({
+      type: 'Program',
+      globals: [
+        {
+          type: 'Val',
+          name: 'num',
+          kind: {
+            type: 'NumberKind',
+          },
+        },
+        {
+          type: 'Val',
+          name: 'numWithMinMax',
+          kind: {
+            type: 'NumberKind',
+            min: 1,
+            max: 2,
+          },
+        },
+        {
+          type: 'Val',
+          name: 'numWithMin',
+          kind: {
+            type: 'NumberKind',
+            min: 1,
+            max: null,
+          },
+        },
+        {
+          type: 'Val',
+          name: 'numWithMax',
+          kind: {
+            type: 'NumberKind',
+            min: null,
+            max: 2,
           },
         },
       ],

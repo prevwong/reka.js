@@ -6,6 +6,10 @@ type StateParameters = {
 };
 
 export class State extends Type {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isState?: string;
+
   declare program: Program;
   declare extensions: Record<string, ExtensionState>;
   constructor(value: StateParameters) {
@@ -20,8 +24,12 @@ type ASTNodeParameters = {
 };
 
 export abstract class ASTNode extends Type {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isASTNode?: string;
+
   declare meta: Record<string, any>;
-  constructor(type: string, value: ASTNodeParameters) {
+  constructor(type: string, value?: ASTNodeParameters) {
     super(type, value);
   }
 }
@@ -35,44 +43,96 @@ type ProgramParameters = {
 };
 
 export class Program extends ASTNode {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isProgram?: string;
+
   declare globals: Val[];
   declare components: RekaComponent[];
-  constructor(value: ProgramParameters) {
+  constructor(value?: ProgramParameters) {
     super('Program', value);
   }
 }
 
 Schema.register('Program', Program);
 
-type KindParameters = {};
-
 export abstract class Kind extends Type {
-  constructor(type: string, value: KindParameters) {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isKind?: string;
+
+  constructor(type: string, value?: any) {
     super(type, value);
   }
 }
 
 Schema.register('Kind', Kind);
 
-type PrimitiveKindParameters = {
-  primitive: 'string' | 'number' | 'boolean' | 'any';
-};
+export class AnyKind extends Kind {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isAnyKind?: string;
 
-export class PrimitiveKind extends Kind {
-  declare primitive: 'string' | 'number' | 'boolean' | 'any';
-  constructor(value: PrimitiveKindParameters) {
-    super('PrimitiveKind', value);
+  constructor() {
+    super('AnyKind');
   }
 }
 
-Schema.register('PrimitiveKind', PrimitiveKind);
+Schema.register('AnyKind', AnyKind);
+
+export class StringKind extends Kind {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isStringKind?: string;
+
+  constructor() {
+    super('StringKind');
+  }
+}
+
+Schema.register('StringKind', StringKind);
+
+type NumberKindParameters = {
+  min?: number | null;
+  max?: number | null;
+};
+
+export class NumberKind extends Kind {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isNumberKind?: string;
+
+  declare min: number | null;
+  declare max: number | null;
+  constructor(value?: NumberKindParameters) {
+    super('NumberKind', value);
+  }
+}
+
+Schema.register('NumberKind', NumberKind);
+
+export class BooleanKind extends Kind {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isBooleanKind?: string;
+
+  constructor() {
+    super('BooleanKind');
+  }
+}
+
+Schema.register('BooleanKind', BooleanKind);
 
 type ArrayKindParameters = {
-  kind: Kind;
+  elements: Kind;
 };
 
 export class ArrayKind extends Kind {
-  declare kind: Kind;
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isArrayKind?: string;
+
+  declare elements: Kind;
   constructor(value: ArrayKindParameters) {
     super('ArrayKind', value);
   }
@@ -85,6 +145,10 @@ type OptionKindParameters = {
 };
 
 export class OptionKind extends Kind {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isOptionKind?: string;
+
   declare options: Record<string, string>;
   constructor(value: OptionKindParameters) {
     super('OptionKind', value);
@@ -98,7 +162,11 @@ type ExpressionParameters = {
 };
 
 export abstract class Expression extends ASTNode {
-  constructor(type: string, value: ExpressionParameters) {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isExpression?: string;
+
+  constructor(type: string, value?: ExpressionParameters) {
     super(type, value);
   }
 }
@@ -111,6 +179,10 @@ type IdentifiableParameters = {
 };
 
 export abstract class Identifiable extends Expression {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isIdentifiable?: string;
+
   declare name: string;
   constructor(type: string, value: IdentifiableParameters) {
     super(type, value);
@@ -127,6 +199,10 @@ type VariableParameters = {
 };
 
 export abstract class Variable extends Identifiable {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isVariable?: string;
+
   declare kind: Kind;
   declare init: Expression | null;
   constructor(type: string, value: VariableParameters) {
@@ -142,6 +218,10 @@ type LiteralParameters = {
 };
 
 export class Literal extends Expression {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isLiteral?: string;
+
   declare value: string | number | boolean;
   constructor(value: LiteralParameters) {
     super('Literal', value);
@@ -157,6 +237,10 @@ type IdentifierParameters = {
 };
 
 export class Identifier extends Expression {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isIdentifier?: string;
+
   declare name: string;
   declare external: boolean;
   constructor(value: IdentifierParameters) {
@@ -174,6 +258,10 @@ type ValParameters = {
 };
 
 export class Val extends Variable {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isVal?: string;
+
   constructor(value: ValParameters) {
     super('Val', value);
   }
@@ -187,6 +275,10 @@ type ArrayExpressionParameters = {
 };
 
 export class ArrayExpression extends Expression {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isArrayExpression?: string;
+
   declare elements: Expression[];
   constructor(value: ArrayExpressionParameters) {
     super('ArrayExpression', value);
@@ -218,6 +310,10 @@ type BinaryExpressionParameters = {
 };
 
 export class BinaryExpression extends Expression {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isBinaryExpression?: string;
+
   declare left: Expression;
   declare operator:
     | '+'
@@ -249,6 +345,10 @@ type ObjectExpressionParameters = {
 };
 
 export class ObjectExpression extends Expression {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isObjectExpression?: string;
+
   declare properties: Record<string, Expression>;
   constructor(value: ObjectExpressionParameters) {
     super('ObjectExpression', value);
@@ -263,6 +363,10 @@ type BlockParameters = {
 };
 
 export class Block extends Expression {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isBlock?: string;
+
   declare statements: Expression[];
   constructor(value: BlockParameters) {
     super('Block', value);
@@ -277,6 +381,10 @@ type ParamParameters = {
 };
 
 export class Param extends Identifiable {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isParam?: string;
+
   constructor(value: ParamParameters) {
     super('Param', value);
   }
@@ -292,6 +400,10 @@ type FuncParameters = {
 };
 
 export class Func extends Expression {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isFunc?: string;
+
   declare name: string | null;
   declare params: Param[];
   declare body: Block;
@@ -309,6 +421,10 @@ type CallExpressionParameters = {
 };
 
 export class CallExpression extends Expression {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isCallExpression?: string;
+
   declare identifier: Identifier;
   declare arguments: Expression[];
   constructor(value: CallExpressionParameters) {
@@ -325,6 +441,10 @@ type UnaryExpressionParameters = {
 };
 
 export class UnaryExpression extends Expression {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isUnaryExpression?: string;
+
   declare operator: '-' | '+';
   declare argument: Expression;
   constructor(value: UnaryExpressionParameters) {
@@ -342,6 +462,10 @@ type ConditionalExpressionParameters = {
 };
 
 export class ConditionalExpression extends Expression {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isConditionalExpression?: string;
+
   declare condition: Expression;
   declare consequent: Expression;
   declare alternate: Expression;
@@ -359,6 +483,10 @@ type IfStatementParameters = {
 };
 
 export class IfStatement extends Expression {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isIfStatement?: string;
+
   declare condition: Expression;
   declare consequent: Block;
   constructor(value: IfStatementParameters) {
@@ -376,6 +504,10 @@ type AssignmentParameters = {
 };
 
 export class Assignment extends Expression {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isAssignment?: string;
+
   declare left: Identifier | MemberExpression;
   declare operator: '=' | '+=' | '-=' | '*=' | '/=' | '^=' | '%=';
   declare right: Expression;
@@ -393,6 +525,10 @@ type MemberExpressionParameters = {
 };
 
 export class MemberExpression extends Expression {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isMemberExpression?: string;
+
   declare object: Identifier | MemberExpression;
   declare property: Expression;
   constructor(value: MemberExpressionParameters) {
@@ -411,6 +547,10 @@ type ComponentPropParameters = {
 };
 
 export class ComponentProp extends Variable {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isComponentProp?: string;
+
   declare bindable: boolean;
   constructor(value: ComponentPropParameters) {
     super('ComponentProp', value);
@@ -425,6 +565,10 @@ type ComponentParameters = {
 };
 
 export abstract class Component extends Identifiable {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isComponent?: string;
+
   constructor(type: string, value: ComponentParameters) {
     super(type, value);
   }
@@ -441,6 +585,10 @@ type RekaComponentParameters = {
 };
 
 export class RekaComponent extends Component {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isRekaComponent?: string;
+
   declare template: Template;
   declare state: Val[];
   declare props: ComponentProp[];
@@ -459,6 +607,10 @@ type ExternalComponentParameters = {
 };
 
 export class ExternalComponent extends Component {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isExternalComponent?: string;
+
   declare render: Function;
   declare props: ComponentProp[];
   constructor(value: ExternalComponentParameters) {
@@ -474,6 +626,10 @@ type PropBindingParameters = {
 };
 
 export class PropBinding extends Expression {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isPropBinding?: string;
+
   declare identifier: Identifier;
   constructor(value: PropBindingParameters) {
     super('PropBinding', value);
@@ -491,11 +647,15 @@ type TemplateParameters = {
 };
 
 export abstract class Template extends Expression {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isTemplate?: string;
+
   declare props: Record<string, Expression>;
   declare if: Expression | null;
   declare each: ElementEach | null;
   declare classList: ObjectExpression | null;
-  constructor(type: string, value: TemplateParameters) {
+  constructor(type: string, value?: TemplateParameters) {
     super(type, value);
   }
 }
@@ -512,8 +672,12 @@ type SlottableTemplateParameters = {
 };
 
 export abstract class SlottableTemplate extends Template {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isSlottableTemplate?: string;
+
   declare children: Template[];
-  constructor(type: string, value: SlottableTemplateParameters) {
+  constructor(type: string, value?: SlottableTemplateParameters) {
     super(type, value);
   }
 }
@@ -531,6 +695,10 @@ type TagTemplateParameters = {
 };
 
 export class TagTemplate extends SlottableTemplate {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isTagTemplate?: string;
+
   declare tag: string;
   constructor(value: TagTemplateParameters) {
     super('TagTemplate', value);
@@ -550,6 +718,10 @@ type ComponentTemplateParameters = {
 };
 
 export class ComponentTemplate extends SlottableTemplate {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isComponentTemplate?: string;
+
   declare component: Identifier;
   constructor(value: ComponentTemplateParameters) {
     super('ComponentTemplate', value);
@@ -567,7 +739,11 @@ type SlotTemplateParameters = {
 };
 
 export class SlotTemplate extends Template {
-  constructor(value: SlotTemplateParameters) {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isSlotTemplate?: string;
+
+  constructor(value?: SlotTemplateParameters) {
     super('SlotTemplate', value);
   }
 }
@@ -580,6 +756,10 @@ type ElementEachAliasParameters = {
 };
 
 export class ElementEachAlias extends Identifiable {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isElementEachAlias?: string;
+
   constructor(value: ElementEachAliasParameters) {
     super('ElementEachAlias', value);
   }
@@ -593,6 +773,10 @@ type ElementEachIndexParameters = {
 };
 
 export class ElementEachIndex extends Identifiable {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isElementEachIndex?: string;
+
   constructor(value: ElementEachIndexParameters) {
     super('ElementEachIndex', value);
   }
@@ -608,6 +792,10 @@ type ElementEachParameters = {
 };
 
 export class ElementEach extends ASTNode {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isElementEach?: string;
+
   declare alias: ElementEachAlias;
   declare index: ElementEachIndex | null;
   declare iterator: Expression;
@@ -626,6 +814,10 @@ type ViewParameters = {
 };
 
 export abstract class View extends Type {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isView?: string;
+
   declare key: string;
   declare template: Template;
   declare frame: string;
@@ -646,6 +838,10 @@ type SlottableViewParameters = {
 };
 
 export abstract class SlottableView extends View {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isSlottableView?: string;
+
   declare children: View[];
   constructor(type: string, value: SlottableViewParameters) {
     super(type, value);
@@ -666,6 +862,10 @@ type TagViewParameters = {
 };
 
 export class TagView extends SlottableView {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isTagView?: string;
+
   declare tag: string;
   declare props: Record<string, any>;
   declare bindings: Record<string, Function>;
@@ -686,6 +886,10 @@ type ComponentViewParameters = {
 };
 
 export abstract class ComponentView extends SlottableView {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isComponentView?: string;
+
   declare component: Component;
   constructor(type: string, value: ComponentViewParameters) {
     super(type, value);
@@ -705,6 +909,10 @@ type RekaComponentViewParameters = {
 };
 
 export class RekaComponentView extends ComponentView {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isRekaComponentView?: string;
+
   declare component: RekaComponent;
   declare render: View[];
   constructor(value: RekaComponentViewParameters) {
@@ -725,6 +933,10 @@ type ExternalComponentViewParameters = {
 };
 
 export class ExternalComponentView extends ComponentView {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isExternalComponentView?: string;
+
   declare component: ExternalComponent;
   declare props: Record<string, any>;
   constructor(value: ExternalComponentViewParameters) {
@@ -743,6 +955,10 @@ type SlotViewParameters = {
 };
 
 export class SlotView extends View {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isSlotView?: string;
+
   declare children: View[];
   constructor(value: SlotViewParameters) {
     super('SlotView', value);
@@ -759,6 +975,10 @@ type SystemViewParameters = {
 };
 
 export abstract class SystemView extends View {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isSystemView?: string;
+
   constructor(type: string, value: SystemViewParameters) {
     super(type, value);
   }
@@ -775,6 +995,10 @@ type EachSystemViewParameters = {
 };
 
 export class EachSystemView extends SystemView {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isEachSystemView?: string;
+
   declare children: View[];
   constructor(value: EachSystemViewParameters) {
     super('EachSystemView', value);
@@ -792,6 +1016,10 @@ type ErrorSystemViewParameters = {
 };
 
 export class ErrorSystemView extends SystemView {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isErrorSystemView?: string;
+
   declare error: string;
   constructor(value: ErrorSystemViewParameters) {
     super('ErrorSystemView', value);
@@ -805,6 +1033,10 @@ type ExtensionStateParameters = {
 };
 
 export class ExtensionState extends Type {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isExtensionState?: string;
+
   declare value: null | Record<string, any>;
   constructor(value: ExtensionStateParameters) {
     super('ExtensionState', value);
@@ -820,6 +1052,10 @@ type ExternalStateParameters = {
 };
 
 export class ExternalState extends Identifiable {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isExternalState?: string;
+
   declare init: any;
   constructor(value: ExternalStateParameters) {
     super('ExternalState', value);
@@ -835,6 +1071,10 @@ type ExternalFuncParameters = {
 };
 
 export class ExternalFunc extends Identifiable {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isExternalFunc?: string;
+
   declare func: Function;
   constructor(value: ExternalFuncParameters) {
     super('ExternalFunc', value);
@@ -849,7 +1089,10 @@ export type Any =
   | ASTNode
   | Program
   | Kind
-  | PrimitiveKind
+  | AnyKind
+  | StringKind
+  | NumberKind
+  | BooleanKind
   | ArrayKind
   | OptionKind
   | Expression
@@ -901,7 +1144,10 @@ export type Visitor = {
   ASTNode: (node: ASTNode) => any;
   Program: (node: Program) => any;
   Kind: (node: Kind) => any;
-  PrimitiveKind: (node: PrimitiveKind) => any;
+  AnyKind: (node: AnyKind) => any;
+  StringKind: (node: StringKind) => any;
+  NumberKind: (node: NumberKind) => any;
+  BooleanKind: (node: BooleanKind) => any;
   ArrayKind: (node: ArrayKind) => any;
   OptionKind: (node: OptionKind) => any;
   Expression: (node: Expression) => any;

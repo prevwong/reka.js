@@ -6,6 +6,7 @@ const prettier = require('prettier');
 const formatBuilderName = require('./formatBuilderName');
 const stringifyField = require('./stringifyField');
 const { Schema } = require('../../src/schema');
+const { DefaultValidator } = require('../../src/validators');
 
 let typesCode = `
 import { Schema, Type } from '../schema';\n
@@ -24,29 +25,56 @@ for (const type in Schema.getRegistry()) {
       aliases[alias].push(type);
     });
   }
-  typesCode += `
 
-  type ${type}Parameters = {
-    ${schema.fields
-      .map(
-        (field) =>
-          `${field.name}${
-            field.type.is === 'default' ? '?' : ''
-          }: ${stringifyField(field.type)}`
-      )
-      .join(';')}
+  if (schema.fields.length > 0) {
+    typesCode += `
+    type ${type}Parameters = {
+      ${schema.fields
+        .map(
+          (field) =>
+            `${field.name}${
+              field.type.is === 'default' ? '?' : ''
+            }: ${stringifyField(field.type)}`
+        )
+        .join(';')}
+    } 
+    `;
   }
 
+  const constructorArgs = [];
+  const superCtorParams = [];
+  const isRootType = !schema.extends;
+
+  if (schema.abstract) {
+    constructorArgs.push('type: string');
+    superCtorParams.push('type');
+  } else {
+    superCtorParams.push(`"${type}"`);
+  }
+
+  if (schema.fields.length > 0 || isRootType) {
+    const paramsType = schema.fields.length ? `${type}Parameters` : 'any';
+    const isOptional =
+      schema.fields.length === 0 ||
+      schema.fields.every((field) => field.type instanceof DefaultValidator);
+
+    constructorArgs.push(`value${isOptional ? '?' : ''}: ${paramsType}`);
+    superCtorParams.push('value');
+  }
+
+  typesCode += `
   export ${schema.abstract ? 'abstract' : ''} class ${type} extends ${
     schema.extends || 'Type'
   } {
+    // Type Hack: in order to accurately use type predicates via the .is() util method
+    // @ts-ignore
+    private declare __is${type}?: string;
+
     ${schema.ownFields
       .map((field) => `declare ${field.name}: ${stringifyField(field.type)}`)
       .join(';')}
-    constructor(${
-      schema.abstract ? 'type: string,' : ''
-    }value: ${type}Parameters) {
-      super(${schema.abstract ? 'type' : `"${type}"`}, value)
+    constructor(${constructorArgs.join(',')}) {
+      super(${superCtorParams.join(',')})
     }
   }
   

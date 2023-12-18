@@ -128,7 +128,7 @@ export class Editor {
               props: [
                 t.componentProp({
                   name: 'name',
-                  kind: t.primitiveKind({ primitive: 'string' }),
+                  kind: t.stringKind(),
                 }),
               ],
               render: (props: { name: string }) => {

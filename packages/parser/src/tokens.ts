@@ -8,6 +8,7 @@ export enum TokenType {
   COMMA = ',',
   DOT = '.',
   MINUS = '-',
+  UNDERSCORE = '_',
   PLUS = '+',
   COLON = ':',
   SEMICOLON = ';',
