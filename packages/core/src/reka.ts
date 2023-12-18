@@ -15,9 +15,14 @@ import { ExtensionDefinition, ExtensionRegistry } from './extension';
 import { Externals } from './externals';
 import { Frame, FrameOpts } from './frame';
 import { Head } from './head';
-import { RekaOpts, StateSubscriberOpts } from './interfaces';
+import {
+  CustomKindDefinition,
+  RekaOpts,
+  StateSubscriberOpts,
+} from './interfaces';
 import { ChangeListenerSubscriber, Observer } from './observer';
 import { ExtensionVolatileStateKey, ExternalVolatileStateKey } from './symbols';
+import { KindFieldValidators } from './utils';
 
 export class Reka {
   id: string;
@@ -34,6 +39,8 @@ export class Reka {
 
   /// @internal
   declare head: Head;
+
+  private declare kinds: Record<string, CustomKindDefinition>;
 
   private declare observer: Observer<t.State>;
   private declare extensions: ExtensionRegistry;
@@ -62,6 +69,8 @@ export class Reka {
       [ExternalVolatileStateKey]: {},
     };
 
+    this.createCustomKindsDefinition();
+
     this.externals = new Externals(this, opts?.externals);
 
     makeObservable(this, {
@@ -70,6 +79,33 @@ export class Reka {
       components: computed,
       dispose: action,
     });
+  }
+
+  private createCustomKindsDefinition() {
+    if (!this.opts || !this.opts.kinds) {
+      return;
+    }
+
+    const kinds = this.opts.kinds;
+
+    this.kinds = Object.keys(kinds).reduce((accum, name) => {
+      // Validate Custom kind names
+      invariant(
+        name[0] === name[0].toUpperCase(),
+        `Custom kind "${name}" must start with a capital letter.`
+      );
+
+      accum[name] = {
+        fallback: kinds[name].fallback ?? '',
+        validator: kinds[name].validate(KindFieldValidators),
+      };
+
+      return accum;
+    }, {});
+  }
+
+  getCustomKind(name: string) {
+    return this.kinds[name] ?? null;
   }
 
   getExternalState(key: string) {

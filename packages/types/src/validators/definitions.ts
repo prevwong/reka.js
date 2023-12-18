@@ -4,10 +4,12 @@ import { Schema, Type } from '../schema';
 
 export class TypeValidator extends Validator {
   type: string;
+  validateFn?: (value: any) => boolean;
 
-  constructor(type: string) {
+  constructor(type: string, validateFn?: (value: any) => boolean) {
     super('type');
     this.type = type;
+    this.validateFn = validateFn;
   }
 
   validate(value: any) {
@@ -19,7 +21,13 @@ export class TypeValidator extends Validator {
       return Object.getPrototypeOf(value) === Object.prototype;
     }
 
-    return typeof value === this.type.toLowerCase();
+    const isValid = typeof value === this.type.toLowerCase();
+
+    if (!this.validateFn) {
+      return isValid;
+    }
+
+    return this.validateFn(value);
   }
 }
 

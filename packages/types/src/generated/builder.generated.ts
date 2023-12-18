@@ -19,6 +19,9 @@ export const arrayKind = (...args: ConstructorParameters<typeof t.ArrayKind>) =>
 export const optionKind = (
   ...args: ConstructorParameters<typeof t.OptionKind>
 ) => new t.OptionKind(...args);
+export const customKind = (
+  ...args: ConstructorParameters<typeof t.CustomKind>
+) => new t.CustomKind(...args);
 export const literal = (...args: ConstructorParameters<typeof t.Literal>) =>
   new t.Literal(...args);
 export const identifier = (

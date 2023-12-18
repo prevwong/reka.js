@@ -334,7 +334,7 @@ class _Parser extends Lexer {
   }
 
   private parseKindType() {
-    const kindType = this.consume(TokenType.KIND_TYPE).value;
+    const kindType = this.consume(TokenType.KIND_TYPE).value as string;
 
     switch (kindType) {
       case 'string': {
@@ -395,6 +395,12 @@ class _Parser extends Lexer {
         });
       }
       default: {
+        if (kindType.length > 0 && kindType[0] === kindType[0].toUpperCase()) {
+          return t.customKind({
+            name: kindType,
+          });
+        }
+
         return t.anyKind();
       }
     }

@@ -249,6 +249,29 @@ describe('Parser', () => {
       ],
     });
   });
+  it('should be able to parse variable with custom kind', () => {
+    expect(
+      Parser.parseProgram(`
+      val color: Color = "#000";
+    `)
+    ).toMatchObject({
+      type: 'Program',
+      globals: [
+        {
+          type: 'Val',
+          name: 'color',
+          init: {
+            type: 'Literal',
+            value: '#000',
+          },
+          kind: {
+            type: 'CustomKind',
+            name: 'Color',
+          },
+        },
+      ],
+    });
+  });
   it('should be able to parse negative values', () => {
     expect(Parser.parseExpression('-1')).toMatchObject({
       operator: '-',

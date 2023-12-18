@@ -114,6 +114,13 @@ export class Editor {
     });
 
     this.reka = Reka.create({
+      kinds: {
+        Color: {
+          validate(field) {
+            return field.string((value) => value.startsWith('#'));
+          },
+        },
+      },
       ...createSharedStateGlobals({
         externals: {
           components: [

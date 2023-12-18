@@ -50,6 +50,11 @@ class _Stringifier {
         return;
       }
 
+      if (t.is(input, t.CustomKind)) {
+        this.writer.write(input.name);
+        return;
+      }
+
       this.writer.write('any');
     };
 

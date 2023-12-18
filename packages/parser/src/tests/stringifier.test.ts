@@ -159,11 +159,11 @@ describe('Stringifier', () => {
       Stringifier.toString(
         t.val({
           name: 'color',
-          kind: t.stringKind(),
+          kind: t.customKind({ name: 'Color' }),
           init: t.literal({ value: 'blue' }),
         })
       )
-    ).toEqual(`val color:string = "blue"`);
+    ).toEqual(`val color:Color = "blue"`);
 
     expect(
       Stringifier.toString(

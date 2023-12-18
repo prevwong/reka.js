@@ -83,3 +83,8 @@ export const defer = (fn: () => void) => {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const noop = () => {};
+
+export const KindFieldValidators = {
+  string: (validate?: (value: string) => boolean) =>
+    t.assertions.type('string', validate),
+};
