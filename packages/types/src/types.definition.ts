@@ -61,6 +61,13 @@ Schema.define('OptionKind', {
   }),
 });
 
+Schema.define('CustomKind', {
+  extends: 'Kind',
+  fields: (t) => ({
+    name: t.string,
+  }),
+});
+
 Schema.define('Expression', {
   extends: 'ASTNode',
   abstract: true,

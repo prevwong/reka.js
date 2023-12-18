@@ -2,6 +2,7 @@ import * as t from '@rekajs/types';
 
 import { ExtensionDefinition } from './extension';
 import { Reka } from './reka';
+import { KindFieldValidators } from './utils';
 
 export type StateExternalFunction = (opts: Record<string, any>) => any;
 export type StateExternalFunctions = Array<t.ExternalFunc>;
@@ -23,7 +24,20 @@ export type RekaExternalsFactory = {
   components: t.Component[];
 };
 
+export type CustomKindConfig = {
+  fallback?: any;
+  // Note: this is currently just decorative and doesn't do anything
+  // TODO: enforce validation in evaluator
+  validate: (field: typeof KindFieldValidators) => t.Validator;
+};
+
+export type CustomKindDefinition = {
+  fallback: any;
+  validator: t.Validator;
+};
+
 export type RekaOpts = {
+  kinds?: Record<string, CustomKindConfig>;
   externals?: Partial<RekaExternalsFactory>;
   extensions?: ExtensionDefinition<any>[];
 };

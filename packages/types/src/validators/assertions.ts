@@ -11,7 +11,8 @@ import {
 } from './definitions';
 import { Validator } from './validator';
 
-export const type = (type: string) => new TypeValidator(type);
+export const type = (type: string, validate?: (value: any) => boolean) =>
+  new TypeValidator(type, validate);
 export const node = (node: string, isRef?: boolean) =>
   new NodeValidator(node, isRef);
 export const union = (...validators: Validator[]) =>

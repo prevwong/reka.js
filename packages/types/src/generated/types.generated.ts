@@ -157,6 +157,23 @@ export class OptionKind extends Kind {
 
 Schema.register('OptionKind', OptionKind);
 
+type CustomKindParameters = {
+  name: string;
+};
+
+export class CustomKind extends Kind {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isCustomKind?: string;
+
+  declare name: string;
+  constructor(value: CustomKindParameters) {
+    super('CustomKind', value);
+  }
+}
+
+Schema.register('CustomKind', CustomKind);
+
 type ExpressionParameters = {
   meta?: Record<string, any>;
 };
@@ -1095,6 +1112,7 @@ export type Any =
   | BooleanKind
   | ArrayKind
   | OptionKind
+  | CustomKind
   | Expression
   | Identifiable
   | Variable
@@ -1150,6 +1168,7 @@ export type Visitor = {
   BooleanKind: (node: BooleanKind) => any;
   ArrayKind: (node: ArrayKind) => any;
   OptionKind: (node: OptionKind) => any;
+  CustomKind: (node: CustomKind) => any;
   Expression: (node: Expression) => any;
   Identifiable: (node: Identifiable) => any;
   Variable: (node: Variable) => any;
