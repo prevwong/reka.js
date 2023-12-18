@@ -132,7 +132,7 @@ describe('Stringifier', () => {
         t.rekaComponent({
           name: 'App',
           state: [t.val({ name: 'counter', init: t.literal({ value: 0 }) })],
-          props: [t.componentProp({ name: 'color' })],
+          props: [t.componentProp({ name: 'color', kind: t.anyKind() })],
           template: t.tagTemplate({
             tag: 'div',
             props: {},
@@ -159,9 +159,7 @@ describe('Stringifier', () => {
       Stringifier.toString(
         t.val({
           name: 'color',
-          kind: t.primitiveKind({
-            primitive: 'string',
-          }),
+          kind: t.stringKind(),
           init: t.literal({ value: 'blue' }),
         })
       )
@@ -172,9 +170,7 @@ describe('Stringifier', () => {
         t.val({
           name: 'colors',
           kind: t.arrayKind({
-            kind: t.primitiveKind({
-              primitive: 'string',
-            }),
+            elements: t.stringKind(),
           }),
           init: t.arrayExpression({ elements: [t.literal({ value: 'blue' })] }),
         })

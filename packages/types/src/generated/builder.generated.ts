@@ -3,9 +3,17 @@ export const state = (...args: ConstructorParameters<typeof t.State>) =>
   new t.State(...args);
 export const program = (...args: ConstructorParameters<typeof t.Program>) =>
   new t.Program(...args);
-export const primitiveKind = (
-  ...args: ConstructorParameters<typeof t.PrimitiveKind>
-) => new t.PrimitiveKind(...args);
+export const anyKind = (...args: ConstructorParameters<typeof t.AnyKind>) =>
+  new t.AnyKind(...args);
+export const stringKind = (
+  ...args: ConstructorParameters<typeof t.StringKind>
+) => new t.StringKind(...args);
+export const numberKind = (
+  ...args: ConstructorParameters<typeof t.NumberKind>
+) => new t.NumberKind(...args);
+export const booleanKind = (
+  ...args: ConstructorParameters<typeof t.BooleanKind>
+) => new t.BooleanKind(...args);
 export const arrayKind = (...args: ConstructorParameters<typeof t.ArrayKind>) =>
   new t.ArrayKind(...args);
 export const optionKind = (

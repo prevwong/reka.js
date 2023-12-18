@@ -4,6 +4,7 @@ export class TokContext {
 
 export const tc_val_prop = new TokContext('val-prop');
 export const tc_kind = new TokContext('kind');
+export const tc_kind_param = new TokContext('kind-param');
 export const tc_component = new TokContext('component');
 export const tc_component_prop_start = new TokContext('component-prop-start');
 export const tc_component_prop_end = new TokContext('component-prop-end');

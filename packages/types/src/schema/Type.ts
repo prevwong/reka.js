@@ -3,12 +3,12 @@ import { getRandomId, invariant } from '@rekajs/utils';
 import { Schema } from './Schema';
 
 export class Type {
-  declare type: string;
+  declare readonly type: string;
   declare id: string;
 
-  constructor(type: string, json: any) {
+  constructor(type: string, json?: any) {
     this.type = type;
-    this.id = json.id || getRandomId();
+    this.id = json?.id ?? getRandomId();
 
     const definition = Schema.get(this.type);
     invariant(
@@ -17,7 +17,7 @@ export class Type {
     );
 
     definition.fields.forEach((field) => {
-      this[field.name] = field.type.get(json[field.name]);
+      this[field.name] = field.type.get(json?.[field.name]);
     });
   }
 }

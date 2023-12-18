@@ -27,17 +27,30 @@ Schema.define('Kind', {
   abstract: true,
 });
 
-Schema.define('PrimitiveKind', {
+Schema.define('AnyKind', {
+  extends: 'Kind',
+});
+
+Schema.define('StringKind', {
+  extends: 'Kind',
+});
+
+Schema.define('NumberKind', {
   extends: 'Kind',
   fields: (t) => ({
-    primitive: t.enumeration('string', 'number', 'boolean', 'any'),
+    min: t.optional(t.number),
+    max: t.optional(t.number),
   }),
+});
+
+Schema.define('BooleanKind', {
+  extends: 'Kind',
 });
 
 Schema.define('ArrayKind', {
   extends: 'Kind',
   fields: (t) => ({
-    kind: t.node('Kind'),
+    elements: t.node('Kind'),
   }),
 });
 
@@ -66,8 +79,7 @@ Schema.define('Variable', {
   abstract: true,
   fields: (t) => ({
     kind: t.defaultValue(t.node('Kind'), {
-      type: 'PrimitiveKind',
-      primitive: 'any',
+      type: 'AnyKind',
     }),
     init: t.optional(t.node('Expression')),
   }),

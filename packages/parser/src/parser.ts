@@ -336,52 +336,68 @@ class _Parser extends Lexer {
   private parseKindType() {
     const kindType = this.consume(TokenType.KIND_TYPE).value;
 
-    if (
-      kindType === 'string' ||
-      kindType === 'number' ||
-      kindType === 'boolean' ||
-      kindType === 'any'
-    ) {
-      return t.primitiveKind({
-        primitive: kindType,
-      });
-    }
-
-    if (kindType === 'array') {
-      this.consume(TokenType.KIND_PARAM_START);
-
-      const kind = this.parseKindType();
-
-      this.consume(TokenType.KIND_PARAM_END);
-
-      return t.arrayKind({
-        kind,
-      });
-    }
-
-    if (kindType === 'option') {
-      this.consume(TokenType.KIND_PARAM_START);
-      const startToken = this.currentToken;
-
-      while (!this.match(TokenType.KIND_PARAM_END)) {
-        this.next();
+    switch (kindType) {
+      case 'string': {
+        return t.stringKind();
       }
+      case 'number': {
+        let min: number | null = null;
+        let max: number | null = null;
 
-      const endToken = this.previousToken;
+        if (this.match(TokenType.KIND_PARAM_START)) {
+          if (this.check(TokenType.NUMBER)) {
+            min = this.consume(TokenType.NUMBER).value;
+          } else {
+            this.next();
+          }
 
-      const str = this.source.slice(startToken.pos, endToken.pos);
-      const expr = parseWithAcorn(str, 0);
+          if (this.match(TokenType.COMMA)) {
+            max = this.consume(TokenType.NUMBER).value;
+          }
+          this.consume(TokenType.KIND_PARAM_END);
+        }
 
-      b.assertObjectExpression(expr);
+        return t.numberKind({ min, max });
+      }
+      case 'boolean': {
+        return t.booleanKind();
+      }
+      case 'array': {
+        this.consume(TokenType.KIND_PARAM_START);
 
-      const options = getJSObjFromExpr(expr);
+        const elements = this.parseKindType();
 
-      return t.optionKind({
-        options,
-      });
+        this.consume(TokenType.KIND_PARAM_END);
+
+        return t.arrayKind({
+          elements,
+        });
+      }
+      case 'option': {
+        this.consume(TokenType.KIND_PARAM_START);
+        const startToken = this.currentToken;
+
+        while (!this.match(TokenType.KIND_PARAM_END)) {
+          this.next();
+        }
+
+        const endToken = this.previousToken;
+
+        const str = this.source.slice(startToken.pos, endToken.pos);
+        const expr = parseWithAcorn(str, 0);
+
+        b.assertObjectExpression(expr);
+
+        const options = getJSObjFromExpr(expr);
+
+        return t.optionKind({
+          options,
+        });
+      }
+      default: {
+        return t.anyKind();
+      }
     }
-
-    throw new Error();
   }
 
   private parseKind() {
@@ -423,7 +439,7 @@ class _Parser extends Lexer {
         bindable = true;
       }
 
-      let propName = this.consume(TokenType.IDENTIFIER).value;
+      const propName = this.consume(TokenType.IDENTIFIER).value;
 
       const kind = this.parseKind();
 

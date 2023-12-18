@@ -10,15 +10,9 @@ class _Stringifier {
 
   private stringifyInput(input: t.Kind) {
     const _stringifyInputType = (input: t.Kind) => {
-      if (t.is(input, t.PrimitiveKind)) {
-        this.writer.write(input.primitive);
-
-        return;
-      }
-
       if (t.is(input, t.ArrayKind)) {
         this.writer.write(`array<`);
-        _stringifyInputType(input.kind);
+        _stringifyInputType(input.elements);
         this.writer.write('>');
 
         return;
@@ -28,7 +22,35 @@ class _Stringifier {
         this.writer.write('option<');
         this.writer.write(JSON.stringify(input.options));
         this.writer.write('>');
+        return;
       }
+
+      if (t.is(input, t.StringKind)) {
+        this.writer.write('string');
+        return;
+      }
+
+      if (input instanceof t.NumberKind) {
+        this.writer.write(`number`);
+        if (input.min !== null || input.max !== null) {
+          this.writer.write(`<`);
+          this.writer.write(input.min !== null ? input.min.toString() : '_');
+
+          if (input.max !== null) {
+            this.writer.write(input.max.toString());
+          }
+
+          this.writer.write('>');
+        }
+        return;
+      }
+
+      if (t.is(input, t.BooleanKind)) {
+        this.writer.write('boolean');
+        return;
+      }
+
+      this.writer.write('any');
     };
 
     this.writer.write(`:`);

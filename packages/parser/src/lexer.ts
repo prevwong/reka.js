@@ -6,6 +6,7 @@ import {
   tc_kind,
   tc_val_prop,
   tc_component_prop_start,
+  tc_kind_param,
 } from './context';
 import { State } from './state';
 import { KEYWORDS, Token, TokenType } from './tokens';
@@ -139,7 +140,7 @@ export class Lexer {
         return this.tokenize(TokenType.LT);
       }
       case '>': {
-        if (this.currentContext === tc_kind) {
+        if (this.currentContext === tc_kind_param) {
           return this.tokenize(TokenType.KIND_PARAM_END);
         }
 
@@ -208,6 +209,9 @@ export class Lexer {
       case '*': {
         return this.tokenize(TokenType.STAR);
       }
+      case '_': {
+        return this.tokenize(TokenType.UNDERSCORE);
+      }
       default: {
         this.error(`Unknown token type "${c}"`);
       }
@@ -230,7 +234,10 @@ export class Lexer {
       return this.tokenize(keyword);
     }
 
-    if (this.currentContext === tc_kind) {
+    if (
+      this.currentContext === tc_kind ||
+      this.currentContext === tc_kind_param
+    ) {
       return this.tokenize(TokenType.KIND_TYPE);
     }
 
@@ -280,6 +287,14 @@ export class Lexer {
       case TokenType.KIND: {
         this.state.addContext(tc_kind);
 
+        break;
+      }
+      case TokenType.KIND_PARAM_START: {
+        this.state.addContext(tc_kind_param);
+        break;
+      }
+      case TokenType.KIND_PARAM_END: {
+        this.state.popContext();
         break;
       }
       case TokenType.EQ: {
