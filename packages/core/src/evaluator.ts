@@ -563,13 +563,15 @@ export class Evaluator {
       return t.assert(views[0], t.FragmentView);
     };
 
-    if (!this.viewObserver) {
+    const viewObserver = this.viewObserver;
+
+    if (!viewObserver) {
       this.setView(_compute());
       return;
     }
 
-    this.viewObserver.change(() => {
-      this.tplKeyToComponentEvaluator.forEach((componentEvaluator) => {
+    this.tplKeyToComponentEvaluator.forEach((componentEvaluator) => {
+      viewObserver.change(() => {
         componentEvaluator.compute();
       });
     });
