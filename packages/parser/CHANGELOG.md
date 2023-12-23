@@ -1,5 +1,13 @@
 # @rekajs/parser
 
+## 0.1.15
+
+### Patch Changes
+
+- [#118](https://github.com/prevwong/reka.js/pull/118) [`52c4c8d`](https://github.com/prevwong/reka.js/commit/52c4c8d81073c7f20eb8c3910f171817a23064ab) Thanks [@prevwong](https://github.com/prevwong)! - Add ability to specify custom kinds
+
+- [#116](https://github.com/prevwong/reka.js/pull/116) [`6bc28c2`](https://github.com/prevwong/reka.js/commit/6bc28c24e32391cd3ec52b1f60a88a03672b65d7) Thanks [@prevwong](https://github.com/prevwong)! - Improve variable kind type definitions
+
 ## 0.1.14
 
 ### Patch Changes
