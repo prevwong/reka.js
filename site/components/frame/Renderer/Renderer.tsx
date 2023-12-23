@@ -283,13 +283,23 @@ const InternalRenderer = observer((props: RendererProps) => {
     return <RenderSlotView view={view} />;
   }
 
+  if (view instanceof t.FragmentView) {
+    return (
+      <React.Fragment>
+        {view.children.map((child) => (
+          <InternalRenderer key={child.id} view={child} />
+        ))}
+      </React.Fragment>
+    );
+  }
+
   return null;
 });
 
 export const Renderer = observer((props: RendererProps) => {
   const view = props.view;
 
-  invariant(view instanceof t.RekaComponentView, 'Unexpected root view');
+  invariant(view instanceof t.FragmentView, 'Unexpected root view');
 
   return <InternalRenderer view={view} />;
 });

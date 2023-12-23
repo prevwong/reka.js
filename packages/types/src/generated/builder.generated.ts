@@ -94,6 +94,9 @@ export const elementEach = (
 ) => new t.ElementEach(...args);
 export const tagView = (...args: ConstructorParameters<typeof t.TagView>) =>
   new t.TagView(...args);
+export const fragmentView = (
+  ...args: ConstructorParameters<typeof t.FragmentView>
+) => new t.FragmentView(...args);
 export const rekaComponentView = (
   ...args: ConstructorParameters<typeof t.RekaComponentView>
 ) => new t.RekaComponentView(...args);

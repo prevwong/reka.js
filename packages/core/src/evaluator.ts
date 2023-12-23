@@ -37,7 +37,7 @@ export type TemplateEachComputationCache = {
 };
 
 export class Evaluator {
-  private _view: IObservableValue<t.RekaComponentView | undefined>;
+  private _view: IObservableValue<t.FragmentView | undefined>;
 
   private viewObserver: Observer | undefined;
   private rootTemplate: t.ComponentTemplate;
@@ -177,13 +177,13 @@ export class Evaluator {
 
       const index = parent.children.indexOf(existingView);
 
-      parent.children[index] = newView;
+      parent.children.splice(index, 0, newView);
 
       return newView;
     });
   }
 
-  private setView(view: t.RekaComponentView) {
+  private setView(view: t.FragmentView) {
     if (this.viewObserver) {
       this.viewObserver.dispose();
     }
@@ -524,7 +524,7 @@ export class Evaluator {
       this.tplKeyToComponentEvaluator.set(key, componentEvaluator);
     }
 
-    return componentEvaluator.compute();
+    return untracked(() => componentEvaluator!.compute());
   }
 
   computeExpr(expr: t.Any, env: Environment) {
@@ -560,19 +560,19 @@ export class Evaluator {
     const _compute = () => {
       const views = this.computeRootTemplate();
 
-      return t.assert(views[0], t.RekaComponentView);
+      return t.assert(views[0], t.FragmentView);
     };
 
-    if (!this.viewObserver) {
+    const viewObserver = this.viewObserver;
+
+    if (!viewObserver) {
       this.setView(_compute());
       return;
     }
 
-    this.viewObserver.change(() => {
-      _compute();
-
-      this.tplKeyToComponentEvaluator.forEach((componentEvaluator) => {
-        componentEvaluator.recompute();
+    this.tplKeyToComponentEvaluator.forEach((componentEvaluator) => {
+      viewObserver.change(() => {
+        componentEvaluator.compute();
       });
     });
   }

@@ -10,13 +10,11 @@ import { createKey } from './utils';
 
 type ComponentViewTreeComputationCache = {
   component: t.Component;
-  computed: IComputedValue<t.RekaComponentView[] | t.ExternalComponentView[]>;
+  computed: IComputedValue<t.FragmentView>;
 };
 
 export class ComponentViewEvaluator {
-  private declare resolveComponentComputation: IComputedValue<
-    t.RekaComponentView[] | t.ErrorSystemView[] | t.ExternalComponentView[]
-  >;
+  private declare resolveComponentComputation: DisposableComputation<t.FragmentView>;
   private declare componentViewTreeComputation: ComponentViewTreeComputationCache | null;
 
   private declare rekaComponentRootComputation: DisposableComputation<t.View> | null;
@@ -32,6 +30,8 @@ export class ComponentViewEvaluator {
 
   readonly key: string;
 
+  private fragment: t.FragmentView;
+
   constructor(
     evaluator: Evaluator,
     ctx: TemplateEvaluateContext,
@@ -46,6 +46,13 @@ export class ComponentViewEvaluator {
     this.env = env;
 
     this.rekaComponentStateComputation = null;
+
+    this.fragment = t.fragmentView({
+      children: [],
+      frame: this.evaluator.frame.id,
+      key: this.key,
+      template: this.template,
+    });
   }
 
   private computeProps(component: t.Component) {
@@ -134,33 +141,38 @@ export class ComponentViewEvaluator {
         [] as [string, any][]
       );
 
-      return [
+      this.fragment.children = [
         t.externalComponentView({
           frame: this.evaluator.frame.id,
           component,
-          key: this.key,
+          key: createKey([this.key, 'root']),
           template: this.template,
           children: children || [],
           props: Object.fromEntries(props),
         }),
       ];
+
+      return this.fragment;
     }
 
     if (component instanceof t.RekaComponent) {
+      if (this.rekaComponentRootComputation) {
+        this.rekaComponentRootComputation.get();
+        return this.fragment;
+      }
+
       const componentViewTree = t.rekaComponentView({
         frame: this.evaluator.frame.id,
-        key: this.key,
+        key: createKey([this.key, 'root']),
         component,
         render: [],
         template: this.template,
         owner: this.ctx.owner,
       });
 
-      untracked(() => {
-        if (this.rekaComponentRootComputation) {
-          return this.rekaComponentRootComputation.get();
-        }
+      this.fragment.children = [componentViewTree];
 
+      untracked(() => {
         this.rekaComponentRootComputation = new DisposableComputation(
           () => {
             let render: t.View[] = [];
@@ -236,7 +248,7 @@ export class ComponentViewEvaluator {
               this.rekaComponentStateComputation.get();
 
               render = this.evaluator.computeTemplate(component.template, {
-                path: [this.key, 'root'],
+                path: [this.key, 'root', 'render'],
                 env: this.env,
                 owner: componentViewTree,
                 componentStack: [...this.ctx.componentStack, component],
@@ -275,25 +287,23 @@ export class ComponentViewEvaluator {
         return this.rekaComponentRootComputation.get();
       });
 
-      return [componentViewTree];
+      return this.fragment;
     }
 
     throw new Error('Invalid Component Template');
   }
 
-  recompute() {
-    if (this.rekaComponentRootComputation) {
-      this.rekaComponentRootComputation.get();
-
-      return;
-    }
-
-    this.compute();
+  private reset() {
+    this.componentViewTreeComputation = null;
+    this.rekaComponentRootComputation = null;
+    this.rekaComponentPropsComputation = null;
+    this.rekaComponentPropsBindingComputation = null;
+    this.rekaComponentStateComputation = null;
   }
 
   compute() {
     if (!this.resolveComponentComputation) {
-      this.resolveComponentComputation = computed(
+      this.resolveComponentComputation = new DisposableComputation(
         () => {
           const component = this.env.getByName(
             this.template.component.name,
@@ -302,28 +312,35 @@ export class ComponentViewEvaluator {
 
           if (!component) {
             this.componentViewTreeComputation = null;
+            this.reset();
 
-            return [
+            this.fragment.children = [
               t.errorSystemView({
                 frame: this.evaluator.frame.id,
                 error: `Component "${this.template.component.name}" not found`,
-                key: this.key,
+                key: createKey([this.key, 'root']),
                 template: this.template,
                 owner: this.ctx.owner,
               }),
             ];
+
+            return this.fragment;
           }
 
           if (this.ctx.componentStack.indexOf(component) > -1) {
-            return [
+            this.reset();
+
+            this.fragment.children = [
               t.errorSystemView({
                 frame: this.evaluator.frame.id,
                 error: `Cycle detected when attempting to render "${component.name}"`,
-                key: this.key,
+                key: createKey([this.key, 'root']),
                 template: this.template,
                 owner: this.ctx.owner,
               }),
             ];
+
+            return this.fragment;
           }
 
           if (
@@ -332,6 +349,8 @@ export class ComponentViewEvaluator {
           ) {
             return this.componentViewTreeComputation.computed.get();
           }
+
+          this.reset();
 
           this.componentViewTreeComputation = {
             component,
@@ -347,18 +366,31 @@ export class ComponentViewEvaluator {
         },
         {
           name: `component-${this.template.component.name}<${this.template.id}>-resolve-computation`,
+          keepAlive: true,
         }
       );
     }
 
-    return this.resolveComponentComputation.get();
+    this.resolveComponentComputation.get();
+
+    if (this.rekaComponentRootComputation) {
+      this.rekaComponentRootComputation.get();
+    }
+
+    return [this.fragment];
+  }
+
+  get view() {
+    return this.fragment.children[0];
   }
 
   dispose() {
-    if (!this.rekaComponentRootComputation) {
-      return;
+    if (this.resolveComponentComputation) {
+      this.resolveComponentComputation.dispose();
     }
 
-    this.rekaComponentRootComputation.dispose();
+    if (this.rekaComponentRootComputation) {
+      this.rekaComponentRootComputation.dispose();
+    }
   }
 }

@@ -2,7 +2,7 @@ import { Parser } from '@rekajs/parser';
 import * as t from '@rekajs/types';
 import { invariant } from '@rekajs/utils';
 
-import { FrameOpts } from '../frame';
+import { Frame, FrameOpts } from '../frame';
 import { RekaOpts } from '../interfaces';
 import { Reka } from '../reka';
 
@@ -43,12 +43,14 @@ describe('evaluator', () => {
           )
     `);
 
-      invariant(frame.view instanceof t.RekaComponentView);
-      expect(frame.view.render.length).toEqual(1);
-      invariant(frame.view.render[0] instanceof t.TagView);
-      expect(frame.view.render[0].tag).toEqual('div');
-      invariant(frame.view.render[0].children[0] instanceof t.TagView);
-      expect(frame.view.render[0].children[0]).toMatchObject({
+      invariant(frame.view?.children[0] instanceof t.RekaComponentView);
+      expect(frame.view.children[0].render.length).toEqual(1);
+      invariant(frame.view.children[0].render[0] instanceof t.TagView);
+      expect(frame.view.children[0].render[0].tag).toEqual('div');
+      invariant(
+        frame.view.children[0].render[0].children[0] instanceof t.TagView
+      );
+      expect(frame.view.children[0].render[0].children[0]).toMatchObject({
         type: 'TagView',
         tag: 'text',
         props: { value: 0 },
@@ -64,7 +66,7 @@ describe('evaluator', () => {
     `);
 
       expect(
-        t.assert(frame.view, t.RekaComponentView, (view) => {
+        t.assert(frame.view?.children[0], t.RekaComponentView, (view) => {
           return t.assert(view.render[0], t.TagView, (view) => {
             return view.children
               .slice(1)
@@ -89,7 +91,7 @@ describe('evaluator', () => {
       `);
 
       expect(
-        t.assert(frame.view, t.RekaComponentView, (view) => {
+        t.assert(frame.view?.children[0], t.RekaComponentView, (view) => {
           return t.assert(view.render[0], t.TagView, (view) => {
             return view.children.map((child) =>
               t.assert(child, t.TagView, (c) => c.props['value'])
@@ -111,11 +113,13 @@ describe('evaluator', () => {
           )
       `);
 
-      t.assert(frame.view, t.RekaComponentView, (view) => {
-        t.assert(view.render[0], t.RekaComponentView, (view) => {
-          t.assert(view.render[0], t.TagView, (view) => {
-            expect(view.tag).toEqual('button');
-            expect(view.props['value']).toEqual('red');
+      t.assert(frame.view?.children[0], t.RekaComponentView, (view) => {
+        t.assert(view.render[0], t.FragmentView, (view) => {
+          t.assert(view.children[0], t.RekaComponentView, (view) => {
+            t.assert(view.render[0], t.TagView, (view) => {
+              expect(view.tag).toEqual('button');
+              expect(view.props['value']).toEqual('red');
+            });
           });
         });
       });
@@ -132,9 +136,13 @@ describe('evaluator', () => {
         )
       `);
 
-      const view = t.assert(frame.view, t.RekaComponentView, (view) => {
-        return t.assert(view.render[0], t.TagView);
-      });
+      const view = t.assert(
+        frame.view?.children[0],
+        t.RekaComponentView,
+        (view) => {
+          return t.assert(view.render[0], t.TagView);
+        }
+      );
 
       expect(view.props['value']).toEqual('Hello: 0, red');
 
@@ -163,9 +171,13 @@ describe('evaluator', () => {
       )
     `);
 
-      const view = t.assert(frame.view, t.RekaComponentView, (view) => {
-        return t.assert(view.render[0], t.TagView);
-      });
+      const view = t.assert(
+        frame.view?.children[0],
+        t.RekaComponentView,
+        (view) => {
+          return t.assert(view.render[0], t.TagView);
+        }
+      );
 
       expect(view.props['value']).toEqual(0);
 
@@ -186,9 +198,13 @@ describe('evaluator', () => {
         )
       `);
 
-      const view = t.assert(frame.view, t.RekaComponentView, (view) => {
-        return t.assert(view.render[0], t.TagView);
-      });
+      const view = t.assert(
+        frame.view?.children[0],
+        t.RekaComponentView,
+        (view) => {
+          return t.assert(view.render[0], t.TagView);
+        }
+      );
 
       expect(view.props['value']).toEqual(3);
 
@@ -219,7 +235,7 @@ describe('evaluator', () => {
       });
     };
 
-    const div = t.assert(frame.view, t.RekaComponentView, (view) =>
+    const div = t.assert(frame.view?.children[0], t.RekaComponentView, (view) =>
       t.assert(view.render[0], t.TagView)
     );
 
@@ -237,9 +253,15 @@ describe('evaluator', () => {
 
     expect(div.children.length).toEqual(2);
 
+    const divChildCompViews = div.children.map((child) =>
+      t.assert(child, t.FragmentView, (view) =>
+        t.assert(view.children[0], t.RekaComponentView)
+      )
+    );
+
     await frame.reka.change(() => {
       const btnComponent = t.assert(
-        div.children[0],
+        divChildCompViews[0],
         t.RekaComponentView,
         (view) => view.component
       );
@@ -249,7 +271,84 @@ describe('evaluator', () => {
       });
     });
 
-    expect(getBtnText(div.children[0])).toEqual('New');
-    expect(getBtnText(div.children[1])).toEqual('New');
+    expect(getBtnText(divChildCompViews[0])).toEqual('New');
+    expect(getBtnText(divChildCompViews[1])).toEqual('New');
+  });
+  describe('when a component gets removed', () => {
+    let frame: Frame;
+    beforeEach(async () => {
+      frame = await createFrame(`
+        component Button() => (<text value="Hello" />)
+        component App() => (<Button />)
+      `);
+    });
+
+    it('should be able to replace the existing comp view with an error', async () => {
+      const getFirstImmediateChildComponentView = () => {
+        return t.assert(frame.view, t.FragmentView, (view) =>
+          t.assert(view.children[0], t.RekaComponentView, (view) =>
+            t.assert(view.render[0], t.FragmentView, (view) => view.children[0])
+          )
+        );
+      };
+
+      expect(
+        t.is(getFirstImmediateChildComponentView(), t.RekaComponentView)
+      ).toBe(true);
+
+      await frame.reka.change(() => {
+        frame.reka.program.components.splice(0, 1);
+      });
+
+      expect(
+        t.is(getFirstImmediateChildComponentView(), t.ErrorSystemView)
+      ).toBe(true);
+    });
+  });
+  /**
+   * This is to test if component.reset() is called before re-evaluating a component with a different identity
+   */
+  describe('edge case: when a component is removed and then readded back while frame is not synching', () => {
+    let frame: Frame;
+    beforeEach(async () => {
+      frame = await createFrame(`
+        component Button(text) => (<text value={text} />)
+        component App() => (<Button text={"Hello"} />)
+      `);
+
+      frame.disableSync();
+
+      // Remove Button component from state
+      await frame.reka.change(() => {
+        frame.reka.program.components.splice(0, 1);
+      });
+
+      // Add the same Button component (different identity) to state
+      await frame.reka.change(() => {
+        const parsed = Parser.parseProgram(`
+          component Button(text) => (<text value={text} />)
+        `);
+
+        frame.reka.program.components.splice(0, 0, parsed.components[0]);
+      });
+
+      // When we sync again, any existing templates referencing the Button component should still work
+      frame.enableSync();
+    });
+    it('should be able to evaluate without errors', () => {
+      const getBtnText = () =>
+        t.assert(frame.view, t.FragmentView, (view) =>
+          t.assert(view.children[0], t.RekaComponentView, (view) =>
+            t.assert(view.render[0], t.FragmentView, (view) =>
+              t.assert(view.children[0], t.RekaComponentView, (view) =>
+                t.assert(view.render[0], t.TagView)
+              )
+            )
+          )
+        );
+
+      expect(() => getBtnText()).not.toThrow();
+      expect(getBtnText().props['value']).toEqual('Hello');
+    });
   });
 });
