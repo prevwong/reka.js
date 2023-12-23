@@ -1,5 +1,13 @@
 # @rekajs/core
 
+## 0.1.25
+
+### Patch Changes
+
+- [#118](https://github.com/prevwong/reka.js/pull/118) [`52c4c8d`](https://github.com/prevwong/reka.js/commit/52c4c8d81073c7f20eb8c3910f171817a23064ab) Thanks [@prevwong](https://github.com/prevwong)! - Add ability to specify custom kinds
+
+- [#119](https://github.com/prevwong/reka.js/pull/119) [`d6016e1`](https://github.com/prevwong/reka.js/commit/d6016e1fe09f87b59fe512b7d5539cad5a88c9a7) Thanks [@prevwong](https://github.com/prevwong)! - Show error view when a template references a component that has been removed
+
 ## 0.1.24
 
 ### Patch Changes

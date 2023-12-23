@@ -1,6 +1,6 @@
 {
   "name": "@rekajs/types",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "Create and manage Reka data types",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.mjs",
