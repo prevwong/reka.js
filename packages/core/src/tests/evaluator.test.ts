@@ -305,4 +305,50 @@ describe('evaluator', () => {
       ).toBe(true);
     });
   });
+  /**
+   * This is to test if component.reset() is called before re-evaluating a component with a different identity
+   */
+  describe('edge case: when a component is removed and then readded back while frame is not synching', () => {
+    let frame: Frame;
+    beforeEach(async () => {
+      frame = await createFrame(`
+        component Button(text) => (<text value={text} />)
+        component App() => (<Button text={"Hello"} />)
+      `);
+
+      frame.disableSync();
+
+      // Remove Button component from state
+      await frame.reka.change(() => {
+        frame.reka.program.components.splice(0, 1);
+      });
+
+      // Add the same Button component (different identity) to state
+      await frame.reka.change(() => {
+        const parsed = Parser.parseProgram(`
+          component Button(text) => (<text value={text} />)
+        `);
+
+        frame.reka.program.components.splice(0, 0, parsed.components[0]);
+      });
+
+      // When we sync again, any existing templates referencing the Button component should still work
+      frame.enableSync();
+    });
+    it('should be able to evaluate without errors', () => {
+      const getBtnText = () =>
+        t.assert(frame.view, t.FragmentView, (view) =>
+          t.assert(view.children[0], t.RekaComponentView, (view) =>
+            t.assert(view.render[0], t.FragmentView, (view) =>
+              t.assert(view.children[0], t.RekaComponentView, (view) =>
+                t.assert(view.render[0], t.TagView)
+              )
+            )
+          )
+        );
+
+      expect(() => getBtnText()).not.toThrow();
+      expect(getBtnText().props['value']).toEqual('Hello');
+    });
+  });
 });
