@@ -1,9 +1,4 @@
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  EyeClosedIcon,
-  EyeOpenIcon,
-} from '@radix-ui/react-icons';
+import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { Undo, Redo } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
