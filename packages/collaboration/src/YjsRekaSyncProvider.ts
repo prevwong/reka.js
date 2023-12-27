@@ -52,9 +52,14 @@ export class YjsRekaSyncProvider {
   private withMobxSync(cb: () => void) {
     const prev = this.isSynchingToMobx;
     this.isSynchingToMobx = true;
-    this.reka.change(() => {
-      cb();
-    });
+    this.reka.change(
+      () => {
+        cb();
+      },
+      {
+        silent: true,
+      }
+    );
     this.isSynchingToMobx = prev;
   }
 

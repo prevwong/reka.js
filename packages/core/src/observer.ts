@@ -24,24 +24,28 @@ type Parent = {
   key: string | number;
 };
 
-type Path = {
+export type Path = {
   parent: t.Type | Array<any> | Record<string, any>;
   key: string | number;
 };
 
-type OnAddPayload = {
+export type OnAddPayload = {
   type: t.Type;
 };
 
-type OnDiposePayload = {
+export type OnDiposePayload = {
   type: t.Type;
 };
 
-type OnChangePayload = (IObjectDidChange | IArraySplice | IArrayUpdate) & {
+export type OnChangePayload = (
+  | IObjectDidChange
+  | IArraySplice
+  | IArrayUpdate
+) & {
   path: Path[];
 };
 
-type ValueDisposer = () => void;
+type Disposer = () => void;
 
 export type ObserverHooks = {
   onAdd: (payload: OnAddPayload) => void;
@@ -58,7 +62,11 @@ export type ObserverOptions = {
 };
 
 export type ChangeOpts = {
-  batch: boolean;
+  /**
+   * If silent is true, all change listeners via .listenToChangeset() will not be called
+   */
+  silent: boolean;
+  source: any;
 };
 
 export type ChangeListenerOnAddPayload = { event: 'add' } & OnAddPayload;
@@ -74,7 +82,15 @@ export type ChangeListenerPayload =
   | ChangeListenerOnDisposePaylaod
   | ChangeListenerOnChangePayload;
 
+export type Changeset = {
+  changes: OnChangePayload[];
+  disposed: t.Type[];
+  added: t.Type[];
+  source?: any;
+};
+
 export type ChangeListenerSubscriber = (payload: ChangeListenerPayload) => void;
+export type ChangesetListener = (changeset: Changeset) => void;
 
 export class Observer<T extends t.Type = t.Type> {
   id: string;
@@ -86,13 +102,17 @@ export class Observer<T extends t.Type = t.Type> {
   private valueToParentMap: WeakMap<ValuesWithReference, Parent>;
   private idToType: Map<string, t.Type>;
   private opts: ObserverOptions;
-  private typeToDisposer: WeakMap<t.Type, ValueDisposer>;
+  private typeToDisposer: WeakMap<t.Type, Disposer>;
   private markedForDisposal: Set<t.Type> = new Set();
   private isDisposing: boolean = false;
-  private isMutation: boolean = false;
+  private isMutating: boolean = false;
+  private isTracking: boolean = false;
 
+  private changesetListeners: ChangesetListener[] = [];
   private uncommittedValues: Set<Record<string, any> | Array<any> | t.Type> =
     new Set();
+
+  private changeset: Changeset;
 
   constructor(type: T, opts?: Partial<ObserverOptions>) {
     this.id = opts?.id || getRandomId();
@@ -100,6 +120,12 @@ export class Observer<T extends t.Type = t.Type> {
     this.typeToDisposer = new WeakMap();
     this.idToType = new Map();
     this.root = type;
+
+    this.changeset = {
+      changes: [],
+      added: [],
+      disposed: [],
+    };
 
     /* eslint-disable @typescript-eslint/no-empty-function */
     this.opts = {
@@ -165,6 +191,18 @@ export class Observer<T extends t.Type = t.Type> {
     this.rootDisposer = rootDisposer;
   }
 
+  setTracking(value: boolean) {
+    this.isTracking = value;
+  }
+
+  withTracking<C>(cb: () => C, track = true) {
+    const prev = this.isTracking;
+    this.isTracking = track;
+    const returnValue = cb();
+    this.isTracking = prev;
+    return returnValue;
+  }
+
   getTypeFromId<T extends t.Type = t.Any>(
     id: string,
     expectedType?: TypeConstructor<T>
@@ -178,12 +216,26 @@ export class Observer<T extends t.Type = t.Type> {
     return type;
   }
 
+  /**
+   * @deprecated - Use listenToChangeset() instead
+   */
   listenToChanges(changeListenerSubscriber: ChangeListenerSubscriber) {
     this.opts.subscribers.push(changeListenerSubscriber);
 
     return () => {
       this.opts.subscribers.splice(
         this.opts.subscribers.indexOf(changeListenerSubscriber),
+        1
+      );
+    };
+  }
+
+  listenToChangeset(subscriber: ChangesetListener) {
+    this.changesetListeners.push(subscriber);
+
+    return () => {
+      this.changesetListeners.splice(
+        this.changesetListeners.indexOf(subscriber),
         1
       );
     };
@@ -208,7 +260,7 @@ export class Observer<T extends t.Type = t.Type> {
 
   private setupChild(value: any, parent: Parent) {
     if (
-      this.isMutation &&
+      this.isMutating &&
       typeof value !== 'function' &&
       value instanceof Object
     ) {
@@ -518,6 +570,8 @@ export class Observer<T extends t.Type = t.Type> {
       });
     }
 
+    this.changeset.added.push(type);
+
     this.notify({
       event: 'add',
       type,
@@ -531,6 +585,8 @@ export class Observer<T extends t.Type = t.Type> {
       });
     }
 
+    this.changeset.disposed.push(type);
+
     this.notify({
       event: 'dispose',
       type,
@@ -539,7 +595,7 @@ export class Observer<T extends t.Type = t.Type> {
 
   private handleOnChange(value: any, payload: Omit<OnChangePayload, 'path'>) {
     invariant(
-      this.isMutation,
+      this.isMutating,
       'Mutation not allowed outside of the .change() method'
     );
 
@@ -574,6 +630,8 @@ export class Observer<T extends t.Type = t.Type> {
       this.opts.hooks.onChange(change);
     }
 
+    this.changeset.changes.push(change);
+
     this.notify({
       event: 'change',
       ...change,
@@ -583,11 +641,19 @@ export class Observer<T extends t.Type = t.Type> {
   }
 
   private notify(change: ChangeListenerPayload) {
-    if (!this.isMutation) {
+    if (!this.isMutating) {
       return;
     }
 
     this.opts.subscribers.forEach((subscriber) => subscriber(change));
+  }
+
+  private notifyChangesetListeners() {
+    if (!this.isTracking) {
+      return;
+    }
+
+    this.changesetListeners.map((subscriber) => subscriber(this.changeset));
   }
 
   private getPath(value: t.Type | Array<any> | Object) {
@@ -651,31 +717,45 @@ export class Observer<T extends t.Type = t.Type> {
     };
   }
 
-  change<C>(mutation: () => C) {
-    const _change = () => {
-      if (this.isMutation) {
-        return runInAction(() => {
-          return mutation();
-        });
-      }
+  change<C>(mutation: () => C, opts?: Partial<ChangeOpts>) {
+    return this.withTracking(
+      () => {
+        const _change = () => {
+          if (this.isMutating) {
+            return runInAction(() => {
+              return mutation();
+            });
+          }
 
-      return runInAction(() => {
-        this.isMutation = true;
-        const returnValue = mutation();
-        this.isMutation = false;
+          return runInAction(() => {
+            this.changeset = {
+              added: [],
+              disposed: [],
+              changes: [],
+              source: opts?.source,
+            };
 
-        this.disposeTypes();
-        this.uncommittedValues.clear();
+            this.isMutating = true;
+            const returnValue = mutation();
+            this.isMutating = false;
 
-        return returnValue;
-      });
-    };
+            this.disposeTypes();
+            this.uncommittedValues.clear();
 
-    if (this.opts.batch) {
-      return _change();
-    }
+            this.notifyChangesetListeners();
 
-    return this.whileDisposing(() => _change());
+            return returnValue;
+          });
+        };
+
+        if (this.opts.batch) {
+          return _change();
+        }
+
+        return this.whileDisposing(() => _change());
+      },
+      opts?.silent ? false : true
+    );
   }
 
   dispose() {

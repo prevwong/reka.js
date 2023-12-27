@@ -101,13 +101,13 @@ importers:
     dependencies:
       '@rekajs/core':
         specifier: '*'
-        version: link:../../packages/core
+        version: 0.1.25(@rekajs/types@0.1.18)
       '@rekajs/parser':
         specifier: '*'
-        version: link:../../packages/parser
+        version: 0.1.15(@rekajs/types@0.1.18)
       '@rekajs/types':
         specifier: '*'
-        version: link:../../packages/types
+        version: 0.1.18
     devDependencies:
       typescript:
         specifier: ^4.9.3
@@ -123,10 +123,10 @@ importers:
         version: 13.1.2
       '@rekajs/core':
         specifier: '*'
-        version: link:../../packages/core
+        version: 0.1.25(@rekajs/types@0.1.18)
       '@rekajs/parser':
         specifier: '*'
-        version: link:../../packages/parser
+        version: 0.1.15(@rekajs/types@0.1.18)
       '@rekajs/react':
         specifier: '*'
         version: link:../../packages/react
@@ -135,7 +135,7 @@ importers:
         version: link:../../packages/react-code-editor
       '@rekajs/types':
         specifier: '*'
-        version: link:../../packages/types
+        version: 0.1.18
       '@types/node':
         specifier: 18.7.15
         version: 18.7.15
@@ -174,10 +174,10 @@ importers:
         version: link:../../packages/collaboration
       '@rekajs/core':
         specifier: '*'
-        version: link:../../packages/core
+        version: 0.1.25(@rekajs/types@0.1.18)
       '@rekajs/parser':
         specifier: '*'
-        version: link:../../packages/parser
+        version: 0.1.15(@rekajs/types@0.1.18)
       '@rekajs/react':
         specifier: '*'
         version: link:../../packages/react
@@ -186,7 +186,7 @@ importers:
         version: link:../../packages/react-code-editor
       '@rekajs/types':
         specifier: '*'
-        version: link:../../packages/types
+        version: 0.1.18
       '@types/node':
         specifier: 18.7.15
         version: 18.7.15
@@ -427,7 +427,7 @@ importers:
         version: 4.1.1
       '@prevwong/getdocs-ts':
         specifier: git+https://prevwong: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@github.com/prevwong/getdocs-ts.git
-        version: prevwong+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@github.com/prevwong/getdocs-ts/2d912fe897b2bd1fbff95d3d77179de82f9efb32
+        version: prevwong+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/github.com/prevwong/getdocs-ts/2d912fe897b2bd1fbff95d3d77179de82f9efb32
       '@radix-ui/colors':
         specifier: ^0.1.8
         version: 0.1.8
@@ -503,6 +503,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      lucide-react:
+        specifier: ^0.302.0
+        version: 0.302.0(react@18.2.0)
       mobx:
         specifier: ^6.6.1
         version: 6.6.1
@@ -1614,6 +1617,7 @@ packages:
 
   /@emotion/memoize@0.7.4:
     resolution: {integrity: sha512-Ja/Vfqe3HpuzRsG1oBtWTHk2PGZ7GR+2Vz5iYGelAw8dx32K0y7PjVuxK6z1nMpZOqAFsRUPCkK1YjJ56qJlgw==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -3152,6 +3156,43 @@ packages:
     resolution: {integrity: sha512-d0O68AYy/9oeEy1DdC07bz1/ZXX+DqCskRd3i4JzLSTXwefzaepQrKjXC7aNM8lTHjFLDO0pDgaEiQ7jEk+HVg==}
     dependencies:
       '@babel/runtime': 7.20.6
+    dev: false
+
+  /@rekajs/core@0.1.25(@rekajs/types@0.1.18):
+    resolution: {integrity: sha512-yY3OcQ4prvQ4iOAkpiHc5i98cT7Fq26PGizERTPljUjNMhZsXHSWy1WGuKSPgxTGA5TT6iwlY3d2zXaRgTEUDA==}
+    peerDependencies:
+      '@rekajs/types': '>=0.1.0'
+    dependencies:
+      '@rekajs/types': 0.1.18
+      '@rekajs/utils': 0.1.3
+      mobx: 6.6.1
+      mobx-utils: 6.0.6(mobx@6.6.1)
+    dev: false
+
+  /@rekajs/parser@0.1.15(@rekajs/types@0.1.18):
+    resolution: {integrity: sha512-iixhPUqxJnB/0o0aG1Y5EHaE7FLeJuK6F8k83U2VdoEIZL3amTcZvSK2IwFpmhH+kYLxHMuW1qloYHcKh+uaRw==}
+    peerDependencies:
+      '@rekajs/types': '>=0.1.0'
+    dependencies:
+      '@babel/types': 7.21.0
+      '@rekajs/types': 0.1.18
+      '@rekajs/utils': 0.1.3
+      acorn: 8.8.1
+      acorn-jsx: 5.3.2(acorn@8.8.1)
+    dev: false
+
+  /@rekajs/types@0.1.18:
+    resolution: {integrity: sha512-n285ny+z3v1HSfK2YRf1BBp62f0dg1OmJ38B3VaB110pdOYQtmAJEMlx55RA+Q9CcHW6bU1XniNFLSBQU3r72A==}
+    dependencies:
+      '@rekajs/utils': 0.1.3
+    dev: false
+
+  /@rekajs/utils@0.1.3:
+    resolution: {integrity: sha512-+O1Hdoj5J9GEA9UmX1lrBWOD9OhKuldxngSyFFvihTKILY6egiiFvGFBfoyCbGU/+TXKQbiwk2BGp37hZEA5Iw==}
+    dependencies:
+      debounce: 2.0.0
+      nanoid: 3.3.4
+      tiny-invariant: 1.2.0
     dev: false
 
   /@rollup/plugin-commonjs@22.0.2(rollup@2.79.1):
@@ -6658,6 +6699,14 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
+  /lucide-react@0.302.0(react@18.2.0):
+    resolution: {integrity: sha512-JZX+1fjpqxvQmEgItvPOAwRlqf0Eg9dSZMxljA2/V2M6dluOhQCPBhewIlSJWgkNu0M36kViOgmTAMnDaAMOFw==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /lz-string@1.4.4:
     resolution: {integrity: sha512-0ckx7ZHRPqb0oUm8zNr+90mtf9DQB60H1wMCjBtfi62Kl3a7JbHob6gA2bC+xRvZoOL+1hzUK8jeuEIQE8svEQ==}
     hasBin: true
@@ -9848,12 +9897,11 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
 
-  prevwong+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@github.com/prevwong/getdocs-ts/2d912fe897b2bd1fbff95d3d77179de82f9efb32:
+  prevwong+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/github.com/prevwong/getdocs-ts/2d912fe897b2bd1fbff95d3d77179de82f9efb32:
     resolution: {commit: 2d912fe897b2bd1fbff95d3d77179de82f9efb32, repo: https://prevwong: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@github.com/prevwong/getdocs-ts.git, type: git}
     name: '@prevwong/getdocs-ts'
     version: 0.1.5
     hasBin: true
-    prepare: true
     requiresBuild: true
     dependencies:
       typescript: 4.9.4
