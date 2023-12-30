@@ -101,13 +101,13 @@ importers:
     dependencies:
       '@rekajs/core':
         specifier: '*'
-        version: 0.1.25(@rekajs/types@0.1.18)
+        version: link:../../packages/core
       '@rekajs/parser':
         specifier: '*'
-        version: 0.1.15(@rekajs/types@0.1.18)
+        version: link:../../packages/parser
       '@rekajs/types':
         specifier: '*'
-        version: 0.1.18
+        version: link:../../packages/types
     devDependencies:
       typescript:
         specifier: ^4.9.3
@@ -123,10 +123,10 @@ importers:
         version: 13.1.2
       '@rekajs/core':
         specifier: '*'
-        version: 0.1.25(@rekajs/types@0.1.18)
+        version: link:../../packages/core
       '@rekajs/parser':
         specifier: '*'
-        version: 0.1.15(@rekajs/types@0.1.18)
+        version: link:../../packages/parser
       '@rekajs/react':
         specifier: '*'
         version: link:../../packages/react
@@ -135,7 +135,7 @@ importers:
         version: link:../../packages/react-code-editor
       '@rekajs/types':
         specifier: '*'
-        version: 0.1.18
+        version: link:../../packages/types
       '@types/node':
         specifier: 18.7.15
         version: 18.7.15
@@ -174,10 +174,10 @@ importers:
         version: link:../../packages/collaboration
       '@rekajs/core':
         specifier: '*'
-        version: 0.1.25(@rekajs/types@0.1.18)
+        version: link:../../packages/core
       '@rekajs/parser':
         specifier: '*'
-        version: 0.1.15(@rekajs/types@0.1.18)
+        version: link:../../packages/parser
       '@rekajs/react':
         specifier: '*'
         version: link:../../packages/react
@@ -186,7 +186,7 @@ importers:
         version: link:../../packages/react-code-editor
       '@rekajs/types':
         specifier: '*'
-        version: 0.1.18
+        version: link:../../packages/types
       '@types/node':
         specifier: 18.7.15
         version: 18.7.15
@@ -3156,43 +3156,6 @@ packages:
     resolution: {integrity: sha512-d0O68AYy/9oeEy1DdC07bz1/ZXX+DqCskRd3i4JzLSTXwefzaepQrKjXC7aNM8lTHjFLDO0pDgaEiQ7jEk+HVg==}
     dependencies:
       '@babel/runtime': 7.20.6
-    dev: false
-
-  /@rekajs/core@0.1.25(@rekajs/types@0.1.18):
-    resolution: {integrity: sha512-yY3OcQ4prvQ4iOAkpiHc5i98cT7Fq26PGizERTPljUjNMhZsXHSWy1WGuKSPgxTGA5TT6iwlY3d2zXaRgTEUDA==}
-    peerDependencies:
-      '@rekajs/types': '>=0.1.0'
-    dependencies:
-      '@rekajs/types': 0.1.18
-      '@rekajs/utils': 0.1.3
-      mobx: 6.6.1
-      mobx-utils: 6.0.6(mobx@6.6.1)
-    dev: false
-
-  /@rekajs/parser@0.1.15(@rekajs/types@0.1.18):
-    resolution: {integrity: sha512-iixhPUqxJnB/0o0aG1Y5EHaE7FLeJuK6F8k83U2VdoEIZL3amTcZvSK2IwFpmhH+kYLxHMuW1qloYHcKh+uaRw==}
-    peerDependencies:
-      '@rekajs/types': '>=0.1.0'
-    dependencies:
-      '@babel/types': 7.21.0
-      '@rekajs/types': 0.1.18
-      '@rekajs/utils': 0.1.3
-      acorn: 8.8.1
-      acorn-jsx: 5.3.2(acorn@8.8.1)
-    dev: false
-
-  /@rekajs/types@0.1.18:
-    resolution: {integrity: sha512-n285ny+z3v1HSfK2YRf1BBp62f0dg1OmJ38B3VaB110pdOYQtmAJEMlx55RA+Q9CcHW6bU1XniNFLSBQU3r72A==}
-    dependencies:
-      '@rekajs/utils': 0.1.3
-    dev: false
-
-  /@rekajs/utils@0.1.3:
-    resolution: {integrity: sha512-+O1Hdoj5J9GEA9UmX1lrBWOD9OhKuldxngSyFFvihTKILY6egiiFvGFBfoyCbGU/+TXKQbiwk2BGp37hZEA5Iw==}
-    dependencies:
-      debounce: 2.0.0
-      nanoid: 3.3.4
-      tiny-invariant: 1.2.0
     dev: false
 
   /@rollup/plugin-commonjs@22.0.2(rollup@2.79.1):
