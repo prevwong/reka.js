@@ -1,16 +1,15 @@
-import { Reka, ChangeListenerPayload } from '@rekajs/core';
+import { Reka, Changeset } from '@rekajs/core';
 import * as t from '@rekajs/types';
-import { invariant } from '@rekajs/utils';
+import { getRandomId, invariant } from '@rekajs/utils';
 import * as Y from 'yjs';
 
 import { getTypePathFromMobxChangePath, jsToYType, yTypeToJS } from './utils';
 
 export class YjsRekaSyncProvider {
-  private mobxChangesToSync: ChangeListenerPayload[] = [];
-  private isBatchingMobxChanges = false;
-  private isSynchingToMobx = false;
+  id: string;
 
   private declare rekaChangeUnsubscriber: () => void;
+
   private yDocChangeListener: (
     events: Y.YEvent<any>[],
     tr: Y.Transaction
@@ -18,7 +17,9 @@ export class YjsRekaSyncProvider {
 
   private yDoc: Y.Doc;
 
-  constructor(readonly reka: Reka, readonly type: Y.Map<any>) {
+  constructor(readonly reka: Reka, readonly type: Y.Map<any>, id?: string) {
+    this.id = id ?? getRandomId();
+
     if (!type.doc) {
       throw new Error();
     }
@@ -39,7 +40,7 @@ export class YjsRekaSyncProvider {
       }
 
       this.withMobxSync(() => {
-        events.forEach((event) => this.syncToState(event));
+        events.forEach((event) => this.syncYEventToState(event));
       });
     };
   }
@@ -50,24 +51,26 @@ export class YjsRekaSyncProvider {
   }
 
   private withMobxSync(cb: () => void) {
-    const prev = this.isSynchingToMobx;
-    this.isSynchingToMobx = true;
     this.reka.change(
       () => {
         cb();
       },
       {
-        silent: true,
+        source: this.changesetSourceKey,
       }
     );
-    this.isSynchingToMobx = prev;
   }
 
   get yRekaDocument() {
     return this.type.get('document');
   }
 
-  syncToState(event: Y.YEvent<any>) {
+  get changesetSourceKey() {
+    return `yjs-sync-${this.id}`;
+  }
+
+  syncYEventToState(event: Y.YEvent<any>) {
+    // No need to do anything if the event is from the sync mechanism below
     if (event.transaction.origin === this) {
       return;
     }
@@ -145,7 +148,7 @@ export class YjsRekaSyncProvider {
     }
   }
 
-  syncMobxChangesToYDoc(changes: ChangeListenerPayload[]) {
+  syncStateChangesetToYDoc(changeset: Changeset) {
     Y.transact(
       this.yDoc,
       () => {
@@ -154,17 +157,12 @@ export class YjsRekaSyncProvider {
 
         const yDocRoot = this.yRekaDocument;
 
-        changes.forEach((change) => {
-          if (change.event === 'add') {
-            return;
-          }
+        changeset.disposed.forEach((dispose) => {
+          const typeIdToDispose = dispose.id;
+          yDocRoot.get('types').delete(typeIdToDispose);
+        });
 
-          if (change.event === 'dispose') {
-            const typeIdToDispose = change.type.id;
-            yDocRoot.get('types').delete(typeIdToDispose);
-            return;
-          }
-
+        changeset.changes.forEach((change) => {
           const path = getTypePathFromMobxChangePath([...change.path]);
 
           const getTypeFromId = (id: string) => {
@@ -307,28 +305,20 @@ export class YjsRekaSyncProvider {
   }
 
   init() {
-    // Listen to Reka state changes
-    this.rekaChangeUnsubscriber = this.reka.listenToChanges((change) => {
-      if (this.isSynchingToMobx) {
-        return;
-      }
-
-      this.mobxChangesToSync.push(change);
-
-      if (this.isBatchingMobxChanges) {
-        return;
-      }
-
-      this.isBatchingMobxChanges = true;
-
-      Promise.resolve().then(() => {
-        this.syncMobxChangesToYDoc(this.mobxChangesToSync);
-        this.mobxChangesToSync = [];
-        this.isBatchingMobxChanges = false;
-      });
-    });
-
     // Listen to Y.js doc changes
     this.type.observeDeep(this.yDocChangeListener);
+
+    // Listen to Reka state changes
+    this.rekaChangeUnsubscriber = this.reka.listenToChangeset((changeset) => {
+      if (changeset.source === this.changesetSourceKey) {
+        return;
+      }
+
+      if (changeset.changes.length === 0) {
+        return;
+      }
+
+      this.syncStateChangesetToYDoc(changeset);
+    });
   }
 }
