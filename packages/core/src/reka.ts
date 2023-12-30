@@ -21,12 +21,10 @@ import {
   RekaChangeOpts,
   RekaChangesetInfo,
   RekaOpts,
-  RekaStateChangeset,
   StateSubscriberOpts,
 } from './interfaces';
 import {
   ChangeListenerSubscriber,
-  ChangeOpts,
   Observer,
   ChangesetListener,
 } from './observer';
@@ -53,7 +51,7 @@ export class Reka {
 
   private declare observer: Observer<t.State>;
   private declare extensions: ExtensionRegistry;
-  private declare _history: HistoryManager;
+  private declare history: HistoryManager;
 
   private idToFrame: Map<string, Frame> = new Map();
 
@@ -96,19 +94,13 @@ export class Reka {
     });
   }
 
-  set history(manager: HistoryManager) {
+  setHistoryManager(manager: HistoryManager) {
     invariant(
       !this.loaded,
       `Cannot override History manager after Reka has been initialised.`
     );
 
-    this._history = manager;
-  }
-
-  get history() {
-    invariant(this._history, `History manager not initialised.`);
-
-    return this._history;
+    this.history = manager;
   }
 
   canUndo() {
@@ -120,7 +112,7 @@ export class Reka {
   }
 
   undo() {
-    return this._history.undo();
+    return this.history.undo();
   }
 
   redo() {
@@ -223,7 +215,7 @@ export class Reka {
       },
     });
 
-    this.history = new DefaultHistoryManager(this);
+    this.setHistoryManager(new DefaultHistoryManager(this));
 
     this.frames = [];
 

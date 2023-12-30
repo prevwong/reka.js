@@ -67,8 +67,6 @@ export class DefaultHistoryManager extends HistoryManager {
         prev &&
         Math.abs(now - prev.timestamp) <= throttleThreshold
       ) {
-        const prev = this.stack[this.pointer];
-
         this.stack[this.pointer] = {
           timestamp: prev.timestamp,
           changes: [...prev.changes, ...payload.changes],
