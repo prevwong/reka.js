@@ -32,7 +32,10 @@ export const Renderer = observer((props: RendererProps) => {
     return props.view.component.render(props.view.props);
   }
 
-  if (props.view instanceof t.SlotView || props.view instanceof t.FragmentView) {
+  if (
+    props.view instanceof t.SlotView ||
+    props.view instanceof t.FragmentView
+  ) {
     return props.view.children.map((r) => <Renderer key={r.id} view={r} />);
   }
 
