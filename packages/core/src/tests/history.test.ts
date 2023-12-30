@@ -174,4 +174,58 @@ describe('History', () => {
       }
     });
   }
+
+  describe('throttle', () => {
+    it('should add changes as a single stack item if changes are made within throttle threshold', async () => {
+      const divTplProp1 = t.assert(
+        reka.program.components[0].template,
+        t.TagTemplate,
+        (tpl) => t.assert(tpl.props.prop1, t.Literal)
+      );
+
+      reka.change(() => {
+        divTplProp1.value = 'hellos';
+      });
+
+      reka.change(
+        () => {
+          divTplProp1.value = 'helloss';
+        },
+        {
+          history: {
+            throttle: 100,
+          },
+        }
+      );
+
+      expect(divTplProp1.value).toEqual('helloss');
+
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(true);
+        }, 100);
+      });
+
+      reka.change(
+        () => {
+          divTplProp1.value = 'hellosss';
+        },
+        {
+          history: {
+            throttle: 100,
+          },
+        }
+      );
+
+      expect(divTplProp1.value).toEqual('hellosss');
+
+      reka.undo();
+
+      expect(divTplProp1.value).toEqual('helloss');
+
+      reka.undo();
+
+      expect(divTplProp1.value).toEqual('hello');
+    });
+  });
 });

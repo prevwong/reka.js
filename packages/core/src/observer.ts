@@ -67,6 +67,7 @@ export type ChangeOpts = {
    */
   silent: boolean;
   source: any;
+  info: Record<string, any>;
 };
 
 export type ChangeListenerOnAddPayload = { event: 'add' } & OnAddPayload;
@@ -82,15 +83,18 @@ export type ChangeListenerPayload =
   | ChangeListenerOnDisposePaylaod
   | ChangeListenerOnChangePayload;
 
-export type Changeset = {
+export type Changeset<I extends Record<string, any> = {}> = {
   changes: OnChangePayload[];
   disposed: t.Type[];
   added: t.Type[];
   source?: any;
+  info: I;
 };
 
 export type ChangeListenerSubscriber = (payload: ChangeListenerPayload) => void;
-export type ChangesetListener = (changeset: Changeset) => void;
+export type ChangesetListener<I extends Record<string, any> = {}> = (
+  changeset: Changeset<I>
+) => void;
 
 export class Observer<T extends t.Type = t.Type> {
   id: string;
@@ -125,6 +129,7 @@ export class Observer<T extends t.Type = t.Type> {
       changes: [],
       added: [],
       disposed: [],
+      info: {},
     };
 
     /* eslint-disable @typescript-eslint/no-empty-function */
@@ -230,7 +235,7 @@ export class Observer<T extends t.Type = t.Type> {
     };
   }
 
-  listenToChangeset(subscriber: ChangesetListener) {
+  listenToChangeset(subscriber: ChangesetListener<any>) {
     this.changesetListeners.push(subscriber);
 
     return () => {
@@ -277,9 +282,16 @@ export class Observer<T extends t.Type = t.Type> {
       this.valueToParentMap.set(value, parent);
     }
 
-    if (this.idToType.get(value.id)) {
+    /**
+     * Ignore setting up observers if the value is already in the tree
+     */
+    if (this.idToType.get(value.id) && this.idToType.get(value.id) === value) {
       return noop;
     }
+
+    // Remove any existing registration of the same type
+    // Should typically never happen
+    this.typeToDisposer.get(value)?.();
 
     this.handleOnAddType(value);
 
@@ -381,6 +393,10 @@ export class Observer<T extends t.Type = t.Type> {
 
     if (!this.typeToDisposer.get(value)) {
       this.typeToDisposer.set(value, () => {
+        if (this.idToType.get(value.id) === value) {
+          this.idToType.delete(value.id);
+        }
+
         this.handleOnDisposeType(value);
         disposeTypeObserver();
         fieldDisposers.forEach((disposeChildField) => disposeChildField?.());
@@ -733,6 +749,7 @@ export class Observer<T extends t.Type = t.Type> {
               disposed: [],
               changes: [],
               source: opts?.source,
+              info: opts?.info ?? {},
             };
 
             this.isMutating = true;
@@ -741,7 +758,6 @@ export class Observer<T extends t.Type = t.Type> {
 
             this.disposeTypes();
             this.uncommittedValues.clear();
-
             this.notifyChangesetListeners();
 
             return returnValue;

@@ -1,20 +1,33 @@
-import { invariant } from '@rekajs/utils';
-
 import { OnChangePayload, Path } from './observer';
 import { Reka } from './reka';
+import { action, makeObservable, observable } from 'mobx';
+
+type HistoryManagerStatus = {
+  undoable: boolean;
+  redoable: boolean;
+};
 
 export abstract class HistoryManager {
+  status: HistoryManagerStatus;
+
   constructor(readonly reka: Reka) {
-    if (this.init) {
-      this.init();
-    }
+    this.status = {
+      undoable: false,
+      redoable: false,
+    };
+
+    makeObservable(this, {
+      status: observable,
+      setStatus: action,
+    });
   }
 
   abstract undo(): void;
   abstract redo(): void;
 
-  abstract canUndo(): boolean;
-  abstract canRedo(): boolean;
+  setStatus(cb: (status: HistoryManagerStatus) => void) {
+    cb(this.status);
+  }
 
   init?(): void;
   dispose?(): void;
@@ -25,6 +38,8 @@ type HistoryChangeset = {
   changes: OnChangePayload[];
 };
 
+export class HistoryChangesetPathError extends Error {}
+
 export class DefaultHistoryManager extends HistoryManager {
   private stack: HistoryChangeset[] = [];
   private pointer = -1;
@@ -32,18 +47,43 @@ export class DefaultHistoryManager extends HistoryManager {
   declare disposeListener: () => void;
 
   init() {
-    this.disposeListener = this.reka.listenToChanges2((payload) => {
+    this.disposeListener = this.reka.listenToChangeset((payload) => {
+      if (payload.source === 'history' || payload.info.history.ignore) {
+        return;
+      }
+
       if (payload.changes.length <= 0) {
         return;
       }
 
-      this.stack.push({
-        timestamp: Date.now(),
-        changes: payload.changes,
-      });
+      const now = Date.now();
 
-      this.pointer++;
-      this.stack.length = this.pointer + 1;
+      const prev = this.stack[this.pointer];
+
+      const throttleThreshold = payload.info.history.throttle;
+
+      if (
+        throttleThreshold &&
+        prev &&
+        Math.abs(now - prev.timestamp) <= throttleThreshold
+      ) {
+        const prev = this.stack[this.pointer];
+
+        this.stack[this.pointer] = {
+          timestamp: prev.timestamp,
+          changes: [...prev.changes, ...payload.changes],
+        };
+      } else {
+        this.pointer++;
+        this.stack[this.pointer] = {
+          timestamp: now,
+          changes: payload.changes,
+        };
+
+        this.stack.length = this.pointer + 1;
+      }
+
+      this.syncStatus();
     });
   }
 
@@ -57,7 +97,9 @@ export class DefaultHistoryManager extends HistoryManager {
         return value;
       }
 
-      invariant(value !== undefined);
+      if (value === undefined) {
+        throw new HistoryChangesetPathError(`Cannot resolve path`);
+      }
 
       const path = paths[i];
 
@@ -129,12 +171,63 @@ export class DefaultHistoryManager extends HistoryManager {
     throw new Error('Unknown op');
   }
 
+  private changeWithRollback(
+    pointer: number,
+    direction: 'backward' | 'forward'
+  ) {
+    const changeset = this.stack[pointer];
+
+    this.reka.change(
+      () => {
+        let abortIdx = -1;
+        let changes = changeset.changes;
+
+        if (direction === 'backward') {
+          changes = [...changes].reverse();
+        }
+
+        for (let i = 0; i < changes.length; i++) {
+          try {
+            if (direction === 'backward') {
+              this.applyInverse(changes[i]);
+            } else {
+              this.apply(changes[i]);
+            }
+          } catch {
+            abortIdx = i;
+            break;
+          }
+        }
+
+        if (abortIdx >= 0) {
+          // Rollback all changes
+          for (let i = abortIdx - 1; i >= 0; i--) {
+            if (direction === 'backward') {
+              this.apply(changes[i]);
+            } else {
+              this.applyInverse(changes[i]);
+            }
+          }
+
+          // remove from history, can't do anything with it anymore
+          this.stack.splice(pointer, 1);
+          this.undo();
+        }
+      },
+      {
+        source: 'history',
+      }
+    );
+  }
+
   undo() {
     if (this.pointer < 0) {
       return;
     }
 
-    const head = this.stack[this.pointer];
+    const currentPointer = this.pointer;
+
+    const head = this.stack[currentPointer];
 
     if (!head) {
       return;
@@ -142,16 +235,9 @@ export class DefaultHistoryManager extends HistoryManager {
 
     this.pointer--;
 
-    this.reka.change(
-      () => {
-        [...head.changes].reverse().map((change) => {
-          this.applyInverse(change);
-        });
-      },
-      {
-        silent: true,
-      }
-    );
+    this.changeWithRollback(currentPointer, 'backward');
+
+    this.syncStatus();
   }
 
   redo() {
@@ -172,16 +258,18 @@ export class DefaultHistoryManager extends HistoryManager {
         });
       },
       {
-        silent: true,
+        source: 'history',
       }
     );
+
+    this.syncStatus();
   }
 
-  canUndo() {
-    return this.stack.length > 0 && this.pointer >= 0;
-  }
-
-  canRedo() {
-    return this.stack.length > 0 && this.pointer < this.stack.length - 1;
+  private syncStatus() {
+    this.setStatus((status) => {
+      status.undoable = this.stack.length > 0 && this.pointer >= 0;
+      status.redoable =
+        this.stack.length > 0 && this.pointer < this.stack.length - 1;
+    });
   }
 }

@@ -294,6 +294,10 @@ export class ComponentViewEvaluator {
   }
 
   private reset() {
+    if (this.rekaComponentRootComputation) {
+      this.rekaComponentRootComputation.dispose();
+    }
+
     this.componentViewTreeComputation = null;
     this.rekaComponentRootComputation = null;
     this.rekaComponentPropsComputation = null;

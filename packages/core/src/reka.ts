@@ -18,7 +18,10 @@ import { Head } from './head';
 import { DefaultHistoryManager, HistoryManager } from './history';
 import {
   CustomKindDefinition,
+  RekaChangeOpts,
+  RekaChangesetInfo,
   RekaOpts,
+  RekaStateChangeset,
   StateSubscriberOpts,
 } from './interfaces';
 import {
@@ -62,9 +65,6 @@ export class Reka {
 
   changes: any[];
 
-  undoable: boolean;
-  redoable: boolean;
-
   volatile: {
     [key: string]: any;
     [ExtensionVolatileStateKey]: Record<string, any>;
@@ -87,17 +87,12 @@ export class Reka {
 
     this.changes = [];
 
-    this.undoable = false;
-    this.redoable = false;
-
     makeObservable(this, {
       frames: observable,
       volatile: observable,
       components: computed,
       dispose: action,
       changes: observable,
-      undoable: observable,
-      redoable: observable,
     });
   }
 
@@ -117,11 +112,11 @@ export class Reka {
   }
 
   canUndo() {
-    return this.undoable;
+    return this.history.status.undoable;
   }
 
   canRedo() {
-    return this.redoable;
+    return this.history.status.redoable;
   }
 
   undo() {
@@ -236,6 +231,8 @@ export class Reka {
 
     this.extensions.init();
 
+    this.history.init?.();
+
     if (syncImmediately) {
       this.sync(evaluateImmediately);
     } else {
@@ -264,12 +261,19 @@ export class Reka {
   /**
    * Perform a mutation to the State
    */
-  change(mutator: () => void, opts?: Partial<ChangeOpts>) {
+  change(mutator: () => void, opts?: Partial<RekaChangeOpts>) {
     return runInAction(() => {
-      this.observer.change(mutator, opts);
-
-      this.undoable = this.history.canUndo();
-      this.redoable = this.history.canRedo();
+      this.observer.change(mutator, {
+        source: opts?.source,
+        info: {
+          ...(opts?.info ?? {}),
+          history: {
+            ignore: false,
+            throttle: 0,
+            ...(opts?.history ?? {}),
+          },
+        },
+      });
 
       // Don't sync yet when we're still setting up (ie: creating the Extensions registry)
       if (this.init) {
@@ -356,13 +360,18 @@ export class Reka {
   }
 
   /**
+   * @deprecated Use listenToChangeset()
+   *
    * Listen for changes and mutations made to the State
    */
   listenToChanges(changeListenerSubscriber: ChangeListenerSubscriber) {
     return this.observer.listenToChanges(changeListenerSubscriber);
   }
 
-  listenToChanges2(subscriber: ChangesetListener) {
+  /**
+   * Listen for changes and mutations made to the State
+   */
+  listenToChangeset(subscriber: ChangesetListener<RekaChangesetInfo>) {
     return this.observer.listenToChangeset(subscriber);
   }
 
