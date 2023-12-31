@@ -1,9 +1,9 @@
 import * as t from '@rekajs/types';
 
 import { ExtensionDefinition } from './extension';
+import { Changeset } from './observer';
 import { Reka } from './reka';
 import { KindFieldValidators } from './utils';
-import { Changeset } from './observer';
 
 export type StateExternalFunction = (opts: Record<string, any>) => any;
 export type StateExternalFunctions = Array<t.ExternalFunc>;

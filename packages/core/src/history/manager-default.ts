@@ -1,44 +1,11 @@
-import { OnChangePayload, Path } from './observer';
-import { Reka } from './reka';
-import { action, makeObservable, observable } from 'mobx';
+import { HistoryManager } from './manager';
 
-type HistoryManagerStatus = {
-  undoable: boolean;
-  redoable: boolean;
-};
-
-export abstract class HistoryManager {
-  status: HistoryManagerStatus;
-
-  constructor(readonly reka: Reka) {
-    this.status = {
-      undoable: false,
-      redoable: false,
-    };
-
-    makeObservable(this, {
-      status: observable,
-      setStatus: action,
-    });
-  }
-
-  abstract undo(): void;
-  abstract redo(): void;
-
-  setStatus(cb: (status: HistoryManagerStatus) => void) {
-    cb(this.status);
-  }
-
-  init?(): void;
-  dispose?(): void;
-}
+import { OnChangePayload, Path } from '../observer';
 
 type HistoryChangeset = {
   timestamp: number;
   changes: OnChangePayload[];
 };
-
-export class HistoryChangesetPathError extends Error {}
 
 export class DefaultHistoryManager extends HistoryManager {
   private stack: HistoryChangeset[] = [];
@@ -96,7 +63,7 @@ export class DefaultHistoryManager extends HistoryManager {
       }
 
       if (value === undefined) {
-        throw new HistoryChangesetPathError(`Cannot resolve path`);
+        throw new Error(`Cannot resolve path`);
       }
 
       const path = paths[i];
