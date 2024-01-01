@@ -57,6 +57,9 @@ export class YjsRekaSyncProvider {
       },
       {
         source: this.changesetSourceKey,
+        history: {
+          ignore: true,
+        },
       }
     );
   }
