@@ -74,7 +74,7 @@ export class DefaultHistoryManager extends HistoryManager {
     return traverse(this.reka.state);
   }
 
-  applyInverse(change: OnChangePayload) {
+  applyUndo(change: OnChangePayload) {
     const pathObj = this.getValueFromPath(change.path);
 
     if (change.type === 'add') {
@@ -105,7 +105,7 @@ export class DefaultHistoryManager extends HistoryManager {
     throw new Error('Unknown inverse op');
   }
 
-  apply(change: OnChangePayload) {
+  applyRedo(change: OnChangePayload) {
     const pathObj = this.getValueFromPath(change.path);
 
     if (change.type === 'add') {
@@ -136,10 +136,10 @@ export class DefaultHistoryManager extends HistoryManager {
     throw new Error('Unknown op');
   }
 
-  private changeWithRollback(
-    pointer: number,
-    direction: 'backward' | 'forward'
-  ) {
+  /**
+   * Apply a changeset via undo/redo with the ability to abort in case an error occurs
+   */
+  private changeWithRollback(pointer: number, direction: 'undo' | 'redo') {
     const changeset = this.stack[pointer];
 
     this.reka.change(
@@ -147,16 +147,16 @@ export class DefaultHistoryManager extends HistoryManager {
         let abortIdx = -1;
         let changes = changeset.changes;
 
-        if (direction === 'backward') {
+        if (direction === 'undo') {
           changes = [...changes].reverse();
         }
 
         for (let i = 0; i < changes.length; i++) {
           try {
-            if (direction === 'backward') {
-              this.applyInverse(changes[i]);
+            if (direction === 'undo') {
+              this.applyUndo(changes[i]);
             } else {
-              this.apply(changes[i]);
+              this.applyRedo(changes[i]);
             }
           } catch {
             abortIdx = i;
@@ -164,19 +164,46 @@ export class DefaultHistoryManager extends HistoryManager {
           }
         }
 
+        /**
+         * If any errors occurs while applying a changeset, we need to abort and reverse the changes that were applied
+         * This typically can happen when in a collaborative environment.
+         *
+         * For example, 2 users editing the same document:
+         * User A makes some changes to a Button
+         * User B then deletes the Button
+         *
+         * If User A tries to undo, the changeset will contain the inverse changes to the Button (which is now deleted),
+         * in which case, the changeset will contain changes to an invalid path (the Button) that no longer exists,
+         * hence an error will occur when we try to perform an undo.
+         *
+         * Therefore, the simplest way to go about this is to simply abort the undo,
+         * reverse any changes that were already applied while performing the undo operation.
+         */
         if (abortIdx >= 0) {
-          // Rollback all changes
+          // Rollback changes that were already applied (if any)
           for (let i = abortIdx - 1; i >= 0; i--) {
-            if (direction === 'backward') {
-              this.apply(changes[i]);
+            if (direction === 'undo') {
+              this.applyRedo(changes[i]);
             } else {
-              this.applyInverse(changes[i]);
+              this.applyUndo(changes[i]);
             }
           }
 
-          // remove from history, can't do anything with it anymore
+          /**
+           * Remove the current changeset where the error happened, from the history stack.
+           * Making it no longer possible to undo/redo the current changeset.
+           */
           this.stack.splice(pointer, 1);
-          this.undo();
+
+          /**
+           * Try to perform the next undo/redo in the stack, if possible.
+           */
+          if (direction === 'undo') {
+            this.undo();
+            return;
+          }
+
+          this.redo();
         }
       },
       {
@@ -200,7 +227,7 @@ export class DefaultHistoryManager extends HistoryManager {
 
     this.pointer--;
 
-    this.changeWithRollback(currentPointer, 'backward');
+    this.changeWithRollback(currentPointer, 'undo');
 
     this.syncStatus();
   }
@@ -216,16 +243,7 @@ export class DefaultHistoryManager extends HistoryManager {
       return;
     }
 
-    this.reka.change(
-      () => {
-        next.changes.map((change) => {
-          this.apply(change);
-        });
-      },
-      {
-        source: 'history',
-      }
-    );
+    this.changeWithRollback(this.pointer, 'redo');
 
     this.syncStatus();
   }

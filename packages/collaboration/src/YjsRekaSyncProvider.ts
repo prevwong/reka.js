@@ -39,29 +39,23 @@ export class YjsRekaSyncProvider {
         return;
       }
 
-      this.withMobxSync(() => {
-        events.forEach((event) => this.syncYEventToState(event));
-      });
+      this.reka.change(
+        () => {
+          events.forEach((event) => this.syncYEventToState(event));
+        },
+        {
+          source: this.changesetSourceKey,
+          history: {
+            ignore: true,
+          },
+        }
+      );
     };
   }
 
   dispose() {
     this.type.unobserveDeep(this.yDocChangeListener);
     this.rekaChangeUnsubscriber();
-  }
-
-  private withMobxSync(cb: () => void) {
-    this.reka.change(
-      () => {
-        cb();
-      },
-      {
-        source: this.changesetSourceKey,
-        history: {
-          ignore: true,
-        },
-      }
-    );
   }
 
   get yRekaDocument() {
