@@ -13,7 +13,7 @@ beforeEach(() => {
         } => (
             <div prop1="hello">
                 <text value={count} />
-                <button onClick={() => { count += 1; }} />
+                <button color="red" onClick={() => { count += 1; }} />
             </div>
         )
         `);
@@ -174,6 +174,46 @@ describe('History', () => {
       }
     });
   }
+
+  describe('rollback', () => {
+    it('should be able to rollback undo op if an error occurs', () => {
+      const divTpl = t.assert(
+        reka.program.components[0].template,
+        t.TagTemplate
+      );
+
+      const textTpl = t.assert(divTpl.children[0], t.TagTemplate);
+
+      const btnTpl = t.assert(divTpl.children[1], t.TagTemplate);
+      expect(t.assert(btnTpl.props.color, t.Literal).value).toEqual('red');
+
+      reka.change(() => {
+        btnTpl.props.color = t.literal({ value: 'blue' });
+      });
+
+      expect(t.assert(btnTpl.props.color, t.Literal).value).toEqual('blue');
+
+      reka.change(() => {
+        textTpl.props.value = t.literal({ value: 'Bye' });
+      });
+
+      reka.change(
+        () => {
+          // remove text tag template
+          divTpl.children.splice(0, 1);
+        },
+        {
+          history: {
+            ignore: true,
+          },
+        }
+      );
+
+      reka.undo();
+
+      expect(t.assert(btnTpl.props.color, t.Literal).value).toEqual('red');
+    });
+  });
 
   describe('throttle', () => {
     it('should add changes as a single stack item if changes are made within throttle threshold', async () => {
