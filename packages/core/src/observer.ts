@@ -19,8 +19,15 @@ import { isObjectLiteral, noop } from './utils';
 
 type ValuesWithReference = Array<any> | Record<string, any> | t.Type;
 
+export type Owner = {
+  type: t.Type;
+  path: Array<string | number>;
+};
+
+// TODO: deprecate in favour of Owner type above
 type Parent = {
   value: ValuesWithReference;
+  owner: Owner;
   key: string | number;
 };
 
@@ -43,6 +50,7 @@ export type OnChangePayload = (
   | IArrayUpdate
 ) & {
   path: Path[];
+  owner: Owner;
 };
 
 type Disposer = () => void;
@@ -345,6 +353,10 @@ export class Observer<T extends t.Type = t.Type> {
         field.name,
         this.setupChild(value[field.name], {
           value,
+          owner: {
+            type: value,
+            path: [field.name],
+          },
           key: field.name,
         })
       );
@@ -384,6 +396,10 @@ export class Observer<T extends t.Type = t.Type> {
         e.name,
         this.setupChild(value[e.name], {
           value,
+          owner: {
+            type: value,
+            path: [e.name as any],
+          },
           key: String(e.name),
         })
       );
@@ -444,6 +460,10 @@ export class Observer<T extends t.Type = t.Type> {
         item,
         this.setupChild(item, {
           value,
+          owner: {
+            ...parent.owner,
+            path: [...parent.owner.path, index],
+          },
           key: index,
         })
       );
@@ -486,13 +506,25 @@ export class Observer<T extends t.Type = t.Type> {
       if (e.added.length > 0) {
         for (let i = e.index + e.added.length; i < value.length; i++) {
           const existingParentForValue = this.valueToParentMap.get(value[i]);
+
           invariant(
             existingParentForValue,
             'Parent map not found for array element'
           );
 
+          const existingParentOwner = existingParentForValue.owner;
+
           this.valueToParentMap.set(value[i], {
             ...existingParentForValue,
+            owner: {
+              ...existingParentOwner,
+              path: [
+                ...existingParentOwner.path.slice(
+                  0,
+                  existingParentOwner.path.length - 1
+                ),
+              ],
+            },
             key: i,
           });
         }
@@ -543,6 +575,10 @@ export class Observer<T extends t.Type = t.Type> {
         childKey,
         this.setupChild(childValue, {
           value,
+          owner: {
+            ...parent.owner,
+            path: [...parent.owner.path, childKey],
+          },
           key: childKey,
         })
       );
@@ -562,6 +598,10 @@ export class Observer<T extends t.Type = t.Type> {
             n.name,
             this.setupChild(n.newValue, {
               value,
+              owner: {
+                ...parent.owner,
+                path: [...parent.owner.path, n.name as any],
+              },
               key: n.name as string,
             })
           );
@@ -609,15 +649,25 @@ export class Observer<T extends t.Type = t.Type> {
     });
   }
 
-  private handleOnChange(value: any, payload: Omit<OnChangePayload, 'path'>) {
+  private handleOnChange(
+    value: any,
+    payload: Omit<OnChangePayload, 'path' | 'owner'>
+  ) {
     invariant(
       this.isMutating,
       'Mutation not allowed outside of the .change() method'
     );
 
+    const parents = this.getParents(value);
+
     const change = {
       ...payload,
-      path: this.getPath(value),
+      // TODO: deprecate
+      path: parents.map((parent) => ({
+        key: parent.key,
+        parent: parent.value,
+      })),
+      owner: parents[parents.length - 1].owner,
     } as OnChangePayload;
 
     const path =
@@ -672,7 +722,7 @@ export class Observer<T extends t.Type = t.Type> {
     this.changesetListeners.map((subscriber) => subscriber(this.changeset));
   }
 
-  private getPath(value: t.Type | Array<any> | Object) {
+  private getParents(value: t.Type | Array<any> | Object): Parent[] {
     if (value === this.root) {
       return [];
     }
@@ -681,13 +731,7 @@ export class Observer<T extends t.Type = t.Type> {
 
     invariant(!!map, `Parent-child map not found!`);
 
-    return [
-      ...this.getPath(map.value),
-      {
-        parent: map.value,
-        key: map.key,
-      },
-    ];
+    return [...this.getParents(map.value), map];
   }
 
   getParentMap(type: t.Type) {

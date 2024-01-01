@@ -1,6 +1,7 @@
 import { HistoryManager } from './manager';
+import { OnChangePayload } from '../observer';
 
-import { OnChangePayload, Path } from '../observer';
+import { invariant } from '@rekajs/utils';
 
 type HistoryChangeset = {
   timestamp: number;
@@ -56,9 +57,9 @@ export class DefaultHistoryManager extends HistoryManager {
     this.disposeListener();
   }
 
-  private getValueFromPath(paths: Path[]) {
+  private getValueFromPath(change: OnChangePayload) {
     const traverse = (value: any, i = 0) => {
-      if (i === paths.length) {
+      if (i === change.owner.path.length) {
         return value;
       }
 
@@ -66,16 +67,22 @@ export class DefaultHistoryManager extends HistoryManager {
         throw new Error(`Cannot resolve path`);
       }
 
-      const path = paths[i];
+      const path = change.owner.path[i];
 
-      return traverse(value[path.key], i + 1);
+      return traverse(value[path], i + 1);
     };
 
-    return traverse(this.reka.state);
+    // Check if owner type still exist
+    invariant(
+      this.reka.getNodeFromId(change.owner.type.id),
+      `Node of id "${change.owner.type.id}" is not in the tree.`
+    );
+
+    return traverse(change.owner.type);
   }
 
   applyUndo(change: OnChangePayload) {
-    const pathObj = this.getValueFromPath(change.path);
+    const pathObj = this.getValueFromPath(change);
 
     if (change.type === 'add') {
       delete pathObj[change.name];
@@ -106,7 +113,7 @@ export class DefaultHistoryManager extends HistoryManager {
   }
 
   applyRedo(change: OnChangePayload) {
-    const pathObj = this.getValueFromPath(change.path);
+    const pathObj = this.getValueFromPath(change);
 
     if (change.type === 'add') {
       pathObj[change.name] = change.newValue;
@@ -158,7 +165,7 @@ export class DefaultHistoryManager extends HistoryManager {
             } else {
               this.applyRedo(changes[i]);
             }
-          } catch {
+          } catch (err) {
             abortIdx = i;
             break;
           }
