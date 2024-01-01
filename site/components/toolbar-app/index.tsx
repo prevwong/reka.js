@@ -1,4 +1,5 @@
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
+import { Undo, Redo } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -20,7 +21,35 @@ export const ToolbarApp = observer(() => {
 
   return (
     <div className="flex items-center gap-2.5 max-sm:hidden">
+      <Tooltip content="Undo">
+        <IconButton
+          disabled={!editor.reka.canUndo()}
+          size="xxs"
+          variant="subtle"
+          className="text-neutral-600 hover:bg-neutral-100"
+          onClick={() => {
+            editor.reka.undo();
+          }}
+        >
+          <Undo />
+        </IconButton>
+      </Tooltip>
+      <Tooltip content="Redo">
+        <IconButton
+          disabled={!editor.reka.canRedo()}
+          size="xxs"
+          variant="subtle"
+          className="text-neutral-600 hover:bg-neutral-100"
+          onClick={() => {
+            editor.reka.redo();
+          }}
+        >
+          <Redo />
+        </IconButton>
+      </Tooltip>
+
       <Collaborators />
+
       <Tooltip content="Toggle code editor">
         <Button
           variant={'secondary'}

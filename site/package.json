@@ -48,6 +48,7 @@
     "framer-motion": "^6.2.8",
     "gray-matter": "^4.0.3",
     "lodash": "^4.17.21",
+    "lucide-react": "^0.302.0",
     "mobx": "^6.6.1",
     "mobx-react-lite": "^3.3.0",
     "next": "13.2.4",

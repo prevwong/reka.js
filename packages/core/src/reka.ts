@@ -15,12 +15,19 @@ import { ExtensionDefinition, ExtensionRegistry } from './extension';
 import { Externals } from './externals';
 import { Frame, FrameOpts } from './frame';
 import { Head } from './head';
+import { DefaultHistoryManager, HistoryManager } from './history';
 import {
   CustomKindDefinition,
+  RekaChangeOpts,
+  RekaChangesetInfo,
   RekaOpts,
   StateSubscriberOpts,
 } from './interfaces';
-import { ChangeListenerSubscriber, Observer } from './observer';
+import {
+  ChangeListenerSubscriber,
+  Observer,
+  ChangesetListener,
+} from './observer';
 import { ExtensionVolatileStateKey, ExternalVolatileStateKey } from './symbols';
 import { KindFieldValidators } from './utils';
 
@@ -44,6 +51,7 @@ export class Reka {
 
   private declare observer: Observer<t.State>;
   private declare extensions: ExtensionRegistry;
+  private declare history: HistoryManager;
 
   private idToFrame: Map<string, Frame> = new Map();
 
@@ -52,6 +60,8 @@ export class Reka {
   loaded = false;
 
   externals: Externals;
+
+  changes: any[];
 
   volatile: {
     [key: string]: any;
@@ -73,12 +83,40 @@ export class Reka {
 
     this.externals = new Externals(this, opts?.externals);
 
+    this.changes = [];
+
     makeObservable(this, {
       frames: observable,
       volatile: observable,
       components: computed,
       dispose: action,
+      changes: observable,
     });
+  }
+
+  setHistoryManager(manager: HistoryManager) {
+    invariant(
+      !this.loaded,
+      `Cannot override History manager after Reka has been initialised.`
+    );
+
+    this.history = manager;
+  }
+
+  canUndo() {
+    return this.history.status.undoable;
+  }
+
+  canRedo() {
+    return this.history.status.redoable;
+  }
+
+  undo() {
+    return this.history.undo();
+  }
+
+  redo() {
+    return this.history.redo();
   }
 
   private createCustomKindsDefinition() {
@@ -177,11 +215,15 @@ export class Reka {
       },
     });
 
+    this.setHistoryManager(new DefaultHistoryManager(this));
+
     this.frames = [];
 
     this.extensions = new ExtensionRegistry(this, this.opts?.extensions ?? []);
 
     this.extensions.init();
+
+    this.history.init?.();
 
     if (syncImmediately) {
       this.sync(evaluateImmediately);
@@ -211,9 +253,19 @@ export class Reka {
   /**
    * Perform a mutation to the State
    */
-  change(mutator: () => void) {
+  change(mutator: () => void, opts?: Partial<RekaChangeOpts>) {
     return runInAction(() => {
-      this.observer.change(mutator);
+      this.observer.change(mutator, {
+        source: opts?.source,
+        info: {
+          ...(opts?.info ?? {}),
+          history: {
+            ignore: false,
+            throttle: 0,
+            ...(opts?.history ?? {}),
+          },
+        },
+      });
 
       // Don't sync yet when we're still setting up (ie: creating the Extensions registry)
       if (this.init) {
@@ -250,6 +302,10 @@ export class Reka {
    * Remove an existing Frame instance
    */
   removeFrame(frame: Frame) {
+    if (this.history.dispose) {
+      this.history.dispose();
+    }
+
     frame.dispose();
 
     this.frames.splice(this.frames.indexOf(frame), 1);
@@ -296,10 +352,19 @@ export class Reka {
   }
 
   /**
+   * @deprecated Use listenToChangeset()
+   *
    * Listen for changes and mutations made to the State
    */
   listenToChanges(changeListenerSubscriber: ChangeListenerSubscriber) {
     return this.observer.listenToChanges(changeListenerSubscriber);
+  }
+
+  /**
+   * Listen for changes and mutations made to the State
+   */
+  listenToChangeset(subscriber: ChangesetListener<RekaChangesetInfo>) {
+    return this.observer.listenToChangeset(subscriber);
   }
 
   /**

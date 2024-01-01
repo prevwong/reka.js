@@ -3,8 +3,8 @@ import { invariant } from '@rekajs/utils';
 import * as Y from 'yjs';
 
 import { YjsRekaSyncProvider } from './YjsRekaSyncProvider';
+import { RekaToYSyncProviders } from './store';
 
-const RekaToYSyncProviders = new WeakMap();
 
 export const createCollabExtension = (type: Y.Map<any>) =>
   createExtension({

@@ -1,6 +1,7 @@
 import * as t from '@rekajs/types';
 
 import { ExtensionDefinition } from './extension';
+import { Changeset } from './observer';
 import { Reka } from './reka';
 import { KindFieldValidators } from './utils';
 
@@ -60,4 +61,22 @@ export type ScopeDescription = {
 export type IdentifiableWithScope = {
   identifiable: t.Identifiable;
   scope: ScopeDescription;
+};
+
+export type RekaChangesetInfo = {
+  history: {
+    throttle: number;
+    ignore: boolean;
+  };
+};
+
+export type RekaStateChangeset = Changeset<RekaChangesetInfo>;
+
+export type RekaChangeOpts = {
+  history: Partial<{
+    ignore: boolean;
+    throttle: number;
+  }>;
+  info: RekaChangesetInfo;
+  source: string;
 };
