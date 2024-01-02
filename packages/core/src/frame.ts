@@ -3,7 +3,7 @@ import { getRandomId } from '@rekajs/utils';
 import { makeObservable, observable, action } from 'mobx';
 
 import { Evaluator } from './evaluator';
-import { ChangeListenerSubscriber } from './observer';
+
 import { Reka } from './reka';
 import { defer } from './utils';
 
@@ -105,8 +105,8 @@ export class Frame {
   }
 
   /// Listen for changes and mutations made to the Frame's output View
-  listenToChanges(changeListenerSubscriber: ChangeListenerSubscriber) {
-    return this.evaluator.listenToChanges(changeListenerSubscriber);
+  get listenToChangeset() {
+    return this.evaluator.listenToChangeset.bind(this.evaluator);
   }
 
   dispose() {

@@ -36,19 +36,15 @@ export type Path = {
   key: string | number;
 };
 
-export type OnAddPayload = {
+export type AddPayload = {
   type: t.Type;
 };
 
-export type OnDiposePayload = {
+export type DisposePayload = {
   type: t.Type;
 };
 
-export type OnChangePayload = (
-  | IObjectDidChange
-  | IArraySplice
-  | IArrayUpdate
-) & {
+export type ChangePayload = (IObjectDidChange | IArraySplice | IArrayUpdate) & {
   path: Path[];
   owner: Owner;
 };
@@ -56,50 +52,32 @@ export type OnChangePayload = (
 type Disposer = () => void;
 
 export type ObserverHooks = {
-  onAdd: (payload: OnAddPayload) => void;
-  onChange: (payload: OnChangePayload) => void;
-  onDispose: (payload: OnDiposePayload) => void;
+  onAdd: (payload: AddPayload) => void;
+  onChange: (payload: ChangePayload) => void;
+  onDispose: (payload: DisposePayload) => void;
 };
 
 export type ObserverOptions = {
-  id?: string;
+  id: string;
   batch: boolean;
-  subscribers: ChangeListenerSubscriber[];
+
   shouldIgnoreObservable: (parent: t.Type, key: string, value: any) => boolean;
   hooks: Partial<ObserverHooks>;
 };
 
 export type ChangeOpts = {
-  /**
-   * If silent is true, all change listeners via .listenToChangeset() will not be called
-   */
-  silent: boolean;
   source: any;
   info: Record<string, any>;
 };
 
-export type ChangeListenerOnAddPayload = { event: 'add' } & OnAddPayload;
-export type ChangeListenerOnDisposePaylaod = {
-  event: 'dispose';
-} & OnDiposePayload;
-export type ChangeListenerOnChangePayload = {
-  event: 'change';
-} & OnChangePayload;
-
-export type ChangeListenerPayload =
-  | ChangeListenerOnAddPayload
-  | ChangeListenerOnDisposePaylaod
-  | ChangeListenerOnChangePayload;
-
 export type Changeset<I extends Record<string, any> = {}> = {
-  changes: OnChangePayload[];
+  changes: ChangePayload[];
   disposed: t.Type[];
   added: t.Type[];
   source?: any;
   info: I;
 };
 
-export type ChangeListenerSubscriber = (payload: ChangeListenerPayload) => void;
 export type ChangesetListener<I extends Record<string, any> = {}> = (
   changeset: Changeset<I>
 ) => void;
@@ -118,7 +96,6 @@ export class Observer<T extends t.Type = t.Type> {
   private markedForDisposal: Set<t.Type> = new Set();
   private isDisposing: boolean = false;
   private isMutating: boolean = false;
-  private isTracking: boolean = false;
 
   private changesetListeners: ChangesetListener[] = [];
   private uncommittedValues: Set<Record<string, any> | Array<any> | t.Type> =
@@ -126,12 +103,12 @@ export class Observer<T extends t.Type = t.Type> {
 
   private changeset: Changeset;
 
-  constructor(type: T, opts?: Partial<ObserverOptions>) {
+  constructor(root: T, opts?: Partial<ObserverOptions>) {
     this.id = opts?.id || getRandomId();
     this.valueToParentMap = new WeakMap();
     this.typeToDisposer = new WeakMap();
     this.idToType = new Map();
-    this.root = type;
+    this.root = root;
 
     this.changeset = {
       changes: [],
@@ -142,19 +119,20 @@ export class Observer<T extends t.Type = t.Type> {
 
     /* eslint-disable @typescript-eslint/no-empty-function */
     this.opts = {
+      id: opts?.id ?? `observer.${root.type}.${root.id}`,
       shouldIgnoreObservable: () => false,
       hooks: {
         onAdd: () => {},
         onChange: () => {},
         onDispose: () => {},
       },
-      subscribers: [],
+
       batch: true,
       ...(opts || {}),
     };
     /* eslint-enable @typescript-eslint/no-empty-function */
 
-    this.setRoot(type);
+    this.setRoot(root);
 
     makeObservable(this, {
       root: observable,
@@ -204,18 +182,6 @@ export class Observer<T extends t.Type = t.Type> {
     this.rootDisposer = rootDisposer;
   }
 
-  setTracking(value: boolean) {
-    this.isTracking = value;
-  }
-
-  withTracking<C>(cb: () => C, track = true) {
-    const prev = this.isTracking;
-    this.isTracking = track;
-    const returnValue = cb();
-    this.isTracking = prev;
-    return returnValue;
-  }
-
   getTypeFromId<T extends t.Type = t.Any>(
     id: string,
     expectedType?: TypeConstructor<T>
@@ -227,20 +193,6 @@ export class Observer<T extends t.Type = t.Type> {
     }
 
     return type;
-  }
-
-  /**
-   * @deprecated - Use listenToChangeset() instead
-   */
-  listenToChanges(changeListenerSubscriber: ChangeListenerSubscriber) {
-    this.opts.subscribers.push(changeListenerSubscriber);
-
-    return () => {
-      this.opts.subscribers.splice(
-        this.opts.subscribers.indexOf(changeListenerSubscriber),
-        1
-      );
-    };
   }
 
   listenToChangeset(subscriber: ChangesetListener<any>) {
@@ -627,11 +579,6 @@ export class Observer<T extends t.Type = t.Type> {
     }
 
     this.changeset.added.push(type);
-
-    this.notify({
-      event: 'add',
-      type,
-    });
   }
 
   private handleOnDisposeType(type: t.Type) {
@@ -642,16 +589,11 @@ export class Observer<T extends t.Type = t.Type> {
     }
 
     this.changeset.disposed.push(type);
-
-    this.notify({
-      event: 'dispose',
-      type,
-    });
   }
 
   private handleOnChange(
     value: any,
-    payload: Omit<OnChangePayload, 'path' | 'owner'>
+    payload: Omit<ChangePayload, 'path' | 'owner'>
   ) {
     invariant(
       this.isMutating,
@@ -668,7 +610,7 @@ export class Observer<T extends t.Type = t.Type> {
         parent: parent.value,
       })),
       owner: parents[parents.length - 1].owner,
-    } as OnChangePayload;
+    } as ChangePayload;
 
     const path =
       change.path.length > 0 ? change.path[change.path.length - 1] : null;
@@ -698,27 +640,10 @@ export class Observer<T extends t.Type = t.Type> {
 
     this.changeset.changes.push(change);
 
-    this.notify({
-      event: 'change',
-      ...change,
-    });
-
     return change;
   }
 
-  private notify(change: ChangeListenerPayload) {
-    if (!this.isMutating) {
-      return;
-    }
-
-    this.opts.subscribers.forEach((subscriber) => subscriber(change));
-  }
-
   private notifyChangesetListeners() {
-    if (!this.isTracking) {
-      return;
-    }
-
     this.changesetListeners.map((subscriber) => subscriber(this.changeset));
   }
 
@@ -778,44 +703,39 @@ export class Observer<T extends t.Type = t.Type> {
   }
 
   change<C>(mutation: () => C, opts?: Partial<ChangeOpts>) {
-    return this.withTracking(
-      () => {
-        const _change = () => {
-          if (this.isMutating) {
-            return runInAction(() => {
-              return mutation();
-            });
-          }
+    const _change = () => {
+      if (this.isMutating) {
+        return runInAction(() => {
+          return mutation();
+        });
+      }
 
-          return runInAction(() => {
-            this.changeset = {
-              added: [],
-              disposed: [],
-              changes: [],
-              source: opts?.source,
-              info: opts?.info ?? {},
-            };
-
-            this.isMutating = true;
-            const returnValue = mutation();
-            this.isMutating = false;
-
-            this.disposeTypes();
-            this.uncommittedValues.clear();
-            this.notifyChangesetListeners();
-
-            return returnValue;
-          });
+      return runInAction(() => {
+        this.changeset = {
+          added: [],
+          disposed: [],
+          changes: [],
+          source: opts?.source,
+          info: opts?.info ?? {},
         };
 
-        if (this.opts.batch) {
-          return _change();
-        }
+        this.isMutating = true;
+        const returnValue = mutation();
+        this.isMutating = false;
 
-        return this.whileDisposing(() => _change());
-      },
-      opts?.silent ? false : true
-    );
+        this.disposeTypes();
+        this.uncommittedValues.clear();
+        this.notifyChangesetListeners();
+
+        return returnValue;
+      });
+    };
+
+    if (this.opts.batch) {
+      return _change();
+    }
+
+    return this.whileDisposing(() => _change());
   }
 
   dispose() {

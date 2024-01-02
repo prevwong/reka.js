@@ -1,11 +1,11 @@
 import { HistoryManager } from './manager';
-import { OnChangePayload } from '../observer';
+import { ChangePayload } from '../observer';
 
 import { invariant } from '@rekajs/utils';
 
 type HistoryChangeset = {
   timestamp: number;
-  changes: OnChangePayload[];
+  changes: ChangePayload[];
 };
 
 export class DefaultHistoryManager extends HistoryManager {
@@ -57,7 +57,7 @@ export class DefaultHistoryManager extends HistoryManager {
     this.disposeListener();
   }
 
-  private getValueFromPath(change: OnChangePayload) {
+  private getValueFromPath(change: ChangePayload) {
     const traverse = (value: any, i = 0) => {
       if (i === change.owner.path.length) {
         return value;
@@ -81,7 +81,7 @@ export class DefaultHistoryManager extends HistoryManager {
     return traverse(change.owner.type);
   }
 
-  applyUndo(change: OnChangePayload) {
+  applyUndo(change: ChangePayload) {
     const pathObj = this.getValueFromPath(change);
 
     if (change.type === 'add') {
@@ -112,7 +112,7 @@ export class DefaultHistoryManager extends HistoryManager {
     throw new Error('Unknown inverse op');
   }
 
-  applyRedo(change: OnChangePayload) {
+  applyRedo(change: ChangePayload) {
     const pathObj = this.getValueFromPath(change);
 
     if (change.type === 'add') {

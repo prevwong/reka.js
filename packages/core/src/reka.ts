@@ -23,11 +23,7 @@ import {
   RekaOpts,
   StateSubscriberOpts,
 } from './interfaces';
-import {
-  ChangeListenerSubscriber,
-  Observer,
-  ChangesetListener,
-} from './observer';
+import { Observer, ChangesetListener } from './observer';
 import { ExtensionVolatileStateKey, ExternalVolatileStateKey } from './symbols';
 import { KindFieldValidators } from './utils';
 
@@ -349,15 +345,6 @@ export class Reka {
     expectedParentType?: t.TypeConstructor<T>
   ) {
     return this.observer.getParent(node, expectedParentType);
-  }
-
-  /**
-   * @deprecated Use listenToChangeset()
-   *
-   * Listen for changes and mutations made to the State
-   */
-  listenToChanges(changeListenerSubscriber: ChangeListenerSubscriber) {
-    return this.observer.listenToChanges(changeListenerSubscriber);
   }
 
   /**

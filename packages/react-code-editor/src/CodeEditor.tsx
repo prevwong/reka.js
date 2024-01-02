@@ -253,11 +253,7 @@ export const CodeEditor = ({ onStatusChange, ...props }: CodeEditorProps) => {
   // If the AST changes (ie: from undo/redo or from multiplayer),
   // Then, sync those changes to the CodeMirror editor
   React.useEffect(() => {
-    const unsubscribe = reka.listenToChanges((payload) => {
-      if (payload.event !== 'change') {
-        return;
-      }
-
+    const unsubscribe = reka.listenToChangeset(() => {
       onExternalChange();
     });
 
