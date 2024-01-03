@@ -61,8 +61,6 @@ export class Evaluator {
     new Map();
   private tplKeyToView: Map<string, t.View> = new Map();
 
-  private viewChangeListenerSubscribers: ChangesetListener[] = [];
-
   constructor(
     readonly frame: Frame,
     readonly componentName: string,
@@ -114,7 +112,7 @@ export class Evaluator {
     view: t.View,
     expectedParentType?: t.TypeConstructor<T>
   ) {
-    return this.viewObserver?.getParent(view, expectedParentType) ?? null;
+    return this.viewObserver?.getParentNode(view, expectedParentType) ?? null;
   }
 
   private disposeComponentEvaluators() {

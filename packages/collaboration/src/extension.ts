@@ -5,7 +5,6 @@ import * as Y from 'yjs';
 import { YjsRekaSyncProvider } from './YjsRekaSyncProvider';
 import { RekaToYSyncProviders } from './store';
 
-
 export const createCollabExtension = (type: Y.Map<any>) =>
   createExtension({
     key: 'collaboration',

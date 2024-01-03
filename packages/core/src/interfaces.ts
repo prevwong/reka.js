@@ -63,20 +63,15 @@ export type IdentifiableWithScope = {
   scope: ScopeDescription;
 };
 
-export type RekaChangesetInfo = {
-  history: {
-    throttle: number;
-    ignore: boolean;
-  };
-};
-
-export type RekaStateChangeset = Changeset<RekaChangesetInfo>;
+export type RekaStateChangeset = Changeset<RekaChangeOpts>;
 
 export type RekaChangeOpts = {
-  history: Partial<{
+  history?: Partial<{
     ignore: boolean;
     throttle: number;
   }>;
-  info: RekaChangesetInfo;
-  source: string;
+  info?: {
+    [key: string]: any;
+  };
+  source?: string;
 };

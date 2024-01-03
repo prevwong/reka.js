@@ -152,23 +152,30 @@ const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
           placeholder="Add a new comment"
           value=""
           onCommit={(content, clear) => {
-            editor.reka.change(() => {
-              const comments =
-                editor.reka.getExtension(CommentExtension).state
-                  .templateToComments;
+            editor.reka.change(
+              () => {
+                const comments =
+                  editor.reka.getExtension(CommentExtension).state
+                    .templateToComments;
 
-              if (!comments[props.templateId]) {
-                comments[props.templateId] = [];
+                if (!comments[props.templateId]) {
+                  comments[props.templateId] = [];
+                }
+
+                comments[props.templateId].push({
+                  content,
+                  user: editor.user,
+                  date: Date.now(),
+                });
+
+                clear();
+              },
+              {
+                history: {
+                  ignore: true,
+                },
               }
-
-              comments[props.templateId].push({
-                content,
-                user: editor.user,
-                date: Date.now(),
-              });
-
-              clear();
-            });
+            );
           }}
         />
       </div>

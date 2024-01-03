@@ -19,7 +19,6 @@ import { DefaultHistoryManager, HistoryManager } from './history';
 import {
   CustomKindDefinition,
   RekaChangeOpts,
-  RekaChangesetInfo,
   RekaOpts,
   StateSubscriberOpts,
 } from './interfaces';
@@ -45,7 +44,7 @@ export class Reka {
 
   private declare kinds: Record<string, CustomKindDefinition>;
 
-  private declare observer: Observer<t.State>;
+  private declare observer: Observer<t.State, RekaChangeOpts>;
   private declare extensions: ExtensionRegistry;
   private declare history: HistoryManager;
 
@@ -249,19 +248,9 @@ export class Reka {
   /**
    * Perform a mutation to the State
    */
-  change(mutator: () => void, opts?: Partial<RekaChangeOpts>) {
+  change(mutator: () => void, opts?: RekaChangeOpts) {
     return runInAction(() => {
-      this.observer.change(mutator, {
-        source: opts?.source,
-        info: {
-          ...(opts?.info ?? {}),
-          history: {
-            ignore: false,
-            throttle: 0,
-            ...(opts?.history ?? {}),
-          },
-        },
-      });
+      this.observer.change(mutator, opts);
 
       // Don't sync yet when we're still setting up (ie: creating the Extensions registry)
       if (this.init) {
@@ -338,19 +327,26 @@ export class Reka {
   }
 
   /**
-   * Get a parent Node of an AST node
+   * Get the nearest parent Node of a given AST node in the State.
    */
-  getParent<T extends t.Type = t.Any>(
+  getParentNode<T extends t.Type = t.Any>(
     node: t.Type,
     expectedParentType?: t.TypeConstructor<T>
   ) {
-    return this.observer.getParent(node, expectedParentType);
+    return this.observer.getParentNode(node, expectedParentType);
+  }
+
+  /**
+   * Get the nearest parent Node and its relative path of a given AST node in the State.
+   */
+  getNodeLocation(node: t.Type) {
+    return this.observer.getNodeLocation(node);
   }
 
   /**
    * Listen for changes and mutations made to the State
    */
-  listenToChangeset(subscriber: ChangesetListener<RekaChangesetInfo>) {
+  listenToChangeset(subscriber: ChangesetListener<RekaChangeOpts>) {
     return this.observer.listenToChangeset(subscriber);
   }
 

@@ -1,11 +1,12 @@
-import { HistoryManager } from './manager';
-import { ChangePayload } from '../observer';
-
 import { invariant } from '@rekajs/utils';
+
+import { HistoryManager } from './manager';
+
+import { ObserverChangePayload } from '../observer';
 
 type HistoryChangeset = {
   timestamp: number;
-  changes: ChangePayload[];
+  changes: ObserverChangePayload[];
 };
 
 export class DefaultHistoryManager extends HistoryManager {
@@ -16,7 +17,7 @@ export class DefaultHistoryManager extends HistoryManager {
 
   init() {
     this.disposeListener = this.reka.listenToChangeset((payload) => {
-      if (payload.source === 'history' || payload.info.history.ignore) {
+      if (payload.source === 'history' || payload.history?.ignore) {
         return;
       }
 
@@ -28,7 +29,7 @@ export class DefaultHistoryManager extends HistoryManager {
 
       const prev = this.stack[this.pointer];
 
-      const throttleThreshold = payload.info.history.throttle;
+      const throttleThreshold = payload.history?.throttle;
 
       if (
         throttleThreshold &&
@@ -57,9 +58,9 @@ export class DefaultHistoryManager extends HistoryManager {
     this.disposeListener();
   }
 
-  private getValueFromPath(change: ChangePayload) {
+  private getValueFromPath(change: ObserverChangePayload) {
     const traverse = (value: any, i = 0) => {
-      if (i === change.owner.path.length) {
+      if (i === change.path.length) {
         return value;
       }
 
@@ -67,21 +68,21 @@ export class DefaultHistoryManager extends HistoryManager {
         throw new Error(`Cannot resolve path`);
       }
 
-      const path = change.owner.path[i];
+      const path = change.path[i];
 
       return traverse(value[path], i + 1);
     };
 
     // Check if owner type still exist
     invariant(
-      this.reka.getNodeFromId(change.owner.type.id),
-      `Node of id "${change.owner.type.id}" is not in the tree.`
+      this.reka.getNodeFromId(change.parent.id),
+      `Node of id "${change.parent.id}" is not in the tree.`
     );
 
-    return traverse(change.owner.type);
+    return traverse(change.parent);
   }
 
-  applyUndo(change: ChangePayload) {
+  applyUndo(change: ObserverChangePayload) {
     const pathObj = this.getValueFromPath(change);
 
     if (change.type === 'add') {
@@ -112,7 +113,7 @@ export class DefaultHistoryManager extends HistoryManager {
     throw new Error('Unknown inverse op');
   }
 
-  applyRedo(change: ChangePayload) {
+  applyRedo(change: ObserverChangePayload) {
     const pathObj = this.getValueFromPath(change);
 
     if (change.type === 'add') {

@@ -3,7 +3,6 @@ import { getRandomId } from '@rekajs/utils';
 import { makeObservable, observable, action } from 'mobx';
 
 import { Evaluator } from './evaluator';
-
 import { Reka } from './reka';
 import { defer } from './utils';
 

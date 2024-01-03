@@ -1,4 +1,3 @@
-import { toJS } from '@rekajs/core';
 import { observer } from '@rekajs/react';
 import * as t from '@rekajs/types';
 import { invariant } from '@rekajs/utils';
@@ -63,7 +62,7 @@ const RenderTagView = observer((props: RenderTagViewProps) => {
   }
 
   const style: Record<string, any> = props.view.props.style
-    ? toJS(props.view.props.style)
+    ? t.toJS(props.view.props.style)
     : {};
 
   if (props.view.tag === 'img') {

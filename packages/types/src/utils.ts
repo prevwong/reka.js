@@ -40,8 +40,35 @@ type MergeTypeOpts = {
   }>;
 };
 
-const isObjectLiteral = (t: any) => {
+export const isObjectLiteral = (t: any) => {
   return !!t && 'object' === typeof t && t.constructor === Object;
+};
+
+export const toJS = (value: any) => {
+  if (typeof value === 'function' || !(value instanceof Object)) {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((c) => toJS(c));
+  }
+
+  if (isObjectLiteral(value)) {
+    return Object.keys(value).reduce(
+      (accum, key) => ({
+        ...accum,
+        [key]: toJS(value[key]),
+      }),
+      {}
+    );
+  }
+
+  if (value instanceof t.Type) {
+    const Ctor = value.constructor as any;
+    return new Ctor(value);
+  }
+
+  throw new Error();
 };
 
 /**
