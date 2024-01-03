@@ -567,6 +567,21 @@ export class Observer<
       'Mutation not allowed outside of the .change() method'
     );
 
+    /**
+     * Only notify if parent has already been committed
+     *
+     * This is to prevent situations where a parent and its children are added in the same mutation.
+     * For example:
+     *
+     * observer.change(() => {
+     *   // parent element added here
+     *   root.someKey = [];
+     *
+     *   // its child values are also added within the same mutation
+     *   // in which case, we can ignore notifying the listeners of this second mutation
+     *   root.someKey.push({})
+     * })
+     */
     if (this.isParentValueUncommitted(value)) {
       return;
     }
