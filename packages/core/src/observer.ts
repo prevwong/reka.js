@@ -92,12 +92,12 @@ export class Observer<
   private uncommittedValues: Set<ValuesWithReference> = new Set();
   private changeset: Changeset<O> | null = null;
 
-  constructor(type: T, opts?: Partial<ObserverOptions>) {
+  constructor(root: T, opts?: Partial<ObserverOptions>) {
     this.id = opts?.id || getRandomId();
     this.valueToTraversalInfo = new WeakMap();
     this.typeToDisposer = new WeakMap();
     this.idToType = new Map();
-    this.root = type;
+    this.root = root;
 
     /* eslint-disable @typescript-eslint/no-empty-function */
     this.opts = {
@@ -112,7 +112,7 @@ export class Observer<
     };
     /* eslint-enable @typescript-eslint/no-empty-function */
 
-    this.setRoot(type);
+    this.setRoot(root);
 
     makeObservable(this, {
       root: observable,
