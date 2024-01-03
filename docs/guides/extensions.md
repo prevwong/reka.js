@@ -98,21 +98,20 @@ const CommentExtension = createExtension<CommentState>({
     comments: {},
   },
   init: (extension) => {
-    extension.reka.listenToChanges((payload) => {
-      if (payload.event !== 'dispose') {
-        return;
-      }
+    extension.reka.listenToChangeset((payload) => {
+      // Get all disposed nodes from the AST
+      payload.disposed.forEach((disposedNode) => {
+        // If the disposed node is a Template node,
+        // Then we should remove all comments associated with the deleted Template node id
+        if (t.is(disposedNode, t.Template)) {
+          const deletedTemplateId = disposedNode.id;
 
-      const disposedType = payload.value;
-
-      if (disposedType instanceof t.Template) {
-        const deletedTemplateId = disposedType.id;
-
-        // remove any comments associated with the deleted Template
-        extension.reka.change(() => {
-          delete extension.state.templateToComments[deletedTemplateId.id];
-        });
-      }
+          // remove any comments associated with the deleted Template
+          extension.reka.change(() => {
+            delete extension.state.templateToComments[deletedTemplateId.id];
+          });
+        }
+      });
     });
   },
 });

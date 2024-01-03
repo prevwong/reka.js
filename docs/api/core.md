@@ -52,28 +52,67 @@ reka.change(() => {
 
 !end-example
 
-!start-example listenToChanges
+!start-example listenToChangeset
 
 ```tsx
-reka.listenToChanges((payload) => {
-  if (payload.event === 'add') {
-    console.log('node added', payload.type);
-  }
-
-  if (payload.event === 'dispose') {
-    console.log('node removed', payload.type);
-  }
-
-  if (payload.event === 'change') {
-    console.log(
-      'node changed',
-      payload.type,
-      payload.newValue,
-      payload.oldValue,
-      payload.name
-    );
-  }
+reka.listenToChangeset((payload) => {
+  console.log(
+    'node changed',
+    payload.type,
+    payload.newValue,
+    payload.oldValue,
+    payload.name
+  );
 });
+```
+
+!end-example
+
+!start-example getParentNode
+
+```tsx
+const state = t.state({
+  program: t.program({
+    components: [
+      t.rekaComponent({
+        name: "App"
+        ...
+      })
+    ]
+  })
+})
+
+reka.load(state);
+
+const appComponent = state.program.components[0];
+
+console.log(reka.getParentNode(appComponent) === state.program); // true
+```
+
+!end-example
+
+!start-example getNodeLocation
+
+```tsx
+const state = t.state({
+  program: t.program({
+    components: [
+      t.rekaComponent({
+        name: "App"
+        ...
+      })
+    ]
+  })
+})
+
+reka.load(state);
+
+const appComponent = state.program.components[0];
+
+const location = reka.getNodeLocation(appComponent);
+
+console.log(location.parent === state.program); // true
+console.log(location.path) // ["components", 0]
 ```
 
 !end-example

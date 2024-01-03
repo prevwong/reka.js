@@ -3,7 +3,7 @@ import * as t from '@rekajs/types';
 import { getRandomId, invariant } from '@rekajs/utils';
 import * as Y from 'yjs';
 
-import { getTypePathFromMobxChangePath, jsToYType, yTypeToJS } from './utils';
+import { jsToYType, yTypeToJS } from './utils';
 
 export class YjsRekaSyncProvider {
   id: string;
@@ -160,17 +160,15 @@ export class YjsRekaSyncProvider {
         });
 
         changeset.changes.forEach((change) => {
-          const path = getTypePathFromMobxChangePath([...change.path]);
-
           const getTypeFromId = (id: string) => {
             return yDocRoot.get('types').get(id);
           };
 
-          const getYTypeFromPath = (paths: any[]) => {
-            const rootType = paths.shift();
+          const getYTypeFromChangesetPath = () => {
+            const rootType = change.parent;
 
-            const traverse = (obj, paths) => {
-              const curr = paths.shift();
+            const traverse = (obj, path) => {
+              const curr = path.shift();
 
               if (curr === undefined) {
                 return obj;
@@ -182,7 +180,7 @@ export class YjsRekaSyncProvider {
                 target = getTypeFromId(target.get('$$typeId'));
               }
 
-              return traverse(target, paths);
+              return traverse(target, path);
             };
 
             const type = getTypeFromId(rootType.id);
@@ -206,10 +204,10 @@ export class YjsRekaSyncProvider {
               return;
             }
 
-            return traverse(type, paths);
+            return traverse(type, [...change.path]);
           };
 
-          const yType = getYTypeFromPath([...path]);
+          const yType = getYTypeFromChangesetPath();
 
           if (!yType) {
             return;

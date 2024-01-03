@@ -72,28 +72,28 @@ const AddTemplateButton = (props: AddTemplateButtonProps) => {
               return;
             }
 
-            const parent = editor.reka.getParent(props.target);
+            const parent = editor.reka.getParentNode(props.target);
 
             if (!parent) {
               return;
             }
 
-            if (!(parent.node instanceof t.SlottableTemplate)) {
+            if (!(parent instanceof t.SlottableTemplate)) {
               return;
             }
 
-            const indexInParent = parent.node.children.indexOf(props.target);
+            const indexInParent = parent.children.indexOf(props.target);
 
             if (indexInParent === -1) {
               return;
             }
 
             if (option === 'after') {
-              parent.node.children.splice(indexInParent + 1, 0, template);
+              parent.children.splice(indexInParent + 1, 0, template);
               return;
             }
 
-            parent.node.children.splice(indexInParent, 0, template);
+            parent.children.splice(indexInParent, 0, template);
           });
         }}
       />
@@ -201,13 +201,16 @@ const RenderTemplateNode = observer((props: RenderTemplateNodeProps) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   editor.reka.change(() => {
-                    const parent = editor.reka.getParent(template, t.Template);
+                    const parent = editor.reka.getParentNode(
+                      template,
+                      t.Template
+                    );
 
                     if (!parent) {
                       return;
                     }
 
-                    const parentNode = parent.node;
+                    const parentNode = parent;
 
                     if (!(parentNode instanceof t.SlottableTemplate)) {
                       return;

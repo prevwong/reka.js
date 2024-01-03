@@ -15,7 +15,7 @@ import { EachDirectiveEvaluator } from './each';
 import { Environment } from './environment';
 import { computeExpression } from './expression';
 import { Frame } from './frame';
-import { Observer, ChangeListenerSubscriber } from './observer';
+import { Observer, ChangesetListener } from './observer';
 import { Reka } from './reka';
 import { ClassListBindingKey, ComponentSlotBindingKey } from './symbols';
 import { createKey } from './utils';
@@ -60,8 +60,6 @@ export class Evaluator {
   private tplKeyToComponentEvaluator: Map<string, ComponentViewEvaluator> =
     new Map();
   private tplKeyToView: Map<string, t.View> = new Map();
-
-  private viewChangeListenerSubscribers: ChangeListenerSubscriber[] = [];
 
   constructor(
     readonly frame: Frame,
@@ -114,7 +112,7 @@ export class Evaluator {
     view: t.View,
     expectedParentType?: t.TypeConstructor<T>
   ) {
-    return this.viewObserver?.getParent(view, expectedParentType) ?? null;
+    return this.viewObserver?.getParentNode(view, expectedParentType) ?? null;
   }
 
   private disposeComponentEvaluators() {
@@ -184,9 +182,10 @@ export class Evaluator {
   }
 
   private setView(view: t.FragmentView) {
-    if (this.viewObserver) {
-      this.viewObserver.dispose();
-    }
+    invariant(
+      !this.viewObserver,
+      `Observer for the view tree is already registered!`
+    );
 
     runInAction(() => {
       this._view.set(view);
@@ -204,7 +203,6 @@ export class Evaluator {
 
           return false;
         },
-        subscribers: this.viewChangeListenerSubscribers,
         hooks: {
           onDispose: (payload) => {
             const disposedType = payload.type;
@@ -232,27 +230,15 @@ export class Evaluator {
     });
   }
 
-  listenToChanges(changeListenerSubscriber: ChangeListenerSubscriber) {
-    this.viewChangeListenerSubscribers.push(changeListenerSubscriber);
+  listenToChangeset(listener: ChangesetListener) {
+    const observer = this.viewObserver;
 
-    let unsubscribe: () => void;
+    invariant(
+      observer,
+      `Observer for the view tree not initialised. Have you called frame.evaluate()?`
+    );
 
-    if (this.viewObserver) {
-      unsubscribe = this.viewObserver?.listenToChanges(
-        changeListenerSubscriber
-      );
-    }
-
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
-
-      this.viewChangeListenerSubscribers.splice(
-        this.viewChangeListenerSubscribers.indexOf(changeListenerSubscriber),
-        1
-      );
-    };
+    return observer.listenToChangeset(listener);
   }
 
   computeTemplate(template: t.Template, ctx: TemplateEvaluateContext) {

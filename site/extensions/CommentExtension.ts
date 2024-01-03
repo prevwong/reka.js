@@ -21,19 +21,23 @@ export const CommentExtension = createExtension<CommentState>({
     templateToComments: {},
   },
   init: (extension) => {
-    extension.reka.listenToChanges((change) => {
-      if (change.event !== 'dispose') {
-        return;
-      }
-
-      const disposedType = change.type;
-
-      if (disposedType instanceof t.Template) {
+    extension.reka.listenToChangeset((change) => {
+      if (
+        change.source === 'history' ||
+        change.disposed.length === 0 ||
+        change.disposed.every((disposed) => !t.is(disposed, t.Template))
+      ) {
         return;
       }
 
       extension.reka.change(() => {
-        delete extension.state.templateToComments[disposedType.id];
+        change.disposed.map((disposedType) => {
+          if (!(disposedType instanceof t.Template)) {
+            return;
+          }
+
+          delete extension.state.templateToComments[disposedType.id];
+        });
       });
     });
   },
