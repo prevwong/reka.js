@@ -19,169 +19,171 @@ type InternalTemplateCommentsProps = {
   templateId: string;
 };
 
-const InternalTemplateComments = (props: InternalTemplateCommentsProps) => {
-  const editor = useEditor();
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
+const InternalTemplateComments = observer(
+  (props: InternalTemplateCommentsProps) => {
+    const editor = useEditor();
+    const containerRef = React.useRef<HTMLDivElement | null>(null);
 
-  const { comments } = useReka((reka) => {
-    const comments: Comment[] =
-      reka.getExtension(CommentExtension).state.templateToComments[
-        props.templateId
-      ] ?? [];
+    const { comments } = useReka((reka) => {
+      const comments: Comment[] =
+        reka.getExtension(CommentExtension).state.templateToComments[
+          props.templateId
+        ] ?? [];
 
-    return {
-      comments,
-    };
-  });
+      return {
+        comments,
+      };
+    });
 
-  const setPos = React.useCallback(() => {
-    const { current: containerDOM } = containerRef;
+    const setPos = React.useCallback(() => {
+      const { current: containerDOM } = containerRef;
 
-    if (!containerDOM) {
-      return;
-    }
+      if (!containerDOM) {
+        return;
+      }
 
-    const domRect = props.templateDOM.getBoundingClientRect();
-    const containerDomRect = containerDOM.getBoundingClientRect();
+      const domRect = props.templateDOM.getBoundingClientRect();
+      const containerDomRect = containerDOM.getBoundingClientRect();
 
-    const top = props.iframeDOM.offsetTop + domRect.top;
-    const left =
-      props.iframeDOM.offsetLeft +
-      domRect.left +
-      domRect.width -
-      containerDomRect.width;
+      const top = props.iframeDOM.offsetTop + domRect.top;
+      const left =
+        props.iframeDOM.offsetLeft +
+        domRect.left +
+        domRect.width -
+        containerDomRect.width;
 
-    containerDOM.style.top = `${top}px`;
-    containerDOM.style.left = `${left}px`;
-  }, [props.templateDOM, props.iframeDOM]);
+      containerDOM.style.top = `${top}px`;
+      containerDOM.style.left = `${left}px`;
+    }, [props.templateDOM, props.iframeDOM]);
 
-  React.useEffect(() => {
-    setPos();
-
-    let animationReq: number | null;
-
-    const animationLoop = () => {
+    React.useEffect(() => {
       setPos();
 
-      animationReq = window.requestAnimationFrame(() => {
-        animationLoop();
-      });
-    };
+      let animationReq: number | null;
 
-    animationReq = window.requestAnimationFrame(() => animationLoop());
+      const animationLoop = () => {
+        setPos();
 
-    return () => {
-      animationReq !== null && window.cancelAnimationFrame(animationReq);
-    };
-  }, [setPos]);
+        animationReq = window.requestAnimationFrame(() => {
+          animationLoop();
+        });
+      };
 
-  React.useEffect(() => {
-    const { current: containerDOM } = containerRef;
+      animationReq = window.requestAnimationFrame(() => animationLoop());
 
-    if (!containerDOM) {
-      return;
-    }
+      return () => {
+        animationReq !== null && window.cancelAnimationFrame(animationReq);
+      };
+    }, [setPos]);
 
-    const hideComments = () => {
-      editor.activeComponentEditor?.hideComments();
-    };
+    React.useEffect(() => {
+      const { current: containerDOM } = containerRef;
 
-    const onClickOutside = (e: any) => {
-      if (!e.target) {
+      if (!containerDOM) {
         return;
       }
 
-      if (containerDOM.contains(e.target as HTMLElement)) {
-        return;
-      }
-      hideComments();
-    };
+      const hideComments = () => {
+        editor.activeComponentEditor?.hideComments();
+      };
 
-    props.iframeDOM.contentDocument?.addEventListener('click', hideComments);
-    document.addEventListener('mouseup', onClickOutside);
+      const onClickOutside = (e: any) => {
+        if (!e.target) {
+          return;
+        }
 
-    return () => {
-      document.removeEventListener('mouseup', onClickOutside);
-      props.iframeDOM.contentDocument?.removeEventListener(
-        'click',
-        onClickOutside
-      );
-    };
-  }, [editor, props.iframeDOM]);
+        if (containerDOM.contains(e.target as HTMLElement)) {
+          return;
+        }
+        hideComments();
+      };
 
-  return (
-    <div
-      className="bg-white/80 border border-solid border-outline backdrop-blur-md flex flex-col fixed w-72 z-max rounded-md shadow-xl"
-      ref={containerRef}
-    >
-      <div className="overflow-auto px-4 py-4 max-h-52">
-        {comments.length === 0 ? (
-          <span className="text-xs text-gray-500">No comments yet</span>
-        ) : (
-          <React.Fragment>
-            {comments
-              .slice()
-              .sort((a, b) => (a.date < b.date ? 1 : -1))
-              .map((comment, i) => {
-                return (
-                  <div className="py-3 gap-3 flex" key={i}>
-                    <div className="mt-1">
-                      <UserAvatar user={comment.user} />
+      props.iframeDOM.contentDocument?.addEventListener('click', hideComments);
+      document.addEventListener('mouseup', onClickOutside);
+
+      return () => {
+        document.removeEventListener('mouseup', onClickOutside);
+        props.iframeDOM.contentDocument?.removeEventListener(
+          'click',
+          onClickOutside
+        );
+      };
+    }, [editor, props.iframeDOM]);
+
+    return (
+      <div
+        className="bg-white/80 border border-solid border-outline backdrop-blur-md flex flex-col fixed w-72 z-max rounded-md shadow-xl"
+        ref={containerRef}
+      >
+        <div className="overflow-auto px-4 py-4 max-h-52">
+          {comments.length === 0 ? (
+            <span className="text-xs text-gray-500">No comments yet</span>
+          ) : (
+            <React.Fragment>
+              {comments
+                .slice()
+                .sort((a, b) => (a.date < b.date ? 1 : -1))
+                .map((comment, i) => {
+                  return (
+                    <div className="py-3 gap-3 flex" key={i}>
+                      <div className="mt-1">
+                        <UserAvatar user={comment.user} />
+                      </div>
+                      <div className="flex flex-col flex-1">
+                        <span className="text-gray-700 text-sm">
+                          {comment.user.name}
+                        </span>
+                        <span className="text-gray-600 text-xs">
+                          {comment.content}
+                        </span>
+                        <span className="text-gray-500 text-xs mt-0.5">
+                          {formatDistance(comment.date, Date.now(), {
+                            addSuffix: true,
+                          })}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex flex-col flex-1">
-                      <span className="text-gray-700 text-sm">
-                        {comment.user.name}
-                      </span>
-                      <span className="text-gray-600 text-xs">
-                        {comment.content}
-                      </span>
-                      <span className="text-gray-500 text-xs mt-0.5">
-                        {formatDistance(comment.date, Date.now(), {
-                          addSuffix: true,
-                        })}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-          </React.Fragment>
-        )}
-      </div>
-      <div className="px-4 pb-4">
-        <TextField
-          placeholder="Add a new comment"
-          value=""
-          onCommit={(content, clear) => {
-            editor.reka.change(
-              () => {
-                const comments =
-                  editor.reka.getExtension(CommentExtension).state
-                    .templateToComments;
+                  );
+                })}
+            </React.Fragment>
+          )}
+        </div>
+        <div className="px-4 pb-4">
+          <TextField
+            placeholder="Add a new comment"
+            value=""
+            onCommit={(content, clear) => {
+              editor.reka.change(
+                () => {
+                  const comments =
+                    editor.reka.getExtension(CommentExtension).state
+                      .templateToComments;
 
-                if (!comments[props.templateId]) {
-                  comments[props.templateId] = [];
-                }
+                  if (!comments[props.templateId]) {
+                    comments[props.templateId] = [];
+                  }
 
-                comments[props.templateId].push({
-                  content,
-                  user: editor.user,
-                  date: Date.now(),
-                });
+                  comments[props.templateId].push({
+                    content,
+                    user: editor.user,
+                    date: Date.now(),
+                  });
 
-                clear();
-              },
-              {
-                history: {
-                  ignore: true,
+                  clear();
                 },
-              }
-            );
-          }}
-        />
+                {
+                  history: {
+                    ignore: true,
+                  },
+                }
+              );
+            }}
+          />
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);
 
 export const TemplateComments = observer((props: TemplateCommentsProps) => {
   const editor = useEditor();
