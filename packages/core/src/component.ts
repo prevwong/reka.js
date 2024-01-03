@@ -141,16 +141,18 @@ export class ComponentViewEvaluator {
         [] as [string, any][]
       );
 
-      this.fragment.children = [
-        t.externalComponentView({
-          frame: this.evaluator.frame.id,
-          component,
-          key: createKey([this.key, 'root']),
-          template: this.template,
-          children: children || [],
-          props: Object.fromEntries(props),
-        }),
-      ];
+      runInAction(() => {
+        this.fragment.children = [
+          t.externalComponentView({
+            frame: this.evaluator.frame.id,
+            component,
+            key: createKey([this.key, 'root']),
+            template: this.template,
+            children: children || [],
+            props: Object.fromEntries(props),
+          }),
+        ];
+      });
 
       return this.fragment;
     }
