@@ -90,7 +90,7 @@ export class Observer<
   private isMutating: boolean = false;
   private changesetListeners: ChangesetListener[] = [];
   private uncommittedValues: Set<ValuesWithReference> = new Set();
-  private declare changeset: Changeset<O>;
+  private changeset: Changeset<O> | null = null;
 
   constructor(type: T, opts?: Partial<ObserverOptions>) {
     this.id = opts?.id || getRandomId();
@@ -617,7 +617,11 @@ export class Observer<
   }
 
   private notifyChangesetListeners() {
-    this.changesetListeners.map((subscriber) => subscriber(this.changeset));
+    const changeset = this.changeset;
+
+    invariant(changeset, `Changeset not found. Nothing to notify`);
+
+    this.changesetListeners.map((subscriber) => subscriber(changeset));
   }
 
   private getValueTraversalInfo(value: ValuesWithReference) {
