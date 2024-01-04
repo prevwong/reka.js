@@ -28,5 +28,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/prevwong/reka.js/"
-  }
+  },
+  "funding": "https://github.com/sponsors/prevwong"
 }
