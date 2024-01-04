@@ -55,6 +55,10 @@ export class Frame {
     return this.opts.component.name;
   }
 
+  get component() {
+    return this.evaluator.component;
+  }
+
   /// Get the output View for the Frame
   get view() {
     return this.evaluator.view;

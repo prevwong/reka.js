@@ -61,6 +61,8 @@ export class Evaluator {
     new Map();
   private tplKeyToView: Map<string, t.View> = new Map();
 
+  _component: IObservableValue<t.Component | null>;
+
   constructor(
     readonly frame: Frame,
     readonly componentName: string,
@@ -68,6 +70,7 @@ export class Evaluator {
     readonly reka: Reka
   ) {
     this._view = observable.box();
+    this._component = observable.box(null);
 
     const nonChildrenProps = omit(this.componentProps, ['children', 'x']);
 
@@ -76,13 +79,6 @@ export class Evaluator {
     if (children) {
       children = Array.isArray(children) ? children : [children];
     }
-
-    invariant(
-      this.reka.components.program.find(
-        (component) => component.name === componentName
-      ),
-      `Component ${componentName} not found in state`
-    );
 
     this.rootTemplate = t.componentTemplate({
       component: t.identifier({ name: this.componentName }),
@@ -95,6 +91,10 @@ export class Evaluator {
 
   get view() {
     return this._view.get();
+  }
+
+  get component() {
+    return this._component.get();
   }
 
   getViewFromId<T extends t.Type = t.Any>(
@@ -504,7 +504,18 @@ export class Evaluator {
         this,
         ctx,
         template,
-        componentEnv
+        componentEnv,
+        {
+          onComponentResolved: (component) => {
+            // Updated the evaluator's `component` property
+            // Whenever we resolve the root component
+            if (ctx.path.length === 1 && ctx.path[0] === 'frame') {
+              runInAction(() => {
+                this._component.set(component);
+              });
+            }
+          },
+        }
       );
 
       this.tplKeyToComponentEvaluator.set(key, componentEvaluator);

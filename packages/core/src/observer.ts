@@ -588,8 +588,6 @@ export class Observer<
 
     const parentWithPath = this.getValueLocation(value);
 
-    invariant(parentWithPath);
-
     const change = {
       ...payload,
       ...parentWithPath,
@@ -609,7 +607,10 @@ export class Observer<
   private isParentValueUncommitted(value: ValuesWithReference) {
     const traversalInfo = this.getValueTraversalInfo(value);
 
-    if (this.uncommittedValues.has(traversalInfo.parentValue)) {
+    if (
+      traversalInfo &&
+      this.uncommittedValues.has(traversalInfo.parentValue)
+    ) {
       return true;
     }
 
@@ -627,15 +628,34 @@ export class Observer<
   private getValueTraversalInfo(value: ValuesWithReference) {
     const traversalInfo = this.valueToTraversalInfo.get(value);
 
-    // Sanity check, should never happen
-    invariant(traversalInfo, `Traversal info not found for value`);
-
-    return traversalInfo;
+    return traversalInfo ?? null;
   }
 
-  private getValueLocation(value: ValuesWithReference): Location | null {
+  /**
+   * Get the nearest parent Type node (and any additional path to traverse) in order to reach a given value
+   * For example:
+   * {
+   *   type: "A",
+   *   children: [
+   *      {
+   *        type: "B"
+   *      }
+   *   ]
+   *
+   *   The location of "B" is {
+   *     parent: "A",
+   *     path: ["children", 0]
+   *   }
+   * }
+   */
+  private getValueLocation(value: ValuesWithReference): Location {
+    // To keep things simple, if the value is the root node itself,
+    // We just return an empty path with its parent node being itself
     if (value === this.root) {
-      return null;
+      return {
+        parent: this.root,
+        path: [],
+      };
     }
 
     const immediateParent = this.valueToTraversalInfo.get(value);
@@ -706,8 +726,8 @@ export class Observer<
   getNodePathStr(node: t.Type) {
     const parentWithPath = this.getNodeLocation(node);
 
-    if (!parentWithPath) {
-      return null;
+    if (!parentWithPath.parent) {
+      return '';
     }
 
     return `${parentWithPath.parent.id}.${parentWithPath.path.join('.')}`;

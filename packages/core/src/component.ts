@@ -6,11 +6,19 @@ import { DisposableComputation } from './computation';
 import { Environment } from './environment';
 import { TemplateEvaluateContext, Evaluator } from './evaluator';
 import { ClassListBindingKey, ComponentSlotBindingKey } from './symbols';
-import { createKey } from './utils';
+import { createKey, noop } from './utils';
 
 type ComponentViewTreeComputationCache = {
   component: t.Component;
   computed: IComputedValue<t.FragmentView>;
+};
+
+type ComponentViewEvaluatorHooks = {
+  onComponentResolved: (
+    component: t.Component | null,
+    name: string,
+    external: boolean
+  ) => void;
 };
 
 export class ComponentViewEvaluator {
@@ -32,16 +40,23 @@ export class ComponentViewEvaluator {
 
   private fragment: t.FragmentView;
 
+  private hooks: ComponentViewEvaluatorHooks;
+
   constructor(
     evaluator: Evaluator,
     ctx: TemplateEvaluateContext,
     template: t.ComponentTemplate,
-    env: Environment
+    env: Environment,
+    hooks?: Partial<ComponentViewEvaluatorHooks>
   ) {
     this.evaluator = evaluator;
     this.ctx = ctx;
     this.template = template;
     this.key = createKey(this.ctx.path);
+    this.hooks = {
+      onComponentResolved: noop,
+      ...(hooks ?? {}),
+    };
 
     this.env = env;
 
@@ -172,7 +187,9 @@ export class ComponentViewEvaluator {
         owner: this.ctx.owner,
       });
 
-      this.fragment.children = [componentViewTree];
+      runInAction(() => {
+        this.fragment.children = [componentViewTree];
+      });
 
       untracked(() => {
         this.rekaComponentRootComputation = new DisposableComputation(
@@ -319,16 +336,23 @@ export class ComponentViewEvaluator {
           if (!component) {
             this.componentViewTreeComputation = null;
             this.reset();
+            this.hooks.onComponentResolved(
+              null,
+              this.template.component.name,
+              this.template.component.external
+            );
 
-            this.fragment.children = [
-              t.errorSystemView({
-                frame: this.evaluator.frame.id,
-                error: `Component "${this.template.component.name}" not found`,
-                key: createKey([this.key, 'root']),
-                template: this.template,
-                owner: this.ctx.owner,
-              }),
-            ];
+            runInAction(() => {
+              this.fragment.children = [
+                t.errorSystemView({
+                  frame: this.evaluator.frame.id,
+                  error: `Component "${this.template.component.name}" not found`,
+                  key: createKey([this.key, 'root']),
+                  template: this.template,
+                  owner: this.ctx.owner,
+                }),
+              ];
+            });
 
             return this.fragment;
           }
@@ -336,15 +360,17 @@ export class ComponentViewEvaluator {
           if (this.ctx.componentStack.indexOf(component) > -1) {
             this.reset();
 
-            this.fragment.children = [
-              t.errorSystemView({
-                frame: this.evaluator.frame.id,
-                error: `Cycle detected when attempting to render "${component.name}"`,
-                key: createKey([this.key, 'root']),
-                template: this.template,
-                owner: this.ctx.owner,
-              }),
-            ];
+            runInAction(() => {
+              this.fragment.children = [
+                t.errorSystemView({
+                  frame: this.evaluator.frame.id,
+                  error: `Cycle detected when attempting to render "${component.name}"`,
+                  key: createKey([this.key, 'root']),
+                  template: this.template,
+                  owner: this.ctx.owner,
+                }),
+              ];
+            });
 
             return this.fragment;
           }
@@ -357,6 +383,12 @@ export class ComponentViewEvaluator {
           }
 
           this.reset();
+
+          this.hooks.onComponentResolved(
+            component,
+            this.template.component.name,
+            this.template.component.external
+          );
 
           this.componentViewTreeComputation = {
             component,

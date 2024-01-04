@@ -165,8 +165,6 @@ export class YjsRekaSyncProvider {
           };
 
           const getYTypeFromChangesetPath = () => {
-            const rootType = change.parent;
-
             const traverse = (obj, path) => {
               const curr = path.shift();
 
@@ -183,7 +181,8 @@ export class YjsRekaSyncProvider {
               return traverse(target, path);
             };
 
-            const type = getTypeFromId(rootType.id);
+
+            const type = getTypeFromId(change.parent.id);
 
             /**
              * There's an edge case when we cannot resolve the root type from the Yjs Document
