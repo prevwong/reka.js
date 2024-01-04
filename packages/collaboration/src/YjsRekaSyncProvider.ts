@@ -181,7 +181,6 @@ export class YjsRekaSyncProvider {
               return traverse(target, path);
             };
 
-
             const type = getTypeFromId(change.parent.id);
 
             /**
