@@ -218,7 +218,7 @@ export class Reka {
 
     this.history.init?.();
 
-    if (!!opts.sync) {
+    if (opts.sync) {
       this.sync(opts.sync === true || opts.sync.immediate);
     } else {
       this.head.sync();

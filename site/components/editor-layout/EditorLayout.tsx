@@ -16,8 +16,8 @@ import { ComponentSettings } from './component-settings';
 import { TemplateSettings } from './template-settings';
 
 import { AnimatedScreenSlider } from '../animated-screen-slider/AnimatedScreenSlider';
-import { CodeEditor } from '../code-editor';
 import { Carbonads } from '../carbonads';
+import { CodeEditor } from '../code-editor';
 
 export const EditorLayout = observer(
   (

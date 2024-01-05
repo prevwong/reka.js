@@ -80,7 +80,10 @@ describe('observer', () => {
     });
 
     it('should get correct paths', () => {
-      expect(observer.getNodeLocation(tree)).toEqual(null);
+      expect(observer.getNodeLocation(tree)).toEqual({
+        parent: tree,
+        path: [],
+      });
 
       expect(observer.getNodeLocation(tree.props['items'])).toMatchObject({
         parent: {

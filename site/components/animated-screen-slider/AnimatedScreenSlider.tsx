@@ -5,7 +5,6 @@ import * as React from 'react';
 import { CREATE_BEZIER_TRANSITION, cn } from '@app/utils';
 
 import { Button } from '../button';
-import { Carbonads } from '../carbonads';
 
 type Callbacks = {
   goTo: (id: string) => void;
