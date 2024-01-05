@@ -178,7 +178,9 @@ export class Editor {
 
     this.reka.load(
       t.unflatten(getCollaborativeYjsRekaState().toJSON() as any),
-      false
+      {
+        sync: false,
+      }
     );
 
     if (this.reka.program.components.length > 0) {

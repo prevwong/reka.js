@@ -19,6 +19,7 @@ import { DefaultHistoryManager, HistoryManager } from './history';
 import {
   CustomKindDefinition,
   RekaChangeOpts,
+  RekaLoadOpts,
   RekaOpts,
   StateSubscriberOpts,
 } from './interfaces';
@@ -180,16 +181,13 @@ export class Reka {
 
   /**
    * Load a new State data type
-   *
-   * @param state The State data type to load
-   * @param syncImmediately Whether to sync changes made to the State to all active Frames immediately
-   * @param evaluateImmediately Whether to evaluate Frames immediately or defer through a microtask
    */
-  load(
-    state: t.State,
-    syncImmediately: boolean = true,
-    evaluateImmediately: boolean = false
-  ) {
+  load(state: t.State, opts?: RekaLoadOpts) {
+    opts = {
+      sync: true,
+      ...opts,
+    };
+
     if (this.loaded) {
       this.dispose();
     }
@@ -220,8 +218,8 @@ export class Reka {
 
     this.history.init?.();
 
-    if (syncImmediately) {
-      this.sync(evaluateImmediately);
+    if (!!opts.sync) {
+      this.sync(opts.sync === true || opts.sync.immediate);
     } else {
       this.head.sync();
     }
@@ -231,9 +229,7 @@ export class Reka {
   }
 
   /**
-   * Sync changes made to the State to all active Frames. You usually do not need to call this manually
-   *
-   * @param evaluateImmediately Whether to evaluate Frames immediately or defer through a microtask
+   * Sync changes made to the State to all active Frames. You usually do not need to call this manually.
    */
   sync(evaluateImmediately: boolean = false) {
     this.head.sync();

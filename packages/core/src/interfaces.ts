@@ -75,3 +75,17 @@ export type RekaChangeOpts = {
   };
   source?: string;
 };
+
+export type RekaLoadOpts = {
+  /**
+   * Specify if each `Frame` should be synced with the latest `State` after loading
+   */
+  sync:
+    | boolean
+    | {
+        /**
+         * Specify if each `Frame` should evaluate immediately or defer through a microtask
+         */
+        immediate: boolean;
+      };
+};
