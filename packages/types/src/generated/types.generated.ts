@@ -1,4 +1,6 @@
-import { Schema, Type } from '../schema';
+import { Schema } from '../schema';
+
+import { Type } from '../node';
 
 type StateParameters = {
   program: Program;

@@ -1,4 +1,5 @@
-import { Schema, Type, TypeConstructor } from './schema';
+import { Type, TypeConstructor } from './node';
+import { Schema } from './schema';
 import * as t from './types.docs';
 
 /**

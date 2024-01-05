@@ -1,6 +1,6 @@
 import { getRandomId, invariant } from '@rekajs/utils';
 
-import { Schema } from './Schema';
+import { Schema } from '../schema';
 
 export class Type {
   declare readonly type: string;

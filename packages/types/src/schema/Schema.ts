@@ -1,5 +1,4 @@
-import { Type } from './Type';
-
+import { Type } from '../node';
 import { assertions, Validator } from '../validators';
 
 export const SchemaRegistry: Record<string, Schema> = Object.create(null);

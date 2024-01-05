@@ -9,7 +9,8 @@ const { Schema } = require('../../src/schema');
 const { DefaultValidator } = require('../../src/validators');
 
 let typesCode = `
-import { Schema, Type } from '../schema';\n
+import { Schema } from '../schema';\n
+import { Type } from '../node';\n
 `;
 
 const aliases = {};
