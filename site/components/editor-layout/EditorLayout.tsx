@@ -17,6 +17,7 @@ import { TemplateSettings } from './template-settings';
 
 import { AnimatedScreenSlider } from '../animated-screen-slider/AnimatedScreenSlider';
 import { CodeEditor } from '../code-editor';
+import { Carbonads } from '../carbonads';
 
 export const EditorLayout = observer(
   (
@@ -105,54 +106,64 @@ export const EditorLayout = observer(
               style={{ minWidth: theme.width['editor-left-sidebar'] }}
             >
               <GlobalSettings />
-              <div className="relative flex-1">
-                <AnimatedScreenSlider
-                  goBackText="Components"
-                  active={'component-list'}
-                  onSetup={(getPath, goTo) => {
-                    return autorun(() => {
-                      const selectedTpl =
-                        editor.activeComponentEditor?.tplEvent.selected;
+              <AnimatedScreenSlider
+                className="flex-1"
+                goBackText="Components"
+                active={'component-list'}
+                onSetup={(getPath, goTo) => {
+                  return autorun(() => {
+                    const selectedTpl =
+                      editor.activeComponentEditor?.tplEvent.selected;
 
-                      const path = getPath();
+                    const path = getPath();
 
-                      if (path !== 'component-list') {
-                        return;
-                      }
+                    if (path !== 'component-list') {
+                      return;
+                    }
 
-                      if (!selectedTpl) {
-                        return;
-                      }
+                    if (!selectedTpl) {
+                      return;
+                    }
 
-                      goTo('component-editor');
-                    });
-                  }}
-                  screens={[
-                    {
-                      id: 'component-list',
-                      render: (cb) => {
-                        return (
-                          <ComponentList
-                            onComponentSelected={(component) => {
-                              editor.router.push(
-                                `/?component=${component.name}`
-                              );
-                              // editor.setActiveComponentEditor(component);
-                              cb.goTo('component-editor');
-                            }}
-                          />
-                        );
-                      },
+                    goTo('component-editor');
+                  });
+                }}
+                screens={[
+                  {
+                    id: 'component-list',
+                    render: (cb) => {
+                      return (
+                        <ComponentList
+                          onComponentSelected={(component) => {
+                            editor.router.push(`/?component=${component.name}`);
+                            // editor.setActiveComponentEditor(component);
+                            cb.goTo('component-editor');
+                          }}
+                        />
+                      );
                     },
-                    {
-                      id: 'component-editor',
-                      render: () => {
-                        return <ComponentSettings />;
-                      },
+                  },
+                  {
+                    id: 'component-editor',
+                    render: () => {
+                      return <ComponentSettings />;
                     },
-                  ]}
-                />
-              </div>
+                  },
+                ]}
+                after={(name) => (
+                  <React.Fragment>
+                    <Carbonads
+                      className={cn(
+                        'bg-white p-3 opacity-100 transition-ease',
+                        {
+                          'pointer-events-none opacity-0':
+                            name !== 'component-list',
+                        }
+                      )}
+                    />
+                  </React.Fragment>
+                )}
+              />
             </div>
           </motion.div>
           <motion.div

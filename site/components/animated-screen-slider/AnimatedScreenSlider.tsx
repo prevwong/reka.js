@@ -2,9 +2,10 @@ import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import { AnimatePresence, motion } from 'framer-motion';
 import * as React from 'react';
 
-import { CREATE_BEZIER_TRANSITION } from '@app/utils';
+import { CREATE_BEZIER_TRANSITION, cn } from '@app/utils';
 
 import { Button } from '../button';
+import { Carbonads } from '../carbonads';
 
 type Callbacks = {
   goTo: (id: string) => void;
@@ -22,6 +23,8 @@ type AnimatedScreenSliderProps = {
   active?: string;
   onSetup?: (getPath: () => string, goTo: (id: string) => void) => void;
   goBackText?: string;
+  after?: (active: string) => React.ReactNode;
+  className?: string;
 };
 
 export const AnimatedScreenSlider = (props: AnimatedScreenSliderProps) => {
@@ -78,68 +81,72 @@ export const AnimatedScreenSlider = (props: AnimatedScreenSliderProps) => {
 
   return (
     <React.Fragment>
-      {props.screens.map((screen, i) => {
-        return (
-          <AnimatePresence initial={false} key={i}>
-            {currentPath === screen.id && (
-              <motion.div
-                key="route"
-                initial="enter"
-                animate="show"
-                exit="exit"
-                variants={{
-                  enter: () => {
-                    let left = '100%';
+      <div className={cn('relative', props.className)}>
+        {props.screens.map((screen, i) => {
+          return (
+            <AnimatePresence initial={false} key={i}>
+              {currentPath === screen.id && (
+                <motion.div
+                  key="route"
+                  initial="enter"
+                  animate="show"
+                  exit="exit"
+                  variants={{
+                    enter: () => {
+                      let left = '100%';
 
-                    if (
-                      prevPathsRef.current &&
-                      prevPathsRef.current.length > i
-                    ) {
-                      left = '-100%';
-                    }
+                      if (
+                        prevPathsRef.current &&
+                        prevPathsRef.current.length > i
+                      ) {
+                        left = '-100%';
+                      }
 
-                    return {
-                      left,
-                      opacity: 0,
-                    };
-                  },
-                  show: { opacity: 1, left: 0 },
-                  exit: () => {
-                    let left = '100%';
+                      return {
+                        left,
+                        opacity: 0,
+                      };
+                    },
+                    show: { opacity: 1, left: 0 },
+                    exit: () => {
+                      let left = '100%';
 
-                    if (pathsRef.current.length > i) {
-                      left = '-100%';
-                    }
+                      if (pathsRef.current.length > i) {
+                        left = '-100%';
+                      }
 
-                    return { opacity: 0, left };
-                  },
-                }}
-                className="absolute w-full h-full top-0 flex flex-col"
-                transition={CREATE_BEZIER_TRANSITION()}
-              >
-                {paths.length > 0 && i > 0 && screen.hideBackButton !== true && (
-                  <div className="px-4 py-4">
-                    <Button
-                      variant="link"
-                      className="gap-2 group"
-                      onClick={() => {
-                        callbacks.goBack();
-                      }}
-                    >
-                      <ArrowLeftIcon className="transition bezier duration-400 translate-x-0 group-hover:-translate-x-0.5" />
-                      <span className="transition bezier duration-400 translate-x-0">
-                        {props.goBackText ?? 'Go Back'}
-                      </span>
-                    </Button>
-                  </div>
-                )}
+                      return { opacity: 0, left };
+                    },
+                  }}
+                  className="absolute w-full h-full top-0 flex flex-col"
+                  transition={CREATE_BEZIER_TRANSITION()}
+                >
+                  {paths.length > 0 && i > 0 && screen.hideBackButton !== true && (
+                    <div className="px-4 py-4">
+                      <Button
+                        variant="link"
+                        className="gap-2 group"
+                        onClick={() => {
+                          callbacks.goBack();
+                        }}
+                      >
+                        <ArrowLeftIcon className="transition bezier duration-400 translate-x-0 group-hover:-translate-x-0.5" />
+                        <span className="transition bezier duration-400 translate-x-0">
+                          {props.goBackText ?? 'Go Back'}
+                        </span>
+                      </Button>
+                    </div>
+                  )}
 
-                {screen.render(callbacks)}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        );
-      })}
+                  {screen.render(callbacks)}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          );
+        })}
+      </div>
+
+      {props.after?.(currentPath)}
     </React.Fragment>
   );
 };
