@@ -383,3 +383,40 @@ export const getRootIdentifierInMemberExpression = (
 
   return getRootIdentifierInMemberExpression(expr.object);
 };
+
+type CloneOpts = {
+  replaceExistingId: boolean;
+};
+
+/**
+ * Clone a primitive value, object literal or a Reka data type
+ */
+export const clone = (value: any, options?: Partial<CloneOpts>) => {
+  const opts: CloneOpts = {
+    replaceExistingId: false,
+    ...(options ?? {}),
+  };
+
+  if (is(value, Type)) {
+    return Schema.fromJSON(value, {
+      clone: {
+        replaceExistingId: opts.replaceExistingId,
+      },
+    });
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => clone(item, opts));
+  }
+
+  if (isObjectLiteral(value)) {
+    return Object.keys(value).reduce((accum, key) => {
+      return {
+        ...accum,
+        [key]: clone(value[key], opts),
+      };
+    }, {});
+  }
+
+  return value;
+};

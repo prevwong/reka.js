@@ -1,4 +1,4 @@
-import { Type } from '../node';
+import { Type, TypeConstructorOptions } from '../node';
 import { SchemaRegistry } from '../registry';
 import { assertions, Validator } from '../validators';
 
@@ -55,8 +55,8 @@ export class Schema {
     return this.fields[key].get(value);
   }
 
-  create(value: any) {
-    return this.ctor(value);
+  create(value: any, opts?: Partial<TypeConstructorOptions>) {
+    return new this.ctor(value, opts);
   }
 
   static define(type: string, properties: SchemaDefinitionOpts) {
@@ -78,7 +78,7 @@ export class Schema {
     return SchemaRegistry[type];
   }
 
-  static fromJSON(json: any) {
+  static fromJSON(json: any, opts?: Partial<TypeConstructorOptions>) {
     const { type } = json;
     const schema = Schema.get(type);
 
@@ -86,7 +86,7 @@ export class Schema {
       return;
     }
 
-    return new schema.ctor(json);
+    return new schema.ctor(json, opts);
   }
 
   static getRegistry() {

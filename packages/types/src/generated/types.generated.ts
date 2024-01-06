@@ -1,4 +1,4 @@
-import { Type } from '../node';
+import { Type, TypeConstructorOptions } from '../node';
 import { Schema } from '../schema';
 
 type StateParameters = {
@@ -13,8 +13,8 @@ export class State extends Type {
 
   declare program: Program;
   declare extensions: Record<string, ExtensionState>;
-  constructor(value: StateParameters) {
-    super('State', value);
+  constructor(value: StateParameters, opts?: Partial<TypeConstructorOptions>) {
+    super('State', value, opts);
   }
 }
 
@@ -30,8 +30,12 @@ export abstract class ASTNode extends Type {
   private declare __isASTNode?: string;
 
   declare meta: Record<string, any>;
-  constructor(type: string, value?: ASTNodeParameters) {
-    super(type, value);
+  constructor(
+    type: string,
+    value?: ASTNodeParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super(type, value, opts);
   }
 }
 
@@ -50,8 +54,11 @@ export class Program extends ASTNode {
 
   declare globals: Val[];
   declare components: RekaComponent[];
-  constructor(value?: ProgramParameters) {
-    super('Program', value);
+  constructor(
+    value?: ProgramParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('Program', value, opts);
   }
 }
 
@@ -62,8 +69,12 @@ export abstract class Kind extends Type {
   // @ts-ignore
   private declare __isKind?: string;
 
-  constructor(type: string, value?: any) {
-    super(type, value);
+  constructor(
+    type: string,
+    value?: any,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super(type, value, opts);
   }
 }
 
@@ -74,8 +85,8 @@ export class AnyKind extends Kind {
   // @ts-ignore
   private declare __isAnyKind?: string;
 
-  constructor() {
-    super('AnyKind');
+  constructor(opts?: Partial<TypeConstructorOptions>) {
+    super('AnyKind', opts);
   }
 }
 
@@ -86,8 +97,8 @@ export class StringKind extends Kind {
   // @ts-ignore
   private declare __isStringKind?: string;
 
-  constructor() {
-    super('StringKind');
+  constructor(opts?: Partial<TypeConstructorOptions>) {
+    super('StringKind', opts);
   }
 }
 
@@ -105,8 +116,11 @@ export class NumberKind extends Kind {
 
   declare min: number | null;
   declare max: number | null;
-  constructor(value?: NumberKindParameters) {
-    super('NumberKind', value);
+  constructor(
+    value?: NumberKindParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('NumberKind', value, opts);
   }
 }
 
@@ -117,8 +131,8 @@ export class BooleanKind extends Kind {
   // @ts-ignore
   private declare __isBooleanKind?: string;
 
-  constructor() {
-    super('BooleanKind');
+  constructor(opts?: Partial<TypeConstructorOptions>) {
+    super('BooleanKind', opts);
   }
 }
 
@@ -134,8 +148,11 @@ export class ArrayKind extends Kind {
   private declare __isArrayKind?: string;
 
   declare elements: Kind;
-  constructor(value: ArrayKindParameters) {
-    super('ArrayKind', value);
+  constructor(
+    value: ArrayKindParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('ArrayKind', value, opts);
   }
 }
 
@@ -151,8 +168,11 @@ export class OptionKind extends Kind {
   private declare __isOptionKind?: string;
 
   declare options: Record<string, string>;
-  constructor(value: OptionKindParameters) {
-    super('OptionKind', value);
+  constructor(
+    value: OptionKindParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('OptionKind', value, opts);
   }
 }
 
@@ -168,8 +188,11 @@ export class CustomKind extends Kind {
   private declare __isCustomKind?: string;
 
   declare name: string;
-  constructor(value: CustomKindParameters) {
-    super('CustomKind', value);
+  constructor(
+    value: CustomKindParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('CustomKind', value, opts);
   }
 }
 
@@ -184,8 +207,12 @@ export abstract class Expression extends ASTNode {
   // @ts-ignore
   private declare __isExpression?: string;
 
-  constructor(type: string, value?: ExpressionParameters) {
-    super(type, value);
+  constructor(
+    type: string,
+    value?: ExpressionParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super(type, value, opts);
   }
 }
 
@@ -202,8 +229,12 @@ export abstract class Identifiable extends Expression {
   private declare __isIdentifiable?: string;
 
   declare name: string;
-  constructor(type: string, value: IdentifiableParameters) {
-    super(type, value);
+  constructor(
+    type: string,
+    value: IdentifiableParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super(type, value, opts);
   }
 }
 
@@ -223,8 +254,12 @@ export abstract class Variable extends Identifiable {
 
   declare kind: Kind;
   declare init: Expression | null;
-  constructor(type: string, value: VariableParameters) {
-    super(type, value);
+  constructor(
+    type: string,
+    value: VariableParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super(type, value, opts);
   }
 }
 
@@ -241,8 +276,11 @@ export class Literal extends Expression {
   private declare __isLiteral?: string;
 
   declare value: string | number | boolean;
-  constructor(value: LiteralParameters) {
-    super('Literal', value);
+  constructor(
+    value: LiteralParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('Literal', value, opts);
   }
 }
 
@@ -261,8 +299,11 @@ export class Identifier extends Expression {
 
   declare name: string;
   declare external: boolean;
-  constructor(value: IdentifierParameters) {
-    super('Identifier', value);
+  constructor(
+    value: IdentifierParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('Identifier', value, opts);
   }
 }
 
@@ -280,8 +321,8 @@ export class Val extends Variable {
   // @ts-ignore
   private declare __isVal?: string;
 
-  constructor(value: ValParameters) {
-    super('Val', value);
+  constructor(value: ValParameters, opts?: Partial<TypeConstructorOptions>) {
+    super('Val', value, opts);
   }
 }
 
@@ -298,8 +339,11 @@ export class ArrayExpression extends Expression {
   private declare __isArrayExpression?: string;
 
   declare elements: Expression[];
-  constructor(value: ArrayExpressionParameters) {
-    super('ArrayExpression', value);
+  constructor(
+    value: ArrayExpressionParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('ArrayExpression', value, opts);
   }
 }
 
@@ -350,8 +394,11 @@ export class BinaryExpression extends Expression {
     | '^'
     | '%';
   declare right: Expression;
-  constructor(value: BinaryExpressionParameters) {
-    super('BinaryExpression', value);
+  constructor(
+    value: BinaryExpressionParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('BinaryExpression', value, opts);
   }
 }
 
@@ -368,8 +415,11 @@ export class ObjectExpression extends Expression {
   private declare __isObjectExpression?: string;
 
   declare properties: Record<string, Expression>;
-  constructor(value: ObjectExpressionParameters) {
-    super('ObjectExpression', value);
+  constructor(
+    value: ObjectExpressionParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('ObjectExpression', value, opts);
   }
 }
 
@@ -386,8 +436,8 @@ export class Block extends Expression {
   private declare __isBlock?: string;
 
   declare statements: Expression[];
-  constructor(value: BlockParameters) {
-    super('Block', value);
+  constructor(value: BlockParameters, opts?: Partial<TypeConstructorOptions>) {
+    super('Block', value, opts);
   }
 }
 
@@ -403,8 +453,8 @@ export class Param extends Identifiable {
   // @ts-ignore
   private declare __isParam?: string;
 
-  constructor(value: ParamParameters) {
-    super('Param', value);
+  constructor(value: ParamParameters, opts?: Partial<TypeConstructorOptions>) {
+    super('Param', value, opts);
   }
 }
 
@@ -425,8 +475,8 @@ export class Func extends Expression {
   declare name: string | null;
   declare params: Param[];
   declare body: Block;
-  constructor(value: FuncParameters) {
-    super('Func', value);
+  constructor(value: FuncParameters, opts?: Partial<TypeConstructorOptions>) {
+    super('Func', value, opts);
   }
 }
 
@@ -445,8 +495,11 @@ export class CallExpression extends Expression {
 
   declare identifier: Identifier;
   declare arguments: Expression[];
-  constructor(value: CallExpressionParameters) {
-    super('CallExpression', value);
+  constructor(
+    value: CallExpressionParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('CallExpression', value, opts);
   }
 }
 
@@ -465,8 +518,11 @@ export class UnaryExpression extends Expression {
 
   declare operator: '-' | '+';
   declare argument: Expression;
-  constructor(value: UnaryExpressionParameters) {
-    super('UnaryExpression', value);
+  constructor(
+    value: UnaryExpressionParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('UnaryExpression', value, opts);
   }
 }
 
@@ -487,8 +543,11 @@ export class ConditionalExpression extends Expression {
   declare condition: Expression;
   declare consequent: Expression;
   declare alternate: Expression;
-  constructor(value: ConditionalExpressionParameters) {
-    super('ConditionalExpression', value);
+  constructor(
+    value: ConditionalExpressionParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('ConditionalExpression', value, opts);
   }
 }
 
@@ -507,8 +566,11 @@ export class IfStatement extends Expression {
 
   declare condition: Expression;
   declare consequent: Block;
-  constructor(value: IfStatementParameters) {
-    super('IfStatement', value);
+  constructor(
+    value: IfStatementParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('IfStatement', value, opts);
   }
 }
 
@@ -529,8 +591,11 @@ export class Assignment extends Expression {
   declare left: Identifier | MemberExpression;
   declare operator: '=' | '+=' | '-=' | '*=' | '/=' | '^=' | '%=';
   declare right: Expression;
-  constructor(value: AssignmentParameters) {
-    super('Assignment', value);
+  constructor(
+    value: AssignmentParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('Assignment', value, opts);
   }
 }
 
@@ -549,8 +614,11 @@ export class MemberExpression extends Expression {
 
   declare object: Identifier | MemberExpression;
   declare property: Expression;
-  constructor(value: MemberExpressionParameters) {
-    super('MemberExpression', value);
+  constructor(
+    value: MemberExpressionParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('MemberExpression', value, opts);
   }
 }
 
@@ -570,8 +638,11 @@ export class ComponentProp extends Variable {
   private declare __isComponentProp?: string;
 
   declare bindable: boolean;
-  constructor(value: ComponentPropParameters) {
-    super('ComponentProp', value);
+  constructor(
+    value: ComponentPropParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('ComponentProp', value, opts);
   }
 }
 
@@ -587,8 +658,12 @@ export abstract class Component extends Identifiable {
   // @ts-ignore
   private declare __isComponent?: string;
 
-  constructor(type: string, value: ComponentParameters) {
-    super(type, value);
+  constructor(
+    type: string,
+    value: ComponentParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super(type, value, opts);
   }
 }
 
@@ -610,8 +685,11 @@ export class RekaComponent extends Component {
   declare template: Template;
   declare state: Val[];
   declare props: ComponentProp[];
-  constructor(value: RekaComponentParameters) {
-    super('RekaComponent', value);
+  constructor(
+    value: RekaComponentParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('RekaComponent', value, opts);
   }
 }
 
@@ -631,8 +709,11 @@ export class ExternalComponent extends Component {
 
   declare render: Function;
   declare props: ComponentProp[];
-  constructor(value: ExternalComponentParameters) {
-    super('ExternalComponent', value);
+  constructor(
+    value: ExternalComponentParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('ExternalComponent', value, opts);
   }
 }
 
@@ -649,8 +730,11 @@ export class PropBinding extends Expression {
   private declare __isPropBinding?: string;
 
   declare identifier: Identifier;
-  constructor(value: PropBindingParameters) {
-    super('PropBinding', value);
+  constructor(
+    value: PropBindingParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('PropBinding', value, opts);
   }
 }
 
@@ -673,8 +757,12 @@ export abstract class Template extends Expression {
   declare if: Expression | null;
   declare each: ElementEach | null;
   declare classList: ObjectExpression | null;
-  constructor(type: string, value?: TemplateParameters) {
-    super(type, value);
+  constructor(
+    type: string,
+    value?: TemplateParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super(type, value, opts);
   }
 }
 
@@ -695,8 +783,12 @@ export abstract class SlottableTemplate extends Template {
   private declare __isSlottableTemplate?: string;
 
   declare children: Template[];
-  constructor(type: string, value?: SlottableTemplateParameters) {
-    super(type, value);
+  constructor(
+    type: string,
+    value?: SlottableTemplateParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super(type, value, opts);
   }
 }
 
@@ -718,8 +810,11 @@ export class TagTemplate extends SlottableTemplate {
   private declare __isTagTemplate?: string;
 
   declare tag: string;
-  constructor(value: TagTemplateParameters) {
-    super('TagTemplate', value);
+  constructor(
+    value: TagTemplateParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('TagTemplate', value, opts);
   }
 }
 
@@ -741,8 +836,11 @@ export class ComponentTemplate extends SlottableTemplate {
   private declare __isComponentTemplate?: string;
 
   declare component: Identifier;
-  constructor(value: ComponentTemplateParameters) {
-    super('ComponentTemplate', value);
+  constructor(
+    value: ComponentTemplateParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('ComponentTemplate', value, opts);
   }
 }
 
@@ -761,8 +859,11 @@ export class SlotTemplate extends Template {
   // @ts-ignore
   private declare __isSlotTemplate?: string;
 
-  constructor(value?: SlotTemplateParameters) {
-    super('SlotTemplate', value);
+  constructor(
+    value?: SlotTemplateParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('SlotTemplate', value, opts);
   }
 }
 
@@ -778,8 +879,11 @@ export class ElementEachAlias extends Identifiable {
   // @ts-ignore
   private declare __isElementEachAlias?: string;
 
-  constructor(value: ElementEachAliasParameters) {
-    super('ElementEachAlias', value);
+  constructor(
+    value: ElementEachAliasParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('ElementEachAlias', value, opts);
   }
 }
 
@@ -795,8 +899,11 @@ export class ElementEachIndex extends Identifiable {
   // @ts-ignore
   private declare __isElementEachIndex?: string;
 
-  constructor(value: ElementEachIndexParameters) {
-    super('ElementEachIndex', value);
+  constructor(
+    value: ElementEachIndexParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('ElementEachIndex', value, opts);
   }
 }
 
@@ -817,8 +924,11 @@ export class ElementEach extends ASTNode {
   declare alias: ElementEachAlias;
   declare index: ElementEachIndex | null;
   declare iterator: Expression;
-  constructor(value: ElementEachParameters) {
-    super('ElementEach', value);
+  constructor(
+    value: ElementEachParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('ElementEach', value, opts);
   }
 }
 
@@ -840,8 +950,12 @@ export abstract class View extends Type {
   declare template: Template;
   declare frame: string;
   declare owner: ComponentView | null;
-  constructor(type: string, value: ViewParameters) {
-    super(type, value);
+  constructor(
+    type: string,
+    value: ViewParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super(type, value, opts);
   }
 }
 
@@ -861,8 +975,12 @@ export abstract class SlottableView extends View {
   private declare __isSlottableView?: string;
 
   declare children: View[];
-  constructor(type: string, value: SlottableViewParameters) {
-    super(type, value);
+  constructor(
+    type: string,
+    value: SlottableViewParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super(type, value, opts);
   }
 }
 
@@ -887,8 +1005,11 @@ export class TagView extends SlottableView {
   declare tag: string;
   declare props: Record<string, any>;
   declare bindings: Record<string, Function>;
-  constructor(value: TagViewParameters) {
-    super('TagView', value);
+  constructor(
+    value: TagViewParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('TagView', value, opts);
   }
 }
 
@@ -909,8 +1030,12 @@ export abstract class ComponentView extends SlottableView {
   private declare __isComponentView?: string;
 
   declare component: Component;
-  constructor(type: string, value: ComponentViewParameters) {
-    super(type, value);
+  constructor(
+    type: string,
+    value: ComponentViewParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super(type, value, opts);
   }
 }
 
@@ -929,8 +1054,11 @@ export class FragmentView extends SlottableView {
   // @ts-ignore
   private declare __isFragmentView?: string;
 
-  constructor(value: FragmentViewParameters) {
-    super('FragmentView', value);
+  constructor(
+    value: FragmentViewParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('FragmentView', value, opts);
   }
 }
 
@@ -953,8 +1081,11 @@ export class RekaComponentView extends ComponentView {
 
   declare component: RekaComponent;
   declare render: View[];
-  constructor(value: RekaComponentViewParameters) {
-    super('RekaComponentView', value);
+  constructor(
+    value: RekaComponentViewParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('RekaComponentView', value, opts);
   }
 }
 
@@ -977,8 +1108,11 @@ export class ExternalComponentView extends ComponentView {
 
   declare component: ExternalComponent;
   declare props: Record<string, any>;
-  constructor(value: ExternalComponentViewParameters) {
-    super('ExternalComponentView', value);
+  constructor(
+    value: ExternalComponentViewParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('ExternalComponentView', value, opts);
   }
 }
 
@@ -998,8 +1132,11 @@ export class SlotView extends View {
   private declare __isSlotView?: string;
 
   declare children: View[];
-  constructor(value: SlotViewParameters) {
-    super('SlotView', value);
+  constructor(
+    value: SlotViewParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('SlotView', value, opts);
   }
 }
 
@@ -1017,8 +1154,12 @@ export abstract class SystemView extends View {
   // @ts-ignore
   private declare __isSystemView?: string;
 
-  constructor(type: string, value: SystemViewParameters) {
-    super(type, value);
+  constructor(
+    type: string,
+    value: SystemViewParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super(type, value, opts);
   }
 }
 
@@ -1038,8 +1179,11 @@ export class EachSystemView extends SystemView {
   private declare __isEachSystemView?: string;
 
   declare children: View[];
-  constructor(value: EachSystemViewParameters) {
-    super('EachSystemView', value);
+  constructor(
+    value: EachSystemViewParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('EachSystemView', value, opts);
   }
 }
 
@@ -1059,8 +1203,11 @@ export class ErrorSystemView extends SystemView {
   private declare __isErrorSystemView?: string;
 
   declare error: string;
-  constructor(value: ErrorSystemViewParameters) {
-    super('ErrorSystemView', value);
+  constructor(
+    value: ErrorSystemViewParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('ErrorSystemView', value, opts);
   }
 }
 
@@ -1076,8 +1223,11 @@ export class ExtensionState extends Type {
   private declare __isExtensionState?: string;
 
   declare value: null | Record<string, any>;
-  constructor(value: ExtensionStateParameters) {
-    super('ExtensionState', value);
+  constructor(
+    value: ExtensionStateParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('ExtensionState', value, opts);
   }
 }
 
@@ -1095,8 +1245,11 @@ export class ExternalState extends Identifiable {
   private declare __isExternalState?: string;
 
   declare init: any;
-  constructor(value: ExternalStateParameters) {
-    super('ExternalState', value);
+  constructor(
+    value: ExternalStateParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('ExternalState', value, opts);
   }
 }
 
@@ -1114,8 +1267,11 @@ export class ExternalFunc extends Identifiable {
   private declare __isExternalFunc?: string;
 
   declare func: Function;
-  constructor(value: ExternalFuncParameters) {
-    super('ExternalFunc', value);
+  constructor(
+    value: ExternalFuncParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('ExternalFunc', value, opts);
   }
 }
 

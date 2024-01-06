@@ -1,6 +1,6 @@
 import { Validator } from './validator';
 
-import { Type } from '../node';
+import { Type, TypeConstructorOptions } from '../node';
 import { getTypeSchema } from '../registry';
 
 export class TypeValidator extends Validator {
@@ -42,8 +42,8 @@ export class DefaultValidator extends Validator {
     this.defaultValue = defaultValue;
   }
 
-  format(value: any) {
-    return this.type.get(value === undefined ? this.defaultValue : value);
+  format(value: any, opts: TypeConstructorOptions) {
+    return this.type.get(value === undefined ? this.defaultValue : value, opts);
   }
 }
 
@@ -81,14 +81,14 @@ export class NodeValidator extends Validator {
     return false;
   }
 
-  format(value: any) {
-    if (value instanceof Type) {
+  format(value: any, opts: TypeConstructorOptions) {
+    if (value instanceof Type && !opts.clone) {
       return value;
     }
 
     const schema = getTypeSchema(value['type']);
 
-    return schema.create(value);
+    return schema.create(value, opts);
   }
 }
 
@@ -100,10 +100,10 @@ export class UnionValidator extends Validator {
     this.union = validators;
   }
 
-  format(value: any) {
+  format(value: any, opts: TypeConstructorOptions) {
     for (let i = 0; i < this.union.length; i++) {
       try {
-        return this.union[i].get(value);
+        return this.union[i].get(value, opts);
       } catch (err) {
         if (i < this.union.length - 1) {
           continue;
@@ -127,8 +127,8 @@ export class ArrayValidator extends Validator {
     return Array.isArray(value);
   }
 
-  format(value: any) {
-    return value.map((v: any) => this.array.get(v));
+  format(value: any, opts: TypeConstructorOptions) {
+    return value.map((v: any) => this.array.get(v, opts));
   }
 }
 
@@ -140,11 +140,11 @@ export class MapValidator extends Validator {
     this.type = validator;
   }
 
-  format(value: any) {
+  format(value: any, opts: TypeConstructorOptions) {
     return Object.entries(value).reduce(
       (accum, [key, value]) => ({
         ...accum,
-        [key]: this.type.get(value),
+        [key]: this.type.get(value, opts),
       }),
       {}
     );
@@ -159,7 +159,7 @@ export class ModelValidator extends Validator {
     this.model = model;
   }
 
-  format(value: any) {
+  format(value: any, opts: TypeConstructorOptions) {
     return Object.keys(this.model).reduce((accum, key) => {
       if (!this.model[key]) {
         throw new TypeError('Invalid key in model');
@@ -167,7 +167,7 @@ export class ModelValidator extends Validator {
 
       return {
         ...accum,
-        [key]: this.model[key].get(value[key]),
+        [key]: this.model[key].get(value[key], opts),
       };
     }, {});
   }

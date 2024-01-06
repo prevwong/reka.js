@@ -158,4 +158,28 @@ console.log(expr instanceof t.Expression); // true
 
 !end-example
 
+!start-example clone
+
+```tsx
+const original = t.binaryExpression({
+  left: t.literal({ value: 1 }),
+  operator: '+',
+  right: t.literal({ vlalue: 2 }),
+});
+
+const clone = t.clone(original);
+console.log(original === clone); // false
+
+// By default, the clone() util maintains the original ids
+console.log(original.id === clone.id); // true
+
+// Clone with new ids via the `replaceExistingIds` option:
+const cloneWithNewIds = t.clone(original, {
+  replaceExistingIds: true,
+});
+console.log(original.id === cloneWithNewIds.id); // false
+```
+
+!end-example
+
 @end-typedoc

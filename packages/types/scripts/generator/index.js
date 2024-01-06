@@ -10,7 +10,7 @@ const { DefaultValidator } = require('../../src/validators');
 
 let typesCode = `
 import { Schema } from '../schema';\n
-import { Type } from '../node';\n
+import { Type, TypeConstructorOptions  } from '../node';\n
 `;
 
 const aliases = {};
@@ -62,6 +62,9 @@ for (const type in Schema.getRegistry()) {
     constructorArgs.push(`value${isOptional ? '?' : ''}: ${paramsType}`);
     superCtorParams.push('value');
   }
+
+  constructorArgs.push(`opts?: Partial<TypeConstructorOptions>`);
+  superCtorParams.push(`opts`);
 
   typesCode += `
   export ${schema.abstract ? 'abstract' : ''} class ${type} extends ${
