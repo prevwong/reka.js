@@ -116,3 +116,16 @@ const CommentExtension = createExtension<CommentState>({
   },
 });
 ```
+
+### Caveat: Extension state cannot store AST nodes
+
+The `Extension` state can hold any type of value **except** instances of Reka's data types. It's unlikely that you ever need to store Reka's data types as part of an extension state, but if you have to - then you could store a serialised version of the data structure instead:
+
+```tsx
+createExtension({
+  state: {
+    // value: t.literal({ value: 10 }) ❌
+    value: { type: "Literal", value: 10 } ✅ // or JSON.parse(JSON.stringify(t.literal({ value: 10 })))
+  }
+})
+```

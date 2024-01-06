@@ -29,7 +29,7 @@ export const enumeration = (...constants: string[]) =>
 export const defaultValue = (validator: Validator, defaultValue: any) =>
   new DefaultValidator(validator, defaultValue);
 
-export const any = new AnyValidator();
+export const any = (fn?: (value: any) => boolean) => new AnyValidator(fn);
 export const string = type('string');
 export const number = type('number');
 export const boolean = type('boolean');
