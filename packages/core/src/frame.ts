@@ -8,7 +8,7 @@ import { defer } from './utils';
 
 type FrameComponentConfig = {
   name: string;
-  props?: Record<string, any>;
+  props?: Record<string, t.Expression>;
 };
 
 export type FrameOpts = {
@@ -37,7 +37,7 @@ export class Frame {
     this.evaluator = new Evaluator(
       this,
       this.opts.component.name,
-      this.opts.component.props || {},
+      t.clone(this.opts.component.props || {}),
       reka
     );
 

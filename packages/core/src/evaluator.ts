@@ -72,7 +72,7 @@ export class Evaluator {
     this._view = observable.box();
     this._component = observable.box(null);
 
-    const nonChildrenProps = omit(this.componentProps, ['children', 'x']);
+    const nonChildrenProps = omit(this.componentProps, ['children']);
 
     let children = this.componentProps['children'];
 
@@ -86,7 +86,9 @@ export class Evaluator {
       children: children || [],
     });
 
-    this.rootTemplateObserver = new Observer(this.rootTemplate);
+    this.rootTemplateObserver = new Observer(this.rootTemplate, {
+      id: `evaluator.${this.componentName}.${this.rootTemplate.id}`,
+    });
   }
 
   get view() {
