@@ -306,7 +306,7 @@ export class Identifier extends Expression {
     super('Identifier', value, opts);
   }
 
-  get identifiable(): Identifiable | null | null {
+  get identifiable(): Identifiable | null {
     return Schema.computeAnnotatedProp(this, 'identifiable');
   }
 }

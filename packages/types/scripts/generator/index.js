@@ -83,7 +83,7 @@ for (const type in Schema.getRegistry()) {
 
     ${Object.entries(schema.annotations).map(
       ([name, annotation]) => `
-        get ${name}(): ${stringifyField(annotation.type)} | null {
+        get ${name}(): ${stringifyField(annotation.type)} {
           return Schema.computeAnnotatedProp(this, "${name}");
         }
       `
