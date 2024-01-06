@@ -4,7 +4,7 @@ import * as t from '@rekajs/types';
 export type UserFrame = {
   id: string;
   name: string;
-  props?: string;
+  props?: Record<string, any>;
   width?: string;
   height?: string;
 };
@@ -22,7 +22,7 @@ export const UserFrameExtensionFactory = () => {
         {
           id: 'Test Feature',
           name: 'Feature',
-          props: JSON.stringify({
+          props: t.toJSON({
             title: t.literal({ value: 'Test Feature' }),
             description: t.literal({
               value: 'An interesting feature description',
@@ -40,7 +40,7 @@ export const UserFrameExtensionFactory = () => {
         {
           id: 'Basic Card',
           name: 'Card',
-          props: JSON.stringify({
+          props: t.toJSON({
             name: t.literal({ value: 'Dummy Card' }),
             description: t.literal({ value: 'Dummy description for card' }),
           }),
@@ -50,7 +50,7 @@ export const UserFrameExtensionFactory = () => {
         {
           id: 'Demo Modal',
           name: 'Modal',
-          props: JSON.stringify({
+          props: t.toJSON({
             title: t.literal({ value: 'My Modal' }),
             isOpen: t.literal({ value: true }),
             children: t.tagTemplate({
@@ -65,7 +65,7 @@ export const UserFrameExtensionFactory = () => {
         {
           id: 'Primary Button',
           name: 'Button',
-          props: JSON.stringify({
+          props: t.toJSON({
             text: t.literal({ value: 'Click me' }),
           }),
           width: '300px',
@@ -74,7 +74,7 @@ export const UserFrameExtensionFactory = () => {
         {
           id: 'Button with Icon',
           name: 'Button',
-          props: JSON.stringify({
+          props: t.toJSON({
             text: t.literal({ value: 'Icon' }),
             icon: t.literal({ value: 'ArrowRightIcon' }),
           }),
@@ -84,7 +84,7 @@ export const UserFrameExtensionFactory = () => {
         {
           id: 'Basic text input',
           name: 'Input',
-          props: JSON.stringify({
+          props: t.toJSON({
             text: t.literal({ value: 'Hello!' }),
           }),
         },
@@ -121,7 +121,7 @@ export const UserFrameExtensionFactory = () => {
               return;
             }
 
-            stateFrame.setProps(props);
+            stateFrame.setProps(t.fromJSON(props));
           });
         }
       );
@@ -149,7 +149,7 @@ export const UserFrameExtensionFactory = () => {
               id: currentFrame.id,
               component: {
                 name: currentFrame.name,
-                props: currentFrame.props ? JSON.parse(currentFrame.props) : {},
+                props: t.fromJSON(currentFrame.props),
               },
               syncImmediately: false,
             });

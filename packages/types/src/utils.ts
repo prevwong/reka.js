@@ -420,3 +420,31 @@ export const clone = (value: any, options?: Partial<CloneOpts>) => {
 
   return value;
 };
+
+export const toJSON = (value: any) => {
+  const x = JSON.parse(JSON.stringify(value));
+
+  return x;
+};
+
+export const fromJSON = (value: any) => {
+  if (Array.isArray(value)) {
+    return value.map((item) => fromJSON(item));
+  }
+
+  if (isObjectLiteral(value)) {
+    if (value['type'] && !!Schema.get(value['type'])) {
+      return Schema.fromJSON(value);
+    }
+
+    return Object.keys(value).reduce(
+      (accum, key) => ({
+        ...accum,
+        [key]: fromJSON(value[key]),
+      }),
+      {}
+    );
+  }
+
+  return value;
+};
