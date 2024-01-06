@@ -1,6 +1,6 @@
 import { getRandomId, invariant } from '@rekajs/utils';
 
-import { Schema } from '../schema';
+import { getTypeSchema } from '../registry';
 
 export class Type {
   declare readonly type: string;
@@ -10,7 +10,8 @@ export class Type {
     this.type = type;
     this.id = json?.id ?? getRandomId();
 
-    const definition = Schema.get(this.type);
+    const definition = getTypeSchema(this.type);
+
     invariant(
       !!definition,
       `Schema definition not found for type "${this.type}"`

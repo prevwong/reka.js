@@ -1,7 +1,7 @@
 import { Validator } from './validator';
 
 import { Type } from '../node';
-import { Schema } from '../schema';
+import { getTypeSchema } from '../registry';
 
 export class TypeValidator extends Validator {
   type: string;
@@ -63,13 +63,13 @@ export class NodeValidator extends Validator {
     }
 
     // Check if matching alias
-    const schema = Schema.get(value.type);
+    const schema = getTypeSchema(value.type);
 
     if (schema.alias && schema.alias.indexOf(this.node) > -1) {
       return true;
     }
 
-    const nodeSchema = Schema.get(this.node);
+    const nodeSchema = getTypeSchema(this.node);
 
     if (
       nodeSchema.abstract &&
@@ -86,7 +86,9 @@ export class NodeValidator extends Validator {
       return value;
     }
 
-    return Schema.fromJSON(value);
+    const schema = getTypeSchema(value['type']);
+
+    return schema.create(value);
   }
 }
 

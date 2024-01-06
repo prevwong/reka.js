@@ -1,7 +1,6 @@
 import { Type } from '../node';
+import { SchemaRegistry } from '../registry';
 import { assertions, Validator } from '../validators';
-
-export const SchemaRegistry: Record<string, Schema> = Object.create(null);
 
 export type SchemaDefinitionOpts = {
   extends?: string;
@@ -54,6 +53,10 @@ export class Schema {
 
   getField(key: string, value: any) {
     return this.fields[key].get(value);
+  }
+
+  create(value: any) {
+    return this.ctor(value);
   }
 
   static define(type: string, properties: SchemaDefinitionOpts) {

@@ -1,6 +1,6 @@
-import { Type, TypeConstructor } from './node';
+import * as t from './generated';
+import { Type, TypeConstructor, TypeProperties } from './node';
 import { Schema } from './schema';
-import * as t from './types.docs';
 
 /**
  * Match a callback to a Type
@@ -25,8 +25,8 @@ export const match = (node: t.Any, visitor: Partial<t.Visitor>): void => {
   }
 };
 
-type TypeOpt<T extends t.Type = any> = Partial<{
-  exclude: Array<keyof t.TypeProperties<T>>;
+type TypeOpt<T extends Type = any> = Partial<{
+  exclude: Array<keyof TypeProperties<T>>;
   diff: (a: T, b: T) => any;
 }>;
 
@@ -34,7 +34,7 @@ type MergeTypeOpts = {
   function?: (a: Function, b: Function) => any;
   types?: Partial<{
     [K in keyof t.Visitor]: t.Visitor[K] extends (type: infer V) => any
-      ? V extends t.Type
+      ? V extends Type
         ? TypeOpt<V>
         : never
       : never;
@@ -64,7 +64,7 @@ export const toJS = (value: any) => {
     );
   }
 
-  if (value instanceof t.Type) {
+  if (value instanceof Type) {
     const Ctor = value.constructor as any;
     return new Ctor(value);
   }
@@ -137,7 +137,7 @@ export const merge = (a: any, b: any, opts?: MergeTypeOpts) => {
       return a;
     }
 
-    if (a instanceof t.Type && b instanceof t.Type) {
+    if (a instanceof Type && b instanceof Type) {
       if (a.type !== b.type) {
         return b;
       }
@@ -216,7 +216,7 @@ export type FlattenedType = {
 /**
  * Flatten a Type and its children
  */
-export const flatten = (root: t.Type) => {
+export const flatten = (root: Type) => {
   const types: Record<string, FlatType> = {};
 
   const convert = (value: any) => {
@@ -236,7 +236,7 @@ export const flatten = (root: t.Type) => {
         };
       }, {});
 
-      if (value instanceof t.Type) {
+      if (value instanceof Type) {
         types[value.id] = obj;
         return {
           $$typeId: value.id,
@@ -308,8 +308,8 @@ export const unflatten = (flattenedType: FlattenedType) => {
 /**
  * Collect all child Types within a given Type
  */
-export const collect = (type: t.Type) => {
-  const types: t.Type[] = [];
+export const collect = (type: Type) => {
+  const types: Type[] = [];
 
   const collect = (value: any) => {
     if (!value) {
@@ -322,7 +322,7 @@ export const collect = (type: t.Type) => {
     }
 
     if (typeof value === 'object') {
-      if (value instanceof t.Type) {
+      if (value instanceof Type) {
         types.push(value);
       }
 
@@ -377,7 +377,7 @@ export function assert<T extends Type, C extends (value: T) => any>(
 export const getRootIdentifierInMemberExpression = (
   expr: t.MemberExpression
 ): t.Identifier => {
-  if (t.is(expr.object, t.Identifier)) {
+  if (is(expr.object, t.Identifier)) {
     return expr.object;
   }
 
