@@ -107,7 +107,7 @@ export const ComponentList = (props: ComponentListProps) => {
   return (
     <React.Fragment>
       <SettingSection
-        className="flex-1"
+        className="flex-1 overflow-auto"
         collapsedOnInitial={false}
         title="Components"
         onAdd={() => {
