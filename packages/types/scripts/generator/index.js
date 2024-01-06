@@ -80,6 +80,14 @@ for (const type in Schema.getRegistry()) {
     constructor(${constructorArgs.join(',')}) {
       super(${superCtorParams.join(',')})
     }
+
+    ${Object.entries(schema.annotations).map(
+      ([name, annotation]) => `
+        get ${name}(): ${stringifyField(annotation.type)} | null {
+          return Schema.computeAnnotatedProp(this, "${name}");
+        }
+      `
+    )}
   }
   
 

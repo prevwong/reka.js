@@ -6,6 +6,7 @@ import {
   IObjectDidChange,
   IObservable,
   IObservableArray,
+  computed,
   isObservable,
   isObservableArray,
   makeObservable,
@@ -54,6 +55,7 @@ export type ObserverOptions = {
   batch: boolean;
   shouldIgnoreObservable: (parent: t.Type, key: string, value: any) => boolean;
   hooks: Partial<ObserverHooks>;
+  resolveProp: t.Tree['resolveProp'];
 };
 
 export type ChangeOpts<O extends Record<string, any> = {}> = {
@@ -73,8 +75,7 @@ export type ChangesetListener<I extends Record<string, any> = {}> = (
 export class Observer<
   T extends t.Type = t.Type,
   O extends Record<string, any> = {}
-> {
-  readonly id: string;
+> extends t.Tree {
   readonly root: T;
 
   private declare rootDisposer: () => void;
@@ -93,7 +94,8 @@ export class Observer<
   private changeset: Changeset<O> | null = null;
 
   constructor(root: T, opts?: Partial<ObserverOptions>) {
-    this.id = opts?.id || getRandomId();
+    super(opts?.id || getRandomId(), root);
+
     this.valueToTraversalInfo = new WeakMap();
     this.typeToDisposer = new WeakMap();
     this.idToType = new Map();
@@ -108,6 +110,7 @@ export class Observer<
         onDispose: () => {},
       },
       batch: true,
+      resolveProp: noop,
       ...(opts || {}),
     };
     /* eslint-enable @typescript-eslint/no-empty-function */
@@ -164,6 +167,10 @@ export class Observer<
     this.rootDisposer = rootDisposer;
   }
 
+  resolveProp(node: t.Type, name: string) {
+    return this.opts.resolveProp(node, name);
+  }
+
   getTypeFromId<T extends t.Type = t.Any>(
     id: string,
     expectedType?: t.TypeConstructor<T>
@@ -218,6 +225,8 @@ export class Observer<
       return noop;
     }
 
+    this.addNodeToTree(value);
+
     this.uncommittedValues.add(value);
 
     // Remove any existing registration of the same type
@@ -233,9 +242,8 @@ export class Observer<
     const schema = t.Schema.get(value.type);
 
     if (!isObservable(value)) {
-      makeObservable(
-        value,
-        Object.fromEntries(
+      makeObservable(value, {
+        ...Object.fromEntries(
           schema.fields
             .filter((field) => {
               if (!this.opts.shouldIgnoreObservable) {
@@ -251,8 +259,11 @@ export class Observer<
               );
             })
             .map((field) => [field.name, observable])
-        )
-      );
+        ),
+        ...Object.fromEntries(
+          Object.keys(schema.annotations).map((name) => [name, computed])
+        ),
+      });
     }
 
     const fieldDisposers = new Map();
