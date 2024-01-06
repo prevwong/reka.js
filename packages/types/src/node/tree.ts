@@ -30,10 +30,12 @@ export abstract class Tree {
     const existingNodeTree = Tree.getNodeTree(node);
 
     // Don't allow nodes to be used across multiple tree, as it can lead to bugs
-    invariant(
-      !existingNodeTree || existingNodeTree === tree,
-      `${node.type}<${node.id}> is already part of a different Tree<${tree.id}>.`
-    );
+    if (existingNodeTree) {
+      invariant(
+        existingNodeTree === tree,
+        `${node.type}<${node.id}> is already part of a different Tree<${existingNodeTree.id}>.`
+      );
+    }
 
     node[NodeTreeSymbol] = tree;
   }

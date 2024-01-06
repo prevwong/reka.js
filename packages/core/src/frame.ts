@@ -104,7 +104,7 @@ export class Frame {
 
   /// Update the props of the Component associated with the Frame
   setProps(props: Record<string, any>) {
-    this.evaluator.setProps(props);
+    this.evaluator.setProps(t.clone(props));
   }
 
   /// Listen for changes and mutations made to the Frame's output View
