@@ -1,5 +1,13 @@
 # @rekajs/collaboration
 
+## 0.1.6
+
+### Patch Changes
+
+- [#141](https://github.com/prevwong/reka.js/pull/141) [`a325dda`](https://github.com/prevwong/reka.js/commit/a325ddaac8942f426eef70eddcec167eb0a49918) Thanks [@prevwong](https://github.com/prevwong)! - Simplify and cleanup Observer class
+
+- [#138](https://github.com/prevwong/reka.js/pull/138) [`7b6d6cb`](https://github.com/prevwong/reka.js/commit/7b6d6cb59d7367dae03d8fec455168ba310ca292) Thanks [@prevwong](https://github.com/prevwong)! - Implement undo/redo
+
 ## 0.1.5
 
 ### Patch Changes
