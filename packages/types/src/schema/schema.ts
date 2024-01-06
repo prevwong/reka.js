@@ -1,3 +1,4 @@
+import { annotations, Annotation } from '../annotations';
 import { Type, TypeConstructorOptions } from '../node';
 import { SchemaRegistry } from '../registry';
 import { assertions, Validator } from '../validators';
@@ -7,12 +8,21 @@ export type SchemaDefinitionOpts = {
   scope?: boolean;
   abstract?: boolean;
   alias?: string[];
-  fields?: (types: typeof assertions) => Record<string, any>;
+  fields?: (assertionsDef: typeof assertions) => Record<string, any>;
+  annotations?: (
+    annotationsDef: typeof annotations,
+    assertionsDef: typeof assertions
+  ) => Record<string, any>;
 };
 
 export type SchemaField = {
   name: string;
   type: Validator;
+};
+
+export type SchemaAnnotation = {
+  name: string;
+  annotation: Annotation;
 };
 
 export class Schema {
@@ -21,6 +31,7 @@ export class Schema {
   extends: string | null = null;
   abstract: boolean = false;
   alias?: string[] = [];
+  annotations: Record<string, Annotation>;
 
   declare ctor: any;
 
@@ -38,6 +49,7 @@ export class Schema {
     this.extends = opts.extends || null;
     this.abstract = opts.abstract || false;
     this.alias = opts.alias;
+    this.annotations = opts.annotations?.(annotations, assertions) ?? {};
   }
 
   get fields(): SchemaField[] {
@@ -91,5 +103,13 @@ export class Schema {
 
   static getRegistry() {
     return SchemaRegistry;
+  }
+
+  static computeAnnotatedProp(node: Type, prop: string) {
+    const schema = Schema.get(node.type);
+
+    const annotation = schema.annotations[prop];
+
+    return annotation.get(node, prop);
   }
 }

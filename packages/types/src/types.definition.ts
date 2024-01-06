@@ -105,6 +105,9 @@ Schema.define('Identifier', {
     name: t.string,
     external: t.defaultValue(t.boolean, false),
   }),
+  annotations: (a, t) => ({
+    identifiable: a.resolveProp(t.node('Identifiable')),
+  }),
 });
 
 Schema.define('Val', {

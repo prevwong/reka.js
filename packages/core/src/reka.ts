@@ -206,6 +206,13 @@ export class Reka {
           this.head.resolver.cleanupDisposedNode(payload.type);
         },
       },
+      resolveProp: (node, name) => {
+        if (t.is(node, t.Identifier) && name === 'identifiable') {
+          return this.getIdentifiableFromIdentifier(node);
+        }
+
+        return null;
+      },
     });
 
     this.setHistoryManager(new DefaultHistoryManager(this));
