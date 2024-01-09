@@ -23,17 +23,17 @@ const getInitialComponentProps = (
   if (component instanceof t.RekaComponent) {
     const props: Record<string, t.Expression> = component.props.reduce(
       (accum, prop) => {
+        const value = t.fromJSON(existingProps[prop.name]);
         return {
           ...accum,
-          [prop.name]:
-            existingProps[prop.name] ?? prop.init ?? t.literal({ value: '' }),
+          [prop.name]: value ?? prop.init ?? t.literal({ value: '' }),
         };
       },
       {}
     );
 
     if (existingProps['children']) {
-      props['children'] = existingProps['children'];
+      props['children'] = t.Schema.fromJSON(existingProps['children']);
     }
 
     return props;
@@ -117,7 +117,7 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
                 return;
               }
 
-              existingFrame.props = componentProps;
+              existingFrame.props = t.toJSON(componentProps);
             });
 
             editor.activeComponentEditor?.setActiveFrame(frameName);

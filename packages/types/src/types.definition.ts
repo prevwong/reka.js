@@ -1,3 +1,4 @@
+import { Type } from './node';
 import { Schema } from './schema';
 
 Schema.define('State', {
@@ -10,7 +11,7 @@ Schema.define('State', {
 Schema.define('ASTNode', {
   abstract: true,
   fields: (t) => ({
-    meta: t.defaultValue(t.map(t.any), {}),
+    meta: t.defaultValue(t.map(t.any()), {}),
   }),
 });
 
@@ -348,7 +349,7 @@ Schema.define('TagView', {
   extends: 'SlottableView',
   fields: (t) => ({
     tag: t.string,
-    props: t.map(t.any),
+    props: t.map(t.any()),
     bindings: t.map(t.func),
   }),
 });
@@ -377,7 +378,7 @@ Schema.define('ExternalComponentView', {
   extends: 'ComponentView',
   fields: (t) => ({
     component: t.node('ExternalComponent'),
-    props: t.map(t.any),
+    props: t.map(t.any()),
   }),
 });
 
@@ -409,14 +410,17 @@ Schema.define('ErrorSystemView', {
 
 Schema.define('ExtensionState', {
   fields: (t) => ({
-    value: t.union(t.nullish, t.map(t.any)),
+    value: t.union(
+      t.nullish,
+      t.map(t.any((value) => !(value instanceof Type)))
+    ),
   }),
 });
 
 Schema.define('ExternalState', {
   extends: 'Identifiable',
   fields: (t) => ({
-    init: t.any,
+    init: t.any((value) => !(value instanceof Type)),
   }),
 });
 

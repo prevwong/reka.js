@@ -22,7 +22,7 @@ export const UserFrameExtensionFactory = () => {
         {
           id: 'Test Feature',
           name: 'Feature',
-          props: {
+          props: t.toJSON({
             title: t.literal({ value: 'Test Feature' }),
             description: t.literal({
               value: 'An interesting feature description',
@@ -34,23 +34,23 @@ export const UserFrameExtensionFactory = () => {
               },
               children: [],
             }),
-          },
+          }),
         },
         { id: 'Top Header', name: 'Header' },
         {
           id: 'Basic Card',
           name: 'Card',
-          props: {
+          props: t.toJSON({
             name: t.literal({ value: 'Dummy Card' }),
             description: t.literal({ value: 'Dummy description for card' }),
-          },
+          }),
           width: '600px',
           height: '542px',
         },
         {
           id: 'Demo Modal',
           name: 'Modal',
-          props: {
+          props: t.toJSON({
             title: t.literal({ value: 'My Modal' }),
             isOpen: t.literal({ value: true }),
             children: t.tagTemplate({
@@ -60,38 +60,37 @@ export const UserFrameExtensionFactory = () => {
               },
               children: [],
             }),
-          },
+          }),
         },
         {
           id: 'Primary Button',
           name: 'Button',
-          props: {
+          props: t.toJSON({
             text: t.literal({ value: 'Click me' }),
-          },
+          }),
           width: '300px',
           height: '300px',
         },
         {
           id: 'Button with Icon',
           name: 'Button',
-          props: {
+          props: t.toJSON({
             text: t.literal({ value: 'Icon' }),
             icon: t.literal({ value: 'ArrowRightIcon' }),
-          },
+          }),
           width: '300px',
           height: '300px',
         },
         {
           id: 'Basic text input',
           name: 'Input',
-          props: {
+          props: t.toJSON({
             text: t.literal({ value: 'Hello!' }),
-          },
+          }),
         },
         {
           id: 'Prop Binding Demo',
           name: 'PropBinding',
-          props: {},
         },
       ],
     },
@@ -122,7 +121,7 @@ export const UserFrameExtensionFactory = () => {
               return;
             }
 
-            stateFrame.setProps(props);
+            stateFrame.setProps(t.fromJSON(props));
           });
         }
       );
@@ -150,7 +149,7 @@ export const UserFrameExtensionFactory = () => {
               id: currentFrame.id,
               component: {
                 name: currentFrame.name,
-                props: currentFrame.props,
+                props: t.fromJSON(currentFrame.props),
               },
               syncImmediately: false,
             });

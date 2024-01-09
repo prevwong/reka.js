@@ -1,3 +1,5 @@
+import { isObjectLiteral } from '@rekajs/utils';
+
 import { Validator } from './validator';
 
 import { Type, TypeConstructorOptions } from '../node';
@@ -187,11 +189,30 @@ export class ConstantValidator extends Validator {
 }
 
 export class AnyValidator extends Validator {
-  constructor() {
+  constructor(readonly validatorFn?: (value: any) => boolean) {
     super('any');
   }
 
-  validate() {
-    return true;
+  validate(value: any) {
+    const validator = this.validatorFn;
+
+    if (!validator) {
+      return true;
+    }
+
+    const _validate = (value: any) => {
+      let childrenValidated = true;
+      if (Array.isArray(value)) {
+        childrenValidated = value.every((item) => _validate(item) === true);
+      } else if (isObjectLiteral(value)) {
+        childrenValidated = Object.values(value).every((value) => {
+          return _validate(value) === true;
+        });
+      }
+
+      return validator(value) && childrenValidated;
+    };
+
+    return _validate(value);
   }
 }
