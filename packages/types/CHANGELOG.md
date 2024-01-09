@@ -1,5 +1,17 @@
 # @rekajs/types
 
+## 0.1.19
+
+### Patch Changes
+
+- [#142](https://github.com/prevwong/reka.js/pull/142) [`5c258bf`](https://github.com/prevwong/reka.js/commit/5c258bf5befde5d4d5aa460f345e31ee4aff63fc) Thanks [@prevwong](https://github.com/prevwong)! - Add ability to specify computed properties on Reka data types
+
+- [`13857e7`](https://github.com/prevwong/reka.js/commit/13857e793242e851fb2222f19209ee3ddaa5c72c) Thanks [@prevwong](https://github.com/prevwong)! - Add clone() util
+
+- [`b1b08ed`](https://github.com/prevwong/reka.js/commit/b1b08ed1443b7c438898a7e02a13c819efba1910) Thanks [@prevwong](https://github.com/prevwong)! - Remove cyclic imports
+
+- [#141](https://github.com/prevwong/reka.js/pull/141) [`a325dda`](https://github.com/prevwong/reka.js/commit/a325ddaac8942f426eef70eddcec167eb0a49918) Thanks [@prevwong](https://github.com/prevwong)! - Simplify and cleanup Observer class
+
 ## 0.1.18
 
 ### Patch Changes

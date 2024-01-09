@@ -1,5 +1,19 @@
 # @rekajs/core
 
+## 0.1.26
+
+### Patch Changes
+
+- [#142](https://github.com/prevwong/reka.js/pull/142) [`5c258bf`](https://github.com/prevwong/reka.js/commit/5c258bf5befde5d4d5aa460f345e31ee4aff63fc) Thanks [@prevwong](https://github.com/prevwong)! - Add ability to specify computed properties on Reka data types
+
+- [`6cca294`](https://github.com/prevwong/reka.js/commit/6cca294fab67ac19da36fe8703ca57ce6fb50b1a) Thanks [@prevwong](https://github.com/prevwong)! - Fix mobx warning when evaluating external component
+
+- [#141](https://github.com/prevwong/reka.js/pull/141) [`a325dda`](https://github.com/prevwong/reka.js/commit/a325ddaac8942f426eef70eddcec167eb0a49918) Thanks [@prevwong](https://github.com/prevwong)! - Simplify and cleanup Observer class
+
+- [#138](https://github.com/prevwong/reka.js/pull/138) [`7b6d6cb`](https://github.com/prevwong/reka.js/commit/7b6d6cb59d7367dae03d8fec455168ba310ca292) Thanks [@prevwong](https://github.com/prevwong)! - Implement undo/redo
+
+- [`6306de6`](https://github.com/prevwong/reka.js/commit/6306de6ab030a61eddfbd16ab0d11bf1d156d2ef) Thanks [@prevwong](https://github.com/prevwong)! - Add computed component property in evaluator
+
 ## 0.1.25
 
 ### Patch Changes
