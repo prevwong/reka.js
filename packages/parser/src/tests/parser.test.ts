@@ -304,4 +304,34 @@ describe('Parser', () => {
       bindable: true,
     });
   });
+  it('should be able to parse string type', () => {
+    const parsed = Parser.parseExpression(
+      '`Hello {{myVariable}} there {{1+2}}!`'
+    );
+
+    expect(parsed).toMatchObject({
+      type: 'String',
+      value: [
+        'Hello ',
+        {
+          type: 'Identifier',
+          name: 'myVariable',
+        },
+        ' there ',
+        {
+          type: 'BinaryExpression',
+          left: {
+            type: 'Literal',
+            value: 1,
+          },
+          operator: '+',
+          right: {
+            type: 'Literal',
+            value: 2,
+          },
+        },
+        '!',
+      ],
+    });
+  });
 });

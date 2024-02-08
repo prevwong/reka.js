@@ -282,6 +282,42 @@ const jsToReka = <T extends t.ASTNode = t.ASTNode>(
           right: _convert(node.right),
         });
       }
+      case 'TemplateLiteral': {
+        const str = node.quasis.map((quasi) => quasi.value.raw).join('');
+
+        const bracesMatches = [...str.matchAll(/{{(.*?)}}/g)];
+
+        if (bracesMatches.length == 0) {
+          return t.string({
+            value: [str],
+          });
+        }
+
+        return t.string({
+          value: bracesMatches.reduce((accum, match, matchIdx) => {
+            const exprStr = match[0];
+            const { type: expr } = parseExpressionWithAcornToRekaType(
+              exprStr.substring(2, exprStr.length - 2),
+              0
+            );
+
+            const start =
+              matchIdx === 0
+                ? 0
+                : (bracesMatches[matchIdx - 1].index ?? 0) +
+                  bracesMatches[matchIdx - 1][0].length;
+
+            const innerStr = str.substring(start, match.index);
+            accum.push(innerStr);
+            accum.push(expr);
+
+            if (matchIdx === bracesMatches.length - 1) {
+              accum.push(str.substring(match.index! + exprStr.length));
+            }
+            return accum;
+          }, [] as Array<string | t.Expression>),
+        });
+      }
       default: {
         return t.Schema.fromJSON(node) as t.Type;
       }

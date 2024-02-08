@@ -93,6 +93,20 @@ class _Stringifier {
 
         this.writer.write(node.value.toString());
       },
+      String: (node) => {
+        this.writer.write('`');
+        node.value.forEach((strOrExpr) => {
+          if (typeof strOrExpr === 'string') {
+            this.writer.write(strOrExpr);
+            return;
+          }
+
+          this.writer.write('{{');
+          this.stringify(strOrExpr, precedence);
+          this.writer.write('}}');
+        });
+        this.writer.write('`');
+      },
       ArrayExpression: (node) => {
         this.writer.write('[');
         node.elements.forEach((element, i) => {

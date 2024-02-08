@@ -222,6 +222,14 @@ export class Resolver {
     if (expr instanceof t.Val) {
       this.resolveVariable(expr, scope);
     }
+
+    if (expr instanceof t.String) {
+      expr.value.map((value) => {
+        if (t.is(value, t.Expression)) {
+          this.resolveExpr(value, scope);
+        }
+      });
+    }
   }
 
   private resolveComponent(component: t.Component, scope: Scope) {

@@ -242,4 +242,24 @@ describe('Stringifier', () => {
       )
     ).toEqual(`<input value:={value} />`);
   });
+  it('should be able to stringifiy string type', () => {
+    expect(
+      Stringifier.toString(
+        t.string({
+          value: [
+            'Hello ',
+            t.identifier({
+              name: 'myVariable',
+            }),
+            ' + ',
+            t.binaryExpression({
+              left: t.literal({ value: 1 }),
+              operator: '+',
+              right: t.literal({ value: 1 }),
+            }),
+          ],
+        })
+      )
+    ).toEqual('`Hello {{myVariable}} + {{1 + 1}}`');
+  });
 });

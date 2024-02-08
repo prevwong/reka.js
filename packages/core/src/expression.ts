@@ -167,6 +167,18 @@ export const computeExpression = (
     return expr.value;
   }
 
+  if (expr instanceof t.String) {
+    return expr.value
+      .map((value) => {
+        if (typeof value === 'string') {
+          return value;
+        }
+
+        return computeExpression(value, reka, env, ctx);
+      })
+      .join('');
+  }
+
   if (expr instanceof t.Val) {
     const value = expr.init
       ? computeExpression(expr.init, reka, env, {

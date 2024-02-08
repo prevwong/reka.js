@@ -16,6 +16,7 @@ export enum TokenType {
   STAR = '*',
   DOLLAR = '$',
   AMPERSAND = '@',
+  BACKTICK = '`',
 
   NOT = '!',
   NEQ = '!=',
