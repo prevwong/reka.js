@@ -243,7 +243,7 @@ describe('History', () => {
       await new Promise((resolve) => {
         setTimeout(() => {
           resolve(true);
-        }, 100);
+        }, 200);
       });
 
       reka.change(
