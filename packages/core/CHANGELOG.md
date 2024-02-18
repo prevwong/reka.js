@@ -1,5 +1,11 @@
 # @rekajs/core
 
+## 0.1.27
+
+### Patch Changes
+
+- [#147](https://github.com/prevwong/reka.js/pull/147) [`6075dee`](https://github.com/prevwong/reka.js/commit/6075dee83626040c9cd067897d7dcf3fd97f9642) Thanks [@prevwong](https://github.com/prevwong)! - Add string type
+
 ## 0.1.26
 
 ### Patch Changes
