@@ -1,5 +1,11 @@
 # @rekajs/parser
 
+## 0.1.16
+
+### Patch Changes
+
+- [#147](https://github.com/prevwong/reka.js/pull/147) [`6075dee`](https://github.com/prevwong/reka.js/commit/6075dee83626040c9cd067897d7dcf3fd97f9642) Thanks [@prevwong](https://github.com/prevwong)! - Add string type
+
 ## 0.1.15
 
 ### Patch Changes
