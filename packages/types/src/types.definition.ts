@@ -99,6 +99,13 @@ Schema.define('Literal', {
   }),
 });
 
+Schema.define('String', {
+  extends: 'Expression',
+  fields: (t) => ({
+    value: t.array(t.union(t.string, t.node('Expression'))),
+  }),
+});
+
 Schema.define('Identifier', {
   extends: 'Expression',
   fields: (t) => ({

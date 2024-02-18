@@ -43,8 +43,8 @@ Schema.register('ASTNode', ASTNode);
 
 type ProgramParameters = {
   meta?: Record<string, any>;
-  globals?: Val[];
-  components?: RekaComponent[];
+  globals?: Array<Val>;
+  components?: Array<RekaComponent>;
 };
 
 export class Program extends ASTNode {
@@ -52,8 +52,8 @@ export class Program extends ASTNode {
   // @ts-ignore
   private declare __isProgram?: string;
 
-  declare globals: Val[];
-  declare components: RekaComponent[];
+  declare globals: Array<Val>;
+  declare components: Array<RekaComponent>;
   constructor(
     value?: ProgramParameters,
     opts?: Partial<TypeConstructorOptions>
@@ -286,6 +286,24 @@ export class Literal extends Expression {
 
 Schema.register('Literal', Literal);
 
+type StringParameters = {
+  meta?: Record<string, any>;
+  value: Array<string | Expression>;
+};
+
+export class String extends Expression {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isString?: string;
+
+  declare value: Array<string | Expression>;
+  constructor(value: StringParameters, opts?: Partial<TypeConstructorOptions>) {
+    super('String', value, opts);
+  }
+}
+
+Schema.register('String', String);
+
 type IdentifierParameters = {
   meta?: Record<string, any>;
   name: string;
@@ -334,7 +352,7 @@ Schema.register('Val', Val);
 
 type ArrayExpressionParameters = {
   meta?: Record<string, any>;
-  elements: Expression[];
+  elements: Array<Expression>;
 };
 
 export class ArrayExpression extends Expression {
@@ -342,7 +360,7 @@ export class ArrayExpression extends Expression {
   // @ts-ignore
   private declare __isArrayExpression?: string;
 
-  declare elements: Expression[];
+  declare elements: Array<Expression>;
   constructor(
     value: ArrayExpressionParameters,
     opts?: Partial<TypeConstructorOptions>
@@ -431,7 +449,7 @@ Schema.register('ObjectExpression', ObjectExpression);
 
 type BlockParameters = {
   meta?: Record<string, any>;
-  statements: Expression[];
+  statements: Array<Expression>;
 };
 
 export class Block extends Expression {
@@ -439,7 +457,7 @@ export class Block extends Expression {
   // @ts-ignore
   private declare __isBlock?: string;
 
-  declare statements: Expression[];
+  declare statements: Array<Expression>;
   constructor(value: BlockParameters, opts?: Partial<TypeConstructorOptions>) {
     super('Block', value, opts);
   }
@@ -467,7 +485,7 @@ Schema.register('Param', Param);
 type FuncParameters = {
   meta?: Record<string, any>;
   name?: string | null;
-  params: Param[];
+  params: Array<Param>;
   body: Block;
 };
 
@@ -477,7 +495,7 @@ export class Func extends Expression {
   private declare __isFunc?: string;
 
   declare name: string | null;
-  declare params: Param[];
+  declare params: Array<Param>;
   declare body: Block;
   constructor(value: FuncParameters, opts?: Partial<TypeConstructorOptions>) {
     super('Func', value, opts);
@@ -489,7 +507,7 @@ Schema.register('Func', Func);
 type CallExpressionParameters = {
   meta?: Record<string, any>;
   identifier: Identifier;
-  arguments?: Expression[];
+  arguments?: Array<Expression>;
 };
 
 export class CallExpression extends Expression {
@@ -498,7 +516,7 @@ export class CallExpression extends Expression {
   private declare __isCallExpression?: string;
 
   declare identifier: Identifier;
-  declare arguments: Expression[];
+  declare arguments: Array<Expression>;
   constructor(
     value: CallExpressionParameters,
     opts?: Partial<TypeConstructorOptions>
@@ -677,8 +695,8 @@ type RekaComponentParameters = {
   meta?: Record<string, any>;
   name: string;
   template: Template;
-  state: Val[];
-  props: ComponentProp[];
+  state: Array<Val>;
+  props: Array<ComponentProp>;
 };
 
 export class RekaComponent extends Component {
@@ -687,8 +705,8 @@ export class RekaComponent extends Component {
   private declare __isRekaComponent?: string;
 
   declare template: Template;
-  declare state: Val[];
-  declare props: ComponentProp[];
+  declare state: Array<Val>;
+  declare props: Array<ComponentProp>;
   constructor(
     value: RekaComponentParameters,
     opts?: Partial<TypeConstructorOptions>
@@ -703,7 +721,7 @@ type ExternalComponentParameters = {
   meta?: Record<string, any>;
   name: string;
   render: Function;
-  props?: ComponentProp[];
+  props?: Array<ComponentProp>;
 };
 
 export class ExternalComponent extends Component {
@@ -712,7 +730,7 @@ export class ExternalComponent extends Component {
   private declare __isExternalComponent?: string;
 
   declare render: Function;
-  declare props: ComponentProp[];
+  declare props: Array<ComponentProp>;
   constructor(
     value: ExternalComponentParameters,
     opts?: Partial<TypeConstructorOptions>
@@ -778,7 +796,7 @@ type SlottableTemplateParameters = {
   if?: Expression | null;
   each?: ElementEach | null;
   classList?: ObjectExpression | null;
-  children?: Template[];
+  children?: Array<Template>;
 };
 
 export abstract class SlottableTemplate extends Template {
@@ -786,7 +804,7 @@ export abstract class SlottableTemplate extends Template {
   // @ts-ignore
   private declare __isSlottableTemplate?: string;
 
-  declare children: Template[];
+  declare children: Array<Template>;
   constructor(
     type: string,
     value?: SlottableTemplateParameters,
@@ -804,7 +822,7 @@ type TagTemplateParameters = {
   if?: Expression | null;
   each?: ElementEach | null;
   classList?: ObjectExpression | null;
-  children?: Template[];
+  children?: Array<Template>;
   tag: string;
 };
 
@@ -830,7 +848,7 @@ type ComponentTemplateParameters = {
   if?: Expression | null;
   each?: ElementEach | null;
   classList?: ObjectExpression | null;
-  children?: Template[];
+  children?: Array<Template>;
   component: Identifier;
 };
 
@@ -970,7 +988,7 @@ type SlottableViewParameters = {
   template: Template;
   frame: string;
   owner?: ComponentView | null;
-  children?: View[];
+  children?: Array<View>;
 };
 
 export abstract class SlottableView extends View {
@@ -978,7 +996,7 @@ export abstract class SlottableView extends View {
   // @ts-ignore
   private declare __isSlottableView?: string;
 
-  declare children: View[];
+  declare children: Array<View>;
   constructor(
     type: string,
     value: SlottableViewParameters,
@@ -995,7 +1013,7 @@ type TagViewParameters = {
   template: Template;
   frame: string;
   owner?: ComponentView | null;
-  children?: View[];
+  children?: Array<View>;
   tag: string;
   props: Record<string, any>;
   bindings: Record<string, Function>;
@@ -1024,7 +1042,7 @@ type ComponentViewParameters = {
   template: Template;
   frame: string;
   owner?: ComponentView | null;
-  children?: View[];
+  children?: Array<View>;
   component: Component;
 };
 
@@ -1050,7 +1068,7 @@ type FragmentViewParameters = {
   template: Template;
   frame: string;
   owner?: ComponentView | null;
-  children?: View[];
+  children?: Array<View>;
 };
 
 export class FragmentView extends SlottableView {
@@ -1073,9 +1091,9 @@ type RekaComponentViewParameters = {
   template: Template;
   frame: string;
   owner?: ComponentView | null;
-  children?: View[];
+  children?: Array<View>;
   component: RekaComponent;
-  render: View[];
+  render: Array<View>;
 };
 
 export class RekaComponentView extends ComponentView {
@@ -1084,7 +1102,7 @@ export class RekaComponentView extends ComponentView {
   private declare __isRekaComponentView?: string;
 
   declare component: RekaComponent;
-  declare render: View[];
+  declare render: Array<View>;
   constructor(
     value: RekaComponentViewParameters,
     opts?: Partial<TypeConstructorOptions>
@@ -1100,7 +1118,7 @@ type ExternalComponentViewParameters = {
   template: Template;
   frame: string;
   owner?: ComponentView | null;
-  children?: View[];
+  children?: Array<View>;
   component: ExternalComponent;
   props: Record<string, any>;
 };
@@ -1127,7 +1145,7 @@ type SlotViewParameters = {
   template: Template;
   frame: string;
   owner?: ComponentView | null;
-  children: View[];
+  children: Array<View>;
 };
 
 export class SlotView extends View {
@@ -1135,7 +1153,7 @@ export class SlotView extends View {
   // @ts-ignore
   private declare __isSlotView?: string;
 
-  declare children: View[];
+  declare children: Array<View>;
   constructor(
     value: SlotViewParameters,
     opts?: Partial<TypeConstructorOptions>
@@ -1174,7 +1192,7 @@ type EachSystemViewParameters = {
   template: Template;
   frame: string;
   owner?: ComponentView | null;
-  children: View[];
+  children: Array<View>;
 };
 
 export class EachSystemView extends SystemView {
@@ -1182,7 +1200,7 @@ export class EachSystemView extends SystemView {
   // @ts-ignore
   private declare __isEachSystemView?: string;
 
-  declare children: View[];
+  declare children: Array<View>;
   constructor(
     value: EachSystemViewParameters,
     opts?: Partial<TypeConstructorOptions>
@@ -1298,6 +1316,7 @@ export type Any =
   | Identifiable
   | Variable
   | Literal
+  | String
   | Identifier
   | Val
   | ArrayExpression
@@ -1355,6 +1374,7 @@ export type Visitor = {
   Identifiable: (node: Identifiable) => any;
   Variable: (node: Variable) => any;
   Literal: (node: Literal) => any;
+  String: (node: String) => any;
   Identifier: (node: Identifier) => any;
   Val: (node: Val) => any;
   ArrayExpression: (node: ArrayExpression) => any;

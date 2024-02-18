@@ -420,3 +420,13 @@ export const clone = (value: any, options?: Partial<CloneOpts>) => {
 
   return value;
 };
+
+export const toStringType = (node: t.Expression) => {
+  if (is(node, t.String)) {
+    return node;
+  }
+
+  return t.string({
+    value: [node],
+  });
+};

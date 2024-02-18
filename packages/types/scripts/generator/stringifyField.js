@@ -19,7 +19,7 @@ const fieldsToString = {
     return self.node;
   },
   array: (self) => {
-    return `${stringifyField(self.array)}[]`;
+    return `Array<${stringifyField(self.array)}>`;
   },
   map: (self) => {
     return `Record<string, ${stringifyField(self.type)}>`;

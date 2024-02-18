@@ -24,6 +24,8 @@ export const customKind = (
 ) => new t.CustomKind(...args);
 export const literal = (...args: ConstructorParameters<typeof t.Literal>) =>
   new t.Literal(...args);
+export const string = (...args: ConstructorParameters<typeof t.String>) =>
+  new t.String(...args);
 export const identifier = (
   ...args: ConstructorParameters<typeof t.Identifier>
 ) => new t.Identifier(...args);

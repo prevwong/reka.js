@@ -88,7 +88,7 @@ component App() {
        />
       </div>
       <h4 className={"mt-5 text-xs text-neutral-600"}>
-       <text value={"Counter -> " + counter} />
+       <text value={\`Counter ->  {{counter}}\`} />
       </h4>
      </div>
     </Feature>

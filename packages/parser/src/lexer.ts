@@ -163,6 +163,9 @@ export class Lexer {
         this.state.current += 1;
         return string;
       }
+      case '`': {
+        return this.tokenize(TokenType.BACKTICK);
+      }
       case ':': {
         if (this.currentContext === tc_val_prop) {
           return this.tokenize(TokenType.KIND);
