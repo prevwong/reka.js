@@ -96,7 +96,15 @@ export class EachDirectiveEvaluator {
 
             newItems.add(itemHash);
 
-            views[i] = this.computeIteratorItem(itemHash, value, i);
+            const item = this.computeIteratorItem(itemHash, value, i);
+
+            // Ensure we don't return a null/undefined value
+            // This can happen if the template has an `if` condition which returns false
+            if (!item) {
+              continue;
+            }
+
+            views[i] = item;
           }
         }
 
