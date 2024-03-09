@@ -262,7 +262,7 @@ Schema.define('RekaComponent', {
 Schema.define('ExternalComponent', {
   extends: 'Component',
   fields: (t) => ({
-    render: t.type('Function'),
+    render: t.any,
     props: t.defaultValue(t.array(t.node('ComponentProp')), []),
   }),
 });

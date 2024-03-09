@@ -1,5 +1,6 @@
-import { Type, TypeConstructorOptions } from '../node';
 import { Schema } from '../schema';
+
+import { Type, TypeConstructorOptions } from '../node';
 
 type StateParameters = {
   program: Program;
@@ -720,7 +721,7 @@ Schema.register('RekaComponent', RekaComponent);
 type ExternalComponentParameters = {
   meta?: Record<string, any>;
   name: string;
-  render: Function;
+  render: any;
   props?: Array<ComponentProp>;
 };
 
@@ -729,7 +730,7 @@ export class ExternalComponent extends Component {
   // @ts-ignore
   private declare __isExternalComponent?: string;
 
-  declare render: Function;
+  declare render: any;
   declare props: Array<ComponentProp>;
   constructor(
     value: ExternalComponentParameters,
