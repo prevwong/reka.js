@@ -1,5 +1,11 @@
 # @rekajs/types
 
+## 0.1.21
+
+### Patch Changes
+
+- [`1efd609`](https://github.com/prevwong/reka.js/commit/1efd609f16b72cecfcb60bf74facbcc1f1204561) Thanks [@prevwong](https://github.com/prevwong)! - Use type any in external component render type
+
 ## 0.1.20
 
 ### Patch Changes
