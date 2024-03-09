@@ -165,6 +165,7 @@ export class ComponentViewEvaluator {
             template: this.template,
             children: children || [],
             props: Object.fromEntries(props),
+            owner: this.ctx.owner,
           }),
         ];
       });
