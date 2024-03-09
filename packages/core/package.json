@@ -1,6 +1,6 @@
 {
   "name": "@rekajs/core",
-  "version": "0.1.27",
+  "version": "0.1.28",
   "description": "State management system for building no-code page editors",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.mjs",

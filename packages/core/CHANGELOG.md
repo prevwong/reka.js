@@ -1,5 +1,13 @@
 # @rekajs/core
 
+## 0.1.28
+
+### Patch Changes
+
+- [#149](https://github.com/prevwong/reka.js/pull/149) [`378baff`](https://github.com/prevwong/reka.js/commit/378baffabf59ee1eb509ebe4c9809e75ca8a3120) Thanks [@prevwong](https://github.com/prevwong)! - Ignore nullish value when evaluating repeated templates
+
+- [`4e8b283`](https://github.com/prevwong/reka.js/commit/4e8b28321667dff9674422dde8834e4970cf0e26) Thanks [@prevwong](https://github.com/prevwong)! - Add owner property in external component view
+
 ## 0.1.27
 
 ### Patch Changes
