@@ -74,7 +74,7 @@ Schema.define('Expression', {
 });
 
 Schema.define('Identifiable', {
-  extends: 'Expression',
+  extends: 'ASTNode',
   abstract: true,
   fields: (t) => ({
     name: t.string,
@@ -275,7 +275,7 @@ Schema.define('PropBinding', {
 });
 
 Schema.define('Template', {
-  extends: 'Expression',
+  extends: 'ASTNode',
   abstract: true,
   fields: (t) => ({
     props: t.defaultValue(t.map(t.node('Expression')), {}),

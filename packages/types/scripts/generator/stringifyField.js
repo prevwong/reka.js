@@ -1,5 +1,5 @@
 const fieldsToString = {
-  type: (self) => {
+  type: (self, type) => {
     if (self.type === 'Record') {
       return 'Record<string, any>';
     }
@@ -15,8 +15,12 @@ const fieldsToString = {
   optional: (self) => {
     return stringifyField(self.type);
   },
-  node: (self) => {
-    return self.node;
+  node: (self, type) => {
+    if (type === 'class') {
+      return self.node;
+    }
+
+    return `${self.node}Parameters`;
   },
   array: (self) => {
     return `Array<${stringifyField(self.array)}>`;
@@ -44,6 +48,7 @@ const fieldsToString = {
   },
 };
 
-const stringifyField = (field) => fieldsToString[field.is]?.(field);
+const stringifyField = (field, type = 'class') =>
+  fieldsToString[field.is]?.(field, type);
 
 module.exports = stringifyField;

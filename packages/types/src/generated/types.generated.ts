@@ -224,7 +224,7 @@ type IdentifiableParameters = {
   name: string;
 };
 
-export abstract class Identifiable extends Expression {
+export abstract class Identifiable extends ASTNode {
   // Type Hack: in order to accurately use type predicates via the .is() util method
   // @ts-ignore
   private declare __isIdentifiable?: string;
@@ -771,7 +771,7 @@ type TemplateParameters = {
   classList?: ObjectExpression | null;
 };
 
-export abstract class Template extends Expression {
+export abstract class Template extends ASTNode {
   // Type Hack: in order to accurately use type predicates via the .is() util method
   // @ts-ignore
   private declare __isTemplate?: string;

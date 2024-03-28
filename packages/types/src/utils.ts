@@ -430,3 +430,23 @@ export const toStringType = (node: t.Expression) => {
     value: [node],
   });
 };
+
+/**
+ * Given an array of Type instances, check if they are all the same Type
+ */
+export const isSameType = (nodes: Type[]) => {
+  if (nodes.length === 1) {
+    return true;
+  }
+
+  for (let i = 1; i < nodes.length; i++) {
+    const prev = nodes[i - 1];
+    const current = nodes[i];
+
+    if (prev.type !== current.type) {
+      return false;
+    }
+  }
+
+  return true;
+};
