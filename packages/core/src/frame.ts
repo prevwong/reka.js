@@ -8,6 +8,7 @@ import { defer } from './utils';
 
 type FrameComponentConfig = {
   name: string;
+  external?: boolean;
   props?: Record<string, t.Expression>;
 };
 
@@ -38,7 +39,8 @@ export class Frame {
       this,
       this.opts.component.name,
       t.clone(this.opts.component.props || {}),
-      reka
+      reka,
+      opts.component.external
     );
 
     this.sync =
@@ -92,13 +94,21 @@ export class Frame {
   }
 
   /// Compute a View tree
-  compute(evaluateImmediately: boolean = false) {
+  compute(evaluateImmediately: boolean = false, cb?: () => void) {
     const evaluate = () => {
       if (!this.sync) {
         return;
       }
-      return this.evaluator.computeView();
+
+      const view = this.evaluator.computeView();
+
+      if (cb) {
+        cb();
+      }
+
+      return view;
     };
+
     return evaluateImmediately ? evaluate() : defer(async () => evaluate());
   }
 
@@ -114,5 +124,9 @@ export class Frame {
 
   dispose() {
     this.evaluator.dispose();
+  }
+
+  getViewsForTpl(template: t.Template) {
+    return this.evaluator.getViewsForTpl(template);
   }
 }

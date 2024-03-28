@@ -4,6 +4,7 @@ import {
   computed,
   IComputedValue,
   IObservableValue,
+  makeObservable,
   observable,
   runInAction,
   untracked,
@@ -44,7 +45,7 @@ export class Evaluator {
   private rootTemplateObserver: Observer;
   private declare rootTemplateComputation: DisposableComputation<t.View[]>;
 
-  private tplToView: WeakMap<t.Template, t.View[]> = new WeakMap();
+  tplToView: Map<t.Template, t.View[]> = new Map();
   private tplKeyToClassListComputationCache: Map<string, IComputedValue<void>> =
     new Map();
   private tplToEachComputationCache: WeakMap<
@@ -67,7 +68,8 @@ export class Evaluator {
     readonly frame: Frame,
     readonly componentName: string,
     readonly componentProps: Record<string, any>,
-    readonly reka: Reka
+    readonly reka: Reka,
+    readonly external = false
   ) {
     this._view = observable.box();
     this._component = observable.box(null);
@@ -81,13 +83,20 @@ export class Evaluator {
     }
 
     this.rootTemplate = t.componentTemplate({
-      component: t.identifier({ name: this.componentName }),
+      component: t.identifier({
+        name: this.componentName,
+        external: this.external,
+      }),
       props: nonChildrenProps,
       children: children || [],
     });
 
     this.rootTemplateObserver = new Observer(this.rootTemplate, {
       id: `evaluator.${this.componentName}.${this.rootTemplate.id}`,
+    });
+
+    makeObservable(this, {
+      tplToView: observable,
     });
   }
 
@@ -97,6 +106,10 @@ export class Evaluator {
 
   get component() {
     return this._component.get();
+  }
+
+  getViewsForTpl(tpl: t.Template) {
+    return this.tplToView.get(tpl) ?? [];
   }
 
   getViewFromId<T extends t.Type = t.Any>(

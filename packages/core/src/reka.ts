@@ -150,10 +150,19 @@ export class Reka {
     return this.volatile[key];
   }
 
-  updateVolatileState(key: string, value: any) {
+  setVolatileState<V = any>(key: string, value: V) {
     this.change(() => {
       this.volatile[key] = value;
     });
+
+    return this.volatile[key] as V;
+  }
+
+  /**
+   * @deprecated - Use setVolatileState()
+   */
+  get updateVolatileState() {
+    return this.setVolatileState.bind(this);
   }
 
   updateExternalState(key: string, value: any) {
@@ -196,7 +205,7 @@ export class Reka {
     this.state = t.state(state);
     this.head = new Head(this);
     this.observer = new Observer(this.state, {
-      id: 'state-observer',
+      id: this.id,
       hooks: {
         onDispose: (payload) => {
           if (!t.is(payload.type, t.ASTNode)) {
@@ -267,7 +276,7 @@ export class Reka {
   /**
    * Create a new Frame instance
    */
-  async createFrame(opts: FrameOpts) {
+  createFrame(opts: FrameOpts, cb?: () => void) {
     const frame = new Frame(opts, this);
 
     invariant(
@@ -280,7 +289,7 @@ export class Reka {
     this.frames.push(frame);
 
     if (!this.init) {
-      await frame.compute(opts.evaluateImmediately);
+      frame.compute(opts.evaluateImmediately, cb);
     }
 
     return frame;
@@ -336,7 +345,7 @@ export class Reka {
     node: t.Type,
     expectedParentType?: t.TypeConstructor<T>
   ) {
-    return this.observer.getParentNode(node, expectedParentType);
+    return this.observer.getParentNode<T>(node, expectedParentType);
   }
 
   /**

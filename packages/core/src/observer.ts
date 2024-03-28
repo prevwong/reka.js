@@ -721,7 +721,7 @@ export class Observer<
       );
     }
 
-    return parentNode;
+    return parentNode as T;
   }
 
   getNodePath(node: t.Type) {
