@@ -116,58 +116,77 @@ export class ComponentViewEvaluator {
       this.rekaComponentPropsComputation = null;
       this.rekaComponentStateComputation = null;
 
-      const children = this.template.children.flatMap((child) =>
-        this.evaluator.computeTemplate(child, {
-          ...this.ctx,
-          path: [...this.ctx.path, child.id],
-          owner: this.ctx.owner,
-          componentStack: [...this.ctx.componentStack, component],
-        })
-      );
+      if (this.rekaComponentRootComputation) {
+        this.rekaComponentRootComputation.get();
+        return this.fragment;
+      }
 
-      const props = this.computeProps(component).reduce(
-        (accum, [prop, value]) => {
-          accum.push([prop.name, value]);
+      this.rekaComponentRootComputation = new DisposableComputation(
+        () => {
+          const children = this.template.children.flatMap((child) =>
+            this.evaluator.computeTemplate(child, {
+              ...this.ctx,
+              path: [...this.ctx.path, child.id],
+              owner: this.ctx.owner,
+              componentStack: [...this.ctx.componentStack, component],
+            })
+          );
 
-          const tplPropValue = this.template.props[prop.name];
+          const props = this.computeProps(component).reduce(
+            (accum, [prop, value]) => {
+              accum.push([prop.name, value]);
 
-          /**
-           * External components should expose a `on{Prop}Change` prop in order to
-           * support 2 way bindings in Reka
-           *
-           * const Input = (props) => {
-           *  return <input type="text" value={props.value} onChange={e => props.onValueChange(e.targetValue)} />
-           * }
-           *
-           */
-          if (t.is(tplPropValue, t.PropBinding) && prop.bindable) {
-            accum.push([
-              `on${capitalize(prop.name)}Change`,
-              (updatedValue: any) => {
-                this.evaluator.reka.change(() => {
-                  this.ctx.env.reassign(tplPropValue.identifier, updatedValue);
-                });
-              },
-            ]);
-          }
+              const tplPropValue = this.template.props[prop.name];
 
-          return accum;
-        },
-        [] as [string, any][]
-      );
+              /**
+               * External components should expose a `on{Prop}Change` prop in order to
+               * support 2 way bindings in Reka
+               *
+               * const Input = (props) => {
+               *  return <input type="text" value={props.value} onChange={e => props.onValueChange(e.targetValue)} />
+               * }
+               *
+               */
+              if (t.is(tplPropValue, t.PropBinding) && prop.bindable) {
+                accum.push([
+                  `on${capitalize(prop.name)}Change`,
+                  (updatedValue: any) => {
+                    this.evaluator.reka.change(() => {
+                      this.ctx.env.reassign(
+                        tplPropValue.identifier,
+                        updatedValue
+                      );
+                    });
+                  },
+                ]);
+              }
 
-      runInAction(() => {
-        this.fragment.children = [
-          t.externalComponentView({
+              return accum;
+            },
+            [] as [string, any][]
+          );
+
+          const key = createKey([this.key, 'root']);
+
+          const view = t.externalComponentView({
             frame: this.evaluator.frame.id,
             component,
-            key: createKey([this.key, 'root']),
+            key,
             template: this.template,
             children: children || [],
             props: Object.fromEntries(props),
             owner: this.ctx.owner,
-          }),
-        ];
+          });
+
+          return this.evaluator.diff(key, view);
+        },
+        {
+          keepAlive: true,
+        }
+      );
+
+      runInAction(() => {
+        this.fragment.children = [this.rekaComponentRootComputation!.get()];
       });
 
       return this.fragment;

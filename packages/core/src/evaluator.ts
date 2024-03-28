@@ -127,7 +127,7 @@ export class Evaluator {
     return this.rootTemplateObserver.change(cb);
   }
 
-  private diff(key: string, newView: t.View) {
+  diff(key: string, newView: t.View) {
     const existingView = this.tplKeyToView.get(key);
 
     if (!existingView) {
