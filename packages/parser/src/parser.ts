@@ -5,9 +5,11 @@ import acorn, { Parser as AcornParser } from 'acorn';
 import jsx from 'acorn-jsx';
 
 import { Lexer } from './lexer';
-import { Stringifier } from './stringifier';
+import { Stringifier, StringifierOpts } from './stringifier';
 import { TokenType } from './tokens';
 import { getIdentifierFromStr } from './utils';
+
+export { StringifierOpts } from './stringifier';
 
 const parseWithAcorn = (source: string, loc: number) => {
   const JSXParser = AcornParser.extend(jsx());
@@ -17,7 +19,7 @@ const parseWithAcorn = (source: string, loc: number) => {
   }) as b.Node & acorn.Node;
 };
 
-type AcornParserOptions<T extends t.Type = t.Any> = {
+type AcornParserOptions<T extends t.Type = t.Any> = ParserOpts & {
   expectedType?: t.TypeConstructor<T>;
   isElementEachDirective?: boolean;
 };
@@ -84,247 +86,264 @@ const jsToReka = <T extends t.ASTNode = t.ASTNode>(
   opts?: AcornParserOptions<T>
 ) => {
   const _convert = (node: b.Node) => {
-    switch (node.type) {
-      case 'BlockStatement': {
-        return t.block({
-          statements: node.body.map((b) => _convert(b)),
-        });
-      }
-      case 'AssignmentExpression': {
-        return t.assignment({
-          left: _convert(node.left),
-          operator: node.operator as any,
-          right: _convert(node.right),
-        });
-      }
-      case 'VariableDeclaration': {
-        return t.val({
-          name: (node.declarations[0].id as b.Identifier).name,
-          init: node.declarations[0].init
-            ? _convert(node.declarations[0].init)
-            : undefined,
-        });
-      }
-      case 'Identifier': {
-        return getIdentifierFromStr(node.name);
-      }
-      case 'ExpressionStatement': {
-        return _convert(node.expression);
-      }
-      case 'ArrowFunctionExpression': {
-        return t.func({
-          params: node.params.map((p) => {
-            b.assertIdentifier(p);
+    const _convertAcornNode = () => {
+      switch (node.type) {
+        case 'BlockStatement': {
+          return t.block({
+            statements: node.body.map((b) => _convert(b)),
+          });
+        }
+        case 'AssignmentExpression': {
+          return t.assignment({
+            left: _convert(node.left),
+            operator: node.operator as any,
+            right: _convert(node.right),
+          });
+        }
+        case 'VariableDeclaration': {
+          return t.val({
+            name: (node.declarations[0].id as b.Identifier).name,
+            init: node.declarations[0].init
+              ? _convert(node.declarations[0].init)
+              : undefined,
+          });
+        }
+        case 'Identifier': {
+          return getIdentifierFromStr(node.name);
+        }
+        case 'ExpressionStatement': {
+          return _convert(node.expression);
+        }
+        case 'ArrowFunctionExpression': {
+          return t.func({
+            params: node.params.map((p) => {
+              b.assertIdentifier(p);
 
-            return t.param({
-              name: p.name,
-            });
-          }),
-          body: _convert(node.body as b.BlockStatement),
-        });
-      }
-      case 'ArrayExpression': {
-        return t.arrayExpression({
-          elements: node.elements.map((p) => p && _convert(p)),
-        });
-      }
-      case 'ObjectExpression': {
-        return t.objectExpression({
-          properties: node.properties.reduce((accum, property: any) => {
-            let key: string;
+              return t.param({
+                name: p.name,
+              });
+            }),
+            body: _convert(node.body as b.BlockStatement),
+          });
+        }
+        case 'ArrayExpression': {
+          return t.arrayExpression({
+            elements: node.elements.map((p) => p && _convert(p)),
+          });
+        }
+        case 'ObjectExpression': {
+          return t.objectExpression({
+            properties: node.properties.reduce((accum, property: any) => {
+              let key: string;
 
-            if (property.key.type === 'Literal') {
-              key = property.key.value;
+              if (property.key.type === 'Literal') {
+                key = property.key.value;
+              } else {
+                key = property.key.name;
+              }
+
+              return {
+                ...accum,
+                [`${safeObjKey(key)}`]: _convert(property.value),
+              };
+            }, {}),
+          });
+        }
+        case 'CallExpression': {
+          const identifier = _convert(node.callee) as t.Identifier;
+
+          return t.callExpression({
+            identifier,
+            arguments: node.arguments.map((arg) => _convert(arg)),
+          });
+        }
+        case 'IfStatement': {
+          return t.ifStatement({
+            condition: _convert(node.test),
+            consequent: _convert(node.consequent),
+          });
+        }
+        case 'ConditionalExpression': {
+          return t.conditionalExpression({
+            condition: _convert(node.test),
+            consequent: _convert(node.consequent),
+            alternate: _convert(node.alternate),
+          });
+        }
+        case 'BinaryExpression': {
+          if (node.operator === 'in' && opts?.isElementEachDirective) {
+            let alias: t.Identifier;
+            let index: t.Identifier | undefined;
+
+            if (b.isIdentifier(node.left)) {
+              alias = _convert(node.left);
+            } else if (b.isSequenceExpression(node.left)) {
+              b.assertIdentifier(node.left.expressions[0]);
+              b.assertIdentifier(node.left.expressions[1]);
+
+              alias = _convert(node.left.expressions[0]);
+              index = _convert(node.left.expressions[1]);
             } else {
-              key = property.key.name;
+              throw new Error(
+                'Unexpected left hand side input for constructing ElementEach type'
+              );
+            }
+
+            return t.elementEach({
+              alias: t.elementEachAlias({
+                name: alias.name,
+              }),
+              index: index
+                ? t.elementEachIndex({
+                    name: index.name,
+                  })
+                : undefined,
+              iterator: _convert(node.right),
+            });
+          }
+
+          return t.binaryExpression({
+            left: _convert(node.left),
+            operator: node.operator as any,
+            right: _convert(node.right),
+          });
+        }
+        case 'JSXElement': {
+          const identifier = node.openingElement.name;
+          invariant(b.isJSXIdentifier(identifier), 'Invalid JSX identifier');
+
+          const identifierName = identifier.name;
+
+          const isComponent =
+            identifierName[0] === identifierName[0].toUpperCase();
+
+          const directives = {
+            if: null,
+            each: null,
+            classList: null,
+          };
+
+          const props = node.openingElement.attributes.reduce((accum, attr) => {
+            invariant(b.isJSXAttribute(attr), 'Invalid attribute');
+
+            const attrName = attr.name.name;
+            invariant(typeof attrName === 'string', 'Invalid attribute name');
+
+            if (
+              attrName.startsWith('@') &&
+              Object.keys(directives).includes(attrName.substring(1))
+            ) {
+              directives[attrName.substring(1)] = attr.value
+                ? _convert(attr.value)
+                : null;
+
+              return accum;
             }
 
             return {
               ...accum,
-              [`${safeObjKey(key)}`]: _convert(property.value),
+              [attrName]: attr.value ? _convert(attr.value) : undefined,
             };
-          }, {}),
-        });
-      }
-      case 'CallExpression': {
-        const identifier = _convert(node.callee) as t.Identifier;
+          }, {});
 
-        return t.callExpression({
-          identifier,
-          arguments: node.arguments.map((arg) => _convert(arg)),
-        });
-      }
-      case 'IfStatement': {
-        return t.ifStatement({
-          condition: _convert(node.test),
-          consequent: _convert(node.consequent),
-        });
-      }
-      case 'ConditionalExpression': {
-        return t.conditionalExpression({
-          condition: _convert(node.test),
-          consequent: _convert(node.consequent),
-          alternate: _convert(node.alternate),
-        });
-      }
-      case 'BinaryExpression': {
-        if (node.operator === 'in' && opts?.isElementEachDirective) {
-          let alias: t.Identifier;
-          let index: t.Identifier | undefined;
+          const children = node.children.map((child) => _convert(child));
 
-          if (b.isIdentifier(node.left)) {
-            alias = _convert(node.left);
-          } else if (b.isSequenceExpression(node.left)) {
-            b.assertIdentifier(node.left.expressions[0]);
-            b.assertIdentifier(node.left.expressions[1]);
-
-            alias = _convert(node.left.expressions[0]);
-            index = _convert(node.left.expressions[1]);
-          } else {
-            throw new Error(
-              'Unexpected left hand side input for constructing ElementEach type'
-            );
+          if (isComponent) {
+            return t.componentTemplate({
+              component: t.identifier({
+                name: identifierName,
+              }),
+              props,
+              children,
+              ...directives,
+            });
           }
 
-          return t.elementEach({
-            alias: t.elementEachAlias({
-              name: alias.name,
-            }),
-            index: index
-              ? t.elementEachIndex({
-                  name: index.name,
-                })
-              : undefined,
-            iterator: _convert(node.right),
-          });
-        }
-
-        return t.binaryExpression({
-          left: _convert(node.left),
-          operator: node.operator as any,
-          right: _convert(node.right),
-        });
-      }
-      case 'JSXElement': {
-        const identifier = node.openingElement.name;
-        invariant(b.isJSXIdentifier(identifier), 'Invalid JSX identifier');
-
-        const identifierName = identifier.name;
-
-        const isComponent =
-          identifierName[0] === identifierName[0].toUpperCase();
-
-        const directives = {
-          if: null,
-          each: null,
-          classList: null,
-        };
-
-        const props = node.openingElement.attributes.reduce((accum, attr) => {
-          invariant(b.isJSXAttribute(attr), 'Invalid attribute');
-
-          const attrName = attr.name.name;
-          invariant(typeof attrName === 'string', 'Invalid attribute name');
-
-          if (
-            attrName.startsWith('@') &&
-            Object.keys(directives).includes(attrName.substring(1))
-          ) {
-            directives[attrName.substring(1)] = attr.value
-              ? _convert(attr.value)
-              : null;
-
-            return accum;
+          if (identifierName === 'slot') {
+            return t.slotTemplate({
+              props: {},
+            });
           }
 
-          return {
-            ...accum,
-            [attrName]: attr.value ? _convert(attr.value) : undefined,
-          };
-        }, {});
-
-        const children = node.children.map((child) => _convert(child));
-
-        if (isComponent) {
-          return t.componentTemplate({
-            component: t.identifier({
-              name: identifierName,
-            }),
+          return t.tagTemplate({
+            tag: identifierName,
             props,
             children,
             ...directives,
           });
         }
-
-        if (identifierName === 'slot') {
-          return t.slotTemplate({
-            props: {},
+        case 'JSXExpressionContainer': {
+          return t.Schema.fromJSON(node.expression);
+        }
+        case 'MemberExpression': {
+          return convertMemberExpression(node);
+        }
+        case 'LogicalExpression': {
+          return t.binaryExpression({
+            left: _convert(node.left),
+            operator: node.operator,
+            right: _convert(node.right),
           });
         }
+        case 'TemplateLiteral': {
+          const str = node.quasis.map((quasi) => quasi.value.raw).join('');
 
-        return t.tagTemplate({
-          tag: identifierName,
-          props,
-          children,
-          ...directives,
-        });
-      }
-      case 'JSXExpressionContainer': {
-        return t.Schema.fromJSON(node.expression);
-      }
-      case 'MemberExpression': {
-        return convertMemberExpression(node);
-      }
-      case 'LogicalExpression': {
-        return t.binaryExpression({
-          left: _convert(node.left),
-          operator: node.operator,
-          right: _convert(node.right),
-        });
-      }
-      case 'TemplateLiteral': {
-        const str = node.quasis.map((quasi) => quasi.value.raw).join('');
+          const bracesMatches = [...str.matchAll(/{{(.*?)}}/g)];
 
-        const bracesMatches = [...str.matchAll(/{{(.*?)}}/g)];
+          if (bracesMatches.length == 0) {
+            return t.string({
+              value: [str],
+            });
+          }
 
-        if (bracesMatches.length == 0) {
           return t.string({
-            value: [str],
+            value: bracesMatches.reduce((accum, match, matchIdx) => {
+              const exprStr = match[0];
+              const { type: expr } = parseExpressionWithAcornToRekaType(
+                exprStr.substring(2, exprStr.length - 2),
+                0,
+                opts
+              );
+
+              const start =
+                matchIdx === 0
+                  ? 0
+                  : (bracesMatches[matchIdx - 1].index ?? 0) +
+                    bracesMatches[matchIdx - 1][0].length;
+
+              const innerStr = str.substring(start, match.index);
+              accum.push(innerStr);
+              accum.push(expr);
+
+              if (matchIdx === bracesMatches.length - 1) {
+                accum.push(str.substring(match.index! + exprStr.length));
+              }
+              return accum;
+            }, [] as Array<string | t.Expression>),
           });
         }
-
-        return t.string({
-          value: bracesMatches.reduce((accum, match, matchIdx) => {
-            const exprStr = match[0];
-            const { type: expr } = parseExpressionWithAcornToRekaType(
-              exprStr.substring(2, exprStr.length - 2),
-              0
-            );
-
-            const start =
-              matchIdx === 0
-                ? 0
-                : (bracesMatches[matchIdx - 1].index ?? 0) +
-                  bracesMatches[matchIdx - 1][0].length;
-
-            const innerStr = str.substring(start, match.index);
-            accum.push(innerStr);
-            accum.push(expr);
-
-            if (matchIdx === bracesMatches.length - 1) {
-              accum.push(str.substring(match.index! + exprStr.length));
-            }
-            return accum;
-          }, [] as Array<string | t.Expression>),
-        });
+        default: {
+          return t.Schema.fromJSON(node) as t.Type;
+        }
       }
-      default: {
-        return t.Schema.fromJSON(node) as t.Type;
+    };
+
+    let convertedNode = _convertAcornNode();
+
+    if (opts?.onParseNode) {
+      const newType = opts?.onParseNode(convertedNode);
+
+      if (newType) {
+        convertedNode = newType;
       }
+
+      return convertedNode;
     }
+
+    return convertedNode;
   };
 
-  const type = _convert(node) as t.Any;
+  let type = _convert(node) as t.ASTNode;
 
   if (opts?.expectedType) {
     invariant(
@@ -336,7 +355,19 @@ const jsToReka = <T extends t.ASTNode = t.ASTNode>(
   return type as T;
 };
 
+export type onParseNode = (
+  node: t.ASTNode
+) => t.ASTNode | undefined | null | void;
+
+export type ParserOpts = {
+  onParseNode?: onParseNode;
+};
+
 class _Parser extends Lexer {
+  constructor(source: string, readonly opts?: ParserOpts) {
+    super(source);
+  }
+
   parse() {
     this.next();
 
@@ -518,7 +549,11 @@ class _Parser extends Lexer {
 
         const exprString = `(${this.source.slice(startTokenPos, endTokenPos)})`;
 
-        init = parseExpressionWithAcornToRekaType(exprString, 0).type;
+        init = parseExpressionWithAcornToRekaType(
+          exprString,
+          0,
+          this.opts
+        ).type;
       }
 
       props.push(
@@ -717,7 +752,10 @@ class _Parser extends Lexer {
     const { expression, type } = parseExpressionWithAcornToRekaType(
       this.source,
       loc,
-      opts
+      {
+        onParseNode: this.opts?.onParseNode,
+        ...opts,
+      }
     );
 
     // Since we're using acorn to parse the expression
@@ -734,24 +772,25 @@ class _Parser extends Lexer {
  */
 export class Parser {
   /// Parse source into a Reka Program AST node
-  static parseProgram(source: string) {
-    return new _Parser(source).parse();
+  static parseProgram(source: string, opts?: ParserOpts) {
+    return new _Parser(source, opts).parse();
   }
 
   /// Parse an expression string into a Expression AST node
   static parseExpression<T extends t.ASTNode = t.ASTNode>(
     source: string,
-    expectedType?: t.TypeConstructor<T>
+    opts?: Partial<ParserOpts & { expected: t.TypeConstructor<T> }>
   ) {
     const { type } = parseExpressionWithAcornToRekaType(`{${source}}`, 1, {
-      expectedType,
+      onParseNode: opts?.onParseNode,
+      expectedType: opts?.expected,
     });
 
     return type as T;
   }
 
   /// Stringify an AST Node into code
-  static stringify(type: t.ASTNode) {
-    return Stringifier.toString(type);
+  static stringify(type: t.ASTNode, opts?: StringifierOpts) {
+    return Stringifier.toString(type, opts);
   }
 }

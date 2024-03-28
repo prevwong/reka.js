@@ -5,8 +5,25 @@ import { BinaryPrecedence, Precedence } from './precedence';
 import { EXTERNAL_IDENTIFIER_PREFIX_SYMBOL } from './utils';
 import { Writer, WriterResult } from './writer';
 
+export type StringifierOpts = {
+  onStringifyNode: (
+    node: t.ASTNode,
+    stringifier: _Stringifier
+  ) => t.ASTNode | null | undefined;
+};
+
 class _Stringifier {
   writer: Writer = new Writer();
+  opts: StringifierOpts;
+
+  constructor(opts?: StringifierOpts) {
+    this.opts = {
+      onStringifyNode: () => {
+        return null;
+      },
+      ...opts,
+    };
+  }
 
   private stringifyInput(input: t.Kind) {
     const _stringifyInputType = (input: t.Kind) => {
@@ -84,6 +101,12 @@ class _Stringifier {
   }
 
   stringify(node: t.ASTNode, precedence: Precedence = Precedence.Sequence) {
+    const value = this.opts.onStringifyNode(node, this);
+
+    if (value) {
+      node = value;
+    }
+
     return t.match(node, {
       Literal: (node) => {
         if (typeof node.value === 'string') {
@@ -499,8 +522,8 @@ class _Stringifier {
 }
 
 export class Stringifier {
-  static toString(node: t.ASTNode) {
-    const _stringifer = new _Stringifier();
+  static toString(node: t.ASTNode, opts?: StringifierOpts) {
+    const _stringifer = new _Stringifier(opts);
     return _stringifer.toString(node);
   }
 }
