@@ -286,7 +286,7 @@ describe('Parser', () => {
       <input type="text" value:={value} />
     )`);
 
-    expect(parsed.components[0].template.props['value']).toMatchObject({
+    expect(parsed.components[0].template[0].props['value']).toMatchObject({
       identifier: {
         type: 'Identifier',
         name: 'value',

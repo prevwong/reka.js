@@ -253,7 +253,9 @@ export class Resolver {
               this.resolveVariable(state, componentScope);
             });
 
-            this.resolveTemplate(component.template, componentScope);
+            component.template.map((tpl) =>
+              this.resolveTemplate(tpl, componentScope)
+            );
           }),
           key: scope.toString(),
         };

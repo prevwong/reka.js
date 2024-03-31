@@ -286,12 +286,14 @@ export class ComponentViewEvaluator {
               this.rekaComponentPropsBindingComputation.get();
               this.rekaComponentStateComputation.get();
 
-              render = this.evaluator.computeTemplate(component.template, {
-                path: [this.key, 'root', 'render'],
-                env: this.env,
-                owner: componentViewTree,
-                componentStack: [...this.ctx.componentStack, component],
-              });
+              render = component.template.flatMap((tpl) =>
+                this.evaluator.computeTemplate(tpl, {
+                  path: [this.key, 'root', 'render', tpl.id],
+                  env: this.env,
+                  owner: componentViewTree,
+                  componentStack: [...this.ctx.componentStack, component],
+                })
+              );
             } catch (err) {
               render = [
                 t.errorSystemView({

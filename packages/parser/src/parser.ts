@@ -569,8 +569,11 @@ class _Parser extends Lexer {
     const state = this.parseComponentStateDeclaration();
     this.consume(TokenType.ARROW);
     this.consume(TokenType.COMPONENT_TMPL_START);
-    const template = this.parseElement();
-    this.consume(TokenType.COMPONENT_TMPL_END);
+    let template: t.Template[] = [];
+
+    while (!this.match(TokenType.COMPONENT_TMPL_END)) {
+      template.push(this.parseElement());
+    }
 
     return t.rekaComponent({
       name: name.value,

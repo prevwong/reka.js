@@ -354,7 +354,7 @@ class _Stringifier {
 
         this.writer.write('(');
         this.writer.withIndent(() => {
-          this.stringify(node.template);
+          node.template.map((tpl) => this.stringify(tpl));
         });
         this.writer.write(')');
       },

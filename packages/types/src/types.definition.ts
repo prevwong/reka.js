@@ -253,7 +253,7 @@ Schema.define('Component', {
 Schema.define('RekaComponent', {
   extends: 'Component',
   fields: (t) => ({
-    template: t.node('Template'),
+    template: t.array(t.node('Template')),
     state: t.array(t.node('Val')),
     props: t.array(t.node('ComponentProp')),
   }),
