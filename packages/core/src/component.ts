@@ -128,7 +128,7 @@ export class ComponentViewEvaluator {
               ...this.ctx,
               path: [...this.ctx.path, child.id],
               owner: this.ctx.owner,
-              componentStack: [...this.ctx.componentStack, component],
+              componentStack: [...this.ctx.componentStack],
             })
           );
 
