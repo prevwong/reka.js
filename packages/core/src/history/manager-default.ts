@@ -102,6 +102,7 @@ export class DefaultHistoryManager extends HistoryManager {
 
     if (change.type === 'update' && change.observableKind === 'array') {
       pathObj[change.index] = change.oldValue;
+      return;
     }
 
     if (change.type === 'splice') {
@@ -133,6 +134,7 @@ export class DefaultHistoryManager extends HistoryManager {
 
     if (change.type === 'update' && change.observableKind === 'array') {
       pathObj[change.index] = change.newValue;
+      return;
     }
 
     if (change.type === 'splice') {
