@@ -34,10 +34,7 @@
     "@rekajs/core": "workspace:*",
     "@rekajs/parser": "workspace:*",
     "@rekajs/react": "workspace:*",
-    "@rekajs/types": "workspace:*",
-    "@types/react": "^17.0.33",
-    "@types/react-dom": "^17.0.10",
-    "react": "^17.0.2"
+    "@rekajs/types": "workspace:*"
   },
   "repository": {
     "type": "git",
