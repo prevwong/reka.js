@@ -6,10 +6,7 @@ import { EXTERNAL_IDENTIFIER_PREFIX_SYMBOL } from './utils';
 import { Writer, WriterResult } from './writer';
 
 export type StringifierOpts = {
-  onStringifyNode: (
-    node: t.ASTNode,
-    stringifier: _Stringifier
-  ) => t.ASTNode | null | undefined;
+  onStringifyNode: (node: t.ASTNode) => t.ASTNode | null | undefined;
 };
 
 class _Stringifier {
@@ -101,7 +98,7 @@ class _Stringifier {
   }
 
   stringify(node: t.ASTNode, precedence: Precedence = Precedence.Sequence) {
-    const value = this.opts.onStringifyNode(node, this);
+    const value = this.opts.onStringifyNode(node);
 
     if (value) {
       node = value;

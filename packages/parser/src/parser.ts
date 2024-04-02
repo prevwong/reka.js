@@ -9,8 +9,6 @@ import { Stringifier, StringifierOpts } from './stringifier';
 import { TokenType } from './tokens';
 import { getIdentifierFromStr } from './utils';
 
-export { StringifierOpts } from './stringifier';
-
 const parseWithAcorn = (source: string, loc: number) => {
   const JSXParser = AcornParser.extend(jsx());
 
