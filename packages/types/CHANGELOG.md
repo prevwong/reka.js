@@ -1,5 +1,11 @@
 # @rekajs/types
 
+## 0.1.22
+
+### Patch Changes
+
+- [`476eb1f`](https://github.com/prevwong/reka.js/commit/476eb1fdbe55003325e73ae369932c64c6e00666) Thanks [@prevwong](https://github.com/prevwong)! - Add isSameType util and export type params
+
 ## 0.1.21
 
 ### Patch Changes

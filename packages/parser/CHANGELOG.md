@@ -1,5 +1,11 @@
 # @rekajs/parser
 
+## 0.1.17
+
+### Patch Changes
+
+- [`8473e6f`](https://github.com/prevwong/reka.js/commit/8473e6f9bcfc2ed1a8a2e0fbb9496a60eeb6b98e) Thanks [@prevwong](https://github.com/prevwong)! - Allow ability to normalise nodes on parse
+
 ## 0.1.16
 
 ### Patch Changes
