@@ -123,7 +123,9 @@ export const EachTemplateSettings = observer(
               className="flex-1"
               value={alias}
               onCommit={(value) => {
-                const expr = Parser.parseExpression(value, t.Identifier);
+                const expr = Parser.parseExpression(value, {
+                  expected: t.Identifier,
+                });
                 setAliasValue(expr.name);
                 commitValue(
                   props.template.each?.iterator ?? null,
@@ -155,7 +157,9 @@ export const EachTemplateSettings = observer(
                     });
                   }}
                   onCommit={(value) => {
-                    const expr = Parser.parseExpression(value, t.Identifier);
+                    const expr = Parser.parseExpression(value, {
+                      expected: t.Identifier,
+                    });
                     setIndexValue(expr.name);
                     commitValue(
                       props.template.each?.iterator ?? null,
