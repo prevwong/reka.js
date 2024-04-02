@@ -312,12 +312,9 @@ importers:
 
   packages/react:
     dependencies:
-      mobx:
-        specifier: ^6.3.13
-        version: 6.6.1
       mobx-react-lite:
-        specifier: ^3.3.0
-        version: 3.4.0(mobx@6.6.1)(react@17.0.2)
+        specifier: ^4.0.6
+        version: 4.0.7
     devDependencies:
       '@rekajs/core':
         specifier: workspace:*
@@ -326,14 +323,11 @@ importers:
         specifier: workspace:*
         version: link:../types
       '@types/react':
-        specifier: ^17.0.33
-        version: 17.0.49
+        specifier: ^18.2.67
+        version: 18.2.73
       '@types/react-dom':
-        specifier: ^17.0.10
-        version: 17.0.17
-      react:
-        specifier: ^17.0.2
-        version: 17.0.2
+        specifier: ^18.2.22
+        version: 18.2.23
 
   packages/react-code-editor:
     dependencies:
@@ -3373,12 +3367,25 @@ packages:
     dependencies:
       '@types/react': 17.0.49
 
+  /@types/react-dom@18.2.23:
+    resolution: {integrity: sha512-ZQ71wgGOTmDYpnav2knkjr3qXdAFu0vsk8Ci5w3pGAIdj7/kKAyn+VsQDhXsmzzzepAiI9leWMmubXz690AI/A==}
+    dependencies:
+      '@types/react': 18.2.73
+    dev: true
+
   /@types/react@17.0.49:
     resolution: {integrity: sha512-CCBPMZaPhcKkYUTqFs/hOWqKjPxhTEmnZWjlHHgIMop67DsXywf9B5Os9Hz8KSacjNOgIdnZVJamwl232uxoPg==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
       csstype: 3.1.0
+
+  /@types/react@18.2.73:
+    resolution: {integrity: sha512-XcGdod0Jjv84HOC7N5ziY3x+qL0AfmubvKOZ9hJjJ2yd5EE+KYjWhdOjt387e9HPheHkdggF9atTifMRtyAaRA==}
+    dependencies:
+      '@types/prop-types': 15.7.5
+      csstype: 3.1.0
+    dev: true
 
   /@types/resolve@1.17.1:
     resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
@@ -7061,6 +7068,22 @@ packages:
     dependencies:
       mobx: 6.6.1
       react: 17.0.2
+    dev: false
+
+  /mobx-react-lite@4.0.7:
+    resolution: {integrity: sha512-RjwdseshK9Mg8On5tyJZHtGD+J78ZnCnRaxeQDSiciKVQDUbfZcXhmld0VMxAwvcTnPEHZySGGewm467Fcpreg==}
+    peerDependencies:
+      mobx: ^6.9.0
+      react: ^16.8.0 || ^17 || ^18
+      react-dom: '*'
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      use-sync-external-store: 1.2.0(react@17.0.2)
     dev: false
 
   /mobx-utils@6.0.6(mobx@6.6.1):
