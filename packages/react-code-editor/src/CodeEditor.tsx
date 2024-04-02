@@ -88,11 +88,16 @@ type CodeEditorProps = React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLDivElement>,
   HTMLDivElement
 > & {
+  children?: React.ReactNode;
   onStatusChange?: onStatusChangeCb;
   extensions?: Extension[];
 };
 
-export const CodeEditor = ({ onStatusChange, ...props }: CodeEditorProps) => {
+export const CodeEditor = ({
+  onStatusChange,
+  extensions,
+  ...props
+}: CodeEditorProps) => {
   const { reka } = useReka();
 
   const domRef = React.useRef<HTMLDivElement | null>(null);
@@ -106,8 +111,8 @@ export const CodeEditor = ({ onStatusChange, ...props }: CodeEditorProps) => {
     Parser.stringify(reka.program)
   );
 
-  const extensionsRef = React.useRef<Extension[]>(props.extensions ?? []);
-  extensionsRef.current = props.extensions || [];
+  const extensionsRef = React.useRef<Extension[]>(extensions ?? []);
+  extensionsRef.current = extensions || [];
 
   const isSynchingFromCodeMirror = React.useRef(false);
   const isSynchingFromExternal = React.useRef(false);

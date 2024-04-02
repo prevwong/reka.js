@@ -343,7 +343,7 @@ const jsToReka = <T extends t.ASTNode = t.ASTNode>(
     return convertedNode;
   };
 
-  let type = _convert(node) as t.ASTNode;
+  const type = _convert(node) as t.ASTNode;
 
   if (opts?.expectedType) {
     invariant(
