@@ -357,6 +357,10 @@ export class Evaluator {
             view = this.computeSlotTemplate(template, ctx);
           }
 
+          if (template instanceof t.FragmentTemplate) {
+            view = this.computeFragmentTemplate(template, ctx);
+          }
+
           this.tplToView.set(template, view);
 
           return view;
@@ -408,6 +412,26 @@ export class Evaluator {
     }
 
     return eachEvaluatorCache.evaluator.compute();
+  }
+
+  computeFragmentTemplate(
+    template: t.FragmentTemplate,
+    ctx: TemplateEvaluateContext
+  ) {
+    return [
+      t.fragmentView({
+        key: createKey(ctx.path),
+        template,
+        children: template.children.flatMap((child) =>
+          this.computeTemplate(child, {
+            ...ctx,
+            path: [...ctx.path, child.id],
+          })
+        ),
+        frame: this.frame.id,
+        owner: ctx.owner,
+      }),
+    ];
   }
 
   computeSlotTemplate(template: t.SlotTemplate, ctx: TemplateEvaluateContext) {

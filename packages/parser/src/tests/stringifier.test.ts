@@ -133,13 +133,15 @@ describe('Stringifier', () => {
           name: 'App',
           state: [t.val({ name: 'counter', init: t.literal({ value: 0 }) })],
           props: [t.componentProp({ name: 'color', kind: t.anyKind() })],
-          template: [
-            t.tagTemplate({
-              tag: 'div',
-              props: {},
-              children: [],
-            }),
-          ],
+          template: t.fragmentTemplate({
+            children: [
+              t.tagTemplate({
+                tag: 'div',
+                props: {},
+                children: [],
+              }),
+            ],
+          }),
         })
       )
     ).toEqual(

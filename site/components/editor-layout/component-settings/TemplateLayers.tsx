@@ -114,6 +114,10 @@ const getTemplateName = (template: t.Template) => {
     return `<slot />`;
   }
 
+  if (template instanceof t.FragmentTemplate) {
+    return `<fragment />`;
+  }
+
   throw new Error();
 };
 

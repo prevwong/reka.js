@@ -1,5 +1,6 @@
-import { Type, TypeConstructorOptions } from '../node';
 import { Schema } from '../schema';
+
+import { Type, TypeConstructorOptions } from '../node';
 
 type StateParameters = {
   program: Program;
@@ -694,7 +695,7 @@ Schema.register('Component', Component);
 type RekaComponentParameters = {
   meta?: Record<string, any>;
   name: string;
-  template: Array<Template>;
+  template: FragmentTemplate;
   state: Array<Val>;
   props: Array<ComponentProp>;
 };
@@ -704,7 +705,7 @@ export class RekaComponent extends Component {
   // @ts-ignore
   private declare __isRekaComponent?: string;
 
-  declare template: Array<Template>;
+  declare template: FragmentTemplate;
   declare state: Array<Val>;
   declare props: Array<ComponentProp>;
   constructor(
@@ -815,6 +816,30 @@ export abstract class SlottableTemplate extends Template {
 }
 
 Schema.register('SlottableTemplate', SlottableTemplate);
+
+type FragmentTemplateParameters = {
+  meta?: Record<string, any>;
+  props?: Record<string, Expression>;
+  if?: Expression | null;
+  each?: ElementEach | null;
+  classList?: ObjectExpression | null;
+  children?: Array<Template>;
+};
+
+export class FragmentTemplate extends SlottableTemplate {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isFragmentTemplate?: string;
+
+  constructor(
+    value?: FragmentTemplateParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('FragmentTemplate', value, opts);
+  }
+}
+
+Schema.register('FragmentTemplate', FragmentTemplate);
 
 type TagTemplateParameters = {
   meta?: Record<string, any>;
@@ -1338,6 +1363,7 @@ export type Any =
   | PropBinding
   | Template
   | SlottableTemplate
+  | FragmentTemplate
   | TagTemplate
   | ComponentTemplate
   | SlotTemplate
@@ -1396,6 +1422,7 @@ export type Visitor = {
   PropBinding: (node: PropBinding) => any;
   Template: (node: Template) => any;
   SlottableTemplate: (node: SlottableTemplate) => any;
+  FragmentTemplate: (node: FragmentTemplate) => any;
   TagTemplate: (node: TagTemplate) => any;
   ComponentTemplate: (node: ComponentTemplate) => any;
   SlotTemplate: (node: SlotTemplate) => any;

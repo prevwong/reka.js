@@ -253,7 +253,7 @@ Schema.define('Component', {
 Schema.define('RekaComponent', {
   extends: 'Component',
   fields: (t) => ({
-    template: t.array(t.node('Template')),
+    template: t.node('FragmentTemplate'),
     state: t.array(t.node('Val')),
     props: t.array(t.node('ComponentProp')),
   }),
@@ -295,6 +295,10 @@ Schema.define('SlottableTemplate', {
   fields: (t) => ({
     children: t.defaultValue(t.array(t.node('Template')), []),
   }),
+});
+
+Schema.define('FragmentTemplate', {
+  extends: 'SlottableTemplate',
 });
 
 Schema.define('TagTemplate', {

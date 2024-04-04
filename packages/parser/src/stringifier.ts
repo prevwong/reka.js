@@ -354,7 +354,7 @@ class _Stringifier {
 
         this.writer.write('(');
         this.writer.withIndent(() => {
-          node.template.map((tpl) => this.stringify(tpl));
+          this.stringify(node.template);
         });
         this.writer.write(')');
       },
@@ -369,9 +369,11 @@ class _Stringifier {
             ? node.tag
             : node instanceof t.SlotTemplate
             ? 'slot'
+            : node instanceof t.FragmentTemplate
+            ? 'fragment'
             : undefined;
 
-        invariant(tag, `Tag is undefined`);
+        invariant(tag !== undefined, `Tag is undefined`);
 
         const result = [`<${tag}`];
 

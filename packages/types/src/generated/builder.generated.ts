@@ -76,6 +76,9 @@ export const externalComponent = (
 export const propBinding = (
   ...args: ConstructorParameters<typeof t.PropBinding>
 ) => new t.PropBinding(...args);
+export const fragmentTemplate = (
+  ...args: ConstructorParameters<typeof t.FragmentTemplate>
+) => new t.FragmentTemplate(...args);
 export const tagTemplate = (
   ...args: ConstructorParameters<typeof t.TagTemplate>
 ) => new t.TagTemplate(...args);
