@@ -343,27 +343,39 @@ export class Evaluator {
 
           classListComputation.get();
 
-          let view: t.View[] = [];
+          let viewSet: t.View[] = [];
 
           if (template instanceof t.TagTemplate) {
-            view = this.computeTagTemplate(template, ctx);
+            viewSet = this.computeTagTemplate(template, ctx);
           }
 
           if (template instanceof t.ComponentTemplate) {
-            view = this.computeComponentTemplate(template, ctx);
+            viewSet = this.computeComponentTemplate(template, ctx);
           }
 
           if (template instanceof t.SlotTemplate) {
-            view = this.computeSlotTemplate(template, ctx);
+            viewSet = this.computeSlotTemplate(template, ctx);
           }
 
           if (template instanceof t.FragmentTemplate) {
-            view = this.computeFragmentTemplate(template, ctx);
+            viewSet = this.computeFragmentTemplate(template, ctx);
           }
 
-          this.tplToView.set(template, view);
+          const cachedViewSet = viewSet.map((view) => {
+            const cachedView = this.diff(view.key, view);
 
-          return view;
+            if (t.is(view, t.SlottableView)) {
+              view.children.forEach((child) => {
+                this.viewToParentView.set(child, cachedView);
+              });
+            }
+
+            return cachedView;
+          });
+
+          this.tplToView.set(template, cachedViewSet);
+
+          return cachedViewSet;
         },
         {
           name: `template-${template.id}<${key}>-root-evaluation`,
@@ -519,13 +531,7 @@ export class Evaluator {
       });
     }
 
-    const cachedView = this.diff(view.key, view);
-
-    children.forEach((child) => {
-      this.viewToParentView.set(child, cachedView);
-    });
-
-    return [cachedView];
+    return [view];
   }
 
   computeComponentTemplate(
