@@ -579,7 +579,7 @@ class _Parser extends Lexer {
       name: name.value,
       state,
       props,
-      template: t.fragmentTemplate({
+      template: t.rootTemplate({
         children: template,
       }),
     });

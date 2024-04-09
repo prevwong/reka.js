@@ -695,7 +695,7 @@ Schema.register('Component', Component);
 type RekaComponentParameters = {
   meta?: Record<string, any>;
   name: string;
-  template: FragmentTemplate;
+  template: RootTemplate;
   state: Array<Val>;
   props: Array<ComponentProp>;
 };
@@ -705,7 +705,7 @@ export class RekaComponent extends Component {
   // @ts-ignore
   private declare __isRekaComponent?: string;
 
-  declare template: FragmentTemplate;
+  declare template: RootTemplate;
   declare state: Array<Val>;
   declare props: Array<ComponentProp>;
   constructor(
@@ -826,20 +826,45 @@ type FragmentTemplateParameters = {
   children?: Array<Template>;
 };
 
-export class FragmentTemplate extends SlottableTemplate {
+export abstract class FragmentTemplate extends SlottableTemplate {
   // Type Hack: in order to accurately use type predicates via the .is() util method
   // @ts-ignore
   private declare __isFragmentTemplate?: string;
 
   constructor(
+    type: string,
     value?: FragmentTemplateParameters,
     opts?: Partial<TypeConstructorOptions>
   ) {
-    super('FragmentTemplate', value, opts);
+    super(type, value, opts);
   }
 }
 
 Schema.register('FragmentTemplate', FragmentTemplate);
+
+type RootTemplateParameters = {
+  meta?: Record<string, any>;
+  props?: Record<string, Expression>;
+  if?: Expression | null;
+  each?: ElementEach | null;
+  classList?: ObjectExpression | null;
+  children?: Array<Template>;
+};
+
+export class RootTemplate extends FragmentTemplate {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isRootTemplate?: string;
+
+  constructor(
+    value?: RootTemplateParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('RootTemplate', value, opts);
+  }
+}
+
+Schema.register('RootTemplate', RootTemplate);
 
 type TagTemplateParameters = {
   meta?: Record<string, any>;
@@ -1364,6 +1389,7 @@ export type Any =
   | Template
   | SlottableTemplate
   | FragmentTemplate
+  | RootTemplate
   | TagTemplate
   | ComponentTemplate
   | SlotTemplate
@@ -1423,6 +1449,7 @@ export type Visitor = {
   Template: (node: Template) => any;
   SlottableTemplate: (node: SlottableTemplate) => any;
   FragmentTemplate: (node: FragmentTemplate) => any;
+  RootTemplate: (node: RootTemplate) => any;
   TagTemplate: (node: TagTemplate) => any;
   ComponentTemplate: (node: ComponentTemplate) => any;
   SlotTemplate: (node: SlotTemplate) => any;
