@@ -1,5 +1,11 @@
 # @rekajs/react
 
+## 0.1.4
+
+### Patch Changes
+
+- [`c53a162`](https://github.com/prevwong/reka.js/commit/c53a16237d3b8834f43a86b94a8b931d6ae4f496) Thanks [@prevwong](https://github.com/prevwong)! - Cleanup deps
+
 ## 0.1.3
 
 ### Patch Changes

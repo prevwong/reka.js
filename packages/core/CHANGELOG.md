@@ -1,5 +1,15 @@
 # @rekajs/core
 
+## 0.1.29
+
+### Patch Changes
+
+- [`4658b42`](https://github.com/prevwong/reka.js/commit/4658b420d796f959a388f1cb70d7e52beec45748) Thanks [@prevwong](https://github.com/prevwong)! - Fix cleanup frame APIs
+
+- [`c5d41da`](https://github.com/prevwong/reka.js/commit/c5d41dab80495fc7d44c1525ec42bf84be4cb2bc) Thanks [@prevwong](https://github.com/prevwong)! - Fix missing return statement in history operation
+
+- [`b319df2`](https://github.com/prevwong/reka.js/commit/b319df2b86add8270c322e89383125743dc3b98a) Thanks [@prevwong](https://github.com/prevwong)! - Reuse existing ExternalComponentView during evaluation
+
 ## 0.1.28
 
 ### Patch Changes

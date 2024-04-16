@@ -1,6 +1,6 @@
 {
   "name": "@rekajs/react",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "React specific APIs for Reka",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.mjs",
