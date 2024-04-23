@@ -25,8 +25,15 @@ const getInitialComponentProps = (
       (accum, prop) => {
         return {
           ...accum,
-          [prop.name]:
-            existingProps[prop.name] ?? prop.init ?? t.literal({ value: '' }),
+          [prop.name]: existingProps[prop.name]
+            ? existingProps[prop.name]
+            : prop.init
+            ? t.Schema.fromJSON(prop.init, {
+                clone: {
+                  replaceExistingId: true,
+                },
+              })
+            : t.literal({ value: '' }),
         };
       },
       {}
