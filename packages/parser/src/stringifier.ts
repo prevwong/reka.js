@@ -362,6 +362,15 @@ class _Stringifier {
         this.stringify(node.identifier);
       },
       Template: (node) => {
+        if (node instanceof t.RootTemplate) {
+          return node.children.forEach((child, i, arr) => {
+            this.stringify(child);
+            if (i !== arr.length - 1) {
+              this.writer.write('\n');
+            }
+          });
+        }
+
         const tag =
           node instanceof t.ComponentTemplate
             ? this.writer.withTemp(() => this.stringify(node.component))
