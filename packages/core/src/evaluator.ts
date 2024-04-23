@@ -4,6 +4,7 @@ import {
   computed,
   IComputedValue,
   IObservableValue,
+  isObservable,
   makeObservable,
   observable,
   runInAction,
@@ -38,7 +39,7 @@ export type TemplateEachComputationCache = {
 };
 
 export class Evaluator {
-  private _view: IObservableValue<t.FragmentView | undefined>;
+  private _view: IObservableValue<t.FrameView | undefined>;
 
   private viewObserver: Observer | undefined;
   private rootTemplate: t.ComponentTemplate;
@@ -98,10 +99,20 @@ export class Evaluator {
     makeObservable(this, {
       tplToView: observable,
     });
+
+    this.setView(
+      t.frameView({
+        children: [],
+        owner: null,
+        template: this.rootTemplate,
+        frame: this.frame.id,
+        key: 'frame',
+      })
+    );
   }
 
   get view() {
-    return this._view.get();
+    return this._view.get()!;
   }
 
   get component() {
@@ -143,7 +154,7 @@ export class Evaluator {
   diff(key: string, newView: t.View) {
     const existingView = this.tplKeyToView.get(key);
 
-    if (!existingView) {
+    if (!existingView || !this.viewObserver) {
       this.tplKeyToView.set(key, newView);
       return newView;
     }
@@ -196,13 +207,11 @@ export class Evaluator {
     });
   }
 
-  private setView(view: t.FragmentView) {
-    invariant(
-      !this.viewObserver,
-      `Observer for the view tree is already registered!`
-    );
-
+  private setView(view: t.FrameView) {
     runInAction(() => {
+      if (this.viewObserver) {
+        this.viewObserver.dispose();
+      }
       this._view.set(view);
 
       this.viewObserver = new Observer(view, {
@@ -539,31 +548,64 @@ export class Evaluator {
     ctx: TemplateEvaluateContext
   ) {
     const key = createKey(ctx.path);
+    const componentKey = createKey([key, 'component']);
 
-    let componentEvaluator = this.tplKeyToComponentEvaluator.get(key);
+    let componentEvaluator = this.tplKeyToComponentEvaluator.get(componentKey);
 
-    if (!componentEvaluator) {
+    const component = ctx.env.getByName(
+      template.component.name,
+      template.component.external
+    ) as t.Component;
+
+    if (ctx.path.length === 1 && ctx.path[0] === 'frame') {
+      runInAction(() => {
+        this._component.set(component);
+      });
+    }
+
+    if (!component) {
+      componentEvaluator?.dispose();
+
+      return [
+        t.errorSystemView({
+          frame: this.frame.id,
+          error: `Component "${template.component.name}" not found`,
+          key,
+          template: template,
+          owner: ctx.owner,
+        }),
+      ];
+    }
+
+    if (ctx.componentStack.indexOf(component) > -1) {
+      componentEvaluator?.dispose();
+
+      return [
+        t.errorSystemView({
+          frame: this.frame.id,
+          error: `Cycle detected when attempting to render "${component.name}"`,
+          key,
+          template: template,
+          owner: ctx.owner,
+        }),
+      ];
+    }
+
+    if (!componentEvaluator || componentEvaluator.component !== component) {
       const componentEnv = this.reka.head.env.inherit();
 
       componentEvaluator = new ComponentViewEvaluator(
         this,
-        ctx,
+        {
+          ...ctx,
+          path: [...ctx.path, 'component'],
+        },
         template,
         componentEnv,
-        {
-          onComponentResolved: (component) => {
-            // Updated the evaluator's `component` property
-            // Whenever we resolve the root component
-            if (ctx.path.length === 1 && ctx.path[0] === 'frame') {
-              runInAction(() => {
-                this._component.set(component);
-              });
-            }
-          },
-        }
+        component
       );
 
-      this.tplKeyToComponentEvaluator.set(key, componentEvaluator);
+      this.tplKeyToComponentEvaluator.set(componentKey, componentEvaluator);
     }
 
     return untracked(() => componentEvaluator!.compute());
@@ -581,7 +623,7 @@ export class Evaluator {
     this.rootTemplateComputation = new DisposableComputation(
       () =>
         this.computeTemplate(this.rootTemplate, {
-          path: ['frame'],
+          path: ['frame', 'root'],
           env: this.reka.head.env,
           owner: null,
           componentStack: [],
@@ -599,21 +641,22 @@ export class Evaluator {
       return;
     }
 
-    const _compute = () => {
-      const views = this.computeRootTemplate();
-
-      return t.assert(views[0], t.FragmentView);
-    };
-
     const viewObserver = this.viewObserver;
 
-    if (!viewObserver) {
-      this.setView(_compute());
-      return;
-    }
+    invariant(viewObserver);
 
-    this.tplKeyToComponentEvaluator.forEach((componentEvaluator) => {
-      viewObserver.change(() => {
+    const views = this.computeRootTemplate();
+
+    viewObserver.change(() => {
+      for (let i = 0; i < views.length; i++) {
+        if (this.view.children[i] === views[i]) {
+          continue;
+        }
+
+        this.view.children[i] = views[i];
+      }
+
+      this.tplKeyToComponentEvaluator.forEach((componentEvaluator) => {
         componentEvaluator.compute();
       });
     });

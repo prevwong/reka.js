@@ -282,7 +282,7 @@ const InternalRenderer = observer((props: RendererProps) => {
     return <RenderSlotView view={view} />;
   }
 
-  if (view instanceof t.FragmentView) {
+  if (view instanceof t.FragmentView || view instanceof t.FrameView) {
     return (
       <React.Fragment>
         {view.children.map((child) => (
@@ -297,8 +297,6 @@ const InternalRenderer = observer((props: RendererProps) => {
 
 export const Renderer = observer((props: RendererProps) => {
   const view = props.view;
-
-  invariant(view instanceof t.FragmentView, 'Unexpected root view');
 
   return <InternalRenderer view={view} />;
 });

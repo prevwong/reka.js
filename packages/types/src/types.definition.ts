@@ -381,6 +381,10 @@ Schema.define('FragmentView', {
   extends: 'SlottableView',
 });
 
+Schema.define('FrameView', {
+  extends: 'SlottableView',
+});
+
 Schema.define('RekaComponentView', {
   extends: 'ComponentView',
   fields: (t) => ({

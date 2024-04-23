@@ -102,6 +102,8 @@ export const tagView = (...args: ConstructorParameters<typeof t.TagView>) =>
 export const fragmentView = (
   ...args: ConstructorParameters<typeof t.FragmentView>
 ) => new t.FragmentView(...args);
+export const frameView = (...args: ConstructorParameters<typeof t.FrameView>) =>
+  new t.FrameView(...args);
 export const rekaComponentView = (
   ...args: ConstructorParameters<typeof t.RekaComponentView>
 ) => new t.RekaComponentView(...args);

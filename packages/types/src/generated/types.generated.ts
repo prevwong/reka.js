@@ -1136,6 +1136,29 @@ export class FragmentView extends SlottableView {
 
 Schema.register('FragmentView', FragmentView);
 
+type FrameViewParameters = {
+  key: string;
+  template: Template;
+  frame: string;
+  owner?: ComponentView | null;
+  children?: Array<View>;
+};
+
+export class FrameView extends SlottableView {
+  // Type Hack: in order to accurately use type predicates via the .is() util method
+  // @ts-ignore
+  private declare __isFrameView?: string;
+
+  constructor(
+    value: FrameViewParameters,
+    opts?: Partial<TypeConstructorOptions>
+  ) {
+    super('FrameView', value, opts);
+  }
+}
+
+Schema.register('FrameView', FrameView);
+
 type RekaComponentViewParameters = {
   key: string;
   template: Template;
@@ -1401,6 +1424,7 @@ export type Any =
   | TagView
   | ComponentView
   | FragmentView
+  | FrameView
   | RekaComponentView
   | ExternalComponentView
   | SlotView
@@ -1461,6 +1485,7 @@ export type Visitor = {
   TagView: (node: TagView) => any;
   ComponentView: (node: ComponentView) => any;
   FragmentView: (node: FragmentView) => any;
+  FrameView: (node: FrameView) => any;
   RekaComponentView: (node: RekaComponentView) => any;
   ExternalComponentView: (node: ExternalComponentView) => any;
   SlotView: (node: SlotView) => any;
