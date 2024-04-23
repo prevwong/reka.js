@@ -254,12 +254,9 @@ type TemplateLayersProps = {
 export const TemplateLayers = (props: TemplateLayersProps) => {
   const editor = useEditor();
 
-  const component = editor.reka.getNodeFromId(
-    props.componentId,
-    t.RekaComponent
-  );
+  const component = editor.reka.getNodeFromId(props.componentId);
 
-  if (!component) {
+  if (!component || !t.is(component, t.RekaComponent)) {
     return null;
   }
 
