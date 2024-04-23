@@ -231,6 +231,8 @@ export class Editor {
     this.peers = this.getPeers();
     this.broadcastLocalUser();
     this.listenAwareness();
+
+    (window as any).editor = this;
   }
 
   private setupComponentRouteListener() {
