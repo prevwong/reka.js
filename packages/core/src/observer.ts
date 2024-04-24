@@ -214,9 +214,15 @@ export class Observer<
   private setupType(value: t.Type, traversal?: ValueTraversalInfo) {
     this.markedForDisposal.delete(value);
 
+    const path: string[] = [];
+
     if (traversal) {
       this.valueToTraversalInfo.set(value, traversal);
+      path.push(traversal.nearestParentNode.path);
     }
+
+    path.push(value.id);
+    value.path = path.join('.');
 
     /**
      * Ignore setting up observers if the value is already in the tree

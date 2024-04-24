@@ -649,7 +649,10 @@ export class Evaluator {
 
     viewObserver.change(() => {
       for (let i = 0; i < views.length; i++) {
-        if (this.view.children[i] === views[i]) {
+        if (
+          this.view.children.length > i &&
+          this.view.children[i] === views[i]
+        ) {
           continue;
         }
 

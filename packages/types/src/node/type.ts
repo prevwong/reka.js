@@ -13,6 +13,7 @@ export type TypeConstructorOptions = {
 export class Type {
   declare readonly type: string;
   declare id: string;
+  declare path: string;
 
   constructor(
     type: string,
