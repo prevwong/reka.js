@@ -214,15 +214,9 @@ export class Observer<
   private setupType(value: t.Type, traversal?: ValueTraversalInfo) {
     this.markedForDisposal.delete(value);
 
-    const path: string[] = [];
-
     if (traversal) {
       this.valueToTraversalInfo.set(value, traversal);
-      path.push(traversal.nearestParentNode.path);
     }
-
-    path.push(value.id);
-    value.path = path.join('.');
 
     /**
      * Ignore setting up observers if the value is already in the tree
@@ -740,14 +734,26 @@ export class Observer<
     return parentWithPath.path;
   }
 
-  getNodePathStr(node: t.Type) {
+  getNodePathStr(node: t.Type, nearest = true) {
     const parentWithPath = this.getNodeLocation(node);
 
-    if (!parentWithPath.parent) {
+    if (!parentWithPath.parent || parentWithPath.parent === node) {
       return '';
     }
 
-    return `${parentWithPath.parent.id}.${parentWithPath.path.join('.')}`;
+    const path = `${parentWithPath.parent.id}.${parentWithPath.path.join('.')}`;
+
+    if (nearest) {
+      return path;
+    }
+
+    const parentPath = this.getNodePathStr(parentWithPath.parent, false);
+
+    if (parentPath) {
+      return `${parentPath}.${path}`;
+    }
+
+    return path;
   }
 
   change<C>(mutation: () => C, opts?: ChangeOpts<O>) {

@@ -355,6 +355,10 @@ export class Reka {
     return this.observer.getNodeLocation(node);
   }
 
+  get getNodePathStr() {
+    return this.observer.getNodePathStr.bind(this.observer);
+  }
+
   /**
    * Listen for changes and mutations made to the State
    */
