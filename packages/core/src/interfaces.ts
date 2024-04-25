@@ -1,7 +1,7 @@
 import * as t from '@rekajs/types';
 
 import { ExtensionDefinition } from './extension';
-import { Changeset } from './observer';
+import { Changeset, ObserverHooks } from './observer';
 import { Reka } from './reka';
 import { KindFieldValidators } from './utils';
 
@@ -41,6 +41,7 @@ export type RekaOpts = {
   kinds?: Record<string, CustomKindConfig>;
   externals?: Partial<RekaExternalsFactory>;
   extensions?: ExtensionDefinition<any>[];
+  hooks?: Partial<ObserverHooks>;
 };
 
 export type StateSubscriberOpts = {

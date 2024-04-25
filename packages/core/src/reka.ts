@@ -207,12 +207,15 @@ export class Reka {
     this.observer = new Observer(this.state, {
       id: this.id,
       hooks: {
+        ...this.opts?.hooks,
         onDispose: (payload) => {
           if (!t.is(payload.type, t.ASTNode)) {
             return;
           }
 
           this.head.resolver.cleanupDisposedNode(payload.type);
+
+          this.opts?.hooks?.onDispose?.(payload);
         },
       },
       resolveProp: (node, name) => {

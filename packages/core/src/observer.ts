@@ -48,6 +48,7 @@ export type ObserverHooks = {
   onAdd: (payload: ObserverAddPayload) => void;
   onChange: (payload: ObserverChangePayload) => void;
   onDispose: (payload: ObserverDiposePayload) => void;
+  onNormalize: (changeset: Changeset) => void;
 };
 
 export type ObserverOptions = {
@@ -108,6 +109,7 @@ export class Observer<
         onAdd: () => {},
         onChange: () => {},
         onDispose: () => {},
+        onNormalize: () => {},
       },
       batch: true,
       resolveProp: noop,
@@ -778,8 +780,12 @@ export class Observer<
         const returnValue = mutation();
         this.disposeTypes();
         this.uncommittedValues.clear();
-        this.notifyChangesetListeners();
 
+        if (this.opts.hooks.onNormalize && this.changeset) {
+          this.opts.hooks.onNormalize(this.changeset);
+        }
+
+        this.notifyChangesetListeners();
         this.isMutating = false;
 
         return returnValue;
