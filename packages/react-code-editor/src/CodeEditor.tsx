@@ -1,4 +1,8 @@
 import { indentWithTab } from '@codemirror/commands';
+import {
+  defaultHighlightStyle,
+  syntaxHighlighting,
+} from '@codemirror/language';
 import { EditorState, Extension } from '@codemirror/state';
 import { EditorView, keymap } from '@codemirror/view';
 import { reka as rekaCodemirrorExtension } from '@rekajs/codemirror';
@@ -6,7 +10,6 @@ import { Parser } from '@rekajs/parser';
 import { useReka } from '@rekajs/react';
 import * as t from '@rekajs/types';
 import { debounce } from '@rekajs/utils';
-import { basicSetup } from 'codemirror';
 import * as React from 'react';
 
 const _diffASTArrayTypes = <T extends t.Type>(
@@ -167,9 +170,11 @@ export const CodeEditor = ({
       state: EditorState.create({
         doc: currentCodeStringRef.current,
         extensions: [
-          basicSetup,
           keymap.of([indentWithTab]),
           rekaCodemirrorExtension(),
+          syntaxHighlighting(defaultHighlightStyle, {
+            fallback: true,
+          }),
           EditorView.theme({
             '&': {
               height: '100%',

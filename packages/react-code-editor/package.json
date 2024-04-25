@@ -20,13 +20,15 @@
     "react": "^16.8.0 || ^17 || ^18"
   },
   "dependencies": {
-    "@codemirror/commands": "^6.2.2",
-    "@codemirror/state": "^6.2.0",
-    "@codemirror/theme-one-dark": "^6.1.1",
-    "@codemirror/view": "^6.9.3",
+    "@codemirror/autocomplete": "^6.12.0",
+    "@codemirror/commands": "^6.3.3",
+    "@codemirror/lang-javascript": "^6.2.2",
+    "@codemirror/language": "^6.10.1",
+    "@codemirror/state": "^6.4.1",
+    "@codemirror/view": "^6.24.1",
+    "@codemirror/theme-one-dark": "6.1.1",
     "@rekajs/codemirror": ">=0.1.2",
     "@rekajs/utils": ">=0.1.3",
-    "codemirror": "^6.0.1",
     "mobx": "^6.3.13",
     "mobx-react-lite": "^3.3.0"
   },
