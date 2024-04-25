@@ -1,7 +1,5 @@
 import { getRandomId, invariant } from '@rekajs/utils';
 
-import { Tree } from './tree';
-
 import { getTypeSchema } from '../registry';
 
 export type TypeConstructorOptions = {
