@@ -6,19 +6,11 @@ import { DisposableComputation } from './computation';
 import { Environment } from './environment';
 import { TemplateEvaluateContext, Evaluator } from './evaluator';
 import { ClassListBindingKey, ComponentSlotBindingKey } from './symbols';
-import { createKey, noop } from './utils';
+import { createKey } from './utils';
 
 type ComponentViewTreeComputationCache = {
   component: t.Component;
   computed: IComputedValue<t.FragmentView>;
-};
-
-type ComponentViewEvaluatorHooks = {
-  onComponentResolved: (
-    component: t.Component | null,
-    name: string,
-    external: boolean
-  ) => void;
 };
 
 export class ComponentViewEvaluator {

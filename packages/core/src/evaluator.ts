@@ -4,7 +4,6 @@ import {
   computed,
   IComputedValue,
   IObservableValue,
-  isObservable,
   makeObservable,
   observable,
   runInAction,

@@ -569,7 +569,7 @@ class _Parser extends Lexer {
     const state = this.parseComponentStateDeclaration();
     this.consume(TokenType.ARROW);
     this.consume(TokenType.COMPONENT_TMPL_START);
-    let template: t.Template[] = [];
+    const template: t.Template[] = [];
 
     while (!this.match(TokenType.COMPONENT_TMPL_END)) {
       template.push(this.parseElement());
