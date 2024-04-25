@@ -2,8 +2,8 @@
   "name": "@rekajs/types",
   "version": "0.1.22",
   "description": "Create and manage Reka data types",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.mjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./lib/index.d.ts",
   "scripts": {
     "generate-ast": "./scripts/generate-ast.js",

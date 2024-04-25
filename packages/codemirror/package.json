@@ -2,8 +2,8 @@
   "name": "@rekajs/codemirror",
   "version": "0.1.2",
   "description": "Reka Grammer for Codemirror",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.mjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./lib/index.d.ts",
   "scripts": {
     "generate-lezer-parser": "mkdir -p src/parser && lezer-generator src/reka.grammar -o src/parser/index.js && pnpm -w run lint:fix",

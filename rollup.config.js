@@ -27,13 +27,13 @@ const createBundle = (config) => {
     input: config.input || './src/index.ts',
     output: [
       {
-        file: 'dist/esm/index.mjs',
+        file: 'dist/index.mjs',
         format: 'es',
         intro: injectPackageVersion(),
         ...(config.output?.esm ?? {}),
       },
       {
-        file: 'dist/cjs/index.js',
+        file: 'dist/index.js',
         format: 'cjs',
         intro: injectPackageVersion(),
         ...(config.output?.cjs ?? {}),

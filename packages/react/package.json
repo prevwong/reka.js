@@ -2,8 +2,8 @@
   "name": "@rekajs/react",
   "version": "0.1.4",
   "description": "React specific APIs for Reka",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.mjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./lib/index.d.ts",
   "scripts": {
     "dev": "../../scripts/build.sh -w",
