@@ -1,4 +1,5 @@
 import * as t from '@rekajs/types';
+import { invariant } from '@rekajs/utils';
 import {
   computed,
   IComputedValue,
@@ -32,6 +33,8 @@ export class Resolver {
   identifiersToIdentifiable: Map<t.Identifier, t.Identifiable>;
   nodeToScope: Map<t.ASTNode, Scope>;
 
+  componentToSlotsMap: Map<t.Component, Map<string, Set<t.SlotTemplate>>>;
+
   private scope: Scope;
   private cachedComponentResolver: WeakMap<
     t.Component,
@@ -61,9 +64,12 @@ export class Resolver {
 
     this.nodeToScope = new Map();
 
+    this.componentToSlotsMap = new Map();
+
     makeObservable(this, {
       identifiersToIdentifiableDistance: observable,
       nodeToScope: observable,
+      componentToSlotsMap: observable,
     });
   }
 
@@ -114,6 +120,58 @@ export class Resolver {
     runInAction(() => {
       this.nodeToScope.set(node, scope);
     });
+  }
+
+  private bindSlotToComponent(component: t.Component, slot: t.SlotTemplate) {
+    runInAction(() => {
+      const componentMap = this.componentToSlotsMap.get(component);
+
+      //TODO: support named slots
+      const slotName = 'children';
+
+      if (!componentMap) {
+        this.componentToSlotsMap.set(
+          component,
+          new Map([[slotName, new Set([slot])]])
+        );
+
+        return;
+      }
+
+      const slotSet = componentMap.get(slotName);
+
+      if (!slotSet) {
+        componentMap.set(slotName, new Set([slot]));
+        return;
+      }
+
+      slotSet.add(slot);
+    });
+  }
+
+  private unbindSlotToComponent(slot: t.SlotTemplate) {
+    const scope = this.nodeToScope.get(slot);
+    const slotName = 'children';
+
+    if (!scope) {
+      return;
+    }
+
+    const componentScope = scope.context?.component;
+    if (!componentScope) {
+      return;
+    }
+
+    const component = this.reka.getNodeFromId(
+      componentScope.id,
+      t.RekaComponent
+    );
+
+    this.componentToSlotsMap.get(component)?.get(slotName)?.delete(slot);
+
+    if (this.componentToSlotsMap.get(component)?.get(slotName)?.size === 0) {
+      this.componentToSlotsMap.get(component)?.delete(slotName);
+    }
   }
 
   unbindIdentifierToIdentifiable(identifier: t.Identifier) {
@@ -254,7 +312,7 @@ export class Resolver {
             });
 
             if (component.template) {
-            this.resolveTemplate(component.template, componentScope);
+              this.resolveTemplate(component.template, componentScope);
             }
           }),
           key: scope.toString(),
@@ -275,6 +333,15 @@ export class Resolver {
       const templateScope = scope.inherit(template);
 
       this.bindNodeToScope(template, templateScope);
+
+      if (t.is(template, t.SlotTemplate)) {
+        const componentId = scope.context?.component.id;
+        invariant(componentId);
+
+        const component = this.reka.getNodeFromId(componentId, t.RekaComponent);
+
+        this.bindSlotToComponent(component, template);
+      }
 
       let eachIndex: string | null = null;
       let eachAliasName: string | null = null;
@@ -401,6 +468,16 @@ export class Resolver {
 
     if (!scopeDescription) {
       return;
+    }
+
+    if (t.is(node, t.Component)) {
+      runInAction(() => {
+        this.componentToSlotsMap.delete(node);
+      });
+    }
+
+    if (t.is(node, t.SlotTemplate)) {
+      this.unbindSlotToComponent(node);
     }
 
     const scopeId = getKeyFromScopeDescription(scopeDescription);

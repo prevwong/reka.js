@@ -98,12 +98,18 @@ export const getScopeDescriptionByNodeOwner = (
   return description;
 };
 
+export type ScopeContext = {
+  component?: t.Component;
+};
+
 export class Scope {
   identifiables: Map<string, t.Identifiable>;
 
   description: ScopeDescription;
 
   path: string;
+
+  context: Record<string, ScopeDescription> | null;
 
   constructor(
     readonly resolver: Resolver,
@@ -123,6 +129,15 @@ export class Scope {
     );
 
     this.resolver.scopeRegistry.set(this.key, this);
+
+    this.context = null;
+
+    if (parent) {
+      this.context = {
+        ...(parent.context ?? {}),
+        [parent.description.level]: parent.description,
+      };
+    }
 
     makeObservable(this, {
       identifiables: observable,

@@ -433,6 +433,10 @@ export class Reka {
     );
   }
 
+  getComponentSlots(component: t.Component) {
+    return this.head.resolver.componentToSlotsMap.get(component) ?? [];
+  }
+
   /**
    * Create a new Reka instance
    */
