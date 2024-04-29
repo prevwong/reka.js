@@ -253,7 +253,9 @@ export class Resolver {
               this.resolveVariable(state, componentScope);
             });
 
+            if (component.template) {
             this.resolveTemplate(component.template, componentScope);
+            }
           }),
           key: scope.toString(),
         };

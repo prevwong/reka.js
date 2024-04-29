@@ -694,7 +694,7 @@ Schema.register('Component', Component);
 type RekaComponentParameters = {
   meta?: Record<string, any>;
   name: string;
-  template: RootTemplate;
+  template?: null | Template;
   state: Array<Val>;
   props: Array<ComponentProp>;
 };
@@ -704,7 +704,7 @@ export class RekaComponent extends Component {
   // @ts-ignore
   private declare __isRekaComponent?: string;
 
-  declare template: RootTemplate;
+  declare template: null | Template;
   declare state: Array<Val>;
   declare props: Array<ComponentProp>;
   constructor(

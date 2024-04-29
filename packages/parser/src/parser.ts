@@ -579,9 +579,7 @@ class _Parser extends Lexer {
       name: name.value,
       state,
       props,
-      template: t.rootTemplate({
-        children: template,
-      }),
+      template: template.length > 0 ? template[0] : null,
     });
   }
 

@@ -264,12 +264,16 @@ export class ComponentViewEvaluator {
               this.rekaComponentPropsBindingComputation.get();
               this.rekaComponentStateComputation.get();
 
-              render = this.evaluator.computeTemplate(component.template, {
-                path: [this.key, 'root', 'render', component.template.id],
-                env: this.env,
-                owner: componentViewTree,
-                componentStack: [...this.ctx.componentStack, component],
-              });
+              if (!component.template) {
+                render = [];
+              } else {
+                render = this.evaluator.computeTemplate(component.template, {
+                  path: [this.key, 'root', 'render', component.template.id],
+                  env: this.env,
+                  owner: componentViewTree,
+                  componentStack: [...this.ctx.componentStack, component],
+                });
+              }
             } catch (err) {
               render = [
                 t.errorSystemView({

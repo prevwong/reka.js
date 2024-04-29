@@ -353,9 +353,14 @@ class _Stringifier {
         this.writer.write(' => ');
 
         this.writer.write('(');
-        this.writer.withIndent(() => {
-          this.stringify(node.template);
-        });
+
+        const template = node.template;
+        if (template) {
+          this.writer.withIndent(() => {
+            this.stringify(template);
+          });
+        }
+
         this.writer.write(')');
       },
       PropBinding: (node) => {
