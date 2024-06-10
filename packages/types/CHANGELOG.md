@@ -1,5 +1,15 @@
 # @rekajs/types
 
+## 0.1.23
+
+### Patch Changes
+
+- [`8832003`](https://github.com/prevwong/reka.js/commit/88320033ed424331a44327b0a938f0686d50b4e4) Thanks [@prevwong](https://github.com/prevwong)! - Rename root reka component template type
+
+- [`340a234`](https://github.com/prevwong/reka.js/commit/340a234a6e515d1a793add5da041d21347464aea) Thanks [@prevwong](https://github.com/prevwong)! - Optional root template in Reka Component
+
+- [`23a5769`](https://github.com/prevwong/reka.js/commit/23a576950c3fd0b5ec74342ae866d11764c1b2a2) Thanks [@prevwong](https://github.com/prevwong)! - Get node path string
+
 ## 0.1.22
 
 ### Patch Changes

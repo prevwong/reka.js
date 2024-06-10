@@ -1,5 +1,21 @@
 # @rekajs/core
 
+## 0.1.30
+
+### Patch Changes
+
+- [`8832003`](https://github.com/prevwong/reka.js/commit/88320033ed424331a44327b0a938f0686d50b4e4) Thanks [@prevwong](https://github.com/prevwong)! - Rename root reka component template type
+
+- [`340a234`](https://github.com/prevwong/reka.js/commit/340a234a6e515d1a793add5da041d21347464aea) Thanks [@prevwong](https://github.com/prevwong)! - Optional root template in Reka Component
+
+- [`573f590`](https://github.com/prevwong/reka.js/commit/573f590d0e6338e0e7756e730695112422fe4ae7) Thanks [@prevwong](https://github.com/prevwong)! - Cache all views during evaluation
+
+- [`1af2673`](https://github.com/prevwong/reka.js/commit/1af26731bab5a6d2044bf0161bd1a977cc20b01c) Thanks [@prevwong](https://github.com/prevwong)! - Add onNormalize observer hook
+
+- [`23a5769`](https://github.com/prevwong/reka.js/commit/23a576950c3fd0b5ec74342ae866d11764c1b2a2) Thanks [@prevwong](https://github.com/prevwong)! - Get node path string
+
+- [`30c9b3a`](https://github.com/prevwong/reka.js/commit/30c9b3aa3de8122c171acd2b5e47d81293b22d98) Thanks [@prevwong](https://github.com/prevwong)! - Implement getComponentSlots() to quickly get slots defined in a Reka Component
+
 ## 0.1.29
 
 ### Patch Changes

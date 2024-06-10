@@ -1,5 +1,11 @@
 # @rekajs/codemirror
 
+## 0.1.3
+
+### Patch Changes
+
+- [`eef7dec`](https://github.com/prevwong/reka.js/commit/eef7dec10482e26e4576fda45622318249e38d18) Thanks [@prevwong](https://github.com/prevwong)! - Bump codemirror dependencies
+
 ## 0.1.2
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@rekajs/parser",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "Parser for Reka syntax",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

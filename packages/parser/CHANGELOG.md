@@ -1,5 +1,11 @@
 # @rekajs/parser
 
+## 0.1.18
+
+### Patch Changes
+
+- [`340a234`](https://github.com/prevwong/reka.js/commit/340a234a6e515d1a793add5da041d21347464aea) Thanks [@prevwong](https://github.com/prevwong)! - Optional root template in Reka Component
+
 ## 0.1.17
 
 ### Patch Changes
