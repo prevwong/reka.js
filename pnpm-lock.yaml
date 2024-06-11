@@ -340,7 +340,7 @@ importers:
         specifier: ^6.24.1
         version: 6.28.0
       '@rekajs/codemirror':
-        specifier: '>=0.1.2'
+        specifier: '>=0.1.3'
         version: link:../codemirror
       '@rekajs/utils':
         specifier: '>=0.1.3'

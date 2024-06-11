@@ -1,5 +1,14 @@
 # @rekajs/react-code-editor
 
+## 0.1.8
+
+### Patch Changes
+
+- [`eef7dec`](https://github.com/prevwong/reka.js/commit/eef7dec10482e26e4576fda45622318249e38d18) Thanks [@prevwong](https://github.com/prevwong)! - Bump codemirror dependencies
+
+- Updated dependencies [[`eef7dec`](https://github.com/prevwong/reka.js/commit/eef7dec10482e26e4576fda45622318249e38d18)]:
+  - @rekajs/codemirror@0.1.3
+
 ## 0.1.7
 
 ### Patch Changes
