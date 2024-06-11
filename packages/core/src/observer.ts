@@ -577,7 +577,7 @@ export class Observer<
   ) {
     invariant(
       this.isMutating,
-      'Mutation not allowed outside of the .change() method'
+      `Observer<${this.id}>: Mutation not allowed outside of the .change() method`
     );
 
     /**

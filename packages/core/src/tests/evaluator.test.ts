@@ -114,12 +114,10 @@ describe('evaluator', () => {
       `);
 
       t.assert(frame.view?.children[0], t.RekaComponentView, (view) => {
-        t.assert(view.render[0], t.FragmentView, (view) => {
-          t.assert(view.children[0], t.RekaComponentView, (view) => {
-            t.assert(view.render[0], t.TagView, (view) => {
-              expect(view.tag).toEqual('button');
-              expect(view.props['value']).toEqual('red');
-            });
+        t.assert(view.render[0], t.RekaComponentView, (view) => {
+          t.assert(view.render[0], t.TagView, (view) => {
+            expect(view.tag).toEqual('button');
+            expect(view.props['value']).toEqual('red');
           });
         });
       });
@@ -254,9 +252,7 @@ describe('evaluator', () => {
     expect(div.children.length).toEqual(2);
 
     const divChildCompViews = div.children.map((child) =>
-      t.assert(child, t.FragmentView, (view) =>
-        t.assert(view.children[0], t.RekaComponentView)
-      )
+      t.assert(child, t.RekaComponentView)
     );
 
     await frame.reka.change(() => {
@@ -285,9 +281,11 @@ describe('evaluator', () => {
 
     it('should be able to replace the existing comp view with an error', async () => {
       const getFirstImmediateChildComponentView = () => {
-        return t.assert(frame.view, t.FragmentView, (view) =>
-          t.assert(view.children[0], t.RekaComponentView, (view) =>
-            t.assert(view.render[0], t.FragmentView, (view) => view.children[0])
+        return t.assert(frame.view, t.FrameView, (view) =>
+          t.assert(
+            view.children[0],
+            t.RekaComponentView,
+            (view) => view.render[0]
           )
         );
       };
@@ -337,12 +335,10 @@ describe('evaluator', () => {
     });
     it('should be able to evaluate without errors', () => {
       const getBtnText = () =>
-        t.assert(frame.view, t.FragmentView, (view) =>
+        t.assert(frame.view, t.FrameView, (view) =>
           t.assert(view.children[0], t.RekaComponentView, (view) =>
-            t.assert(view.render[0], t.FragmentView, (view) =>
-              t.assert(view.children[0], t.RekaComponentView, (view) =>
-                t.assert(view.render[0], t.TagView)
-              )
+            t.assert(view.render[0], t.RekaComponentView, (view) =>
+              t.assert(view.render[0], t.TagView)
             )
           )
         );

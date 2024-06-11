@@ -364,7 +364,11 @@ export function assert<T extends Type, C extends (value: T) => any>(
   cb?: C
 ) {
   if (!is(value, assertedType)) {
-    throw new Error(`Invalid type. Expected type ${assertedType.name}`);
+    throw new Error(
+      `Invalid type. Expected type ${assertedType.name} but received ${
+        is(value, Type) ? value.type : typeof value
+      }`
+    );
   }
 
   if (cb) {

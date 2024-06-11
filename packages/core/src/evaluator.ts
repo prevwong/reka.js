@@ -644,9 +644,8 @@ export class Evaluator {
 
     invariant(viewObserver);
 
-    const views = this.computeRootTemplate();
-
     viewObserver.change(() => {
+      const views = this.computeRootTemplate();
       for (let i = 0; i < views.length; i++) {
         if (
           this.view.children.length > i &&
