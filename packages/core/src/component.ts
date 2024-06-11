@@ -314,18 +314,6 @@ export class ComponentViewEvaluator {
     throw new Error('Invalid Component Template');
   }
 
-  private reset() {
-    if (this.rekaComponentRootComputation) {
-      this.rekaComponentRootComputation.dispose();
-    }
-
-    this.componentViewTreeComputation = null;
-    this.rekaComponentRootComputation = null;
-    this.rekaComponentPropsComputation = null;
-    this.rekaComponentPropsBindingComputation = null;
-    this.rekaComponentStateComputation = null;
-  }
-
   compute() {
     if (!this.resolveComponentComputation) {
       this.resolveComponentComputation = new DisposableComputation(
