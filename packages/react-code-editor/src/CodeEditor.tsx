@@ -1,10 +1,27 @@
-import { indentWithTab } from '@codemirror/commands';
+import { closeBracketsKeymap } from '@codemirror/autocomplete';
+import {
+  defaultKeymap,
+  history,
+  historyKeymap,
+  indentWithTab,
+} from '@codemirror/commands';
 import {
   defaultHighlightStyle,
   syntaxHighlighting,
+  foldGutter,
+  indentOnInput,
+  foldKeymap,
 } from '@codemirror/language';
 import { EditorState, Extension } from '@codemirror/state';
-import { EditorView, keymap } from '@codemirror/view';
+import {
+  EditorView,
+  drawSelection,
+  dropCursor,
+  highlightActiveLine,
+  highlightActiveLineGutter,
+  keymap,
+  lineNumbers,
+} from '@codemirror/view';
 import { reka as rekaCodemirrorExtension } from '@rekajs/codemirror';
 import { Parser } from '@rekajs/parser';
 import { useReka } from '@rekajs/react';
@@ -170,7 +187,21 @@ export const CodeEditor = ({
       state: EditorState.create({
         doc: currentCodeStringRef.current,
         extensions: [
-          keymap.of([indentWithTab]),
+          lineNumbers(),
+          foldGutter(),
+          indentOnInput(),
+          highlightActiveLine(),
+          highlightActiveLineGutter(),
+          history(),
+          drawSelection(),
+          dropCursor(),
+          keymap.of([
+            ...closeBracketsKeymap,
+            ...defaultKeymap,
+            ...historyKeymap,
+            ...foldKeymap,
+            indentWithTab,
+          ]),
           rekaCodemirrorExtension(),
           syntaxHighlighting(defaultHighlightStyle, {
             fallback: true,
