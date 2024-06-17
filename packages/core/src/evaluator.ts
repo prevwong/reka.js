@@ -455,11 +455,15 @@ export class Evaluator {
   }
 
   computeSlotTemplate(template: t.SlotTemplate, ctx: TemplateEvaluateContext) {
+    const slotValue = ctx.env.getByName(ComponentSlotBindingKey)[
+      template.name ? template.name : 'children'
+    ];
+
     return [
       t.slotView({
         key: createKey(ctx.path),
         template,
-        children: ctx.env.getByName(ComponentSlotBindingKey),
+        children: slotValue ?? [],
         frame: this.frame.id,
         owner: ctx.owner,
       }),

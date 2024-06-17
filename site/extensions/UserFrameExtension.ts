@@ -93,6 +93,11 @@ export const UserFrameExtensionFactory = () => {
           name: 'PropBinding',
           props: {},
         },
+        {
+          id: 'Named slots',
+          name: 'NamedSlotsDemo',
+          props: {},
+        },
       ],
     },
     init: (ext) => {

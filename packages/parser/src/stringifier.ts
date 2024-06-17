@@ -97,7 +97,11 @@ class _Stringifier {
     this.writer.write(result);
   }
 
-  stringify(node: t.ASTNode, precedence: Precedence = Precedence.Sequence) {
+  stringify(
+    node: t.ASTNode,
+    precedence: Precedence = Precedence.Sequence,
+    context: Record<string, any> = {}
+  ) {
     const value = this.opts.onStringifyNode(node);
 
     if (value) {
@@ -466,6 +470,38 @@ class _Stringifier {
           );
         }
 
+        if (t.is(node, t.SlotTemplate) && node.name) {
+          const slotName = node.name;
+
+          if (slotName) {
+            props.push(
+              this.writer.withTemp(() => {
+                this.writer.write(`@name="${slotName}"`);
+              })
+            );
+          }
+
+          if (node.accepts) {
+            const componentIdentifier = node.accepts;
+
+            props.push(
+              this.writer.withTemp(() => {
+                this.writer.write(`@accepts={`);
+                this.stringify(componentIdentifier);
+                this.writer.write('}');
+              })
+            );
+          }
+        }
+
+        if (context['slotName'] !== undefined) {
+          props.push(
+            this.writer.withTemp(() =>
+              this.writer.write(`@slot="${context['slotName']}"`)
+            )
+          );
+        }
+
         const flattenedProps = props.reduce(
           (accum, prop, i, arr) => [
             ...accum,
@@ -486,7 +522,10 @@ class _Stringifier {
           }
         }
 
-        if (t.is(node, t.SlottableTemplate) && node.children.length > 0) {
+        if (
+          t.is(node, t.SlottableTemplate) &&
+          (node.children.length > 0 || Object.keys(node.slots).length > 0)
+        ) {
           this.writer.write('>');
           result.push('>');
         } else {
@@ -499,8 +538,24 @@ class _Stringifier {
 
         if (t.is(node, t.SlottableTemplate)) {
           this.writer.withIndent(() => {
-            node.children.forEach((child, i, arr) => {
-              this.stringify(child);
+            const children: Array<[string | null, t.Template]> = [];
+
+            Object.entries(node.slots).forEach(([slotName, tpls]) => {
+              tpls.forEach((tpl) => children.push([slotName, tpl]));
+            });
+
+            node.children.map((child) => children.push([null, child]));
+
+            children.forEach(([slotName, child], i, arr) => {
+              this.stringify(
+                child,
+                precedence,
+                slotName
+                  ? {
+                      slotName,
+                    }
+                  : {}
+              );
               if (i !== arr.length - 1) {
                 this.writer.write('\n');
               }

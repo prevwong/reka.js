@@ -282,4 +282,31 @@ component Input(@value = "") => (
         <input className="w-full mt-6" type="text" value:={value} /> 
     </div>
 )
+
+component NamedSlots() => (
+    <div className={"w-300 bg-black text-white p-10 gap-4 flex flex-col"}>
+        <slot
+            @name="header"
+            @accepts={Button}
+        />
+        <div className={"p-3 rounded-lg bg-white text-neutral-900 flex flex-col gap-2 items-start"}>
+            <slot />
+        </div>
+    </div>
+)
+
+component NamedSlotsDemo() => (
+    <div>
+        <NamedSlots>
+            <div @slot="header">
+                <h2 className="text-2xl"><text value={"Header"} /></h2>
+                <p><text value={"This is placed inside the header slot"} /></p>
+            </div>
+            <text value={"This is placed inside the usual children slot"} />
+            <Button
+                text={"Hello"}
+            />
+        </NamedSlots>
+    </div>
+)
 `);
