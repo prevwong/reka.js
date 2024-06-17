@@ -294,6 +294,7 @@ Schema.define('SlottableTemplate', {
   extends: 'Template',
   fields: (t) => ({
     children: t.defaultValue(t.array(t.node('Template')), []),
+    slots: t.defaultValue(t.map(t.array(t.node('Template'))), {}),
   }),
 });
 
@@ -322,7 +323,10 @@ Schema.define('ComponentTemplate', {
 
 Schema.define('SlotTemplate', {
   extends: 'Template',
-  fields: () => ({}),
+  fields: (t) => ({
+    name: t.optional(t.string),
+    accepts: t.optional(t.node('Identifier')),
+  }),
 });
 
 Schema.define('ElementEachAlias', {

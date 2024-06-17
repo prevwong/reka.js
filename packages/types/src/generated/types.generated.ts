@@ -1,5 +1,6 @@
-import { Type, TypeConstructorOptions } from '../node';
 import { Schema } from '../schema';
+
+import { Type, TypeConstructorOptions } from '../node';
 
 type StateParameters = {
   program: Program;
@@ -797,6 +798,7 @@ type SlottableTemplateParameters = {
   each?: ElementEach | null;
   classList?: ObjectExpression | null;
   children?: Array<Template>;
+  slots?: Record<string, Array<Template>>;
 };
 
 export abstract class SlottableTemplate extends Template {
@@ -805,6 +807,7 @@ export abstract class SlottableTemplate extends Template {
   private declare __isSlottableTemplate?: string;
 
   declare children: Array<Template>;
+  declare slots: Record<string, Array<Template>>;
   constructor(
     type: string,
     value?: SlottableTemplateParameters,
@@ -823,6 +826,7 @@ type FragmentTemplateParameters = {
   each?: ElementEach | null;
   classList?: ObjectExpression | null;
   children?: Array<Template>;
+  slots?: Record<string, Array<Template>>;
 };
 
 export abstract class FragmentTemplate extends SlottableTemplate {
@@ -848,6 +852,7 @@ type RootTemplateParameters = {
   each?: ElementEach | null;
   classList?: ObjectExpression | null;
   children?: Array<Template>;
+  slots?: Record<string, Array<Template>>;
 };
 
 export class RootTemplate extends FragmentTemplate {
@@ -872,6 +877,7 @@ type TagTemplateParameters = {
   each?: ElementEach | null;
   classList?: ObjectExpression | null;
   children?: Array<Template>;
+  slots?: Record<string, Array<Template>>;
   tag: string;
 };
 
@@ -898,6 +904,7 @@ type ComponentTemplateParameters = {
   each?: ElementEach | null;
   classList?: ObjectExpression | null;
   children?: Array<Template>;
+  slots?: Record<string, Array<Template>>;
   component: Identifier;
 };
 
@@ -923,6 +930,8 @@ type SlotTemplateParameters = {
   if?: Expression | null;
   each?: ElementEach | null;
   classList?: ObjectExpression | null;
+  name?: string | null;
+  accepts?: Identifier | null;
 };
 
 export class SlotTemplate extends Template {
@@ -930,6 +939,8 @@ export class SlotTemplate extends Template {
   // @ts-ignore
   private declare __isSlotTemplate?: string;
 
+  declare name: string | null;
+  declare accepts: Identifier | null;
   constructor(
     value?: SlotTemplateParameters,
     opts?: Partial<TypeConstructorOptions>

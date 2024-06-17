@@ -219,6 +219,8 @@ const jsToReka = <T extends t.ASTNode = t.ASTNode>(
             if: null,
             each: null,
             classList: null,
+            name: null,
+            accepsts: null,
           };
 
           const props = node.openingElement.attributes.reduce((accum, attr) => {
@@ -608,18 +610,36 @@ class _Parser extends Lexer {
     });
   }
 
-  private parseElementContent() {
+  private parseElementContent(parent?: t.SlottableTemplate) {
     const children: t.Template[] = [];
-    const props: Record<string, any> = {};
-
+    const slotChildren: Record<string, t.Template[]> = {};
     let closingTag: string | null = null;
 
     const tag = this.consume(TokenType.ELEMENT_PROPERTY).value;
 
-    const directives = {
-      each: undefined,
-      if: undefined,
-    };
+    let tpl: t.Template;
+
+    const isComponent = tag[0] === tag[0].toUpperCase();
+
+    if (isComponent) {
+      tpl = t.componentTemplate({
+        component: getIdentifierFromStr(tag),
+        children,
+        slots: slotChildren,
+      });
+    } else if (tag === 'slot') {
+      tpl = t.slotTemplate({
+        props: {},
+      });
+    } else {
+      tpl = t.tagTemplate({
+        tag,
+        children,
+        slots: slotChildren,
+      });
+    }
+
+    let slotEntryName = null;
 
     while (
       !this.check(TokenType.ELEMENT_TAG_END) &&
@@ -632,7 +652,7 @@ class _Parser extends Lexer {
         if (this.match(TokenType.COLON)) {
           this.consume(TokenType.EQ);
 
-          props[propName] = t.propBinding({
+          tpl.props[propName] = t.propBinding({
             identifier: t.assert(this.parseElementExpr(), t.Identifier),
           });
         } else {
@@ -648,17 +668,28 @@ class _Parser extends Lexer {
             propValue = this.parseElementExpr();
           }
 
-          props[propName] = propValue;
+          tpl.props[propName] = propValue;
         }
       } else {
         const directive = this.consume(TokenType.ELEMENT_DIRECTIVE).value;
+        if (directive === 'accepts') {
+          invariant(
+            t.is(tpl, t.SlotTemplate),
+            `The "@accepts" directive can only be used with SlotTemplate type`
+          );
+        }
         this.consume(TokenType.EQ);
+
         const directiveValue =
           directive === 'each'
             ? this.parseElementEach()
             : this.parseElementExpr();
 
-        directives[directive] = directiveValue;
+        if (directive === 'slot') {
+          slotEntryName = directiveValue;
+        } else {
+          tpl[directive] = directiveValue;
+        }
       }
     }
 
@@ -668,6 +699,8 @@ class _Parser extends Lexer {
 
     if (!selfClosing) {
       contents: for (;;) {
+        invariant(tpl && t.is(tpl, t.SlottableTemplate));
+
         switch (this.currentToken.type) {
           case TokenType.ELEMENT_TAG_START: {
             this.next();
@@ -678,7 +711,7 @@ class _Parser extends Lexer {
               break contents;
             }
 
-            children.push(this.parseElementContent());
+            this.parseElementContent(tpl);
             break;
           }
           case TokenType.ELEMENT_EXPR_START: {
@@ -689,7 +722,7 @@ class _Parser extends Lexer {
               `Expected literal value as text value`
             );
 
-            children.push(
+            tpl.children.push(
               t.tagTemplate({
                 tag: 'text',
                 props: {
@@ -714,36 +747,33 @@ class _Parser extends Lexer {
       }
     }
 
-    const isComponent = tag[0] === tag[0].toUpperCase();
-
-    if (isComponent) {
-      return t.componentTemplate({
-        component: getIdentifierFromStr(tag),
-        props,
-        children,
-        ...directives,
-      });
+    if (parent) {
+      if (!slotEntryName) {
+        parent.children.push(tpl);
+      } else {
+        parent.slots[slotEntryName] = [
+          ...(parent.slots[slotEntryName] || []),
+          tpl,
+        ];
+      }
     }
 
-    if (tag === 'slot') {
-      return t.slotTemplate({
-        props: {},
-      });
-    }
-
-    return t.tagTemplate({
-      tag,
-      props,
-      children,
-      ...directives,
-    });
+    return tpl;
   }
 
   private parseElementExpr<T extends t.Type>(opts?: AcornParserOptions<T>) {
-    this.consume(TokenType.ELEMENT_EXPR_START);
-    const expr = this.parseExpressionAt(this.previousToken.pos + 1, opts);
-    this.consume(TokenType.ELEMENT_EXPR_END);
-    return expr;
+    if (this.check(TokenType.STRING)) {
+      return this.consume(TokenType.STRING).value;
+    }
+
+    if (this.check(TokenType.ELEMENT_EXPR_START)) {
+      this.consume(TokenType.ELEMENT_EXPR_START);
+      const expr = this.parseExpressionAt(this.previousToken.pos + 1, opts);
+      this.consume(TokenType.ELEMENT_EXPR_END);
+      return expr;
+    }
+
+    return this.currentToken.value;
   }
 
   private parseExpressionAt<T extends t.Type = t.Any>(

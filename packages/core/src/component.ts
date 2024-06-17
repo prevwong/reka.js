@@ -196,7 +196,7 @@ export class ComponentViewEvaluator {
             if (!this.rekaComponentPropsComputation) {
               this.rekaComponentPropsComputation = computed(
                 () => {
-                  const slot = this.template.children.flatMap((child) =>
+                  const children = this.template.children.flatMap((child) =>
                     this.evaluator.computeTemplate(child, {
                       ...this.ctx,
                       path: [...this.ctx.path, child.id],
@@ -204,8 +204,26 @@ export class ComponentViewEvaluator {
                     })
                   );
 
+                  const namedSlots = Object.keys(this.template.slots).reduce(
+                    (accum, name) => {
+                      accum[name] = this.template.slots[name].flatMap((child) =>
+                        this.evaluator.computeTemplate(child, {
+                          ...this.ctx,
+                          path: [...this.ctx.path, child.id],
+                          owner: this.ctx.owner,
+                        })
+                      );
+
+                      return accum;
+                    },
+                    {}
+                  );
+
                   this.env.set(ComponentSlotBindingKey, {
-                    value: slot,
+                    value: {
+                      children,
+                      ...namedSlots,
+                    },
                     readonly: true,
                   });
 
