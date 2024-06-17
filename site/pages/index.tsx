@@ -2,6 +2,7 @@ import { Parser } from '@rekajs/parser';
 import { RekaProvider } from '@rekajs/react';
 import { useRouter } from 'next/router';
 import * as React from 'react';
+import { flushSync } from 'react-dom';
 
 import { HeaderToolbar } from '@app/components/header/HeaderToolbar';
 import { SEO } from '@app/components/seo';
@@ -25,6 +26,17 @@ const AppEditor = () => {
   const routerRef = React.useRef(router);
   routerRef.current = router;
 
+  const disposeEditor = React.useCallback(
+    (editor: Editor) => {
+      flushSync(() => {
+        setEditor(null);
+      });
+
+      editor.dispose();
+    },
+    [setEditor]
+  );
+
   React.useEffect(() => {
     if (!router.isReady) {
       return;
@@ -37,10 +49,9 @@ const AppEditor = () => {
     setEditor(editor);
 
     return () => {
-      setEditor(null);
-      editor.dispose();
+      disposeEditor(editor);
     };
-  }, [setEditor, router.isReady]);
+  }, [setEditor, disposeEditor, router.isReady]);
 
   React.useEffect(() => {
     if (!editor) {
