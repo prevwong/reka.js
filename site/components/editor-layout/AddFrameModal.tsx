@@ -97,6 +97,15 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
                   };
                 });
               }}
+              onRemove={(id) => {
+                setComponentProps((props) => {
+                  delete props[id];
+
+                  return {
+                    ...props,
+                  };
+                });
+              }}
               values={Object.keys(componentProps).reduce((accum, propKey) => {
                 return [
                   ...accum,
