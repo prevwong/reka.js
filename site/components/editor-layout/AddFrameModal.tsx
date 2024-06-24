@@ -76,6 +76,7 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
             <TextField
               placeholder="Frame #1"
               value={frameName}
+              required
               onChange={(e) => {
                 setFrameName(e.target.value);
               }}
@@ -113,6 +114,10 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
         <Button
           variant="primary"
           onClick={() => {
+            if (!frameName) {
+              return;
+            }
+
             editor.reka.change(() => {
               if (!existingFrame) {
                 editor.reka.getExtension(UserFrameExtension).state.frames.push({
@@ -126,6 +131,9 @@ export const AddFrameModal = (props: AddFrameModalProps) => {
 
               existingFrame.props = componentProps;
             });
+
+            // clean up the form
+            setFrameName('');
 
             editor.activeComponentEditor?.setActiveFrame(frameName);
 
