@@ -30,12 +30,20 @@ export const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
       onCommit,
       onChange,
       value,
+      required,
       ...props
     },
     ref
   ) => {
     const [uncommittedValue, setUncommitedValue] = React.useState(value);
     const [hasError, setHasError] = React.useState('');
+
+    // handle `required` attribute
+    React.useEffect(() => {
+      if (required && !value && !uncommittedValue && !hasError) {
+        setHasError('A value is required for this field');
+      }
+    }, [required, value, uncommittedValue, hasError]);
 
     const commitValue = () => {
       if (!onCommit) {
@@ -65,7 +73,7 @@ export const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
     return (
       <div
         className={cn(
-          'group flex-1 relative border border-solid border-outline flex items-center rounded-md shadow-sm',
+          'group flex-1 flex-col relative border border-solid border-outline flex items-center rounded-md shadow-sm',
           {
             'border-red-400': !!hasError,
             'border-none': transparent,
@@ -124,7 +132,7 @@ export const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
           </IconButton>
         )}
         {hasError && (
-          <div className="absolute left-0 top-full w-full text-xs px-3 py-3 bg-red-300 text-white z-2">
+          <div className="left-0 top-full w-full text-xs px-3 py-3 bg-red-300 text-white z-2">
             {hasError}
           </div>
         )}
