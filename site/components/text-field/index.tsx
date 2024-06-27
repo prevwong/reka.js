@@ -37,6 +37,10 @@ export const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
     const [uncommittedValue, setUncommitedValue] = React.useState(value);
     const [hasError, setHasError] = React.useState('');
 
+    React.useEffect(() => {
+      setUncommitedValue(value);
+    }, [value]);
+
     const commitValue = () => {
       if (!onCommit) {
         return;

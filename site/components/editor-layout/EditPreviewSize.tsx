@@ -1,6 +1,8 @@
-import { Cross1Icon } from '@radix-ui/react-icons';
+import { Cross1Icon, DesktopIcon, MobileIcon } from '@radix-ui/react-icons';
+import { TabletIcon } from 'lucide-react';
 import * as React from 'react';
 
+import { PresetPreviewSize } from '@app/components/editor-layout/PresetPreviewSize';
 import { useEditor, useEditorActiveComponent } from '@app/editor';
 import { UserFrame } from '@app/extensions/UserFrameExtension';
 
@@ -13,10 +15,26 @@ type EditPreviewSizeProps = {
 export const EditPreviewSize = (props: EditPreviewSizeProps) => {
   const editor = useEditor();
   const componentEditor = useEditorActiveComponent();
-
   return (
     <React.Fragment>
-      <span className="text-xs mr-3 text-slate-500">Preview size</span>
+      <div className="flex flex-row items-center">
+        <span className="text-xs mr-3 text-slate-500">Preview size</span>
+        <div className="flex items-center pr-2">
+          <PresetPreviewSize frames={props.frames} width="390px" height="844px">
+            <MobileIcon />
+          </PresetPreviewSize>
+          <PresetPreviewSize
+            frames={props.frames}
+            width="820px"
+            height="1180px"
+          >
+            <TabletIcon />
+          </PresetPreviewSize>
+          <PresetPreviewSize frames={props.frames} width="100%" height="100%">
+            <DesktopIcon />
+          </PresetPreviewSize>
+        </div>
+      </div>
       <div className="flex items-center">
         <TextField
           placeholder="100%"
