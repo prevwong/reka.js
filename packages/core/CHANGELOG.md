@@ -1,5 +1,11 @@
 # @rekajs/core
 
+## 0.1.31
+
+### Patch Changes
+
+- [#161](https://github.com/prevwong/reka.js/pull/161) [`c82817e`](https://github.com/prevwong/reka.js/commit/c82817e44472801d01126670dd6aec0ab5f0cb09) Thanks [@prevwong](https://github.com/prevwong)! - Add named slots
+
 ## 0.1.30
 
 ### Patch Changes
