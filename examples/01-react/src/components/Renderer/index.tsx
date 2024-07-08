@@ -33,6 +33,7 @@ export const Renderer = observer((props: RendererProps) => {
   }
 
   if (
+    props.view instanceof t.FrameView ||
     props.view instanceof t.SlotView ||
     props.view instanceof t.FragmentView
   ) {

@@ -163,6 +163,10 @@ importers:
       typescript:
         specifier: 4.9.4
         version: 4.9.4
+    devDependencies:
+      '@types/react':
+        specifier: ^17.0.2
+        version: 17.0.2
 
   examples/02-collab:
     dependencies:
@@ -605,6 +609,12 @@ importers:
       '@types/randomcolor':
         specifier: ^0.5.6
         version: 0.5.7
+      '@types/react':
+        specifier: ^18.2.0
+        version: 18.2.73
+      '@types/react-dom':
+        specifier: ^18.2.0
+        version: 18.2.23
       autoprefixer:
         specifier: ^10.4.13
         version: 10.4.13(postcss@8.4.20)
@@ -3367,6 +3377,13 @@ packages:
     resolution: {integrity: sha512-ZQ71wgGOTmDYpnav2knkjr3qXdAFu0vsk8Ci5w3pGAIdj7/kKAyn+VsQDhXsmzzzepAiI9leWMmubXz690AI/A==}
     dependencies:
       '@types/react': 18.2.73
+    dev: true
+
+  /@types/react@17.0.2:
+    resolution: {integrity: sha512-Xt40xQsrkdvjn1EyWe1Bc0dJLcil/9x2vAuW7ya+PuQip4UYUaXyhzWmAbwRsdMgwOFHpfp7/FFZebDU6Y8VHA==}
+    dependencies:
+      '@types/prop-types': 15.7.5
+      csstype: 3.1.0
     dev: true
 
   /@types/react@18.2.73:

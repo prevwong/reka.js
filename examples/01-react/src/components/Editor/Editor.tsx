@@ -35,7 +35,7 @@ export const Editor = () => {
                 return;
               }
               reka.change(() => {
-                appComponent.template.children.push(
+                t.assert(appComponent.template, t.TagTemplate).children.push(
                   t.tagTemplate({
                     tag: 'text',
                     props: {

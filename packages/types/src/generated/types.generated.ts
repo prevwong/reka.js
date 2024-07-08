@@ -1,6 +1,5 @@
-import { Schema } from '../schema';
-
 import { Type, TypeConstructorOptions } from '../node';
+import { Schema } from '../schema';
 
 type StateParameters = {
   program: Program;
