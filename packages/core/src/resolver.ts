@@ -396,6 +396,11 @@ export class Resolver {
             template.children.forEach((child) => {
               this.resolveTemplate(child, templateScope);
             });
+            Object.values(template.slots).map((children) =>
+              children.map((child) =>
+                this.resolveTemplate(child, templateScope)
+              )
+            );
           }
         }),
       };
