@@ -396,8 +396,8 @@ export class Resolver {
             template.children.forEach((child) => {
               this.resolveTemplate(child, templateScope);
             });
-            Object.values(template.slots).map((children) =>
-              children.map((child) =>
+            Object.values(template.slots).map((slot) =>
+              slot.map((child) =>
                 this.resolveTemplate(child, templateScope)
               )
             );
