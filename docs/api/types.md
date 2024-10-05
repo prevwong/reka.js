@@ -173,9 +173,9 @@ console.log(original === clone); // false
 // By default, the clone() util maintains the original ids
 console.log(original.id === clone.id); // true
 
-// Clone with new ids via the `replaceExistingIds` option:
+// Clone with new ids via the `replaceExistingId` option:
 const cloneWithNewIds = t.clone(original, {
-  replaceExistingIds: true,
+  replaceExistingId: true,
 });
 console.log(original.id === cloneWithNewIds.id); // false
 ```
