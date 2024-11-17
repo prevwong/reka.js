@@ -2,7 +2,7 @@
 
 Thank you for considering to contribute to Reka.js!
 
-To get started right away, have a look at our [project tracker](https://github.com/prevwong/projects/2) to check out a list of things that we'd like to work on right now.
+To get started right away, have a look at our [project tracker](https://github.com/users/prevwong/projects/2) to check out a list of things that we'd like to work on right now.
 
 If you are interested in proposing a new feature or have found a bug that you'd like to fix, please file a new [issue](https://github.com/prevwong/reka.js/issues).
 
