@@ -234,3 +234,18 @@ new WebrtcProvider('collab-room', doc);
 ## Acknowledgments :raised_hands:
 
 Reka is inspired by [Plasmic](https://www.plasmic.app/), [Builder.io](https://builder.io) and [Mitosis](https://github.com/BuilderIO/mitosis)
+
+### Sponsors
+
+- [eye-square](https://github.com/eye-square)
+
+### Backers
+
+- [Tekeste Kidanu](https://opencollective.com/guest-1703f486)
+- [CORS Digital](https://opencollective.com/cors-digital)
+- [Mattermix](https://opencollective.com/mattermix)
+- [muttenzer](https://github.com/muttenzer)
+- [ITCuw](https://github.com/ITCuw)
+- [Victor Vanegas](vicvans20)
+- [Andreas Thoelke](https://github.com/andreasthoelke)
+- [Saltcorn](https://github.com/saltcorn)
