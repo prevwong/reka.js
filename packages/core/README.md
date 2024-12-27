@@ -238,6 +238,7 @@ Reka is inspired by [Plasmic](https://www.plasmic.app/), [Builder.io](https://bu
 ### Sponsors
 
 - [eye-square](https://github.com/eye-square)
+- [api4ui](https://github.com/api4ui)
 
 ### Backers
 
