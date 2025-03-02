@@ -79,7 +79,7 @@ export class ComponentViewEvaluator {
         propValue = this.evaluator.computeExpr(expr, this.ctx.env);
       }
 
-      if (!propValue && prop.init) {
+      if (propValue === undefined && prop.init) {
         propValue = this.evaluator.computeExpr(prop.init, this.ctx.env);
       }
 
