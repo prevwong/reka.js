@@ -17,7 +17,7 @@
     "@rekajs/parser": ">=0.1.0",
     "@rekajs/react": ">=0.1.0",
     "@rekajs/types": ">=0.1.0",
-    "react": "^16.8.0 || ^17 || ^18"
+    "react": "^16.8.0 || ^17 || ^18 || ^19"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.12.0",

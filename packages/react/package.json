@@ -15,7 +15,7 @@
   "peerDependencies": {
     "@rekajs/core": ">=0.1.0",
     "@rekajs/types": ">=0.1.0",
-    "react": "^16.8.0 || ^17 || ^18"
+    "react": "^16.8.0 || ^17 || ^18 || ^19"
   },
   "dependencies": {
     "mobx-react-lite": "^4.0.6"
